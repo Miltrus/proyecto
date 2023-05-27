@@ -1,0 +1,28 @@
+
+
+<div class="container">
+  <h1>Permisos</h1>
+  <button type="button" class="btn btn-success" (click)="newPermiso()">Create new permiso</button> <br><br>
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Permiso</th>
+          <th scope="col">Modulo</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let permiso of permisos">
+            <th scope="row">{{ permiso.idPermiso }}</th>
+            <td>{{ permiso.nombrePermiso }}</td>
+            <td>{{ permiso.idModulo }} - {{ getNameModulo(permiso.idModulo) }}</td>
+            <td>
+              <button type="button" class="btn btn-info" (click)="editPermiso(permiso.idPermiso)">Edit</button> |
+              <button class="btn btn-danger" (click)="deletePermiso(permiso.idPermiso)">Delete</button>
+            </td>
+          </tr>
+      </tbody>
+  </table><br>
+  <button type="button" class="btn btn-secondary" (click)="goBack()">Volver a la lista</button>
+</div>

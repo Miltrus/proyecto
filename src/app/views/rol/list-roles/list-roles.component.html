@@ -1,0 +1,29 @@
+
+
+<div class="container">
+  <h1>Roles</h1>
+  <button type="button" class="btn btn-success" (click)="newRol()">Create new rol</button> <br><br>
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Descripcion</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let rol of roles ">
+            <th scope="row">{{ rol.idRol }}</th>
+            <td>{{ rol.nombreRol }}</td>
+            <td>{{ rol.descripcionRol }}</td>
+            <td>
+              <button type="button" class="btn btn-info" (click)="editRol(rol.idRol)">Edit</button> |
+              <button class="btn btn-danger" (click)="deleteRol(rol.idRol)">Delete</button>
+            </td>
+          </tr>
+      </tbody>
+  </table><br>
+  <button type="button" class="btn btn-secondary" (click)="goBack()">Volver a la lista</button>
+</div>
+

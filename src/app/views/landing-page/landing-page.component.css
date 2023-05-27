@@ -1,0 +1,73 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+mat-toolbar {
+    display: flex;
+    align-items: center;
+}
+
+.brand {
+    margin-right: 16px;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.login {
+    margin-left: 16px;
+}
+
+.card-no-border {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.video-card {
+    margin-top: 20px;
+    position: relative;
+}
+
+.video-background {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+
+.video-background video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.contactenos {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem auto;
+    max-width: 600px;
+}
+
+.custom-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.custom-form mat-form-field {
+    width: 100%;
+}
+
+.center-button {
+    display: flex;
+    justify-content: center;
+}
+
+.mobile-app-card {
+    background-color: #f7f7f7;
+}

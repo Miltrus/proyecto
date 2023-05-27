@@ -1,0 +1,39 @@
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+
+    <!-- Icon -->
+    <div class="fadeIn first">
+      <img src="assets/Logo.png" id="icon" alt="Star Routing logo" />
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm.value)">
+      <!--enviamos el valor del form a la funcion onLogin-->
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Correo electronico</mat-label>
+          <input id="login" class="fadeIn second" formControlName="correoUsuario" matInput placeholder="Correo">
+          <mat-icon matSuffix color="primary">person</mat-icon>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Contraseña</mat-label>
+          <input id="password" class="fadeIn third" formControlName="contrasenaUsuario" matInput
+            placeholder="Contraseña" type="password">
+          <mat-icon matSuffix color="primary">lock</mat-icon>
+        </mat-form-field>
+      </p>
+      <!-- <input type="text" id="login" class="fadeIn second" formControlName="correoUsuario" placeholder="Email">
+      <input type="password" id="password" class="fadeIn third" formControlName="contrasenaUsuario" placeholder="Contraseña"> -->
+      <input type="submit" class="fadeIn fourth" value="Iniciar sesión">
+    </form>
+
+    <!-- Remind Passowrd -->
+    <div class="alert alert-danger" *ngIf="errorStatus">
+      <p>{{errorMsg}}</p>
+    </div>
+
+  </div>
+</div>

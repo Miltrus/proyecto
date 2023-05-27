@@ -1,0 +1,32 @@
+
+
+<div class="container">
+  <h1>Usuarios</h1>
+  <button type="button" class="btn btn-success" (click)="newPaquete()">Create new paquete</button> <br><br>
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">QR</th>
+          <th scope="col">Mensajero</th>
+          <th scope="col">Destinatario</th>
+          <th scope="col">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let paquete of paquetes">
+            <th scope="row">{{ paquete.idPaquete }}</th>
+            <td>{{ paquete.codigoQrPaquete }}</td>
+            <td>{{ paquete.documentoUsuario }} - {{ getUsuarioPaquete (paquete.documentoUsuario) }}</td>
+            <td>{{ paquete.documentoCliente }} - {{ getClientePaquete (paquete.documentoCliente) }}</td>
+            <td>{{ paquete.idEstado }} - {{ getEstadoPaquete (paquete.idEstado) }}</td>
+            <td>
+              <button type="button" class="btn btn-info" (click)="editPaquete(paquete.idPaquete)">Edit</button> |
+              <button class="btn btn-danger" (click)="deletePaquete(paquete.idEstado)">Delete</button>
+            </td>
+          </tr>
+      </tbody>
+  </table><br>
+  <button type="button" class="btn btn-secondary" (click)="goBack()">Volver a la lista</button>
+</div>
+

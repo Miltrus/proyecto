@@ -1,0 +1,25 @@
+
+
+<div class="container">
+    <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)">
+        <div class="form-group">
+            <label for="exampleFormControlInput1">ID Permiso</label>
+            <input type="text" class="form-control" formControlName="idPermiso" readonly/>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Nombre Permiso</label>
+            <input type="text" class="form-control" formControlName="nombrePermiso"/>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Modulo</label>
+            <select class="form-control" formControlName="idModulo">
+                <option *ngFor="let modulo of modulos" [value]="modulo.idModulo">{{ modulo.idModulo }} - {{ modulo.modulo }}</option>
+            </select>
+        </div>
+        <br><br/> 
+        
+        <button type="button" class="btn btn-secondary" (click)="goBack()">Atras</button> |
+        <button type="submit" class="btn btn-success" >Guardar</button>
+        
+    </form>
+</div>

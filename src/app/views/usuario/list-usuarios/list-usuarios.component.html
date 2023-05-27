@@ -1,0 +1,38 @@
+
+
+<div class="container">
+  <h1>Usuarios</h1>
+  <button type="button" class="btn btn-success" (click)="newUsuario()">Create new usuario</button> <br><br>
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Documento</th>
+          <th scope="col">Tipo documento</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Apellido</th>
+          <th scope="col">Telefono</th>
+          <th scope="col">Correo</th>
+          <th scope="col">Rol</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let usuario of usuarios">
+            <th scope="row">{{ usuario.documentoUsuario }}</th>
+            <td>{{ usuario.idTipoDocumento }} - {{ getTipoDocumento (usuario.idTipoDocumento) }}</td>
+            <td>{{ usuario.nombreUsuario }}</td>
+            <td>{{ usuario.apellidoUsuario }}</td>
+            <td>{{ usuario.telefonoUsuario }}</td>
+            <td>{{ usuario.correoUsuario }}</td>
+            <td>{{ usuario.idRol }} - {{ getRolUsuario (usuario.idRol) }}</td>
+            <td>{{ usuario.idEstado }} - {{ getEstadoUsuario (usuario.idEstado) }}</td>
+            <td>
+              <button type="button" class="btn btn-info" (click)="editUsuario(usuario.documentoUsuario)">Edit</button> |
+              <button class="btn btn-danger" (click)="deleteUsuario(usuario.documentoUsuario)">Delete</button>
+            </td>
+          </tr>
+      </tbody>
+  </table><br>
+  <button type="button" class="btn btn-secondary" (click)="goBack()">Volver a la lista</button>
+</div>

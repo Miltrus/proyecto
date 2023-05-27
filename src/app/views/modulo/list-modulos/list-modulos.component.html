@@ -1,0 +1,26 @@
+
+
+<div class="container">
+  <h1>Modulos</h1>
+  <button type="button" class="btn btn-success" (click)="newModulo()">Create new modulo</button> <br><br>
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Modulo</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let modulo of modulos">
+            <th scope="row">{{ modulo.idModulo }}</th>
+            <td>{{ modulo.modulo }}</td>
+            <td>
+              <button type="button" class="btn btn-info" (click)="editModulo(modulo.idModulo)">Edit</button> |
+              <button class="btn btn-danger" (click)="deleteModulo(modulo.idModulo)">Delete</button>
+            </td>
+          </tr>
+      </tbody>
+  </table><br>
+  <button type="button" class="btn btn-secondary" (click)="goBack()">Volver a la lista</button>
+</div>
