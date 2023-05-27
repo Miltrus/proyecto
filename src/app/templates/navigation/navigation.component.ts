@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent, ConfirmDialogData } from './dialog-confirm/dialog-confirm.component';
+import { DialogConfirmComponent, ConfirmDialogData } from '../dialog-confirm/dialog-confirm.component';
 
 @Component({
   selector: 'app-navigation',

@@ -28,7 +28,12 @@ export class NewClienteComponent implements OnInit{
 
   tiposDocumento: TipoDocumentoInterface[] = []
 
+  isLoading: boolean = true;
+  
   ngOnInit(): void {
+    setTimeout(() => {
+      this.isLoading = false; // Oculta la pantalla de carga
+    }, 2000);
     this.getTiposDocumento();
     this.checkLocalStorage();
   }
