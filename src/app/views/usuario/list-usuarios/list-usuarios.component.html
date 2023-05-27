@@ -5,6 +5,10 @@
     <button mat-raised-button color="primary" (click)="newUsuario()">Create new usuario</button> 
     <br><br>
     <table mat-table class="mat-elevation-z8" [dataSource]="usuarios">
+      <ng-container matColumnDef="numero">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let cliente; let i = index">{{ i + 1 }}</td>
+      </ng-container>
       <ng-container matColumnDef="Documento">
         <th mat-header-cell *matHeaderCellDef>Documento</th>
         <td mat-cell *matCellDef="let usuario">{{ usuario.documentoUsuario }}</td>
