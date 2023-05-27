@@ -1,38 +1,58 @@
+<app-navigation>
 
-
-<div class="container">
-  <h1>Usuarios</h1>
-  <button type="button" class="btn btn-success" (click)="newUsuario()">Create new usuario</button> <br><br>
-  <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Documento</th>
-          <th scope="col">Tipo documento</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Apellido</th>
-          <th scope="col">Telefono</th>
-          <th scope="col">Correo</th>
-          <th scope="col">Rol</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr *ngFor="let usuario of usuarios">
-            <th scope="row">{{ usuario.documentoUsuario }}</th>
-            <td>{{ usuario.idTipoDocumento }} - {{ getTipoDocumento (usuario.idTipoDocumento) }}</td>
-            <td>{{ usuario.nombreUsuario }}</td>
-            <td>{{ usuario.apellidoUsuario }}</td>
-            <td>{{ usuario.telefonoUsuario }}</td>
-            <td>{{ usuario.correoUsuario }}</td>
-            <td>{{ usuario.idRol }} - {{ getRolUsuario (usuario.idRol) }}</td>
-            <td>{{ usuario.idEstado }} - {{ getEstadoUsuario (usuario.idEstado) }}</td>
-            <td>
-              <button type="button" class="btn btn-info" (click)="editUsuario(usuario.documentoUsuario)">Edit</button> |
-              <button class="btn btn-danger" (click)="deleteUsuario(usuario.documentoUsuario)">Delete</button>
-            </td>
-          </tr>
-      </tbody>
-  </table><br>
-  <button type="button" class="btn btn-secondary" (click)="goBack()">Volver a la lista</button>
-</div>
+  <div class="container">
+    <h1>Usuarios</h1>
+    <button mat-raised-button color="primary" (click)="newUsuario()">Create new usuario</button> 
+    <br><br>
+    <table mat-table class="mat-elevation-z8" [dataSource]="usuarios">
+      <ng-container matColumnDef="Documento">
+        <th mat-header-cell *matHeaderCellDef>Documento</th>
+        <td mat-cell *matCellDef="let usuario">{{ usuario.documentoUsuario }}</td>
+      </ng-container>
+      <ng-container matColumnDef="TipoDocumento">
+        <th mat-header-cell *matHeaderCellDef>Tipo documento</th>
+        <td mat-cell *matCellDef="let usuario">{{ usuario.idTipoDocumento }} - {{ getTipoDocumento (usuario.idTipoDocumento) }}</td>
+      </ng-container>
+      <ng-container matColumnDef="Nombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let usuario">{{ usuario.nombreUsuario }}</td>
+      </ng-container>
+      <ng-container matColumnDef="Apellido">
+        <th mat-header-cell *matHeaderCellDef>Apellido</th>
+        <td mat-cell *matCellDef="let usuario">{{ usuario.apellidoUsuario }}</td>
+      </ng-container>
+      <ng-container matColumnDef="telefonoUsuario">
+        <th mat-header-cell *matHeaderCellDef>Telefono</th>
+        <td mat-cell *matCellDef="let usuario">{{ usuario.telefonoUsuario }}</td>
+      </ng-container>
+      <ng-container matColumnDef="correoUsuario">
+        <th mat-header-cell *matHeaderCellDef>Correo</th>
+        <td mat-cell *matCellDef="let usuario">{{ usuario.correoUsuario }}</td>
+      </ng-container>
+      <ng-container matColumnDef="Rol">
+        <th mat-header-cell *matHeaderCellDef>Rol</th>
+        <td mat-cell *matCellDef="let usuario">{{ usuario.idRol }} - {{ getRolUsuario (usuario.idRol) }}</td>
+      </ng-container>
+      <ng-container matColumnDef="Estado">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let usuario">{{ usuario.idEstado }} - {{ getEstadoUsuario (usuario.idEstado) }}</td>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let usuario">
+          <button mat-icon-button color="primary" (click)="editUsuario(usuario.documentoUsuario)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteUsuario(usuario.documentoUsuario)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="['Documento', 'TipoDocumento', 'Nombre', 'Apellido', 'telefonoUsuario', 'correoUsuario', 'Rol', 'Estado', 'acciones']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['Documento', 'TipoDocumento', 'Nombre', 'Apellido', 'telefonoUsuario', 'correoUsuario', 'Rol', 'Estado', 'acciones']"></tr>
+    </table>
+    <br>
+    <button mat-raised-button (click)="goBack()">Volver a la lista</button>
+  </div>
+  </app-navigation>
