@@ -8,7 +8,8 @@ import { UsuarioInterface } from 'src/app/models/usuario.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent, ConfirmDialogData } from '../../../templates/navigation/dialog-confirm/dialog-confirm.component';
+import { DialogConfirmComponent, ConfirmDialogData } from '../../../templates/dialog-confirm/dialog-confirm.component';
+import { LoadingComponent } from 'src/app/templates/loading/loading.component';
 
 @Component({
   selector: 'app-list-paquetes',
