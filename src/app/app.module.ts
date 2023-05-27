@@ -25,8 +25,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { DialogConfirmComponent } from './templates/navigation/dialog-confirm/dialog-confirm.component';
+import { DialogConfirmComponent } from './templates/dialog-confirm/dialog-confirm.component';
 import { MatOptionModule } from '@angular/material/core';
+import { LoadingComponent } from './templates/loading/loading.component';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { MatOptionModule } from '@angular/material/core';
     AppComponent,
     NavigationComponent,
     DialogConfirmComponent,
+    LoadingComponent,
     routingComponents,
   ],
   imports: [
