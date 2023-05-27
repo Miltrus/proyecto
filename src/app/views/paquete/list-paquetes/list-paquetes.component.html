@@ -1,32 +1,47 @@
-
+<app-navigation>
 
 <div class="container">
-  <h1>Usuarios</h1>
-  <button type="button" class="btn btn-success" (click)="newPaquete()">Create new paquete</button> <br><br>
-  <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">ID</th>
-          <th scope="col">QR</th>
-          <th scope="col">Mensajero</th>
-          <th scope="col">Destinatario</th>
-          <th scope="col">Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr *ngFor="let paquete of paquetes">
-            <th scope="row">{{ paquete.idPaquete }}</th>
-            <td>{{ paquete.codigoQrPaquete }}</td>
-            <td>{{ paquete.documentoUsuario }} - {{ getUsuarioPaquete (paquete.documentoUsuario) }}</td>
-            <td>{{ paquete.documentoCliente }} - {{ getClientePaquete (paquete.documentoCliente) }}</td>
-            <td>{{ paquete.idEstado }} - {{ getEstadoPaquete (paquete.idEstado) }}</td>
-            <td>
-              <button type="button" class="btn btn-info" (click)="editPaquete(paquete.idPaquete)">Edit</button> |
-              <button class="btn btn-danger" (click)="deletePaquete(paquete.idEstado)">Delete</button>
-            </td>
-          </tr>
-      </tbody>
-  </table><br>
-  <button type="button" class="btn btn-secondary" (click)="goBack()">Volver a la lista</button>
+  <h1>Paquetes</h1>
+  <button mat-raised-button color="primary" (click)="newPaquete()">Create new paquete</button> 
+  <br><br>
+  <table mat-table class="mat-elevation-z8" [dataSource]="paquetes">
+    <ng-container matColumnDef="ID">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let paquete">{{ paquete.idPaquete }}</td>
+    </ng-container>
+    <ng-container matColumnDef="QR">
+      <th mat-header-cell *matHeaderCellDef>QR</th>
+      <td mat-cell *matCellDef="let paquete">{{ paquete.codigoQrPaquete }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Mensajero">
+      <th mat-header-cell *matHeaderCellDef>Mensajero</th>
+      <td mat-cell *matCellDef="let paquete">{{ paquete.documentoUsuario }} - {{ getUsuarioPaquete (paquete.documentoUsuario) }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Destinatario">
+      <th mat-header-cell *matHeaderCellDef>Destinatario</th>
+      <td mat-cell *matCellDef="let paquete">{{ paquete.documentoCliente }} - {{ getClientePaquete (paquete.documentoCliente) }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Estado">
+      <th mat-header-cell *matHeaderCellDef>Estado</th>
+      <td mat-cell *matCellDef="let paquete">{{ paquete.idEstado }} - {{ getEstadoPaquete (paquete.idEstado) }}</td>
+    </ng-container>
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+      <td mat-cell *matCellDef="let paquete">
+        <button mat-icon-button color="primary" (click)="editPaquete(paquete.idPaquete)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deletePaquete(paquete.idEstado)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['ID', 'QR', 'Mensajero', 'Destinatario', 'Estado', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['ID', 'QR', 'Mensajero', 'Destinatario', 'Estado', 'acciones']"></tr>
+  </table>
+  <br>
+  <button mat-raised-button (click)="goBack()">Volver a la lista</button>
 </div>
+</app-navigation>
 
