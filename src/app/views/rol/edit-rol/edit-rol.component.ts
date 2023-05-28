@@ -24,7 +24,6 @@ export class EditRolComponent implements OnInit{
 
   ngOnInit(): void {
     let idRol = this.activatedRouter.snapshot.paramMap.get('id');
-    let token = this.getToken();
     this.api.getOneRol(idRol).subscribe(data => {
       this.dataRol = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
       this.editForm.setValue({
@@ -32,13 +31,14 @@ export class EditRolComponent implements OnInit{
         'nombreRol': this.dataRol[0]?.nombreRol || '',
         'descripcionRol': this.dataRol[0]?.descripcionRol || '',
       });
-      console.log(this.editForm.value);
-      
     })
+    this.checkLocalStorage();
   }
 
-  getToken(){
-    return localStorage.getItem('token');
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
   }
 
   postForm(id: any){

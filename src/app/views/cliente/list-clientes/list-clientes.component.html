@@ -4,7 +4,7 @@
     <button mat-raised-button color="primary" (click)="newCliente()">Crear nuevo cliente</button>
     <br><br>
     <table mat-table class="mat-elevation-z8" [dataSource]="clientes">
-      <ng-container matColumnDef="numero">
+      <ng-container matColumnDef="num">
         <th mat-header-cell *matHeaderCellDef>#</th>
         <td mat-cell *matCellDef="let cliente; let i = index">{{ i + 1 }}</td>
       </ng-container>
@@ -44,8 +44,8 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="['numero', 'documentoCliente', 'tipoDocumento', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['numero', 'documentoCliente', 'tipoDocumento', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
+      <tr mat-header-row *matHeaderRowDef="['num', 'documentoCliente', 'tipoDocumento', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['num', 'documentoCliente', 'tipoDocumento', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
     </table>
     <br>
     <button mat-raised-button (click)="goBack()">Volver a la lista</button>

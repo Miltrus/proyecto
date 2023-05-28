@@ -23,7 +23,13 @@ export class NewRolComponent implements OnInit{
   })
 
   ngOnInit(): void {
-  
+    this.checkLocalStorage();
+  }
+
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
   }
 
   postForm(form: RolInterface){

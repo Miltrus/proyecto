@@ -5,9 +5,9 @@
   <button mat-raised-button color="primary" (click)="newPaquete()">Create new paquete</button> 
   <br><br>
   <table mat-table class="mat-elevation-z8" [dataSource]="paquetes">
-    <ng-container matColumnDef="numero">
+    <ng-container matColumnDef="num">
       <th mat-header-cell *matHeaderCellDef>#</th>
-      <td mat-cell *matCellDef="let cliente; let i = index">{{ i + 1 }}</td>
+      <td mat-cell *matCellDef="let paquete; let i = index">{{ i + 1 }}</td>
     </ng-container>
     <ng-container matColumnDef="ID">
       <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -41,8 +41,8 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['ID', 'QR', 'Mensajero', 'Destinatario', 'Estado', 'acciones']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['ID', 'QR', 'Mensajero', 'Destinatario', 'Estado', 'acciones']"></tr>
+    <tr mat-header-row *matHeaderRowDef="['num', 'ID', 'QR', 'Mensajero', 'Destinatario', 'Estado', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['num', 'ID', 'QR', 'Mensajero', 'Destinatario', 'Estado', 'acciones']"></tr>
   </table>
   <br>
   <button mat-raised-button (click)="goBack()">Volver a la lista</button>

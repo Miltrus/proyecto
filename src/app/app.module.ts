@@ -1,18 +1,21 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
 import { ToastrModule } from 'ngx-toastr';
 
+//Components
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NavigationComponent } from './templates/navigation/navigation.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
+import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
+import { LoadingComponent } from './components/loading/loading.component';
+
+//Material
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -25,9 +28,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { DialogConfirmComponent } from './templates/dialog-confirm/dialog-confirm.component';
 import { MatOptionModule } from '@angular/material/core';
-import { LoadingComponent } from './templates/loading/loading.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
+
 
 
 @NgModule({
@@ -62,6 +66,7 @@ import { LoadingComponent } from './templates/loading/loading.component';
     MatSnackBarModule,
     MatDialogModule,
     MatOptionModule,
+    MatProgressSpinnerModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

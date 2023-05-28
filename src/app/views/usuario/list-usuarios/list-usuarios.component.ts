@@ -8,7 +8,7 @@ import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface'
 import { EstadoUsuarioInterface } from 'src/app/models/estado-usuario.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent, ConfirmDialogData } from '../../../templates/dialog-confirm/dialog-confirm.component';
+import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/dialog-confirm/dialog-confirm.component';
 
 
 @Component({
@@ -31,6 +31,7 @@ export class ListUsuariosComponent implements OnInit {
   rolUsuario: RolInterface[] = [];
 
   ngOnInit(): void {
+    this.checkLocalStorage();
     this.api.getAllUsuarios().subscribe(data => {
       this.usuarios = data;
     });
@@ -46,7 +47,6 @@ export class ListUsuariosComponent implements OnInit {
     this.api.getRolUsuario().subscribe(data => {
       this.rolUsuario = data;
     });
-    this.checkLocalStorage();
   }
 
   checkLocalStorage() {

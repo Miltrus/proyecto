@@ -10,7 +10,7 @@ import { ResponseInterface } from '../../../models/response.interface';
 @Component({
   selector: 'app-new-modulo',
   templateUrl: './new-modulo.component.html',
-  styleUrls: ['./new-modulo.component.css']
+  styleUrls: ['./new-modulo.component.scss']
 })
 export class NewModuloComponent implements OnInit{
 
@@ -22,7 +22,13 @@ export class NewModuloComponent implements OnInit{
   })
 
   ngOnInit(): void {
-  
+    this.checkLocalStorage();
+  }
+
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
   }
 
   postForm(form: ModuloInterface){

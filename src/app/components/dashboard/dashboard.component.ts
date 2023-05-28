@@ -1,13 +1,27 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
+
+  constructor(private router:Router) { }
+
+  ngOnInit(): void {
+    this.checkLocalStorage();
+  }
+
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
+  }
+
   private breakpointObserver = inject(BreakpointObserver);
 
   /** Based on the screen size, switch from standard to one column per row */

@@ -27,7 +27,14 @@ export class NewPermisoComponent implements OnInit{
   modulos: ModuloInterface[] = [];
 
   ngOnInit(): void {
+    this.checkLocalStorage();
     this.getModulos();
+  }
+
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
   }
 
   postForm(form: PermisoInterface){

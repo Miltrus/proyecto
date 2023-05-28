@@ -36,9 +36,16 @@ export class NewUsuarioComponent implements OnInit{
   rolUsuario: RolInterface[] = [];
 
   ngOnInit(): void {
+    this.checkLocalStorage();
     this.getTiposDocumento();
     this.getEstadosUsuario();
     this.getRolesUsuario();
+  }
+
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
   }
 
   postForm(form: UsuarioInterface){

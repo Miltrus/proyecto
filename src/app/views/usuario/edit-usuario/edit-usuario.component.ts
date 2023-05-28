@@ -39,7 +39,6 @@ export class EditUsuarioComponent implements OnInit{
 
   ngOnInit(): void {
     let documentoUsuario = this.activatedRouter.snapshot.paramMap.get('id');
-    let token = this.getToken();
     this.api.getOneUsuario(documentoUsuario).subscribe(data => {
       this.dataUsuario = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
       this.editForm.setValue({
@@ -54,14 +53,16 @@ export class EditUsuarioComponent implements OnInit{
         'idEstado': this.dataUsuario[0]?.idEstado || '',
       });
     });
-
+    this.checkLocalStorage();
     this.getTiposDocumento();
     this.getEstadosUsuario();
     this.getRolesUsuario();
   }
 
-  getToken(){
-    return localStorage.getItem('token');
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
   }
 
   postForm(id: any){

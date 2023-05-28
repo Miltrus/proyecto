@@ -21,12 +21,19 @@ export class ListPermisosComponent implements OnInit{
   modulos: ModuloInterface[] = [];
 
   ngOnInit(): void {
+    this.checkLocalStorage();
     this.api.getAllPermisos().subscribe(data => {
       this.permisos = data;
     })
     this.moduloService.getAllModulos().subscribe(data => {
       this.modulos = data;
     });
+  }
+
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
   }
 
   editPermiso(id:any){

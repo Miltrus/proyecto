@@ -1,5 +1,8 @@
 <div class="wrapper fadeInDown">
-  <div id="formContent">
+
+  <mat-spinner *ngIf="loading" class="spinner" diameter="50"></mat-spinner>
+
+  <div *ngIf="!loading" id="formContent">
     <!-- Tabs Titles -->
 
     <!-- Icon -->
@@ -29,11 +32,5 @@
       <input type="password" id="password" class="fadeIn third" formControlName="contrasenaUsuario" placeholder="Contraseña"> -->
       <input type="submit" class="fadeIn fourth" value="Iniciar sesión">
     </form>
-
-    <!-- Remind Passowrd -->
-    <div class="alert alert-danger" *ngIf="errorStatus">
-      <p>{{errorMsg}}</p>
-    </div>
-
   </div>
 </div>

@@ -9,7 +9,7 @@ import { ModuloInterface } from 'src/app/models/modulo.interface';
 @Component({
   selector: 'app-list-modulos',
   templateUrl: './list-modulos.component.html',
-  styleUrls: ['./list-modulos.component.css']
+  styleUrls: ['./list-modulos.component.scss']
 })
 export class ListModulosComponent implements OnInit{
 
@@ -20,7 +20,14 @@ export class ListModulosComponent implements OnInit{
   ngOnInit(): void {
     this.api.getAllModulos().subscribe(data => {
       this.modulos = data;
-    })
+    });
+    this.checkLocalStorage();
+  }
+
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
   }
 
   editModulo(id:any){

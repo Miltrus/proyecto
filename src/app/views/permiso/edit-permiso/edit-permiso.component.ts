@@ -28,7 +28,6 @@ export class EditPermisoComponent implements OnInit{
 
   ngOnInit(): void {
     let idPermiso = this.activatedRouter.snapshot.paramMap.get('id');
-    let token = this.getToken();
     this.api.getOnePermiso(idPermiso).subscribe(data => {
       this.dataPermiso = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
       this.editForm.setValue({
@@ -37,13 +36,15 @@ export class EditPermisoComponent implements OnInit{
         'idModulo': this.dataPermiso[0]?.idModulo || '',
       });
     })
+    this.checkLocalStorage();
     this.getModulos();
   }
 
-  getToken(){
-    return localStorage.getItem('token');
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
   }
-
   postForm(id: any){
     this.api.putPermiso(id).subscribe(data => {
       let respuesta: ResponseInterface = data;

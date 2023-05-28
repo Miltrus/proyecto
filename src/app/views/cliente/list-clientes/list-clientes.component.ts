@@ -6,8 +6,8 @@ import { ResponseInterface } from 'src/app/models/response.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent, ConfirmDialogData } from '../../../templates/dialog-confirm/dialog-confirm.component';
-import { LoadingComponent } from 'src/app/templates/loading/loading.component';
+import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/dialog-confirm/dialog-confirm.component';
+import { LoadingComponent } from 'src/app/components/loading/loading.component';
 
 @Component({
   selector: 'app-list-clientes',

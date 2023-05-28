@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './views/login/login.component';
+import { LoginComponent } from './components/login/login.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
-import { DashboardComponent } from './templates/dashboard/dashboard.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 import { ListRolesComponent } from './views/rol/list-roles/list-roles.component';
 import { NewRolComponent } from './views/rol/new-rol/new-rol.component';
@@ -34,7 +34,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'landing-page', component: LandingPageComponent },
 
-  { path: 'list-roles', component: ListRolesComponent },
+  { path: 'list-roles', component: ListRolesComponent, },
   { path: 'new-rol', component: NewRolComponent },
   { path: 'edit-rol/:id', component: EditRolComponent },
 

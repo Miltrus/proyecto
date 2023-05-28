@@ -9,7 +9,7 @@ import { ResponseInterface } from '../../../models/response.interface';
 @Component({
   selector: 'app-edit-modulo',
   templateUrl: './edit-modulo.component.html',
-  styleUrls: ['./edit-modulo.component.css']
+  styleUrls: ['./edit-modulo.component.scss']
 })
 export class EditModuloComponent implements OnInit{
 
@@ -23,20 +23,20 @@ export class EditModuloComponent implements OnInit{
 
   ngOnInit(): void {
     let idModulo = this.activatedRouter.snapshot.paramMap.get('id');
-    let token = this.getToken();
     this.api.getOneModulo(idModulo).subscribe(data => {
       this.dataModulo = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
       this.editForm.setValue({
         'idModulo': this.dataModulo[0]?.idModulo || 'idModulo',
         'modulo': this.dataModulo[0]?.modulo || '',
       });
-      console.log(this.editForm.value);
-      
     })
+    this.checkLocalStorage();
   }
 
-  getToken(){
-    return localStorage.getItem('token');
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
   }
 
   postForm(id: any){

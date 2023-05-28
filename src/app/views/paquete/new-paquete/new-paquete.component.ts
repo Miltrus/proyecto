@@ -31,9 +31,16 @@ export class NewPaqueteComponent implements OnInit{
     estadosPaquete: EstadoPaqueteInterface[] = [];
 
   ngOnInit(): void {
+    this.checkLocalStorage();
     this.getUsuarioPaquete();
     this.getClientePaquete();
     this.getEstadoPaquete();
+  }
+
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
   }
 
   postForm(form: PaqueteInterface){

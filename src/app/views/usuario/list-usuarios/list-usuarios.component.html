@@ -5,9 +5,9 @@
     <button mat-raised-button color="primary" (click)="newUsuario()">Create new usuario</button> 
     <br><br>
     <table mat-table class="mat-elevation-z8" [dataSource]="usuarios">
-      <ng-container matColumnDef="numero">
+      <ng-container matColumnDef="num">
         <th mat-header-cell *matHeaderCellDef>#</th>
-        <td mat-cell *matCellDef="let cliente; let i = index">{{ i + 1 }}</td>
+        <td mat-cell *matCellDef="let usuario; let i = index">{{ i + 1 }}</td>
       </ng-container>
       <ng-container matColumnDef="Documento">
         <th mat-header-cell *matHeaderCellDef>Documento</th>
@@ -53,8 +53,8 @@
         </td>
       </ng-container>
   
-      <tr mat-header-row *matHeaderRowDef="['Documento', 'TipoDocumento', 'Nombre', 'Apellido', 'telefonoUsuario', 'correoUsuario', 'Rol', 'Estado', 'acciones']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['Documento', 'TipoDocumento', 'Nombre', 'Apellido', 'telefonoUsuario', 'correoUsuario', 'Rol', 'Estado', 'acciones']"></tr>
+      <tr mat-header-row *matHeaderRowDef="['num', 'Documento', 'TipoDocumento', 'Nombre', 'Apellido', 'telefonoUsuario', 'correoUsuario', 'Rol', 'Estado', 'acciones']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['num', 'Documento', 'TipoDocumento', 'Nombre', 'Apellido', 'telefonoUsuario', 'correoUsuario', 'Rol', 'Estado', 'acciones']"></tr>
     </table>
     <br>
     <button mat-raised-button (click)="goBack()">Volver a la lista</button>

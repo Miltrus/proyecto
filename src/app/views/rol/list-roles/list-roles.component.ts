@@ -18,9 +18,16 @@ export class ListRolesComponent implements OnInit{
   roles: RolInterface[] = [];
 
   ngOnInit(): void {
+    this.checkLocalStorage();
     this.api.getAllRoles().subscribe(data => {
       this.roles = data;
     })
+  }
+
+  checkLocalStorage() {
+    if(!localStorage.getItem('token')){
+      this.router.navigate(['login']);
+    }
   }
 
   editRol(id:any){

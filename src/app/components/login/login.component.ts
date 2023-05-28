@@ -4,11 +4,12 @@ import { LoginService } from '../../services/api/login/login.service';
 import { LoginInterface } from '../../models/login.interface';
 import { ResolveData, Router } from '@angular/router';
 import { ResponseInterface } from '../../models/response.interface';
+import { AlertsService } from '../../services/alerts/alerts.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit{
   
@@ -17,33 +18,28 @@ export class LoginComponent implements OnInit{
     contrasenaUsuario: new FormControl('', Validators.required)
   })
 
-  constructor(private api:LoginService, private router:Router) { }
+  constructor(private api:LoginService, private router:Router,private alerts: AlertsService) { }
 
-  errorStatus: boolean = false;
-  errorMsg: any = '';
-  hide = true;
+  loading = false;
 
   ngOnInit(): void {
-    /* this.checkLocalStorage(); */
+    
   }
 
-  /* checkLocalStorage() {
-    if(localStorage.getItem('token')){
-      this.router.navigate(['dashboard']);
-    }
-  } */
 
   onLogin(form: LoginInterface) {
     this.api.onLogin(form).subscribe(data => {
       let dataResponse: ResponseInterface = data;
       if (dataResponse.status == 'ok') {
-        localStorage.setItem("token", dataResponse.token);
-        this.router.navigate(['dashboard']);
-        console.log(dataResponse.token);
+        this.loading = true;
+        setTimeout(() => {
+          localStorage.setItem("token", dataResponse.token);
+          this.router.navigate(['dashboard']);
+          this.loading = false;
+        }, 500);
       }
       else {
-        this.errorStatus = true;
-        this.errorMsg = dataResponse.msj;
+        this.alerts.showError(dataResponse.msj, 'Error al iniciar sesión');
       }
     });
   }
