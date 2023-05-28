@@ -8,9 +8,11 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoginComponent } from './components/login/login.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 //Material
 import { MatIconModule } from '@angular/material/icon';
@@ -37,9 +39,11 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent,
     NavigationComponent,
     DialogConfirmComponent,
     LoadingComponent,
+    NotFoundComponent,
     routingComponents,
   ],
   imports: [

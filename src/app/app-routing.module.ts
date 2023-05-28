@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 import { ListRolesComponent } from './views/rol/list-roles/list-roles.component';
 import { NewRolComponent } from './views/rol/new-rol/new-rol.component';
@@ -57,6 +58,8 @@ const routes: Routes = [
   { path: 'list-paquetes', component: ListPaquetesComponent },
   { path: 'new-paquete', component: NewPaqueteComponent },
   { path: 'edit-paquete/:id', component: EditPaqueteComponent },
+
+  { path: '**', component: NotFoundComponent }, //pal not found
 ];
 
 @NgModule({
@@ -69,6 +72,7 @@ export const routingComponents = [
   LoginComponent,
   DashboardComponent,
   LandingPageComponent,
+  NotFoundComponent,
 
   ListRolesComponent,
   NewRolComponent,
