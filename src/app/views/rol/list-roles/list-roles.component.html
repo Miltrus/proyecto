@@ -1,7 +1,7 @@
 <app-navigation>
   <div class="container">
     <h1>Roles</h1>
-    <button mat-raised-button color="primary" (click)="newRol()">Create new usuario</button> 
+    <button mat-raised-button color="primary" (click)="newRol()">Crear nuevo rol</button>
     <br><br>
     <table mat-table class="mat-elevation-z8" [dataSource]="roles">
       <ng-container matColumnDef="num">
@@ -31,11 +31,11 @@
           </button>
         </td>
       </ng-container>
-    
+
       <tr mat-header-row *matHeaderRowDef="['num', 'idRol', 'nombreRol', 'descripcionRol', 'acciones']"></tr>
       <tr mat-row *matRowDef="let row; columns: ['num', 'idRol', 'nombreRol', 'descripcionRol', 'acciones']"></tr>
     </table>
     <br>
     <button mat-raised-button color='accent' (click)="goBack()">Volver a la lista</button>
   </div>
-  </app-navigation>
+</app-navigation>
