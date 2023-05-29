@@ -11,19 +11,19 @@ import { AlertsService } from '../../services/alerts/alerts.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit{
-  
+export class LoginComponent implements OnInit {
+
   loginForm = new FormGroup({
     correoUsuario: new FormControl('', Validators.required),
     contrasenaUsuario: new FormControl('', Validators.required)
   })
 
-  constructor(private api:LoginService, private router:Router,private alerts: AlertsService) { }
+  constructor(private api: LoginService, private router: Router, private alerts: AlertsService) { }
 
   loading = false;
 
   ngOnInit(): void {
-    
+
   }
 
 
@@ -42,5 +42,9 @@ export class LoginComponent implements OnInit{
         this.alerts.showError(dataResponse.msj, 'Error al iniciar sesión');
       }
     });
+  }
+
+  goBack() {
+    this.router.navigate(['landing-page']);
   }
 }
