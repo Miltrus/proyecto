@@ -32,7 +32,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatOptionModule } from '@angular/material/core';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -71,6 +71,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatDialogModule,
     MatOptionModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
