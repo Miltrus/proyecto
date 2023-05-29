@@ -3,50 +3,57 @@
     <h1>Clientes</h1>
     <button mat-raised-button color="primary" (click)="newCliente()">Crear nuevo cliente</button>
     <br><br>
-    <table mat-table class="mat-elevation-z8" [dataSource]="clientes">
-      <ng-container matColumnDef="num">
-        <th mat-header-cell *matHeaderCellDef>#</th>
-        <td mat-cell *matCellDef="let cliente; let i = index">{{ i + 1 }}</td>
-      </ng-container>
-      <ng-container matColumnDef="documentoCliente">
-        <th mat-header-cell *matHeaderCellDef>Documento</th>
-        <td mat-cell *matCellDef="let cliente">{{ cliente.documentoCliente }}</td>
-      </ng-container>
-      <ng-container matColumnDef="tipoDocumento">
-        <th mat-header-cell *matHeaderCellDef>Tipo documento</th>
-        <td mat-cell *matCellDef="let cliente">{{ cliente.idTipoDocumento }} - {{ getTipoDocumento(cliente.idTipoDocumento) }}</td>
-      </ng-container>
-      <ng-container matColumnDef="nombreCliente">
-        <th mat-header-cell *matHeaderCellDef>Nombre</th>
-        <td mat-cell *matCellDef="let cliente">{{ cliente.nombreCliente }}</td>
-      </ng-container>
-      <ng-container matColumnDef="telefonoCliente">
-        <th mat-header-cell *matHeaderCellDef>Teléfono</th>
-        <td mat-cell *matCellDef="let cliente">{{ cliente.telefonoCliente }}</td>
-      </ng-container>
-      <ng-container matColumnDef="correoCliente">
-        <th mat-header-cell *matHeaderCellDef>Correo</th>
-        <td mat-cell *matCellDef="let cliente">{{ cliente.correoCliente }}</td>
-      </ng-container>
-      <ng-container matColumnDef="direccionCliente">
-        <th mat-header-cell *matHeaderCellDef>Dirección</th>
-        <td mat-cell *matCellDef="let cliente">{{ cliente.direccionCliente }}</td>
-      </ng-container>
-      <ng-container matColumnDef="acciones">
-        <th mat-header-cell *matHeaderCellDef>Acciones</th>
-        <td mat-cell *matCellDef="let cliente">
-          <button mat-icon-button color="primary" (click)="editCliente(cliente.documentoCliente)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteCliente(cliente.documentoCliente)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="['num', 'documentoCliente', 'tipoDocumento', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['num', 'documentoCliente', 'tipoDocumento', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
-    </table>
+    <mat-form-field>
+      <mat-label>Filtro</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Juan" #input autocomplete="off">
+    </mat-form-field>
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="num">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let cliente; let i = index">{{ i + 1 }}</td>
+        </ng-container>
+        <ng-container matColumnDef="documentoCliente">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Documento</th>
+          <td mat-cell *matCellDef="let cliente">{{ cliente.documentoCliente }}</td>
+        </ng-container>
+        <ng-container matColumnDef="tipoDocumento">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo documento</th>
+          <td mat-cell *matCellDef="let cliente">{{ cliente.idTipoDocumento }} - {{ getTipoDocumento(cliente.idTipoDocumento) }}</td>
+        </ng-container>
+        <ng-container matColumnDef="nombreCliente">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+          <td mat-cell *matCellDef="let cliente">{{ cliente.nombreCliente }}</td>
+        </ng-container>
+        <ng-container matColumnDef="telefonoCliente">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
+          <td mat-cell *matCellDef="let cliente">{{ cliente.telefonoCliente }}</td>
+        </ng-container>
+        <ng-container matColumnDef="correoCliente">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Correo</th>
+          <td mat-cell *matCellDef="let cliente">{{ cliente.correoCliente }}</td>
+        </ng-container>
+        <ng-container matColumnDef="direccionCliente">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Dirección</th>
+          <td mat-cell *matCellDef="let cliente">{{ cliente.direccionCliente }}</td>
+        </ng-container>
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let cliente">
+            <button mat-icon-button color="primary" (click)="editCliente(cliente.documentoCliente)" matTooltip="Editar cliente">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteCliente(cliente.documentoCliente)" matTooltip="Eliminar cliente">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="['num', 'documentoCliente', 'tipoDocumento', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['num', 'documentoCliente', 'tipoDocumento', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements"></mat-paginator>
+    </div>
+    
     <br>
     <button mat-raised-button color='accent' (click)="goBack()">Volver a la lista</button>
   </div>
