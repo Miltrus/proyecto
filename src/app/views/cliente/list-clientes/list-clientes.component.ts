@@ -37,7 +37,7 @@ export class ListClientesComponent implements OnInit {
   ngOnInit(): void {
     this.checkLocalStorage();
 
-    this.api.getAllClientes().subscribe(data => {
+    this.api.getAllClientes().subscribe(data => { 
       this.clientes = data;
       this.dataSource.data = this.clientes; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
     });

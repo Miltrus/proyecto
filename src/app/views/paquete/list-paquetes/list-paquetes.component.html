@@ -14,23 +14,23 @@
         <th mat-header-cell *matHeaderCellDef>#</th>
         <td mat-cell *matCellDef="let paquete; let i = index">{{ i + 1 }}</td>
       </ng-container>
-      <ng-container matColumnDef="ID">
+      <ng-container matColumnDef="idPaquete">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
         <td mat-cell *matCellDef="let paquete">{{ paquete.idPaquete }}</td>
       </ng-container>
-      <ng-container matColumnDef="QR">
+      <ng-container matColumnDef="codigoQrPaquete">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>QR</th>
         <td mat-cell *matCellDef="let paquete">{{ paquete.codigoQrPaquete }}</td>
       </ng-container>
-      <ng-container matColumnDef="Mensajero">
+      <ng-container matColumnDef="documentoUsuario">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Mensajero</th>
         <td mat-cell *matCellDef="let paquete">{{ paquete.documentoUsuario }} - {{ getUsuarioPaquete (paquete.documentoUsuario) }}</td>
       </ng-container>
-      <ng-container matColumnDef="Destinatario">
+      <ng-container matColumnDef="documentoCliente">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Destinatario</th>
         <td mat-cell *matCellDef="let paquete">{{ paquete.documentoCliente }} - {{ getClientePaquete (paquete.documentoCliente) }}</td>
       </ng-container>
-      <ng-container matColumnDef="Estado">
+      <ng-container matColumnDef="idEstado">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
         <td mat-cell *matCellDef="let paquete">{{ paquete.idEstado }} - {{ getEstadoPaquete (paquete.idEstado) }}</td>
       </ng-container>
@@ -46,8 +46,8 @@
         </td>
       </ng-container>
   
-      <tr mat-header-row *matHeaderRowDef="['num', 'ID', 'QR', 'Mensajero', 'Destinatario', 'Estado', 'acciones']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['num', 'ID', 'QR', 'Mensajero', 'Destinatario', 'Estado', 'acciones']"></tr>
+      <tr mat-header-row *matHeaderRowDef="['num', 'idPaquete', 'codigoQrPaquete', 'documentoUsuario', 'documentoCliente', 'idEstado', 'acciones']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['num', 'idPaquete', 'codigoQrPaquete', 'documentoUsuario', 'documentoCliente', 'idEstado', 'acciones']"></tr>
     </table>
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements"></mat-paginator>
   </div>
