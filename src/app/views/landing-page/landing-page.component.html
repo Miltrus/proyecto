@@ -1,110 +1,66 @@
-<mat-toolbar color="primary">
-    <div class="brand">
-        <span>Star Routing</span>
-    </div>
-    <div class="spacer"></div>
-    <div class="login">
-        <button mat-button color="accent" (click)="login()">Iniciar sesión</button>
-    </div>
-</mat-toolbar>
-
-<div class=" container">
-
-    <br><br><br><br>
-
-    <div class="column">
-        <mat-card class="card-no-border">
-            <mat-card-header>
-                <mat-card-title style="font-size: 35px;">Te ayudamos a optimizar tus rutas</mat-card-title>
-            </mat-card-header>
-            <br><br>
-            <mat-card-content>
-                <div class="card-text">
-                    <p>El servicio de Star Routing está diseñado para reducir la cantidad de tiempo que toma
-                        planificar rutas.</p>
-                    <p>Además de poder brindar servicio a más clientes con un software planificador de rutas, tu
-                        empresa y/o conductores también ahorrarán gasolina, tiempo de conducción y reducirán su
-                        impacto ambiental.</p>
-                    <p>Para generar tus enrutamientos con Star Routing, simplemente tienes que escribir, copiar
-                        y
-                        pegar, o cargar la lista de clientes del día. Luego, selecciona el número de conductores
-                        y
-                        en menos de 10 segundos se generará la mejor ruta para ellos.</p>
-                </div>
-            </mat-card-content>
-            <mat-card-actions>
-                <div class="card-buttons">
-                    <a href="#contactenos" mat-raised-button color="primary">Contáctenos</a>
-                    ||
-                    <a href="#more" mat-button>Leer más</a>
-                </div>
-            </mat-card-actions>
-        </mat-card>
-    </div>
-
-    <br><br><br><br>
-
-    <div class="video-card">
-        <div class="video-background">
-            <video autoplay loop muted>
-                <source src="../../assets/videos/paisaje.mp4" type="video/mp4">
-            </video>
+<div class="landing-page">
+    <header>
+        <div class="container">
+            <a href="#" class="logo">Star <b>☆ </b>Routing</a>
+            <ul class="links">
+                <li><a (click)="scrollToInicio()">Inicio</a></li>
+                <li><a (click)="scrollToSobreNosotros()">Sobre nosotros</a></li>
+                <li><a (click)="scrollToContactenos()">Contáctanos</a></li>
+                <li><a (click)="login()">Iniciar sesión</a></li>
+            </ul>
+        </div>
+    </header>
+    <div class="content">
+        <div id="inicio" class="container">
+            <div class="info">
+                <h1>Simplifica tus entregas con Star Routing</h1>
+                <p>Incrementa la eficiencia en tus operaciones de entrega, reduce los costos logísticos y supera las
+                    expectativas de tus clientes con nuestro software de última generación. Únete a la comunidad de
+                    éxito de Star Routing y transforma tus rutas de reparto.</p>
+                <button>Contáctanos</button>
+            </div>
+            <div class="image">
+                <img src="https://i.postimg.cc/65QxYYzh/001234.png">
+            </div>
+        </div>
+        <div id="sobreNosotros" class="container">
+            <h1>Sobre nosotros</h1>
+            <p>Somos una empresa dedicada a brindar soluciones logísticas de última generación. Nuestro objetivo es
+                ayudar a mejorar la eficiencia en las operaciones de entrega y superar las expectativas de nuestros
+                clientes.</p>
+            <p>Con nuestro software avanzado, ofrecemos la capacidad de optimizar y transformar las rutas de
+                reparto, lo
+                que resulta en una reducción de los costos logísticos y una mayor satisfacción del cliente.</p>
+            <p>En Star Routing, nos enorgullece ser parte de una comunidad exitosa que comparte conocimientos y
+                experiencias para impulsar el crecimiento y la innovación en la industria de la logística.</p>
         </div>
     </div>
-
-    <br><br><br><br>
-
-    <mat-card id="contactenos" class="contactenos card-no-border">
-        <mat-card-header>
-            <mat-card-title>Contactenos</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <form class="custom-form">
-                <mat-form-field appearance="outline">
-                    <mat-label>Ingresa tu nombre</mat-label>
-                    <input matInput placeholder="Nombre">
-                    <mat-icon matSuffix>person</mat-icon>
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                    <mat-label>Ingresa tu apellido</mat-label>
-                    <input matInput placeholder="Apellido">
-                    <mat-icon matSuffix>people</mat-icon>
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                    <mat-label>Ingresa tu correo</mat-label>
-                    <input matInput placeholder="Correo electrónico">
-                    <mat-icon matSuffix>email</mat-icon>
-                </mat-form-field>
-            </form>
-        </mat-card-content>
-        <mat-card-actions class="center-button">
-            <button mat-raised-button color="primary">Enviar</button>
-        </mat-card-actions>
-    </mat-card>
-
-    <br><br><br><br>
-
-    <mat-card id="more" class="mobile-app-card card-no-border">
-        <mat-card-header>
-            <mat-card-title style="font-size: 35px;">Descarga nuestra aplicación
-                móvil</mat-card-title>
-        </mat-card-header>
-        <br>
-        <mat-card-content>
-            <div class="card-text">
-                <p>¡Lleva el poder de Star Routing en tu bolsillo! Descarga nuestra aplicación móvil y gestiona
-                    tus
-                    rutas en
-                    cualquier momento y en cualquier lugar.</p>
+    <div id="contactenos" class="container">
+        <h1>Contacte con nosotros</h1>
+        <form class="cf">
+            <div class="half left cf">
+                <input type="text" id="input-name" placeholder="Nombre">
+                <input type="email" id="input-email" placeholder="Correo electrónico">
             </div>
-        </mat-card-content>
-        <mat-card-actions class="center-button">
-            <div class="card-buttons">
-                <a href="link-de-descarga-de-la-aplicacion" mat-raised-button color="primary">
-                    <mat-icon>arrow_downward</mat-icon>Descargar</a>
+            <div class="half right cf">
+                <textarea name="message" type="text" id="input-message" placeholder="Mensaje"></textarea>
             </div>
-        </mat-card-actions>
-    </mat-card>
-
-    <br><br><br><br>
+            <input type="submit" value="Enviar" id="input-submit">
+        </form>
+    </div>
 </div>
+
+<br><br><br><br>
+
+<!-- Site footer -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <p class="copyright-text">Copyright &copy; 2024. Todos los Derechos Reservados por
+                    <a href="#">Star Routing</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

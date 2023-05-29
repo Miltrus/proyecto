@@ -10,6 +10,27 @@ export class LandingPageComponent {
 
   constructor(private router: Router) { }
 
+  scrollToInicio() {
+    const inicioElement = document.getElementById("inicio");
+    if (inicioElement) {
+      inicioElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  scrollToSobreNosotros() {
+    const sobreNosotrosElement = document.getElementById("sobreNosotros");
+    if (sobreNosotrosElement) {
+      sobreNosotrosElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  scrollToContactenos() {
+    const contactenosElement = document.getElementById("contactenos");
+    if (contactenosElement) {
+      contactenosElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   login() {
     this.router.navigate(['login']);
   }
