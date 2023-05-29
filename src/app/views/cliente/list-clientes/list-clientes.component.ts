@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ClienteService } from '../../../services/api/cliente/cliente.service';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
@@ -8,6 +8,10 @@ import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface'
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/dialog-confirm/dialog-confirm.component';
 import { LoadingComponent } from 'src/app/components/loading/loading.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+
 
 @Component({
   selector: 'app-list-clientes',
@@ -25,15 +29,27 @@ export class ListClientesComponent implements OnInit {
 
   clientes: ClienteInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
+  dataSource = new MatTableDataSource(this.clientes); //pal filtro
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
+  @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
 
   ngOnInit(): void {
+    this.checkLocalStorage();
+
     this.api.getAllClientes().subscribe(data => {
       this.clientes = data;
+      this.dataSource.data = this.clientes; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
     });
+
     this.api.getTipoDocumento().subscribe(data => {
       this.tiposDocumento = data;
     });
-    this.checkLocalStorage();
+  }
+
+  ngAfterViewInit() { //para la paginacion y el ordenamiento
+    this.dataSource.paginator = this.paginator; 
+    this.dataSource.sort = this.sort;
   }
 
   checkLocalStorage() {
@@ -61,10 +77,10 @@ export class ListClientesComponent implements OnInit {
       if (result) {
         this.api.deleteCliente(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
-
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El cliente ha sido eliminado exitosamente.', 'Eliminación Exitosa');
             this.clientes = this.clientes.filter(cliente => cliente.documentoCliente !== id);
+            this.dataSource.data = this.clientes; // Actualizar el dataSource con los nuevos datos
           } else {
             this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
           }
@@ -80,5 +96,10 @@ export class ListClientesComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['dashboard']);
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }

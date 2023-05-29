@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PaqueteService } from '../../../services/api/paquete/paquete.service';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
@@ -10,6 +10,9 @@ import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface'
 import { MatDialog } from '@angular/material/dialog';
 
 import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/dialog-confirm/dialog-confirm.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 
 @Component({
@@ -30,10 +33,16 @@ export class ListPaquetesComponent implements OnInit {
   usuario: UsuarioInterface[] = [];
   cliente: ClienteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
+  dataSource = new MatTableDataSource(this.paquetes); //pal filtro
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
+  @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
 
   ngOnInit(): void {
+    this.checkLocalStorage();
     this.api.getAllPaquetes().subscribe(data => {
       this.paquetes = data;
+      this.dataSource.data = this.paquetes; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de paquetes
     });
 
     this.api.getUsuario().subscribe(data => {
@@ -47,7 +56,11 @@ export class ListPaquetesComponent implements OnInit {
     this.api.getEstadoPaquete().subscribe(data => {
       this.estadosPaquete = data;
     });
-    this.checkLocalStorage();
+  }
+
+  ngAfterViewInit() { //para la paginacion
+    this.dataSource.paginator = this.paginator; 
+    this.dataSource.sort = this.sort;
   }
 
   checkLocalStorage() {
@@ -79,6 +92,7 @@ export class ListPaquetesComponent implements OnInit {
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El paquete ha sido eliminado exitosamente.', 'Eliminación Exitosa');
             this.paquetes = this.paquetes.filter(paquete => paquete.idPaquete !== id);
+            this.dataSource.data = this.paquetes; //actualizamos el datasource
           } else {
             this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
           }
@@ -105,5 +119,10 @@ export class ListPaquetesComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['dashboard']);
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }

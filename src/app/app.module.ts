@@ -35,7 +35,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 
-
 @NgModule({
   declarations: [
     AppComponent,
