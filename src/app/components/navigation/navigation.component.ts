@@ -59,7 +59,7 @@ export class NavigationComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.router.navigate(['login']);
+        this.router.navigate(['landing-page']);
         localStorage.removeItem('token');
 
         this.isDarkThemeActive = false;
