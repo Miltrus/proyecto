@@ -17,6 +17,10 @@ ul {
     margin: 0;
 }
 
+#estrella {
+    color: #5e35b1;
+}
+
 .container {
     padding-left: 15px;
     padding-right: 15px;
@@ -116,11 +120,11 @@ ul {
     border-radius: 20px;
     padding: 10px 20px;
     color: #FFF;
-    background-color: indigo;
+    background-color: #5e35b1;
 }
 
 .landing-page header .links li:not(:last-child):hover {
-    color: indigo;
+    color: #5e35b1;
 }
 
 .landing-page .content .container {
@@ -148,7 +152,7 @@ ul {
 }
 
 .landing-page .content .info h1 {
-    color: indigo;
+    color: #5e35b1;
     line-height: 1;
     font-size: 46px;
 }
@@ -167,7 +171,7 @@ ul {
     margin-top: 30px;
     cursor: pointer;
     color: #FFF;
-    background-color: indigo;
+    background-color: #5e35b1;
 }
 
 .landing-page .content .image img {
@@ -176,7 +180,7 @@ ul {
 
 #sobreNosotros h1 {
     font-size: 28px;
-    color: indigo;
+    color: #5e35b1;
 }
 
 #sobreNosotros p {
@@ -189,7 +193,7 @@ ul {
 #contactenos h1 {
     text-align: center;
     font-size: 28px;
-    color: indigo;
+    color: #5e35b1;
 }
 
 form {
@@ -209,17 +213,17 @@ form {
         resize: none;
 
         &:focus {
-            box-shadow: 0 0 0 2px rgba($color: indigo, $alpha: 1) !important;
+            box-shadow: 0 0 0 2px rgba($color: #5e35b1, $alpha: 1) !important;
         }
 
         #input-sumbit {
             color: white;
-            background: indigo;
+            background: #5e35b1;
             cursor: pointer;
         }
 
         &:hover {
-            box-shadow: (0 1px 1px 1px rgba($color: indigo, $alpha: 0.6));
+            box-shadow: (0 1px 1px 1px rgba($color: #5e35b1, $alpha: 0.6));
         }
 
         textarea {
@@ -273,7 +277,7 @@ form {
 }
 
 .site-footer a:hover {
-    color: #3366cc;
+    color: #5e35b1;
     text-decoration: none;
 }
 
