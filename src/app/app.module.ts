@@ -74,6 +74,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatDialogModule,
     MatOptionModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
+    MatSlideToggleModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

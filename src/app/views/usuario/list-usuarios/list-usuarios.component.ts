@@ -30,7 +30,7 @@ export class ListUsuariosComponent implements OnInit {
 
   usuarios: UsuarioInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
-  estadosUsuario: EstadoUsuarioInterface[] = [];
+  estadosUsuario: EstadoUsuarioInterface[] = [];  
   rolUsuario: RolInterface[] = [];
   dataSource = new MatTableDataSource(this.usuarios); //pal filtro
 
