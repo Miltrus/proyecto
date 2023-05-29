@@ -1,4 +1,4 @@
-
+<app-navigation>
 
 <div class="container">
     <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)">
@@ -26,8 +26,9 @@
         </div>
         <br><br/> 
         
-        <button type="button" class="btn btn-secondary" (click)="goBack()">Atras</button> |
-        <button type="submit" class="btn btn-success" >Guardar</button>
+        <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button>
+        <button type="submit" mat-raised-button color="primary" >Guardar</button>
         
     </form>
 </div>
+</app-navigation>
