@@ -1,9 +1,13 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { ModuloService } from '../../../services/api/modulo/modulo.service';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from 'src/app/models/response.interface';
 import { ModuloInterface } from 'src/app/models/modulo.interface';
+
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 
 @Component({
@@ -16,12 +20,23 @@ export class ListModulosComponent implements OnInit{
   constructor(private api:ModuloService, private router:Router, private alerts:AlertsService) {  }
 
   modulos: ModuloInterface[] = [];
+  dataSource = new MatTableDataSource(this.modulos);
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
+  @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
 
   ngOnInit(): void {
-    this.api.getAllModulos().subscribe(data => {
-      this.modulos = data;
-    });
     this.checkLocalStorage();
+    
+    this.api.getAllModulos().subscribe(data => { 
+      this.modulos = data;
+      this.dataSource.data = this.modulos; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
+    });
+  }
+
+  ngAfterViewInit() { //para la paginacion y el ordenamiento
+    this.dataSource.paginator = this.paginator; 
+    this.dataSource.sort = this.sort;
   }
 
   checkLocalStorage() {
@@ -52,6 +67,11 @@ export class ListModulosComponent implements OnInit{
       }
       });
     }
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   goBack(){

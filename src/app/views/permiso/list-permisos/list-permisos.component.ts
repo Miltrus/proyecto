@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { PermisoService } from '../../../services/api/permiso/permiso.service';
 import { ModuloService } from '../../../services/api/modulo/modulo.service';
 import { Router } from '@angular/router';
@@ -6,6 +6,9 @@ import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from 'src/app/models/response.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { ModuloInterface } from 'src/app/models/modulo.interface';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 
 @Component({
@@ -19,15 +22,23 @@ export class ListPermisosComponent implements OnInit{
 
   permisos: PermisoInterface[] = [];
   modulos: ModuloInterface[] = [];
+  dataSource = new MatTableDataSource(this.permisos);
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
+  @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
 
   ngOnInit(): void {
     this.checkLocalStorage();
-    this.api.getAllPermisos().subscribe(data => {
+    
+    this.api.getAllPermisos().subscribe(data => { 
       this.permisos = data;
-    })
-    this.moduloService.getAllModulos().subscribe(data => {
-      this.modulos = data;
+      this.dataSource.data = this.permisos; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
     });
+  }
+
+  ngAfterViewInit() { //para la paginacion y el ordenamiento
+    this.dataSource.paginator = this.paginator; 
+    this.dataSource.sort = this.sort;
   }
 
   checkLocalStorage() {
@@ -63,6 +74,11 @@ export class ListPermisosComponent implements OnInit{
   getNameModulo(idModulo: any): string {
     const modulo = this.modulos.find(modulo => modulo.idModulo === idModulo);
     return modulo?.modulo ?? '';
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   
 

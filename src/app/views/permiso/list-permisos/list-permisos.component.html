@@ -1,28 +1,37 @@
+<app-navigation>
 
+  <div class="container">
+    <h1>Permisos</h1>
+    <br><br>
+    <mat-form-field>
+      <mat-label>Filtro</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Juan" #input autocomplete="off">
+    </mat-form-field>
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="num">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let permiso; let i = index">{{ i + 1 }}</td>
+        </ng-container>
+        <ng-container matColumnDef="idPermiso">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <td mat-cell *matCellDef="let permiso">{{ permiso.idPermiso }}</td>
+        </ng-container>
+        <ng-container matColumnDef="nombrePermiso">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Permiso</th>
+          <td mat-cell *matCellDef="let permiso">{{ permiso.nombrePermiso }}</td>
+        </ng-container>
+        <ng-container matColumnDef="idModulo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Modulo</th>
+          <td mat-cell *matCellDef="let permiso">{{ permiso.idModulo }} - {{ getNameModulo(permiso.idModulo) }}</td>
+        </ng-container>
 
-<div class="container">
-  <h1>Permisos</h1>
-  <button type="button" class="btn btn-success" (click)="newPermiso()">Create new permiso</button> <br><br>
-  <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">ID</th>
-          <th scope="col">Permiso</th>
-          <th scope="col">Modulo</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr *ngFor="let permiso of permisos">
-            <th scope="row">{{ permiso.idPermiso }}</th>
-            <td>{{ permiso.nombrePermiso }}</td>
-            <td>{{ permiso.idModulo }} - {{ getNameModulo(permiso.idModulo) }}</td>
-            <td>
-              <button type="button" class="btn btn-info" (click)="editPermiso(permiso.idPermiso)">Edit</button> |
-              <button class="btn btn-danger" (click)="deletePermiso(permiso.idPermiso)">Delete</button>
-            </td>
-          </tr>
-      </tbody>
-  </table><br>
-  <button type="button" class="btn btn-secondary" (click)="goBack()">Volver a la lista</button>
-</div>
+        <tr mat-header-row *matHeaderRowDef="['num', 'idPermiso', 'nombrePermiso', 'idModulo']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['num', 'idPermiso', 'nombrePermiso', 'idModulo']"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements"></mat-paginator>
+    </div>
+    <br>
+    <button mat-raised-button color='accent' (click)="goBack()">Volver a la lista</button>
+  </div>
+  </app-navigation>
