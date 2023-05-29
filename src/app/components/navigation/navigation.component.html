@@ -19,6 +19,11 @@
       </button>
       <span>star-routing</span>
       <span class="spacer"></span>
+
+      <mat-slide-toggle mat-icon-slide (ngModelChange)="onChange($event)" [(ngModel)]="isDarkThemeActive">
+        
+      </mat-slide-toggle>
+
       <button mat-icon-button color="danger" aria-label="Cerrar sesión" (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>
       </button>

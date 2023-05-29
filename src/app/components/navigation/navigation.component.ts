@@ -5,6 +5,8 @@ import { map, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent, ConfirmDialogData } from '../dialog-confirm/dialog-confirm.component';
+import { DOCUMENT } from '@angular/common';
+
 
 @Component({
   selector: 'app-navigation',
@@ -14,7 +16,23 @@ import { DialogConfirmComponent, ConfirmDialogData } from '../dialog-confirm/dia
 export class NavigationComponent {
   private breakpointObserver = inject(BreakpointObserver);
 
-  constructor(private router: Router, private dialog: MatDialog) { }
+  constructor(@Inject(DOCUMENT) private document: Document, private router: Router, private dialog: MatDialog) { }
+
+  ngOnInit(): void {
+    // Verificar si el modo oscuro está activo al iniciar el componente
+    const isDarkModeActive = this.document.body.classList.contains('dark-mode');
+    this.isDarkThemeActive = isDarkModeActive;
+  }
+
+  isDarkThemeActive = false;
+
+  onChange(newValue: boolean): void {
+    if (newValue) {
+      this.document.body.classList.add('dark-mode');
+    } else {
+      this.document.body.classList.remove('dark-mode');
+    }
+  };
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -43,6 +61,9 @@ export class NavigationComponent {
       if (result) {
         this.router.navigate(['login']);
         localStorage.removeItem('token');
+
+        this.isDarkThemeActive = false;
+        this.document.body.classList.remove('dark-mode');
       }
     });
   }
