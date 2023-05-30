@@ -1,0 +1,45 @@
+<app-navigation>
+    <div class="container">
+      <h1>Entregas</h1>
+      <!-- <button mat-raised-button color="primary" (click)="newCliente()">Crear nuevo cliente</button> -->
+      <br><br>
+      <mat-form-field>
+        <mat-label>Filtro</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Juan" #input autocomplete="off">
+      </mat-form-field>
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="num">
+            <th mat-header-cell *matHeaderCellDef>#</th>
+            <td mat-cell *matCellDef="let entrega; let i = index">{{ i + 1 }}</td>
+          </ng-container>
+          <ng-container matColumnDef="firmaDestinatario">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Firma</th>
+            <td mat-cell *matCellDef="let entrega">{{ entrega.firmaDestinatario }}</td>
+          </ng-container>
+          <ng-container matColumnDef="fechaEntrega">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
+            <td mat-cell *matCellDef="let entrega">{{ entrega.fechaEntrega }}</td>
+          </ng-container>
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let entrega"><!-- 
+              <button mat-icon-button color="primary" (click)="editCliente(cliente.documentoCliente)" matTooltip="Editar cliente">
+                <mat-icon>edit</mat-icon>
+              </button> -->
+              <button mat-icon-button color="warn" (click)="deleteEntrega(entrega.idEntrega)" matTooltip="Eliminar entrega">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['num', 'firmaDestinatario', 'fechaEntrega', 'acciones']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['num', 'firmaDestinatario', 'fechaEntrega', 'acciones']"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements"></mat-paginator>
+      </div>
+      
+      <br>
+      <button mat-raised-button color='accent' (click)="goBack()">Volver a la lista</button>
+    </div>
+  </app-navigation>
+  

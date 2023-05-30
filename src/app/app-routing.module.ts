@@ -29,6 +29,8 @@ import { ListPaquetesComponent } from './views/paquete/list-paquetes/list-paquet
 import { NewPaqueteComponent } from './views/paquete/new-paquete/new-paquete.component';
 import { EditPaqueteComponent } from './views/paquete/edit-paquete/edit-paquete.component';
 
+import { ListEntregasComponent } from './views/entrega/list-entregas/list-entregas.component';
+
 const routes: Routes = [
   { path: '', redirectTo: 'landing-page', pathMatch: 'full' }, //ruta x defecto
   { path: 'login', component: LoginComponent },
@@ -58,6 +60,8 @@ const routes: Routes = [
   { path: 'list-paquetes', component: ListPaquetesComponent },
   { path: 'new-paquete', component: NewPaqueteComponent },
   { path: 'edit-paquete/:id', component: EditPaqueteComponent },
+
+  { path: 'list-entregas', component: ListEntregasComponent },
 
   { path: '**', component: NotFoundComponent }, //pal not found
 ];
@@ -97,4 +101,6 @@ export const routingComponents = [
   ListPaquetesComponent,
   NewPaqueteComponent,
   EditPaqueteComponent,
+
+  ListEntregasComponent,
 ]

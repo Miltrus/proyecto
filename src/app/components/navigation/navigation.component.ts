@@ -46,7 +46,8 @@ export class NavigationComponent {
     { name: 'Permisos', route: '/list-permisos' },
     { name: 'Clientes', route: '/list-clientes' },
     { name: 'Usuarios', route: '/list-usuarios' },
-    { name: 'Paquetes', route: '/list-paquetes' }
+    { name: 'Paquetes', route: '/list-paquetes' },
+    { name: 'Entretayh5mhmj5tfgmhjmg5tht', route: '/list-entregas' }
   ]
 
   logout(): void {

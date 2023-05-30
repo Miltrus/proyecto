@@ -34,6 +34,7 @@ import { MatOptionModule } from '@angular/material/core';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ListEntregasComponent } from './views/entrega/list-entregas/list-entregas.component';
 
 
 
