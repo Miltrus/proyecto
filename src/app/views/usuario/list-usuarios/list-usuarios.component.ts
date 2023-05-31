@@ -125,6 +125,10 @@ export class ListUsuariosComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  clearFilter() {
+    this.dataSource.filter = '';
+  }
+
 
   toggleEstado(usuario: UsuarioInterface): void {
     const nuevoEstado = parseInt(usuario.idEstado, 10) === 1 ? 2 : 1;
@@ -133,7 +137,7 @@ export class ListUsuariosComponent implements OnInit {
   
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
       data: {
-        message: `¿Estás seguro de que deseas cambiar el estado del usuario a ${nuevoEstado}?`
+        message: `¿Estás seguro de que deseas cambiar el estado del usuario?`
       }
     });
   
@@ -150,7 +154,11 @@ export class ListUsuariosComponent implements OnInit {
             this.alerts.showError(respuesta.msj, 'Error en la Actualización');
           }
         });
+      }else {
+        usuario.idEstado = usuario.idEstado;
+        this.dataSource.data = this.usuarios;
       }
     });
   }
+  
 }
