@@ -155,8 +155,7 @@ export class ListUsuariosComponent implements OnInit {
           }
         });
       }else {
-        usuario.idEstado = usuario.idEstado;
-        this.dataSource.data = this.usuarios;
+        this.alerts.showError('No se ha realizado ningún cambio.', 'Actualización Cancelada');
       }
     });
   }
