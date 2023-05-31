@@ -16,7 +16,7 @@ import { MatSort } from '@angular/material/sort';
 
 
 @Component({
-  selector: 'app-list-clientes',
+  selector: 'app-list-usuarios',
   templateUrl: './list-usuarios.component.html',
   styleUrls: ['./list-usuarios.component.scss']
 })
@@ -44,10 +44,6 @@ export class ListUsuariosComponent implements OnInit {
       this.usuarios = data;
       this.dataSource.data = this.usuarios; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
     });
-
-    
-
-  
 
     this.api.getTipoDocumento().subscribe(data => {
       this.tiposDocumento = data;
@@ -129,9 +125,11 @@ export class ListUsuariosComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+
   toggleEstado(usuario: UsuarioInterface): void {
-    const nuevoEstado = usuario.idEstado === '1' ? '2' : '1';
-    const updatedUsuario: UsuarioInterface = { ...usuario, idEstado: nuevoEstado };
+    const nuevoEstado = parseInt(usuario.idEstado, 10) === 1 ? 2 : 1;
+    const { contrasenaUsuario, ...userWithOutPwd } = usuario;
+    const updatedUsuario: UsuarioInterface = { ...userWithOutPwd, idEstado: nuevoEstado };
   
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
       data: {
@@ -143,27 +141,16 @@ export class ListUsuariosComponent implements OnInit {
       if (result) {
         this.api.putUsuario(updatedUsuario).subscribe(data => {
           let respuesta: ResponseInterface = data;
+          
           if (respuesta.status === 'ok') {
             this.alerts.showSuccess('El estado del usuario ha sido actualizado exitosamente.', 'Actualización Exitosa');
             this.usuarios = this.usuarios.map(u => (u.documentoUsuario === updatedUsuario.documentoUsuario ? updatedUsuario : u));
             this.dataSource.data = this.usuarios; // actualizamos el datasource
           } else {
             this.alerts.showError(respuesta.msj, 'Error en la Actualización');
-            usuario.idEstado = usuario.idEstado === '1' ? '2' : '1'; // Revertir el cambio en el estado del toggle
           }
         });
-      } else {
-        usuario.idEstado = usuario.idEstado; // No se realiza ningún cambio, se mantiene el estado actual del toggle
       }
-      // Restablecer el estado del toggle a su valor original después de que se cierre el cuadro de diálogo
-      setTimeout(() => {
-        this.dataSource.data = [...this.dataSource.data];
-      });
     });
   }
-  
-  
-  
-  
-  
 }

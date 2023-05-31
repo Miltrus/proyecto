@@ -6,6 +6,6 @@ export interface UsuarioInterface {
     correoUsuario?: string | null | undefined;
     telefonoUsuario?: string | null | undefined;
     contrasenaUsuario?: string | null | undefined;
-    idEstado?: string | null | undefined;
+    idEstado?: any | null | undefined;
     idRol?: string | null | undefined;
 }
