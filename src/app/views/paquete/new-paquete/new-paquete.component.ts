@@ -9,6 +9,7 @@ import { ResponseInterface } from '../../../models/response.interface';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-new-paquete',
@@ -17,7 +18,7 @@ import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface'
 })
 export class NewPaqueteComponent implements OnInit{
 
-  constructor(private router:Router, private api:PaqueteService, private alerts:AlertsService) { }
+  constructor(private router:Router, private api:PaqueteService, private alerts:AlertsService, private auth: LoginComponent) { }
 
   newForm = new FormGroup({
     codigoQrPaquete: new FormControl(''),
@@ -31,16 +32,10 @@ export class NewPaqueteComponent implements OnInit{
     estadosPaquete: EstadoPaqueteInterface[] = [];
 
   ngOnInit(): void {
-    this.checkLocalStorage();
+    this.auth.checkLocalStorage();
     this.getUsuarioPaquete();
     this.getClientePaquete();
     this.getEstadoPaquete();
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
   }
 
   postForm(form: PaqueteInterface){

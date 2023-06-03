@@ -13,6 +13,7 @@ import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/d
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class ListPaquetesComponent implements OnInit {
     private api: PaqueteService,
     private router: Router,
     private alerts: AlertsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private auth: LoginComponent,
   ) { }
 
   paquetes: PaqueteInterface[] = [];
@@ -39,7 +41,7 @@ export class ListPaquetesComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
 
   ngOnInit(): void {
-    this.checkLocalStorage();
+    this.auth.checkLocalStorage();
     this.api.getAllPaquetes().subscribe(data => {
       this.paquetes = data;
       this.dataSource.data = this.paquetes; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de paquetes
@@ -62,13 +64,6 @@ export class ListPaquetesComponent implements OnInit {
     this.dataSource.paginator = this.paginator; 
     this.dataSource.sort = this.sort;
   }
-
-  checkLocalStorage() {
-    if (!localStorage.getItem('token')) {
-      this.router.navigate(['login']);
-    }
-  }
-
   editPaquete(id: any) {
     this.router.navigate(['edit-paquete', id]);
   }

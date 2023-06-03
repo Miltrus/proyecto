@@ -8,6 +8,7 @@ import { PermisoInterface } from '../../../models/permiso.interface';
 import { ModuloInterface } from '../../../models/modulo.interface';
 import { ModuloService } from '../../../services/api/modulo/modulo.service';
 import { ResponseInterface } from '../../../models/response.interface';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-new-permiso',
@@ -16,7 +17,12 @@ import { ResponseInterface } from '../../../models/response.interface';
 })
 export class NewPermisoComponent implements OnInit{
 
-  constructor(private router:Router, private api:PermisoService, private alerts:AlertsService, private moduloService: ModuloService) { }
+  constructor(
+    private router:Router, 
+    private api:PermisoService, 
+    private alerts:AlertsService,
+    private auth: LoginComponent,
+    ) { }
 
   newForm = new FormGroup({
     idPermiso: new FormControl(''),
@@ -27,14 +33,8 @@ export class NewPermisoComponent implements OnInit{
   modulos: ModuloInterface[] = [];
 
   ngOnInit(): void {
-    this.checkLocalStorage();
+    this.auth.checkLocalStorage();
     this.getModulos();
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
   }
 
   postForm(form: PermisoInterface){
@@ -51,7 +51,7 @@ export class NewPermisoComponent implements OnInit{
   }
 
   getModulos(): void {
-    this.moduloService.getAllModulos().subscribe(
+    this.api.getModulo().subscribe(
       (data: ModuloInterface[]) => {
         this.modulos = data;
       },

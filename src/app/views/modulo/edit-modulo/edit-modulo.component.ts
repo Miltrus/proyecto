@@ -5,6 +5,7 @@ import { ModuloService } from '../../../services/api/modulo/modulo.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-edit-modulo',
@@ -13,7 +14,13 @@ import { ResponseInterface } from '../../../models/response.interface';
 })
 export class EditModuloComponent implements OnInit{
 
-  constructor(private router:Router, private activatedRouter:ActivatedRoute, private api:ModuloService, private alerts:AlertsService) { }
+  constructor(
+    private router:Router, 
+    private activatedRouter:ActivatedRoute, 
+    private api:ModuloService, 
+    private alerts:AlertsService,
+    private auth:LoginComponent,
+  ) { }
 
   dataModulo: ModuloInterface[] = [];
   editForm = new FormGroup({
@@ -22,6 +29,7 @@ export class EditModuloComponent implements OnInit{
   })
 
   ngOnInit(): void {
+    this.auth.checkLocalStorage();
     let idModulo = this.activatedRouter.snapshot.paramMap.get('id');
     this.api.getOneModulo(idModulo).subscribe(data => {
       this.dataModulo = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
@@ -30,13 +38,6 @@ export class EditModuloComponent implements OnInit{
         'modulo': this.dataModulo[0]?.modulo || '',
       });
     })
-    this.checkLocalStorage();
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
   }
 
   postForm(id: any){

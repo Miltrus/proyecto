@@ -12,7 +12,7 @@ import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/d
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 
 @Component({
@@ -26,7 +26,8 @@ export class ListUsuariosComponent implements OnInit {
     private api: UsuarioService,
     private router: Router,
     private alerts: AlertsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private auth: LoginComponent
   ) { }
 
   usuarios: UsuarioInterface[] = [];
@@ -39,7 +40,7 @@ export class ListUsuariosComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
 
   ngOnInit(): void {
-    this.checkLocalStorage();
+    this.auth.checkLocalStorage();
     this.api.getAllUsuarios().subscribe(data => {
       this.usuarios = data;
       this.dataSource.data = this.usuarios; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
@@ -62,12 +63,7 @@ export class ListUsuariosComponent implements OnInit {
     this.dataSource.paginator = this.paginator; 
     this.dataSource.sort = this.sort;
   }
-
-  checkLocalStorage() {
-    if (!localStorage.getItem('token')) {
-      this.router.navigate(['login']);
-    }
-  }
+  
 
   editUsuario(id: any) {
     this.router.navigate(['edit-usuario', id]);

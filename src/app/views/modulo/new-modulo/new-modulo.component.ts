@@ -6,6 +6,7 @@ import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ModuloService } from '../../../services/api/modulo/modulo.service';
 import { ModuloInterface } from '../../../models/modulo.interface';
 import { ResponseInterface } from '../../../models/response.interface';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-new-modulo',
@@ -14,7 +15,7 @@ import { ResponseInterface } from '../../../models/response.interface';
 })
 export class NewModuloComponent implements OnInit{
 
-  constructor(private router:Router, private api:ModuloService, private alerts:AlertsService) { }
+  constructor(private router:Router, private api:ModuloService, private alerts:AlertsService, private auth: LoginComponent) { }
 
   newForm = new FormGroup({
     idModulo: new FormControl(''),
@@ -22,13 +23,7 @@ export class NewModuloComponent implements OnInit{
   })
 
   ngOnInit(): void {
-    this.checkLocalStorage();
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
+    this.auth.checkLocalStorage();
   }
 
   postForm(form: ModuloInterface){

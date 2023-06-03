@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from 'src/app/models/response.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 
 @Component({
@@ -13,21 +14,15 @@ import { RolInterface } from 'src/app/models/rol.interface';
 })
 export class ListRolesComponent implements OnInit{
 
-  constructor(private api:RolService, private router:Router, private alerts:AlertsService) {  }
+  constructor(private api:RolService, private router:Router, private alerts:AlertsService, private auth: LoginComponent) {  }
 
   roles: RolInterface[] = [];
 
   ngOnInit(): void {
-    this.checkLocalStorage();
+    this.auth.checkLocalStorage();
     this.api.getAllRoles().subscribe(data => {
       this.roles = data;
     })
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
   }
 
   editRol(id:any){

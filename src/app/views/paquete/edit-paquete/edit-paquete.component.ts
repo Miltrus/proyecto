@@ -10,6 +10,7 @@ import { PaqueteService } from '../../../services/api/paquete/paquete.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-edit-paquete',
@@ -18,7 +19,13 @@ import { ResponseInterface } from '../../../models/response.interface';
 })
 export class EditPaqueteComponent implements OnInit {
 
-  constructor(private router: Router, private activatedRouter: ActivatedRoute, private api: PaqueteService, private alerts: AlertsService) { }
+  constructor(
+    private router: Router, 
+    private activatedRouter: ActivatedRoute, 
+    private api: PaqueteService, 
+    private alerts: AlertsService,
+    private auth: LoginComponent,
+    ) { }
 
   editForm = new FormGroup({
     idPaquete: new FormControl(''),
@@ -34,6 +41,8 @@ export class EditPaqueteComponent implements OnInit {
   estadosPaquete: EstadoPaqueteInterface[] = [];
 
   ngOnInit(): void {
+    this.auth.checkLocalStorage();
+
     let idPaquete = this.activatedRouter.snapshot.paramMap.get('id');
     this.api.getOnePaquete(idPaquete).subscribe(data => {
       this.dataPaquete = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
@@ -46,16 +55,9 @@ export class EditPaqueteComponent implements OnInit {
       });
 
     });
-    this.checkLocalStorage();
     this.getUsuarioPaquete();
     this.getClientePaquete();
     this.getEstadoPaquete();
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
   }
 
   postForm(id: any) {

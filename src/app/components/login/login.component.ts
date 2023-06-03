@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
       if (dataResponse.status == 'ok') {
         this.loading = true;
         setTimeout(() => {
+          this.alerts.showSuccess('Inicio de sesión exitoso', 'Bienvenido');
           localStorage.setItem("token", dataResponse.token);
           this.router.navigate(['dashboard']);
           this.loading = false;
@@ -43,6 +44,24 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+
+  checkLocalStorage() {
+    let token = localStorage.getItem('token');
+    if (!token) {
+      this.alerts.showError('Por favor inicie sesión nuevamente', 'Su sesión ha expirado');
+      this.router.navigate(['login']);
+    } else {
+      const tokenDate = JSON.parse(atob(token.split('.')[1]));
+      const expirationDate = new Date(tokenDate.exp * 1000);
+  
+      if (expirationDate < new Date()) {
+        localStorage.removeItem('token');
+        this.alerts.showError('Por favor inicie sesión nuevamente', 'Su sesión ha expirado');
+        this.router.navigate(['login']);
+      }
+    }
+  }
+  
 
   goBack() {
     this.router.navigate(['landing-page']);

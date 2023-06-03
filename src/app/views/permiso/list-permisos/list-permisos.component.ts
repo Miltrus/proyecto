@@ -9,6 +9,7 @@ import { ModuloInterface } from 'src/app/models/modulo.interface';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 
 @Component({
@@ -18,7 +19,12 @@ import { MatSort } from '@angular/material/sort';
 })
 export class ListPermisosComponent implements OnInit{
 
-  constructor(private api:PermisoService, private router:Router, private alerts:AlertsService, private moduloService:ModuloService) {  }
+  constructor(
+    private api:PermisoService, 
+    private router:Router, 
+    private alerts:AlertsService,
+    private auth: LoginComponent
+  ) {  }
 
   permisos: PermisoInterface[] = [];
   modulos: ModuloInterface[] = [];
@@ -28,7 +34,7 @@ export class ListPermisosComponent implements OnInit{
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
 
   ngOnInit(): void {
-    this.checkLocalStorage();
+    this.auth.checkLocalStorage();
     
     this.api.getAllPermisos().subscribe(data => { 
       this.permisos = data;
@@ -39,12 +45,6 @@ export class ListPermisosComponent implements OnInit{
   ngAfterViewInit() { //para la paginacion y el ordenamiento
     this.dataSource.paginator = this.paginator; 
     this.dataSource.sort = this.sort;
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
   }
 
   editPermiso(id:any){

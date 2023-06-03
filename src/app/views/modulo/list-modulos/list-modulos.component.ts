@@ -8,6 +8,7 @@ import { ModuloInterface } from 'src/app/models/modulo.interface';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { MatSort } from '@angular/material/sort';
 })
 export class ListModulosComponent implements OnInit{
 
-  constructor(private api:ModuloService, private router:Router, private alerts:AlertsService) {  }
+  constructor(private api:ModuloService, private router:Router, private alerts:AlertsService, private auth:LoginComponent) {  }
 
   modulos: ModuloInterface[] = [];
   dataSource = new MatTableDataSource(this.modulos);
@@ -26,7 +27,7 @@ export class ListModulosComponent implements OnInit{
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
 
   ngOnInit(): void {
-    this.checkLocalStorage();
+    this.auth.checkLocalStorage();
     
     this.api.getAllModulos().subscribe(data => { 
       this.modulos = data;
@@ -37,12 +38,6 @@ export class ListModulosComponent implements OnInit{
   ngAfterViewInit() { //para la paginacion y el ordenamiento
     this.dataSource.paginator = this.paginator; 
     this.dataSource.sort = this.sort;
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
   }
 
   editModulo(id:any){

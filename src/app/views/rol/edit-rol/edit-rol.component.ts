@@ -5,6 +5,7 @@ import { RolService } from '../../../services/api/rol/rol.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-edit-rol',
@@ -13,7 +14,13 @@ import { ResponseInterface } from '../../../models/response.interface';
 })
 export class EditRolComponent implements OnInit{
 
-  constructor(private router:Router, private activatedRouter:ActivatedRoute, private api:RolService, private alerts:AlertsService) { }
+  constructor(
+    private router:Router, 
+    private activatedRouter:ActivatedRoute, 
+    private api:RolService, 
+    private alerts:AlertsService,
+    private auth: LoginComponent,
+    ) { }
 
   dataRol: RolInterface[] = [];
   editForm = new FormGroup({
@@ -23,6 +30,8 @@ export class EditRolComponent implements OnInit{
   })
 
   ngOnInit(): void {
+    this.auth.checkLocalStorage();
+
     let idRol = this.activatedRouter.snapshot.paramMap.get('id');
     this.api.getOneRol(idRol).subscribe(data => {
       this.dataRol = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
@@ -32,13 +41,6 @@ export class EditRolComponent implements OnInit{
         'descripcionRol': this.dataRol[0]?.descripcionRol || '',
       });
     })
-    this.checkLocalStorage();
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
   }
 
   postForm(id: any){

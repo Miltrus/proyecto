@@ -11,6 +11,7 @@ import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 
 @Component({
@@ -24,7 +25,8 @@ export class ListClientesComponent implements OnInit {
     private api: ClienteService,
     private router: Router,
     private alerts: AlertsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private auth: LoginComponent,
   ) { }
 
   clientes: ClienteInterface[] = [];
@@ -35,7 +37,7 @@ export class ListClientesComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
 
   ngOnInit(): void {
-    this.checkLocalStorage();
+    this.auth.checkLocalStorage();
 
     this.api.getAllClientes().subscribe(data => { 
       this.clientes = data;
@@ -50,12 +52,6 @@ export class ListClientesComponent implements OnInit {
   ngAfterViewInit() { //para la paginacion y el ordenamiento
     this.dataSource.paginator = this.paginator; 
     this.dataSource.sort = this.sort;
-  }
-
-  checkLocalStorage() {
-    if (!localStorage.getItem('token')) {
-      this.router.navigate(['login']);
-    }
   }
 
   editCliente(id: any) {

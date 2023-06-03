@@ -8,6 +8,7 @@ import { ClienteService } from '../../../services/api/cliente/cliente.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-edit-cliente',
@@ -16,7 +17,13 @@ import { ResponseInterface } from '../../../models/response.interface';
 })
 export class EditClienteComponent implements OnInit{
 
-  constructor(private router:Router, private activatedRouter:ActivatedRoute, private api:ClienteService, private alerts:AlertsService) { }
+  constructor(
+    private router:Router, 
+    private activatedRouter:ActivatedRoute, 
+    private api:ClienteService,
+    private alerts:AlertsService,
+    private auth:LoginComponent
+  ) { }
 
   dataCliente: ClienteInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
@@ -31,6 +38,7 @@ export class EditClienteComponent implements OnInit{
   })
 
   ngOnInit(): void {
+    this.auth.checkLocalStorage();
     let documentoCliente = this.activatedRouter.snapshot.paramMap.get('id');
     this.api.getOneCliente(documentoCliente).subscribe(data => {
       this.dataCliente = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
@@ -44,13 +52,6 @@ export class EditClienteComponent implements OnInit{
       });
     })
     this.getTiposDocumento();
-    this.checkLocalStorage();
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
   }
 
   postForm(id: any){

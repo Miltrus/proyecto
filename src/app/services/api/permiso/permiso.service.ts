@@ -4,6 +4,7 @@ import { PermisoInterface } from '../../../models/permiso.interface';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; // 
+import { ModuloInterface } from 'src/app/models/modulo.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -39,8 +40,8 @@ export class PermisoService {
     return this.http.delete<ResponseInterface>(addres);
   }
 
-  getModulo(id: any):Observable<ResponseInterface>{
-    let address = this.url + 'modulo/' + id;
-    return this.http.get<ResponseInterface>(address);
+  getModulo():Observable<ModuloInterface[]>{
+    let address = this.url + 'modulo/';
+    return this.http.get<ModuloInterface[]>(address);
   }
 }

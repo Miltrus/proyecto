@@ -6,6 +6,7 @@ import { AlertsService } from '../../../services/alerts/alerts.service';
 import { RolService } from '../../../services/api/rol/rol.service';
 import { RolInterface } from '../../../models/rol.interface';
 import { ResponseInterface } from '../../../models/response.interface';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-new-rol',
@@ -14,7 +15,7 @@ import { ResponseInterface } from '../../../models/response.interface';
 })
 export class NewRolComponent implements OnInit{
 
-  constructor(private router:Router, private api:RolService, private alerts:AlertsService) { }
+  constructor(private router:Router, private api:RolService, private alerts:AlertsService, private auth: LoginComponent) { }
 
   newForm = new FormGroup({
     idRol: new FormControl(''),
@@ -23,13 +24,7 @@ export class NewRolComponent implements OnInit{
   })
 
   ngOnInit(): void {
-    this.checkLocalStorage();
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
+    this.auth.checkLocalStorage();
   }
 
   postForm(form: RolInterface){

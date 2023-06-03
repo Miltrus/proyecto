@@ -10,6 +10,7 @@ import { RolInterface } from '../../../models/rol.interface';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-edit-usuario',
@@ -18,7 +19,13 @@ import { ResponseInterface } from '../../../models/response.interface';
 })
 export class EditUsuarioComponent implements OnInit{
 
-  constructor(private router:Router, private activatedRouter:ActivatedRoute, private api:UsuarioService, private alerts:AlertsService) { }
+  constructor(
+    private router:Router, 
+    private activatedRouter:ActivatedRoute, 
+    private api:UsuarioService, 
+    private alerts:AlertsService,
+    private auth: LoginComponent,
+    ) { }
 
   editForm = new FormGroup({
     documentoUsuario: new FormControl(''),
@@ -38,6 +45,8 @@ export class EditUsuarioComponent implements OnInit{
   rolUsuario: RolInterface[] = [];
 
   ngOnInit(): void {
+    this.auth.checkLocalStorage();
+
     let documentoUsuario = this.activatedRouter.snapshot.paramMap.get('id');
     this.api.getOneUsuario(documentoUsuario).subscribe(data => {
       this.dataUsuario = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
@@ -53,16 +62,9 @@ export class EditUsuarioComponent implements OnInit{
         'idEstado': this.dataUsuario[0]?.idEstado || '',
       });
     });
-    this.checkLocalStorage();
     this.getTiposDocumento();
     this.getEstadosUsuario();
     this.getRolesUsuario();
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
   }
 
   postForm(id: any){

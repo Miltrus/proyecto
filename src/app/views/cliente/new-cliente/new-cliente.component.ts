@@ -7,6 +7,7 @@ import { ClienteService } from '../../../services/api/cliente/cliente.service';
 import { ClienteInterface } from '../../../models/cliente.interface';
 import { ResponseInterface } from '../../../models/response.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
+import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-new-cliente',
@@ -15,7 +16,7 @@ import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface'
 })
 export class NewClienteComponent implements OnInit{
 
-  constructor(private router:Router, private api:ClienteService, private alerts:AlertsService) { }
+  constructor(private router:Router, private api:ClienteService, private alerts:AlertsService, private auth:LoginComponent) { }
 
   newForm = new FormGroup({
     documentoCliente: new FormControl(''),
@@ -27,21 +28,10 @@ export class NewClienteComponent implements OnInit{
   })
 
   tiposDocumento: TipoDocumentoInterface[] = []
-
-  isLoading: boolean = true;
   
   ngOnInit(): void {
-    setTimeout(() => {
-      this.isLoading = false; // Oculta la pantalla de carga
-    }, 2000);
+    this.auth.checkLocalStorage();
     this.getTiposDocumento();
-    this.checkLocalStorage();
-  }
-
-  checkLocalStorage() {
-    if(!localStorage.getItem('token')){
-      this.router.navigate(['login']);
-    }
   }
 
   postForm(form: ClienteInterface){
