@@ -2,9 +2,53 @@
   overflow-x: auto;
   max-width: 100%;
   overflow-y: auto;
-  max-height: 600px;
 }
 
 .spacer {
   margin-right: 728px;
+}
+
+.mat-row {
+  display: flex;
+  align-items: center;
+}
+
+.mat-cell {
+  flex: 1;
+  white-space: nowrap; /* Evita que el contenido de la celda se rompa en varias líneas */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Agrega puntos suspensivos (...) si el contenido desborda el ancho de la celda */
+}
+
+.max-width-cell {
+  max-width: 116px; /* Establece el ancho máximo deseado */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.create-button-container {
+  position: relative;
+  z-index: 0;
+}
+
+app-navigation {
+  position: relative;
+  z-index: 0;
+}
+
+.primary-button .button-icon {
+  color: blue;
+}
+
+.accent-button .button-icon {
+  color: orange;
+}
+
+.warn-button .button-icon {
+  color: red;
+}
+
+.menu-icon {
+  color: inherit;
 }

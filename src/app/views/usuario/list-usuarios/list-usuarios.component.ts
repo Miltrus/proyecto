@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { UsuarioService } from '../../../services/api/usuario/usuario.service';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
@@ -38,6 +38,7 @@ export class ListUsuariosComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
+  @ViewChild('viewUsuarioDialog') viewUsuarioDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
   ngOnInit(): void {
     this.auth.checkLocalStorage();
@@ -64,6 +65,12 @@ export class ListUsuariosComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
   
+  viewUsuario(usuario: UsuarioInterface): void {
+    this.dialog.open(this.viewUsuarioDialog, {
+      data: usuario,
+      width: '400px', // Ajusta el ancho del cuadro emergente según tus necesidades
+    });
+  }
 
   editUsuario(id: any) {
     this.router.navigate(['edit-usuario', id]);

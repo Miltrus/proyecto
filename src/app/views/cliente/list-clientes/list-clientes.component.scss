@@ -2,9 +2,34 @@
   overflow-x: auto;
   max-width: 100%;
   overflow-y: auto;
-  max-height: 500px;
 }
 
 .spacer {
   margin-right: 727px;
+}
+
+.mat-row {
+  display: flex;
+  align-items: center;
+}
+
+.mat-cell {
+  flex: 1;
+  white-space: nowrap; /* Evita que el contenido de la celda se rompa en varias líneas */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Agrega puntos suspensivos (...) si el contenido desborda el ancho de la celda */
+}
+
+.max-width-cell {
+  max-width: 150px; /* Establece el ancho máximo deseado */
+}
+
+.create-button-container {
+  position: relative;
+  z-index: 0;
+}
+
+app-navigation {
+  position: relative;
+  z-index: 0;
 }
