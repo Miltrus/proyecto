@@ -1,5 +1,10 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
 .sidenav-container {
   height: 100%;
+  overflow: hidden;
 }
 
 .sidenav {
@@ -7,13 +12,12 @@
   position: fixed;
 }
 
-.spacer {
-  flex: 1 1 auto;
-}
-
 .custom-toolbar {
   background-color: #4B0082;
   color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 #header {
