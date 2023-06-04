@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ClienteService } from '../../../services/api/cliente/cliente.service';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
@@ -35,6 +35,7 @@ export class ListClientesComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
+  @ViewChild('viewClienteDialog') viewClienteDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
   ngOnInit(): void {
     this.auth.checkLocalStorage();
@@ -52,6 +53,13 @@ export class ListClientesComponent implements OnInit {
   ngAfterViewInit() { //para la paginacion y el ordenamiento
     this.dataSource.paginator = this.paginator; 
     this.dataSource.sort = this.sort;
+  }
+
+  viewCliente(usuario: ClienteInterface): void {
+    this.dialog.open(this.viewClienteDialog, {
+      data: usuario,
+      width: '400px', // Ajusta el ancho del cuadro emergente según tus necesidades
+    });
   }
 
   editCliente(id: any) {

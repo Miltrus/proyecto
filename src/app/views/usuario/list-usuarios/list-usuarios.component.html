@@ -4,7 +4,7 @@
     <h1>Usuarios</h1>
     
     <div class="create-button-container">
-      <button mat-raised-button color="primary" (click)="newUsuario()">Create new usuario</button>
+      <button mat-raised-button color="primary" (click)="newUsuario()">Crear nuevo usuario</button>
       <span class="spacer"></span>
       <mat-form-field>
         <mat-label>Busqueda de usuarios</mat-label>
@@ -86,7 +86,7 @@
   </div>
   </app-navigation>
   <ng-template #viewUsuarioDialog let-dialogData>
-    <h2>Información de Usuario</h2>
+    <h2>Información de usuario</h2>
     <p><strong>Documento:</strong> {{ dialogData.documentoUsuario }}</p>
     <p><strong>Tipo de Documento:</strong> {{ getTipoDocumento(dialogData.idTipoDocumento) }}</p>
     <p><strong>Nombre:</strong> {{ dialogData.nombreUsuario }}</p>

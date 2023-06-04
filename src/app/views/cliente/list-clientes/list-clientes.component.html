@@ -47,17 +47,28 @@
         </ng-container>
         <ng-container matColumnDef="acciones">
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
-          <td mat-cell *matCellDef="let cliente">
-            <button mat-icon-button color="primary" (click)="editCliente(cliente.documentoCliente)" matTooltip="Editar cliente">
-              <mat-icon>edit</mat-icon>
+          <td mat-cell *matCellDef="let usuario">
+            <button mat-icon-button [matMenuTriggerFor]="actionsMenu">
+              <mat-icon>more_vert</mat-icon>
             </button>
-            <button mat-icon-button color="warn" (click)="deleteCliente(cliente.documentoCliente)" matTooltip="Eliminar cliente">
-              <mat-icon>delete</mat-icon>
-            </button>
+            <mat-menu #actionsMenu="matMenu">
+              <button mat-menu-item (click)="viewCliente(usuario)">
+                <mat-icon [ngStyle]="{'color': '#AED581'}">visibility</mat-icon>
+                <span>Ver</span>
+              </button>
+              <button mat-menu-item (click)="editCliente(usuario.documentoUsuario)">
+                <mat-icon [ngStyle]="{'color': '#5E35B1'}">edit</mat-icon>
+                <span>Editar</span>
+              </button>
+              <button mat-menu-item (click)="deleteCliente(usuario.documentoUsuario)" [disabled]="usuario.idEstado === 1">
+                <mat-icon [ngStyle]="{'color': 'red'}">delete</mat-icon>
+                <span>Eliminar</span>
+              </button>
+            </mat-menu>
           </td>
         </ng-container>
-        <tr mat-header-row *matHeaderRowDef="['num', 'documentoCliente', 'idTipoDocumento', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['num', 'documentoCliente', 'idTipoDocumento', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
+        <tr mat-header-row *matHeaderRowDef="['num', 'documentoCliente', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['num', 'documentoCliente', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
       </table>
     </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements"></mat-paginator>
@@ -66,3 +77,12 @@
     <button mat-raised-button color='accent' (click)="goBack()">Volver a la lista</button>
   </div>
 </app-navigation>
+<ng-template #viewClienteDialog let-dialogData>
+  <h2>Información de cliente</h2>
+  <p><strong>Documento:</strong> {{ dialogData.documentoCliente }}</p>
+  <p><strong>Tipo de Documento:</strong> {{ getTipoDocumento(dialogData.idTipoDocumento) }}</p>
+  <p><strong>Nombre:</strong> {{ dialogData.nombreCliente }}</p>
+  <p><strong>Teléfono:</strong> {{ dialogData.telefonoCliente }}</p>
+  <p><strong>Correo:</strong> {{ dialogData.correoCliente }}</p>
+  <p><strong>Direccion:</strong> {{ dialogData.direccionCliente }}</p>
+</ng-template>

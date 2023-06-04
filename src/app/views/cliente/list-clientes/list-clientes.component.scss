@@ -2,6 +2,7 @@
   overflow-x: auto;
   max-width: 100%;
   overflow-y: auto;
+  max-height: 600px;
 }
 
 .spacer {
@@ -21,7 +22,10 @@
 }
 
 .max-width-cell {
-  max-width: 150px; /* Establece el ancho máximo deseado */
+  max-width: 116px; /* Establece el ancho máximo deseado */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .create-button-container {
