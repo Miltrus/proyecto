@@ -79,11 +79,13 @@
   </div>
 </app-navigation>
 <ng-template #viewClienteDialog let-dialogData>
-  <h2>Información de cliente</h2>
-  <p><strong>Documento:</strong> {{ dialogData.documentoCliente }}</p>
-  <p><strong>Tipo de Documento:</strong> {{ getTipoDocumento(dialogData.idTipoDocumento) }}</p>
-  <p><strong>Nombre:</strong> {{ dialogData.nombreCliente }}</p>
-  <p><strong>Teléfono:</strong> {{ dialogData.telefonoCliente }}</p>
-  <p><strong>Correo:</strong> {{ dialogData.correoCliente }}</p>
-  <p><strong>Direccion:</strong> {{ dialogData.direccionCliente }}</p>
+  <div class="dialogData">
+    <h2>Información de cliente</h2>
+    <p><strong>Documento:</strong> {{ dialogData.documentoCliente }}</p>
+    <p><strong>Tipo de Documento:</strong> {{ getTipoDocumento(dialogData.idTipoDocumento) }}</p>
+    <p><strong>Nombre:</strong> {{ dialogData.nombreCliente }}</p>
+    <p><strong>Teléfono:</strong> {{ dialogData.telefonoCliente }}</p>
+    <p><strong>Correo:</strong> {{ dialogData.correoCliente }}</p>
+    <p><strong>Direccion:</strong> {{ dialogData.direccionCliente }}</p>
+  </div>
 </ng-template>

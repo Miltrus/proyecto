@@ -3,21 +3,28 @@
 <div class="container">
     <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)">
         <div class="form-group">
-            <label for="exampleFormControlInput1">ID Rol</label>
-            <input type="text" class="form-control" formControlName="idRol"/>
-        </div>
-        <div class="form-group">
             <label for="exampleFormControlInput1">Nombre Rol</label>
-            <select class="form-control" formControlName="nombreRol">
-                <option value="Administrador">Administrador</option>
-                <option value="Mensajero">Mensajero</option>
-            </select>
+            <input type="text" class="form-control" formControlName="nombreRol">
         </div>
         <div class="form-group">
             <label for="exampleFormControlInput1">Descripcion Rol</label>
             <input type="text" class="form-control" formControlName="descripcionRol"/>
         </div>
         <br><br/> 
+
+        <div class="form-group">
+          <label>Permisos</label>
+          <div formArrayName="permisosSeleccionados">
+            <div *ngFor="let permiso of permisos">
+              <label>
+                <input type="checkbox" [formControlName]="permiso.idPermiso ?? ''" /> {{ permiso.nombrePermiso }}
+              </label>
+            </div>
+          </div>
+          
+        </div>
+        <br><br>
+          
         
         <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
         <button type="submit" mat-raised-button color='primary' >Guardar</button>
