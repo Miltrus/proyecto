@@ -29,7 +29,7 @@ export class NewUsuarioComponent implements OnInit{
     correoUsuario: new FormControl(''),
     contrasenaUsuario: new FormControl(''),
     idRol: new FormControl(''),
-    idEstado: new FormControl(''),
+    idEstado: new FormControl('1'),
   })
 
   tiposDocumento: TipoDocumentoInterface[] = []

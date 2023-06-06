@@ -1,4 +1,4 @@
 export interface PermisoInterface {
-    idPermiso?: string | null | undefined,
+    idPermiso?: any | null | undefined,
     nombrePermiso?: string | null | undefined,
 }

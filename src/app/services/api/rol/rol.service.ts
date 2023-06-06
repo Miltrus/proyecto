@@ -41,14 +41,18 @@ export class RolService {
     return this.http.delete<ResponseInterface>(addres);
   }
 
-  getPermisos(): Observable<PermisoInterface[]>{
-    let adress = this.url + 'permiso';
-    return this.http.get<PermisoInterface[]>(adress);
+  getAllPermisos(): Observable<PermisoInterface[]> {
+    let address = this.url + 'permiso';
+    return this.http.get<PermisoInterface[]>(address);
   }
 
-  postRolPermiso(rolPermiso: RolPermisoInterface): Observable<ResponseInterface> {
+  getLastRolId(): Observable<any> {
+    let address = this.url + 'rol/lastId';
+    return this.http.get<any>(address);
+  }
+  
+  guardarRolPermiso(rolPermiso: RolPermisoInterface): Observable<ResponseInterface> {
     let address = this.url + 'rolPermiso';
     return this.http.post<ResponseInterface>(address, rolPermiso);
   }
-  
 }
