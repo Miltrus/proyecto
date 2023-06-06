@@ -32,7 +32,7 @@ export class ListUsuariosComponent implements OnInit {
 
   usuarios: UsuarioInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
-  estadosUsuario: EstadoUsuarioInterface[] = [];  
+  estadosUsuario: EstadoUsuarioInterface[] = [];
   rolUsuario: RolInterface[] = [];
   dataSource = new MatTableDataSource(this.usuarios); //pal filtro
 
@@ -61,10 +61,10 @@ export class ListUsuariosComponent implements OnInit {
   }
 
   ngAfterViewInit() { //para la paginacion
-    this.dataSource.paginator = this.paginator; 
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-  
+
   viewUsuario(usuario: UsuarioInterface): void {
     this.dialog.open(this.viewUsuarioDialog, {
       data: usuario,
@@ -128,27 +128,23 @@ export class ListUsuariosComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  clearFilter() {
-    this.dataSource.filter = '';
-  }
-
 
   toggleEstado(usuario: UsuarioInterface): void {
     const nuevoEstado = parseInt(usuario.idEstado, 10) === 1 ? 2 : 1;
     const { contrasenaUsuario, ...userWithOutPwd } = usuario;
     const updatedUsuario: UsuarioInterface = { ...userWithOutPwd, idEstado: nuevoEstado };
-  
+
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
       data: {
         message: `¿Estás seguro de que deseas cambiar el estado del usuario?`
       }
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.api.putUsuario(updatedUsuario).subscribe(data => {
           let respuesta: ResponseInterface = data;
-          
+
           if (respuesta.status === 'ok') {
             this.alerts.showSuccess('El estado del usuario ha sido actualizado exitosamente.', 'Actualización Exitosa');
             this.usuarios = this.usuarios.map(u => (u.documentoUsuario === updatedUsuario.documentoUsuario ? updatedUsuario : u));
@@ -157,10 +153,10 @@ export class ListUsuariosComponent implements OnInit {
             this.alerts.showError(respuesta.msj, 'Error en la Actualización');
           }
         });
-      }else {
+      } else {
         this.alerts.showError('No se ha realizado ningún cambio.', 'Actualización Cancelada');
       }
     });
   }
-  
+
 }

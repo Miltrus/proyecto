@@ -42,11 +42,10 @@ export class NavigationComponent {
 
   modules = [
     { name: 'Roles', route: '/list-roles' },
-    { name: 'Modulos', route: '/list-modulos' },
-    { name: 'Permisos', route: '/list-permisos' },
     { name: 'Clientes', route: '/list-clientes' },
     { name: 'Usuarios', route: '/list-usuarios' },
-    { name: 'Paquetes', route: '/list-paquetes' }
+    { name: 'Paquetes', route: '/list-paquetes' },
+    { name: 'Novedades', route: '/list-novedades' },
   ]
 
   logout(): void {
