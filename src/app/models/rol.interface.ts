@@ -1,5 +1,8 @@
+import { PermisoInterface } from "./permiso.interface";
+
 export interface RolInterface{
-    idRol?: string | null | undefined,
+    idRol?: any | null | undefined,
     nombreRol?: string | null | undefined,
     descripcionRol?: string | null | undefined,
+    permisos?: PermisoInterface[] | null | undefined; // Nueva propiedad
 }

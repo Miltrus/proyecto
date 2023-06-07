@@ -21,7 +21,7 @@ import { ListPaquetesComponent } from './views/paquete/list-paquetes/list-paquet
 import { NewPaqueteComponent } from './views/paquete/new-paquete/new-paquete.component';
 import { EditPaqueteComponent } from './views/paquete/edit-paquete/edit-paquete.component';
 
-/* import { ListNovedadesComponent } from './views/novedad/list-novedades/list-novedades.component'; */
+import { ListNovedadesComponent } from './views/novedad/list-novedades/list-novedades.component';
 
 
 const routes: Routes = [
@@ -46,7 +46,7 @@ const routes: Routes = [
   { path: 'new-paquete', component: NewPaqueteComponent },
   { path: 'edit-paquete/:id', component: EditPaqueteComponent },
 
-  /* { path: 'list-novedades', component: ListNovedadesComponent }, */
+  { path: 'list-novedades', component: ListNovedadesComponent },
 
   { path: '**', component: NotFoundComponent }, //pal not found
 ];
@@ -79,5 +79,5 @@ export const routingComponents = [
   NewPaqueteComponent,
   EditPaqueteComponent,
 
-  /* ListNovedadesComponent, */
+  ListNovedadesComponent,
 ]

@@ -6,6 +6,7 @@ import { RolPermisoInterface } from '../../../models/rol-permiso.interface';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; // 
+import { RolPermisoResponseInterface } from 'src/app/models/rol-permiso-response.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -56,8 +57,8 @@ export class RolService {
     return this.http.post<ResponseInterface>(address, rolPermiso);
   }
 
-  getRolPermisos(idRol: any): Observable<RolPermisoInterface[]> {
+  getRolPermisos(idRol: any): Observable<RolPermisoResponseInterface> {
     let address = this.url + 'rolPermiso/' + idRol + '/permisos';
-    return this.http.get<RolPermisoInterface[]>(address);
+    return this.http.get<RolPermisoResponseInterface>(address);
   }
 }
