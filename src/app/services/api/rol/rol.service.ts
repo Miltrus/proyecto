@@ -55,4 +55,9 @@ export class RolService {
     let address = this.url + 'rolPermiso';
     return this.http.post<ResponseInterface>(address, rolPermiso);
   }
+
+  getRolPermisos(idRol: any): Observable<RolPermisoInterface[]> {
+    let address = this.url + 'rolPermiso/' + idRol + '/permisos';
+    return this.http.get<RolPermisoInterface[]>(address);
+  }
 }
