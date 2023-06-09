@@ -100,7 +100,7 @@ export class ListRolesComponent implements OnInit {
   deleteRol(id: any): void {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
       data: {
-        message: '¿Estás seguro de que deseas eliminar este usuario?'
+        message: '¿Estás seguro de que deseas eliminar este rol?'
       }
     });
 
@@ -110,7 +110,7 @@ export class ListRolesComponent implements OnInit {
           let respuesta: ResponseInterface = data;
 
           if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El usuario ha sido eliminado exitosamente.', 'Eliminación Exitosa');
+            this.alerts.showSuccess('El rol ha sido eliminado exitosamente.', 'Eliminación Exitosa');
             this.roles = this.roles.filter(rol => rol.idRol !== id);
             this.dataSource.data = this.roles;
           } else {
