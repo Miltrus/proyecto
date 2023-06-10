@@ -11,14 +11,15 @@ import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
 import { LoginComponent } from 'src/app/components/login/login.component';
 
+
 @Component({
   selector: 'app-new-paquete',
   templateUrl: './new-paquete.component.html',
   styleUrls: ['./new-paquete.component.scss']
 })
-export class NewPaqueteComponent implements OnInit{
+export class NewPaqueteComponent implements OnInit {
 
-  constructor(private router:Router, private api:PaqueteService, private alerts:AlertsService, private auth: LoginComponent) { }
+  constructor(private router: Router, private api: PaqueteService, private alerts: AlertsService, private auth: LoginComponent, private paqueteService: PaqueteService) { }
 
   newForm = new FormGroup({
     codigoQrPaquete: new FormControl(''),
@@ -27,25 +28,35 @@ export class NewPaqueteComponent implements OnInit{
     idEstado: new FormControl(''),
   })
 
-    usuario: UsuarioInterface[] = [];
-    cliente: ClienteInterface[] = [];
-    estadosPaquete: EstadoPaqueteInterface[] = [];
+  usuario: UsuarioInterface[] = [];
+  cliente: ClienteInterface[] = [];
+  estadosPaquete: EstadoPaqueteInterface[] = [];
 
   ngOnInit(): void {
     this.auth.checkLocalStorage();
     this.getUsuarioPaquete();
     this.getClientePaquete();
     this.getEstadoPaquete();
+
+    this.newForm.get('documentoCliente')?.valueChanges.subscribe((value) => {
+      this.paqueteService.getDireccionCliente(value).subscribe((data) => {
+        if (data.direccion) {
+          this.newForm.patchValue({
+            codigoQrPaquete: data.direccion
+          });
+        }
+      });
+    });
   }
 
-  postForm(form: PaqueteInterface){
+  postForm(form: PaqueteInterface) {
     this.api.postPaquete(form).subscribe(data => {
       let respuesta: ResponseInterface = data;
-      if(respuesta.status == 'ok'){
+      if (respuesta.status == 'ok') {
         this.alerts.showSuccess('El paquete ha sido creado exitosamente.', 'Paquete creado');
         this.router.navigate(['list-paquetes']);
       }
-      else{
+      else {
         this.alerts.showError(respuesta.msj, 'Error al crear el paquete');
       }
     });
@@ -84,7 +95,7 @@ export class NewPaqueteComponent implements OnInit{
     );
   }
 
-  goBack(){
+  goBack() {
     this.router.navigate(['list-paquetes']);
   }
 }

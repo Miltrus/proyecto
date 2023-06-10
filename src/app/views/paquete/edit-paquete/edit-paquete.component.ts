@@ -12,6 +12,7 @@ import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
 import { LoginComponent } from 'src/app/components/login/login.component';
 
+
 @Component({
   selector: 'app-edit-paquete',
   templateUrl: './edit-paquete.component.html',
