@@ -52,7 +52,7 @@ export class ListPaquetesComponent implements OnInit {
         const codigoQr = paquete.codigoQrPaquete ?? '';
         qrCode.addData(codigoQr);
         qrCode.make();
-        paquete.qrCodeImage = qrCode.createDataURL();
+        paquete.qrCodeImage = qrCode.createDataURL(); //soy rua el pro
       });
     });
 
