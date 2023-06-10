@@ -4,7 +4,6 @@ import { ListRolesComponent } from './list-roles/list-roles.component';
 import { NewRolComponent } from './new-rol/new-rol.component';
 import { EditRolComponent } from './edit-rol/edit-rol.component';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [

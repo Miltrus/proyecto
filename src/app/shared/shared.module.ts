@@ -34,12 +34,9 @@ import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
-  declarations: [NavigationComponent, LoginComponent, DashboardComponent, NotFoundComponent, DialogConfirmComponent],
+  declarations: [NavigationComponent, DialogConfirmComponent],
   exports: [
     NavigationComponent, 
-    LoginComponent, 
-    DashboardComponent, 
-    NotFoundComponent, 
     DialogConfirmComponent,
 
     CommonModule, 

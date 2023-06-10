@@ -1,9 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './components/login/login.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { NotFoundComponent } from './components/not-found/not-found.component';
 
 
 const routes: Routes = [
@@ -11,8 +8,10 @@ const routes: Routes = [
   { path: '', redirectTo: 'landing-page', pathMatch: 'full' }, //ruta x defecto
   
   { path: 'landing-page', component: LandingPageComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  
+  { path: 'login', loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule) },
+
+  { path: 'dashboard', loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule) },
 
   { path: 'rol', loadChildren: () => import('./views/rol/rol.module').then(m => m.RolModule) },
 
@@ -24,7 +23,7 @@ const routes: Routes = [
 
   { path: 'novedad', loadChildren: () => import('./views/novedad/novedad.module').then(m => m.NovedadModule) },
 
-  { path: '**', component: NotFoundComponent }, //pal not found
+  { path: '**', loadChildren: () => import('./components/not-found/not-found.module').then(m => m.NotFoundModule) },
 ];
 
 @NgModule({

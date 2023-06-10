@@ -44,8 +44,10 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['dashboard']);
           this.loading = false;
         }, 500);
+        return true;
       } else {
         this.alerts.showError(dataResponse.msj, 'Error al iniciar sesión');
+        return false;
       }
     });
   }
