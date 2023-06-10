@@ -19,7 +19,7 @@ export class NewRolComponent implements OnInit {
   constructor(private router: Router, private api: RolService, private alerts: AlertsService, private auth: LoginComponent) { }
 
   newForm = new FormGroup({
-    nombreRol: new FormControl(''),
+    nombreRol: new FormControl('', Validators.required) ,
     descripcionRol: new FormControl(''),
     permisosSeleccionados: new FormArray(<any>[])
   });

@@ -3,7 +3,8 @@ import { LoginInterface } from '../../../models/login.interface';
 import { ResponseInterface } from '../../../models/response.interface';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs'; // 
+import { Observable, of } from 'rxjs'; // 
+import { UsuarioInterface } from 'src/app/models/usuario.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -19,4 +20,10 @@ export class LoginService {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post<ResponseInterface>(address, form, {headers});
   }
+
+  verifyToken(token: string): Observable<ResponseInterface> {
+    let address = this.url + 'token';
+    return this.http.post<ResponseInterface>(address, { token });
+  }
+  
 }
