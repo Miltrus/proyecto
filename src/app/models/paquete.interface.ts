@@ -4,4 +4,5 @@ export interface PaqueteInterface {
     documentoUsuario?: string | null | undefined;
     documentoCliente?: string | null | undefined;
     idEstado?: string | null | undefined;
+    qrCodeImage?: string | null | undefined;
 }

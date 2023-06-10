@@ -14,6 +14,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { LoginComponent } from 'src/app/components/login/login.component';
+import * as QRCodeGenerator from 'qrcode-generator';
 
 
 @Component({
@@ -44,7 +45,15 @@ export class ListPaquetesComponent implements OnInit {
     this.auth.checkLocalStorage();
     this.api.getAllPaquetes().subscribe(data => {
       this.paquetes = data;
-      this.dataSource.data = this.paquetes; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de paquetes
+      this.dataSource.data = this.paquetes;
+
+      this.paquetes.forEach(paquete => {
+        const qrCode = QRCodeGenerator(0, 'M');
+        const codigoQr = paquete.codigoQrPaquete ?? '';
+        qrCode.addData(codigoQr);
+        qrCode.make();
+        paquete.qrCodeImage = qrCode.createDataURL();
+      });
     });
 
     this.api.getUsuario().subscribe(data => {
@@ -58,10 +67,13 @@ export class ListPaquetesComponent implements OnInit {
     this.api.getEstadoPaquete().subscribe(data => {
       this.estadosPaquete = data;
     });
+
+
+
   }
 
   ngAfterViewInit() { //para la paginacion
-    this.dataSource.paginator = this.paginator; 
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
   editPaquete(id: any) {
