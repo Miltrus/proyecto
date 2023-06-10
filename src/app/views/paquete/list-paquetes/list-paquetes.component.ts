@@ -65,11 +65,11 @@ export class ListPaquetesComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
   editPaquete(id: any) {
-    this.router.navigate(['edit-paquete', id]);
+    this.router.navigate(['paquete/edit-paquete', id]);
   }
 
   newPaquete() {
-    this.router.navigate(['new-paquete']);
+    this.router.navigate(['paquete/new-paquete']);
   }
 
   deletePaquete(id: any): void {

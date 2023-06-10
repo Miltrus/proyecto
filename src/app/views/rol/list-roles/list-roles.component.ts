@@ -90,11 +90,11 @@ export class ListRolesComponent implements OnInit {
   }
 
   editRol(id: any): void {
-    this.router.navigate(['edit-rol', id]);
+    this.router.navigate(['rol/edit-rol', id]);
   }
 
   newRol(): void {
-    this.router.navigate(['new-rol']);
+    this.router.navigate(['rol/new-rol']);
   }
 
   deleteRol(id: any): void {

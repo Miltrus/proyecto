@@ -1,4 +1,4 @@
-import { Component, Inject, inject } from '@angular/core';
+import { Component, Inject, ViewChild, inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent, ConfirmDialogData } from '../dialog-confirm/dialog-confirm.component';
 import { DOCUMENT } from '@angular/common';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @Component({
@@ -14,9 +16,12 @@ import { DOCUMENT } from '@angular/common';
   styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent {
+
+  @ViewChild('userMenuTrigger') userMenuTrigger!: MatMenuTrigger;
   private breakpointObserver = inject(BreakpointObserver);
 
   constructor(@Inject(DOCUMENT) private document: Document, private router: Router, private dialog: MatDialog) { }
+
 
   ngOnInit(): void {
     // Verificar si el modo oscuro está activo al iniciar el componente
@@ -41,11 +46,11 @@ export class NavigationComponent {
     );
 
   modules = [
-    { name: 'Roles', route: '/list-roles' },
-    { name: 'Clientes', route: '/list-clientes' },
-    { name: 'Usuarios', route: '/list-usuarios' },
-    { name: 'Paquetes', route: '/list-paquetes' },
-    { name: 'Novedades', route: '/list-novedades' },
+    { name: 'Roles', route: '/rol' },
+    { name: 'Clientes', route: '/cliente' },
+    { name: 'Usuarios', route: '/usuario' },
+    { name: 'Paquetes', route: '/paquete' },
+    { name: 'Novedades', route: '/novedad' },
   ]
 
   logout(): void {
@@ -66,4 +71,16 @@ export class NavigationComponent {
       }
     });
   }
+
+  toggleUserPanel(): void {
+    if (this.userMenuTrigger) {
+      this.userMenuTrigger.openMenu();
+    }
+  }
+
+  goToProfile(): void {
+    this.router.navigate(['usuario/profile']);
+  }
+  
+  
 }

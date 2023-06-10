@@ -63,11 +63,11 @@ export class ListClientesComponent implements OnInit {
   }
 
   editCliente(id: any) {
-    this.router.navigate(['edit-cliente', id]);
+    this.router.navigate(['cliente/edit-cliente', id]);
   }
 
   newCliente() {
-    this.router.navigate(['new-cliente']);
+    this.router.navigate(['cliente/new-cliente']);
   }
 
   deleteCliente(id: any): void {

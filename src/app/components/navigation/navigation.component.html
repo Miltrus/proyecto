@@ -20,9 +20,16 @@
 
       </mat-slide-toggle>
 
-      <button mat-icon-button color="danger" aria-label="Cerrar sesión" (click)="logout()">
-        <mat-icon>exit_to_app</mat-icon>
+      <button mat-icon-button aria-label="Usuario" [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
       </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item (click)="goToProfile()">Administrar usuario</button>
+        <button mat-menu-item (click)="logout()">Cerrar sesión</button>
+      </mat-menu>
+      
+      
+      
     </mat-toolbar>
     <ng-content></ng-content>
   </mat-sidenav-content>
