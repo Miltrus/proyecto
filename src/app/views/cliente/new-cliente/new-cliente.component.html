@@ -8,7 +8,7 @@
                 <mat-label>Tipo de documento</mat-label>
                 <select matNativeControl formControlName="idTipoDocumento">
                   <option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.idTipoDocumento">
-                    {{ tipoDocumento.idTipoDocumento }} - {{ tipoDocumento.nombreTipo }}
+                    {{ tipoDocumento.nombreTipo }}
                   </option>
                 </select>
               </mat-form-field>

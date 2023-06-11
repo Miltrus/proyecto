@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { CanMatchFn } from '@angular/router';
 
-import { hasRoleGuard } from './has-role.guard';
+import { rolePermissionGuard } from './role-permission.guard';
 
-describe('hasRoleGuard', () => {
+describe('rolePermissionGuard', () => {
   const executeGuard: CanMatchFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => hasRoleGuard(...guardParameters));
+      TestBed.runInInjectionContext(() => rolePermissionGuard(...guardParameters));
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

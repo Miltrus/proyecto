@@ -4,7 +4,7 @@
         <div class="form-group">
             <label for="idTipoDocumento">Tipo de documento</label>
             <select class="form-control" formControlName="idTipoDocumento">
-              <option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.idTipoDocumento">{{tipoDocumento.idTipoDocumento}} - {{ tipoDocumento.nombreTipo }}</option>
+              <option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.idTipoDocumento">{{ tipoDocumento.nombreTipo }}</option>
             </select>
         </div>
         <div class="form-group">

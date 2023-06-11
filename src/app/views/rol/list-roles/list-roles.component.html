@@ -51,7 +51,7 @@
                 <mat-icon [ngStyle]="{'color': '#5E35B1'}">edit</mat-icon>
                 <span>Editar</span>
               </button>
-              <button mat-menu-item (click)="deleteRol(rol.idRol)">
+              <button mat-menu-item (click)="deleteRol(rol.idRol)" [disabled]="rol.idRol === 1">
                 <mat-icon [ngStyle]="{'color': 'red'}">delete</mat-icon>
                 <span>Eliminar</span>
               </button>

@@ -26,12 +26,38 @@ export class NavigationComponent {
     private rolService: RolService
   ) {}
 
-  ngOnInit(): void {
+  modules = [
+    { name: 'Roles', route: '/rol' },
+    { name: 'Clientes', route: '/cliente' },
+    { name: 'Usuarios', route: '/usuario' },
+    { name: 'Paquetes', route: '/paquete' },
+    { name: 'Novedades', route: '/novedad' },
+  ];
 
+  ngOnInit(): void {
     // Verificar si el modo oscuro está activo al iniciar el componente
     const isDarkModeActive = this.document.body.classList.contains('dark-mode');
     this.isDarkThemeActive = isDarkModeActive;
+  
+    // Obtener los permisos del rol y filtrar los módulos correspondientes
+    const idRol = localStorage.getItem('rolId');
+  
+    this.rolService.getRolPermisos(idRol).subscribe(
+      (response) => {
+        const permisos = response.idPermiso.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
+  
+        this.modules = this.modules.filter((module) =>
+          permisos.includes(module.name)
+        );
+      },
+      (error) => {
+        console.error('Error al obtener los permisos del rol:', error);
+        // Manejar el error según corresponda
+      }
+    );
   }
+  
+  
 
   isDarkThemeActive = false;
 
@@ -49,13 +75,6 @@ export class NavigationComponent {
       shareReplay()
     );
 
-  modules = [
-    { name: 'Roles', route: '/rol' },
-    { name: 'Clientes', route: '/cliente' },
-    { name: 'Usuarios', route: '/usuario' },
-    { name: 'Paquetes', route: '/paquete' },
-    { name: 'Novedades', route: '/novedad' },
-  ];
 
   logout(): void {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { CanActivateFn, CanMatchFn, Router } from '@angular/router';
+import { CanMatchFn, Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { AlertsService } from 'src/app/services/alerts/alerts.service';
 import { TokenService } from 'src/app/auth/token/token.service';
