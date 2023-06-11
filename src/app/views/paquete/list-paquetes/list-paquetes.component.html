@@ -21,7 +21,7 @@
       <ng-container matColumnDef="codigoQrPaquete">
         <th mat-header-cell *matHeaderCellDef>Código QR Paquetee</th>
         <td mat-cell *matCellDef="let paquete">
-          <img [src]="paquete.qrCodeImage" alt="Código QR del paquete">
+          <img [src]="paquete.qrCodeUrl" alt="Código QR del paquete" class="qr-image">
         </td>
       </ng-container>
       <ng-container matColumnDef="documentoUsuario">
@@ -44,6 +44,9 @@
           </button>
           <button mat-icon-button color="warn" (click)="deletePaquete(paquete.idPaquete)" matTooltip="Eliminar paquete">
             <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="generatePDF(paquete.idPaquete)" matTooltip="Generar PDF">
+            <mat-icon>picture_as_pdf</mat-icon>
           </button>
         </td>
       </ng-container>
