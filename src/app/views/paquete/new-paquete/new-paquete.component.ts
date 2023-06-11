@@ -54,7 +54,7 @@ export class NewPaqueteComponent implements OnInit {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
         this.alerts.showSuccess('El paquete ha sido creado exitosamente.', 'Paquete creado');
-        this.router.navigate(['list-paquetes']);
+        this.router.navigate(['paquete/list-paquetes']);
       }
       else {
         this.alerts.showError(respuesta.msj, 'Error al crear el paquete');
@@ -95,7 +95,7 @@ export class NewPaqueteComponent implements OnInit {
     );
   }
 
-  goBack() {
-    this.router.navigate(['list-paquetes']);
+  goBack(){
+    this.router.navigate(['paquete/list-paquetes']);
   }
 }

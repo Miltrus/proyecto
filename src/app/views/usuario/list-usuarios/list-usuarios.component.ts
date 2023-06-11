@@ -74,11 +74,11 @@ export class ListUsuariosComponent implements OnInit {
   }
 
   editUsuario(id: any) {
-    this.router.navigate(['edit-usuario', id]);
+    this.router.navigate(['usuario/edit-usuario', id]);
   }
 
   newUsuario() {
-    this.router.navigate(['new-usuario']);
+    this.router.navigate(['usuario/new-usuario']);
   }
 
   deleteUsuario(id: any): void {

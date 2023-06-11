@@ -1,4 +1,4 @@
-import { Component, Inject, inject } from '@angular/core';
+import { Component, Inject, ViewChild, inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent, ConfirmDialogData } from '../dialog-confirm/dialog-confirm.component';
 import { DOCUMENT } from '@angular/common';
-
+import { MatMenuTrigger } from '@angular/material/menu';
+import { RolService } from '../../services/api/rol/rol.service';
 
 @Component({
   selector: 'app-navigation',
@@ -14,11 +15,24 @@ import { DOCUMENT } from '@angular/common';
   styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent {
+
+  @ViewChild('userMenuTrigger') userMenuTrigger!: MatMenuTrigger;
   private breakpointObserver = inject(BreakpointObserver);
 
-  constructor(@Inject(DOCUMENT) private document: Document, private router: Router, private dialog: MatDialog) { }
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private router: Router,
+    private dialog: MatDialog,
+    private rolService: RolService
+  ) {}
 
   ngOnInit(): void {
+    const roleId = localStorage.getItem('rolId'); // Obtén el ID del rol desde el localStorage
+    this.rolService.getRolPermisos(roleId).subscribe(rolPermisos => {
+      // Filtra la lista de módulos según los permisos del rol
+      this.modules = this.filterModulesByPermisos(this.modules, rolPermisos.idPermiso);
+    });
+
     // Verificar si el modo oscuro está activo al iniciar el componente
     const isDarkModeActive = this.document.body.classList.contains('dark-mode');
     this.isDarkThemeActive = isDarkModeActive;
@@ -41,12 +55,12 @@ export class NavigationComponent {
     );
 
   modules = [
-    { name: 'Roles', route: '/list-roles' },
-    { name: 'Clientes', route: '/list-clientes' },
-    { name: 'Usuarios', route: '/list-usuarios' },
-    { name: 'Paquetes', route: '/list-paquetes' },
-    { name: 'Novedades', route: '/list-novedades' },
-  ]
+    { name: 'Roles', route: '/rol' },
+    { name: 'Clientes', route: '/cliente' },
+    { name: 'Usuarios', route: '/usuario' },
+    { name: 'Paquetes', route: '/paquete' },
+    { name: 'Novedades', route: '/novedad' },
+  ];
 
   logout(): void {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
@@ -60,10 +74,31 @@ export class NavigationComponent {
       if (result) {
         this.router.navigate(['landing-page']);
         localStorage.removeItem('token');
+        localStorage.removeItem('rolId'); // Elimina el ID del rol del localStorage
 
         this.isDarkThemeActive = false;
         this.document.body.classList.remove('dark-mode');
       }
     });
   }
+
+  toggleUserPanel(): void {
+    if (this.userMenuTrigger) {
+      this.userMenuTrigger.openMenu();
+    }
+  }
+
+  goToProfile(): void {
+    this.router.navigate(['usuario/profile']);
+  }
+
+  private filterModulesByPermisos(modules: any[], permisos: any[]): any[] {
+    return modules.filter(module => {
+      // Verifica si el nombre del módulo está presente en los permisos
+      const found = permisos.find(permiso => permiso.permiso.nombrePermiso.toLowerCase() === module.name.toLowerCase());
+      return found !== undefined;
+    });
+  }
+  
+  
 }

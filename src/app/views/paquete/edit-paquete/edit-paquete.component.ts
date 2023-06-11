@@ -66,7 +66,7 @@ export class EditPaqueteComponent implements OnInit {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
         this.alerts.showSuccess('El paquete ha sido modificado exitosamente.', 'Modificación Exitosa');
-        this.router.navigate(['list-paquetes']);
+        this.router.navigate(['paquete/list-paquetes']);
       }
       else {
         this.alerts.showError(respuesta.msj, "Error en la Modificación");
@@ -108,6 +108,6 @@ export class EditPaqueteComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['list-paquetes']);
+    this.router.navigate(['paquete/list-paquetes']);
   }
 }

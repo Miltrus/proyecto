@@ -41,24 +41,19 @@ export class NewRolComponent implements OnInit {
     });
   }
   
-  
 
   postForm(form: RolInterface) {
     this.api.postRol(form).subscribe(data => {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
         this.alerts.showSuccess('El rol ha sido creado exitosamente.', 'Rol Creado');
-        this.router.navigate(['list-roles']);
+        this.router.navigate(['rol/list-roles']);
   
         // Obtén el último ID de rol creado
         this.api.getLastRolId().subscribe(lastRolId => {
           const idRol = lastRolId;
-  
-          console.log(idRol);
           // Obtén los permisos seleccionados del formulario
           const permisosSeleccionados = this.newForm.value.permisosSeleccionados;
-  
-          console.log(permisosSeleccionados);
           // Itera sobre los permisos seleccionados y guárdalos en la tabla intermedia
           permisosSeleccionados.forEach((permisoSeleccionado: boolean, index: number) => {
             if (permisoSeleccionado) {
@@ -72,8 +67,6 @@ export class NewRolComponent implements OnInit {
               this.api.guardarRolPermiso(rolPermiso).subscribe(response => {
                 // Maneja la respuesta si es necesario
               });
-  
-              console.log(rolPermiso);
             }
           });
         });
@@ -83,12 +76,9 @@ export class NewRolComponent implements OnInit {
       }
     });
   }
-  
-  
-  
 
   goBack() {
-    this.router.navigate(['list-roles']);
+    this.router.navigate(['rol/list-roles']);
   }
 
 }

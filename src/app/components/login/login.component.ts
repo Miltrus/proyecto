@@ -5,6 +5,7 @@ import { LoginInterface } from '../../models/login.interface';
 import { ResolveData, Router } from '@angular/router';
 import { ResponseInterface } from '../../models/response.interface';
 import { AlertsService } from '../../services/alerts/alerts.service';
+import { UsuarioInterface } from 'src/app/models/usuario.interface';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,8 @@ export class LoginComponent implements OnInit {
   constructor(private api: LoginService, private router: Router, private alerts: AlertsService) { }
 
   loading = false;
+  userData: UsuarioInterface | null = null;
+
 
   ngOnInit(): void {
 
@@ -35,15 +38,20 @@ export class LoginComponent implements OnInit {
         setTimeout(() => {
           this.alerts.showSuccess('Inicio de sesión exitoso', 'Bienvenido');
           localStorage.setItem("token", dataResponse.token);
+          this.userData = dataResponse.user; // Almacenar los datos del usuario
+          console.log(this.userData);
+          
           this.router.navigate(['dashboard']);
           this.loading = false;
         }, 500);
-      }
-      else {
+        return true;
+      } else {
         this.alerts.showError(dataResponse.msj, 'Error al iniciar sesión');
+        return false;
       }
     });
   }
+  
 
   checkLocalStorage() {
     let token = localStorage.getItem('token');
@@ -55,7 +63,6 @@ export class LoginComponent implements OnInit {
         response  => {
           if (response.status === 'ok') {
             // Token válido
-            console.log('Token válido');
             const tokenDate = JSON.parse(atob(token!.split('.')[1]));
             const expirationDate = new Date(tokenDate.exp * 1000);
       
@@ -67,7 +74,6 @@ export class LoginComponent implements OnInit {
           } else {
             // Token no válido
             localStorage.removeItem('token');
-            this.alerts.showError('Por favor inicie sesión nuevamente', 'Su sesión ha expirado');
             this.alerts.showError(response.msj, 'Su sesión ha expirado');
             this.router.navigate(['login']);
           }

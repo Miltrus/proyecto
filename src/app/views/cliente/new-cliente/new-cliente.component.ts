@@ -39,7 +39,7 @@ export class NewClienteComponent implements OnInit{
       let respuesta: ResponseInterface = data;
       if(respuesta.status == 'ok'){
         this.alerts.showSuccess('El cliente ha sido creado exitosamente.', 'Cliente creado');
-        this.router.navigate(['list-clientes']);
+        this.router.navigate(['cliente/list-clientes']);
       }
       else{
         this.alerts.showError(respuesta.msj, 'Error al crear el cliente');
@@ -59,6 +59,6 @@ export class NewClienteComponent implements OnInit{
   }
 
   goBack(){
-    this.router.navigate(['list-clientes']);
+    this.router.navigate(['cliente/list-clientes']);
   }
 }

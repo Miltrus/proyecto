@@ -59,7 +59,7 @@ export class EditClienteComponent implements OnInit{
       let respuesta: ResponseInterface = data;
       if(respuesta.status == 'ok'){
         this.alerts.showSuccess('El cliente ha sido modificado exitosamente.', 'Modificación Exitosa');
-        this.router.navigate(['list-clientes']);
+        this.router.navigate(['cliente/list-clientes']);
       }
       else{
         this.alerts.showError(respuesta.msj, "Error en la Modificación");
@@ -79,6 +79,6 @@ export class EditClienteComponent implements OnInit{
   }
 
   goBack(){
-    this.router.navigate(['list-clientes']);
+    this.router.navigate(['cliente/list-clientes']);
   }
 }

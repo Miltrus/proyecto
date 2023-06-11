@@ -26,13 +26,11 @@ export class EditRolComponent implements OnInit{
 
   dataRol: RolInterface[] = [];
   permisos: PermisoInterface[] = [];
-  rolesPermisos: RolPermisoInterface[] = [];
 
   editForm = new FormGroup({
     idRol: new FormControl(''),
     nombreRol: new FormControl(''),
     descripcionRol: new FormControl(''),
-    permisosSeleccionados: new FormArray(<any>[])
   })
 
   ngOnInit(): void {
@@ -47,30 +45,6 @@ export class EditRolComponent implements OnInit{
         descripcionRol: this.dataRol[0]?.descripcionRol || ''
       });
     });
-
-    this.api.getAllPermisos().subscribe(data => {
-      this.permisos = data;
-      this.loadPermisosSeleccionados();
-    });
-  }
-
-  loadPermisosSeleccionados(): void {
-    const permisosSeleccionados = this.editForm.controls.permisosSeleccionados as FormArray;
-    this.permisos.forEach(() => {
-      permisosSeleccionados.push(new FormControl(false));
-    });
-
-    this.rolesPermisos[0]?.idPermiso.forEach((permiso: PermisoInterface) => {
-      const index = this.permisos.findIndex(p => p.idPermiso === permiso.idPermiso);
-      if (index !== -1) {
-        permisosSeleccionados.at(index).setValue(true);
-      }
-    });
-  }
-
-  isPermisoSeleccionado(index: number): boolean {
-    const permisosSeleccionados = this.editForm.controls.permisosSeleccionados as FormArray;
-    return permisosSeleccionados.at(index).value;
   }
 
   postForm(id: any) {
@@ -78,7 +52,7 @@ export class EditRolComponent implements OnInit{
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
         this.alerts.showSuccess('El rol ha sido editado exitosamente.', 'Edición de Rol');
-        this.router.navigate(['list-roles']);
+        this.router.navigate(['rol/list-roles']);
       } else {
         this.alerts.showError(respuesta.msj, 'Error al editar el rol');
       }
@@ -86,6 +60,6 @@ export class EditRolComponent implements OnInit{
   }
 
   goBack(){
-    this.router.navigate(['list-roles']);
+    this.router.navigate(['rol/list-roles']);
   }
 }

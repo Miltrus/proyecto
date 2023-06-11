@@ -48,7 +48,7 @@ export class NewUsuarioComponent implements OnInit{
       let respuesta: ResponseInterface = data;
       if(respuesta.status == 'ok'){
         this.alerts.showSuccess('El usuario ha sido creado exitosamente.', 'Usuario creado');
-        this.router.navigate(['list-usuarios']);
+        this.router.navigate(['usuario/list-usuarios']);
       }
       else{
         this.alerts.showError(respuesta.msj, 'Error al crear el usuario');
@@ -90,6 +90,6 @@ export class NewUsuarioComponent implements OnInit{
   }
 
   goBack(){
-    this.router.navigate(['list-usuarios']);
+    this.router.navigate(['usuario/list-usuarios']);
   }
 }
