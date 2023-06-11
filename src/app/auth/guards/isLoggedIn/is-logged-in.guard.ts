@@ -41,7 +41,7 @@ export const isLoggedInGuard: CanMatchFn = (route, state) => {
       })
     );
   } else {
-    alerts.showError('Por favor inicie sdppkjdfksión nuevamente', 'Su sesión ha expirado');
+    alerts.showError('Por favor inicie sesión nuevamente', 'Su sesión ha expirado');
     router.navigate(['login']);
     return of(false); // Retorna un Observable<boolean> usando el operador of
   }

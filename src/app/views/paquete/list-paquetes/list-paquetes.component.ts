@@ -31,13 +31,13 @@ import { ContentImage, TDocumentDefinitions } from 'pdfmake/interfaces';
   styleUrls: ['./list-paquetes.component.scss']
 })
 export class ListPaquetesComponent implements OnInit {
-  sanitizer: any;
 
   constructor(
     private api: PaqueteService,
     private router: Router,
     private alerts: AlertsService,
     private dialog: MatDialog,
+    private sanitizer: DomSanitizer,
   ) { }
 
   paquetes: PaqueteInterface[] = [];
@@ -136,8 +136,8 @@ export class ListPaquetesComponent implements OnInit {
   }
 
   generatePDF(idPaquete: string): void {
+    
     const paquete = this.paquetes.find(paquete => paquete.idPaquete === idPaquete);
-
 
     if (paquete) {
       const docDefinition = {
@@ -148,10 +148,10 @@ export class ListPaquetesComponent implements OnInit {
         ],
       };
 
-  
       pdfMake.createPdf(docDefinition).download(`QR_${idPaquete}.pdf`);
+    
+    }
   }
-}
   
 
   goBack() {
