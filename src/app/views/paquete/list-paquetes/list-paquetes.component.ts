@@ -61,7 +61,7 @@ export class ListPaquetesComponent implements OnInit {
       this.paquetes.forEach(async (paquete) => {
         const qrCodeBase64 = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
         paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
-        paquete.qrCodeUrl = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
+        paquete.qrCodeUrl = await this.generateQRCode(paquete.codigoQrPaquete ?? ''); //siu
       });
     });
 
