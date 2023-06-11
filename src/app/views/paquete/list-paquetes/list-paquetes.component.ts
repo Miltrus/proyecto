@@ -13,8 +13,12 @@ import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/d
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { LoginComponent } from 'src/app/components/login/login.component';
-import * as QRCodeGenerator from 'qrcode-generator';
+
+import * as QRCode from 'qrcode';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { ContentImage, TDocumentDefinitions } from 'pdfmake/interfaces';
 
 // Configurar las fuentes
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
@@ -33,7 +37,7 @@ export class ListPaquetesComponent implements OnInit {
     private router: Router,
     private alerts: AlertsService,
     private dialog: MatDialog,
-    private sanitizer: DomSanitizer,
+    private sanitizer: DomSanitizer
   ) { }
 
   paquetes: PaqueteInterface[] = [];
@@ -51,10 +55,6 @@ export class ListPaquetesComponent implements OnInit {
       this.paquetes = data;
       this.dataSource.data = this.paquetes;
 
-      this.paquetes.forEach(async (paquete) => {
-        const qrCodeBase64 = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
-        paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
-        paquete.qrCodeUrl = await this.generateQRCode(paquete.codigoQrPaquete ?? ''); //siu
       this.paquetes.forEach(async (paquete) => {
         const qrCodeBase64 = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
         paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
@@ -79,14 +79,6 @@ export class ListPaquetesComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-
-  async generateQRCode(data: string): Promise<string> {
-    const canvas = document.createElement('canvas');
-    await QRCode.toCanvas(canvas, data);
-    const qrCodeBase64 = canvas.toDataURL('image/png');
-    return qrCodeBase64;
-  }
-
 
   async generateQRCode(data: string): Promise<string> {
     const canvas = document.createElement('canvas');
@@ -157,7 +149,6 @@ export class ListPaquetesComponent implements OnInit {
       };
 
       pdfMake.createPdf(docDefinition).download(`QR_${idPaquete}.pdf`);
-    
     }
   }
   

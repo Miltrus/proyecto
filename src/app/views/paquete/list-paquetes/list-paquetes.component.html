@@ -43,9 +43,20 @@
           <button mat-icon-button [matMenuTriggerFor]="actionsMenu">
             <mat-icon>more_vert</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="deletePaquete(paquete.idPaquete)" matTooltip="Eliminar paquete">
-            <mat-icon>delete</mat-icon>
-          </button>
+          <mat-menu #actionsMenu="matMenu">
+            <button mat-menu-item (click)="generatePDF(paquete.idPaquete)">
+              <mat-icon [ngStyle]="{'color': '#AED581'}">picture_as_pdf</mat-icon>
+              <span>Ver</span>
+            </button>
+            <button mat-menu-item (click)="editPaquete(paquete.idPaquete)">
+              <mat-icon [ngStyle]="{'color': '#5E35B1'}">edit</mat-icon>
+              <span>Editar</span>
+            </button>
+            <button mat-menu-item (click)="deletePaquete(paquete.idPaquete)">
+              <mat-icon [ngStyle]="{'color': 'red'}">delete</mat-icon>
+              <span>Eliminar</span>
+            </button>
+          </mat-menu>
         </td>
       </ng-container>
   
