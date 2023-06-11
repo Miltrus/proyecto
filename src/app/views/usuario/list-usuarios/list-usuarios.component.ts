@@ -12,8 +12,6 @@ import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/d
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { LoginComponent } from 'src/app/components/login/login.component';
-import { LoginService } from 'src/app/services/api/login/login.service';
 
 
 @Component({
@@ -28,7 +26,6 @@ export class ListUsuariosComponent implements OnInit {
     private router: Router,
     private alerts: AlertsService,
     private dialog: MatDialog,
-    private auth: LoginComponent,
   ) { }
 
   usuarios: UsuarioInterface[] = [];
@@ -42,7 +39,6 @@ export class ListUsuariosComponent implements OnInit {
   @ViewChild('viewUsuarioDialog') viewUsuarioDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
   ngOnInit(): void {
-    this.auth.checkLocalStorage();
     this.api.getAllUsuarios().subscribe(data => {
       this.usuarios = data;
       this.dataSource.data = this.usuarios; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes

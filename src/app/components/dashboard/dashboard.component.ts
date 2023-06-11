@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { AlertsService } from '../../services/alerts/alerts.service';
-import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,14 +10,10 @@ import { LoginComponent } from '../login/login.component';
 export class DashboardComponent implements OnInit {
 
   constructor(
-    private router: Router,
-    private alerts: AlertsService,
     private breakpointObserver: BreakpointObserver,
-    private auth:LoginComponent
   ) {}
 
   ngOnInit(): void {
-    this.auth.checkLocalStorage();
   }
 
   /** Based on the screen size, switch from standard to one column per row */

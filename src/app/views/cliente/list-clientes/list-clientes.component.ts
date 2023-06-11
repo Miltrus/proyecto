@@ -7,11 +7,9 @@ import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/dialog-confirm/dialog-confirm.component';
-import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { LoginComponent } from 'src/app/components/login/login.component';
 
 
 @Component({
@@ -26,7 +24,6 @@ export class ListClientesComponent implements OnInit {
     private router: Router,
     private alerts: AlertsService,
     private dialog: MatDialog,
-    private auth: LoginComponent,
   ) { }
 
   clientes: ClienteInterface[] = [];
@@ -38,7 +35,6 @@ export class ListClientesComponent implements OnInit {
   @ViewChild('viewClienteDialog') viewClienteDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
   ngOnInit(): void {
-    this.auth.checkLocalStorage();
 
     this.api.getAllClientes().subscribe(data => { 
       this.clientes = data;

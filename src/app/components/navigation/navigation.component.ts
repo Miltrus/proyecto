@@ -27,11 +27,6 @@ export class NavigationComponent {
   ) {}
 
   ngOnInit(): void {
-    const roleId = localStorage.getItem('rolId'); // Obtén el ID del rol desde el localStorage
-    this.rolService.getRolPermisos(roleId).subscribe(rolPermisos => {
-      // Filtra la lista de módulos según los permisos del rol
-      this.modules = this.filterModulesByPermisos(this.modules, rolPermisos.idPermiso);
-    });
 
     // Verificar si el modo oscuro está activo al iniciar el componente
     const isDarkModeActive = this.document.body.classList.contains('dark-mode');
@@ -91,14 +86,4 @@ export class NavigationComponent {
   goToProfile(): void {
     this.router.navigate(['usuario/profile']);
   }
-
-  private filterModulesByPermisos(modules: any[], permisos: any[]): any[] {
-    return modules.filter(module => {
-      // Verifica si el nombre del módulo está presente en los permisos
-      const found = permisos.find(permiso => permiso.permiso.nombrePermiso.toLowerCase() === module.name.toLowerCase());
-      return found !== undefined;
-    });
-  }
-  
-  
 }

@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from 'src/app/models/response.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
-import { LoginComponent } from 'src/app/components/login/login.component';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
 import { RolPermisoResponseInterface } from 'src/app/models/rol-permiso-response.interface';
@@ -24,7 +23,6 @@ export class ListRolesComponent implements OnInit {
     private api: RolService,
     private router: Router,
     private alerts: AlertsService,
-    private auth: LoginComponent,
     private dialog: MatDialog,
   ) {}
 
@@ -35,7 +33,6 @@ export class ListRolesComponent implements OnInit {
   @ViewChild('viewRolDialog') viewRolDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de rol
 
   ngOnInit(): void {
-    this.auth.checkLocalStorage();
     this.loadRoles();
   }
 

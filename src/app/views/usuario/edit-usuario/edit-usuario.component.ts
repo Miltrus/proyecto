@@ -10,7 +10,6 @@ import { RolInterface } from '../../../models/rol.interface';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
-import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-edit-usuario',
@@ -24,7 +23,6 @@ export class EditUsuarioComponent implements OnInit{
     private activatedRouter:ActivatedRoute, 
     private api:UsuarioService, 
     private alerts:AlertsService,
-    private auth: LoginComponent,
     ) { }
 
   editForm = new FormGroup({
@@ -45,9 +43,8 @@ export class EditUsuarioComponent implements OnInit{
   rolUsuario: RolInterface[] = [];
 
   ngOnInit(): void {
-    this.auth.checkLocalStorage();
-
     let documentoUsuario = this.activatedRouter.snapshot.paramMap.get('id');
+    
     this.api.getOneUsuario(documentoUsuario).subscribe(data => {
       this.dataUsuario = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
       this.editForm.setValue({

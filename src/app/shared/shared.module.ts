@@ -3,9 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
 import { NavigationComponent } from 'src/app/components/navigation/navigation.component';
-import { LoginComponent } from '../components/login/login.component';
-import { DashboardComponent } from '../components/dashboard/dashboard.component';
-import { NotFoundComponent } from '../components/not-found/not-found.component';
 
 //material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -35,6 +32,35 @@ import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [NavigationComponent, DialogConfirmComponent],
+
+  imports: [
+    CommonModule, 
+    RouterModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatListModule,
+    MatGridListModule,
+    MatCardModule,
+    MatMenuModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    FormsModule,
+    HttpClientModule,
+    ToastrModule.forRoot(), // ToastrModule added
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatSnackBarModule,
+    MatDialogModule,
+    MatOptionModule,
+    MatSlideToggleModule,
+    MatProgressSpinnerModule,
+  ],
+
   exports: [
     NavigationComponent, 
     DialogConfirmComponent,
@@ -64,32 +90,5 @@ import { MatSelectModule } from '@angular/material/select';
     MatSlideToggleModule,
     MatProgressSpinnerModule,
   ],
-  imports: [
-    CommonModule, 
-    RouterModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatListModule,
-    MatGridListModule,
-    MatCardModule,
-    MatMenuModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    FormsModule,
-    HttpClientModule,
-    ToastrModule.forRoot(), // ToastrModule added
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatSnackBarModule,
-    MatDialogModule,
-    MatOptionModule,
-    MatSlideToggleModule,
-    MatProgressSpinnerModule,
-  ]
 })
 export class SharedModule { }

@@ -9,7 +9,6 @@ import { ResponseInterface } from '../../../models/response.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { EstadoUsuarioInterface } from 'src/app/models/estado-usuario.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
-import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-new-usuario',
@@ -18,7 +17,7 @@ import { LoginComponent } from 'src/app/components/login/login.component';
 })
 export class NewUsuarioComponent implements OnInit{
 
-  constructor(private router:Router, private api:UsuarioService, private alerts:AlertsService, private auth: LoginComponent) { }
+  constructor(private router:Router, private api:UsuarioService, private alerts:AlertsService) { }
 
   newForm = new FormGroup({
     documentoUsuario: new FormControl(''),
@@ -37,7 +36,6 @@ export class NewUsuarioComponent implements OnInit{
   rolUsuario: RolInterface[] = [];
 
   ngOnInit(): void {
-    this.auth.checkLocalStorage();
     this.getTiposDocumento();
     this.getEstadosUsuario();
     this.getRolesUsuario();

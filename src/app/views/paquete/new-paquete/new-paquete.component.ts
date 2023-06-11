@@ -9,7 +9,6 @@ import { ResponseInterface } from '../../../models/response.interface';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
-import { LoginComponent } from 'src/app/components/login/login.component';
 
 
 @Component({
@@ -19,7 +18,7 @@ import { LoginComponent } from 'src/app/components/login/login.component';
 })
 export class NewPaqueteComponent implements OnInit {
 
-  constructor(private router: Router, private api: PaqueteService, private alerts: AlertsService, private auth: LoginComponent, private paqueteService: PaqueteService) { }
+  constructor(private router: Router, private api: PaqueteService, private alerts: AlertsService, private paqueteService: PaqueteService) { }
 
   newForm = new FormGroup({
     codigoQrPaquete: new FormControl(''),
@@ -33,7 +32,6 @@ export class NewPaqueteComponent implements OnInit {
   estadosPaquete: EstadoPaqueteInterface[] = [];
 
   ngOnInit(): void {
-    this.auth.checkLocalStorage();
     this.getUsuarioPaquete();
     this.getClientePaquete();
     this.getEstadoPaquete();

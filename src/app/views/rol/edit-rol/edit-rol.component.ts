@@ -5,7 +5,6 @@ import { RolService } from '../../../services/api/rol/rol.service';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
-import { LoginComponent } from 'src/app/components/login/login.component';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 
@@ -21,7 +20,6 @@ export class EditRolComponent implements OnInit{
     private activatedRouter: ActivatedRoute, 
     private api: RolService, 
     private alerts: AlertsService,
-    private auth: LoginComponent,
   ) { }
 
   dataRol: RolInterface[] = [];
@@ -34,7 +32,6 @@ export class EditRolComponent implements OnInit{
   })
 
   ngOnInit(): void {
-    this.auth.checkLocalStorage();
 
     let idRol = this.activatedRouter.snapshot.paramMap.get('id');
     this.api.getOneRol(idRol).subscribe(data => {

@@ -10,7 +10,6 @@ import { PaqueteService } from '../../../services/api/paquete/paquete.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
-import { LoginComponent } from 'src/app/components/login/login.component';
 
 
 @Component({
@@ -25,7 +24,6 @@ export class EditPaqueteComponent implements OnInit {
     private activatedRouter: ActivatedRoute, 
     private api: PaqueteService, 
     private alerts: AlertsService,
-    private auth: LoginComponent,
     ) { }
 
   editForm = new FormGroup({
@@ -42,7 +40,6 @@ export class EditPaqueteComponent implements OnInit {
   estadosPaquete: EstadoPaqueteInterface[] = [];
 
   ngOnInit(): void {
-    this.auth.checkLocalStorage();
 
     let idPaquete = this.activatedRouter.snapshot.paramMap.get('id');
     this.api.getOnePaquete(idPaquete).subscribe(data => {

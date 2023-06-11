@@ -13,7 +13,6 @@ import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/d
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { LoginComponent } from 'src/app/components/login/login.component';
 import * as QRCodeGenerator from 'qrcode-generator';
 
 
@@ -29,7 +28,6 @@ export class ListPaquetesComponent implements OnInit {
     private router: Router,
     private alerts: AlertsService,
     private dialog: MatDialog,
-    private auth: LoginComponent,
   ) { }
 
   paquetes: PaqueteInterface[] = [];
@@ -42,7 +40,6 @@ export class ListPaquetesComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
 
   ngOnInit(): void {
-    this.auth.checkLocalStorage();
     this.api.getAllPaquetes().subscribe(data => {
       this.paquetes = data;
       this.dataSource.data = this.paquetes;

@@ -51,39 +51,6 @@ export class LoginComponent implements OnInit {
       }
     });
   }
-  
-
-  checkLocalStorage() {
-    let token = localStorage.getItem('token');
-    if (!token) {
-      this.alerts.showError('Por favor inicie sesión nuevamente', 'Su sesión ha expirado');
-      this.router.navigate(['login']);
-    } else {
-      this.api.verifyToken(token).subscribe(
-        response  => {
-          if (response.status === 'ok') {
-            // Token válido
-            const tokenDate = JSON.parse(atob(token!.split('.')[1]));
-            const expirationDate = new Date(tokenDate.exp * 1000);
-      
-            if (expirationDate < new Date()) {
-              localStorage.removeItem('token');
-              this.alerts.showError('Por favor inicie sesión nuevamente', 'Su sesión ha expirado');
-              this.router.navigate(['login']);
-            }
-          } else {
-            // Token no válido
-            localStorage.removeItem('token');
-            this.alerts.showError(response.msj, 'Su sesión ha expirado');
-            this.router.navigate(['login']);
-          }
-        },
-      );
-    }
-  }
-  
-  
-  
 
   goBack() {
     this.router.navigate(['landing-page']);

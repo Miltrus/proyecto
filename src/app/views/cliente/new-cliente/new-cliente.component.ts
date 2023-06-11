@@ -7,7 +7,6 @@ import { ClienteService } from '../../../services/api/cliente/cliente.service';
 import { ClienteInterface } from '../../../models/cliente.interface';
 import { ResponseInterface } from '../../../models/response.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
-import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-new-cliente',
@@ -16,7 +15,7 @@ import { LoginComponent } from 'src/app/components/login/login.component';
 })
 export class NewClienteComponent implements OnInit{
 
-  constructor(private router:Router, private api:ClienteService, private alerts:AlertsService, private auth:LoginComponent) { }
+  constructor(private router:Router, private api:ClienteService, private alerts:AlertsService) { }
 
   newForm = new FormGroup({
     documentoCliente: new FormControl(''),
@@ -30,7 +29,6 @@ export class NewClienteComponent implements OnInit{
   tiposDocumento: TipoDocumentoInterface[] = []
   
   ngOnInit(): void {
-    this.auth.checkLocalStorage();
     this.getTiposDocumento();
   }
 

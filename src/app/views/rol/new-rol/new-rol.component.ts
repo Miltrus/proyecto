@@ -7,7 +7,6 @@ import { RolInterface } from '../../../models/rol.interface';
 import { ResponseInterface } from '../../../models/response.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
-import { LoginComponent } from 'src/app/components/login/login.component';
 
 @Component({
   selector: 'app-new-rol',
@@ -16,7 +15,7 @@ import { LoginComponent } from 'src/app/components/login/login.component';
 })
 export class NewRolComponent implements OnInit {
 
-  constructor(private router: Router, private api: RolService, private alerts: AlertsService, private auth: LoginComponent) { }
+  constructor(private router: Router, private api: RolService, private alerts: AlertsService) { }
 
   newForm = new FormGroup({
     nombreRol: new FormControl('', Validators.required) ,
@@ -27,7 +26,6 @@ export class NewRolComponent implements OnInit {
   permisos: PermisoInterface[] = [];
 
   ngOnInit(): void {
-    this.auth.checkLocalStorage();
     this.getPermisos();
   }
 
