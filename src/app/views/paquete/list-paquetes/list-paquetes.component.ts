@@ -13,7 +13,16 @@ import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/d
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import * as QRCodeGenerator from 'qrcode-generator';
+
+import * as QRCode from 'qrcode';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { ContentImage, TDocumentDefinitions } from 'pdfmake/interfaces';
+
+// Configurar las fuentes
+(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
+
 
 
 @Component({
@@ -22,6 +31,7 @@ import * as QRCodeGenerator from 'qrcode-generator';
   styleUrls: ['./list-paquetes.component.scss']
 })
 export class ListPaquetesComponent implements OnInit {
+  sanitizer: any;
 
   constructor(
     private api: PaqueteService,
@@ -39,17 +49,16 @@ export class ListPaquetesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
 
+
   ngOnInit(): void {
     this.api.getAllPaquetes().subscribe(data => {
       this.paquetes = data;
       this.dataSource.data = this.paquetes;
 
-      this.paquetes.forEach(paquete => {
-        const qrCode = QRCodeGenerator(0, 'M');
-        const codigoQr = paquete.codigoQrPaquete ?? '';
-        qrCode.addData(codigoQr);
-        qrCode.make();
-        paquete.qrCodeImage = qrCode.createDataURL(); //soy rua el pro
+      this.paquetes.forEach(async (paquete) => {
+        const qrCodeBase64 = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
+        paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
+        paquete.qrCodeUrl = await this.generateQRCode(paquete.codigoQrPaquete ?? ''); //siu
       });
     });
 
@@ -64,15 +73,20 @@ export class ListPaquetesComponent implements OnInit {
     this.api.getEstadoPaquete().subscribe(data => {
       this.estadosPaquete = data;
     });
-
-
-
   }
 
   ngAfterViewInit() { //para la paginacion
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
+
+  async generateQRCode(data: string): Promise<string> {
+    const canvas = document.createElement('canvas');
+    await QRCode.toCanvas(canvas, data);
+    const qrCodeBase64 = canvas.toDataURL('image/png');
+    return qrCodeBase64;
+  }
+
   editPaquete(id: any) {
     this.router.navigate(['paquete/edit-paquete', id]);
   }
@@ -120,6 +134,25 @@ export class ListPaquetesComponent implements OnInit {
     const estadoPaquete = this.estadosPaquete.find(estado => estado.idEstado === idEstado);
     return estadoPaquete?.estadoPaquete || '';
   }
+
+  generatePDF(idPaquete: string): void {
+    const paquete = this.paquetes.find(paquete => paquete.idPaquete === idPaquete);
+
+
+    if (paquete) {
+      const docDefinition = {
+        content: [
+          // Agrega otros elementos del PDF si es necesario
+          { image: paquete.qrCodeUrl, width: 200 } as ContentImage, // Agrega la imagen del código QR con su URL
+  
+        ],
+      };
+
+  
+      pdfMake.createPdf(docDefinition).download(`QR_${idPaquete}.pdf`);
+  }
+}
+  
 
   goBack() {
     this.router.navigate(['dashboard']);
