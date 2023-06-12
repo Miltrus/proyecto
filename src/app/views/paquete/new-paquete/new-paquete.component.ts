@@ -24,7 +24,7 @@ export class NewPaqueteComponent implements OnInit {
     codigoQrPaquete: new FormControl(''),
     documentoUsuario: new FormControl(''),
     documentoCliente: new FormControl(''),
-    idEstado: new FormControl(''),
+    idEstado: new FormControl('1'),
   })
 
   usuario: UsuarioInterface[] = [];

@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
         this.loading = true;
         setTimeout(() => {
           this.alerts.showSuccess('Inicio de sesión exitoso', 'Bienvenido');
-          localStorage.setItem("rolId", dataResponse.user.idRol);
+          localStorage.setItem("idRol", dataResponse.user.idRol);
           localStorage.setItem("token", dataResponse.token);
           this.userData = dataResponse.user; // Almacenar los datos del usuario
           console.log(this.userData);

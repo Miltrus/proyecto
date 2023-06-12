@@ -31,7 +31,7 @@ export class EditPaqueteComponent implements OnInit {
     codigoQrPaquete: new FormControl(''),
     documentoUsuario: new FormControl(''),
     documentoCliente: new FormControl(''),
-    idEstado: new FormControl(''),
+    //idEstado: new FormControl(''),
   })
 
   dataPaquete: PaqueteInterface[] = [];
@@ -49,7 +49,7 @@ export class EditPaqueteComponent implements OnInit {
         'codigoQrPaquete': this.dataPaquete[0]?.codigoQrPaquete || '',
         'documentoUsuario': this.dataPaquete[0]?.documentoUsuario || '',
         'documentoCliente': this.dataPaquete[0]?.documentoCliente || '',
-        'idEstado': this.dataPaquete[0]?.idEstado || '',
+        //'idEstado': this.dataPaquete[0]?.idEstado || '',
       });
 
     });

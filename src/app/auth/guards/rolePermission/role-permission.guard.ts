@@ -8,7 +8,7 @@ export const rolePermissionGuard: CanMatchFn = (route, segments) => {
   const router = inject(Router);
   const rolService = inject(RolService);
 
-  const idRol = localStorage.getItem('rolId');
+  const idRol = localStorage.getItem('idRol');
   const modules = route.data?.['modules'] || [];
 
   return rolService.getRolPermisos(idRol).pipe(

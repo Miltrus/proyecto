@@ -14,12 +14,12 @@
               <option *ngFor="let cli of cliente " [value]="cli.documentoCliente">{{ cli.nombreCliente }}</option>
             </select>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label for="">Estado</label>
             <select class="form-control" formControlName="idEstado">
               <option *ngFor="let estado of estadosPaquete" [value]="estado.idEstado">{{ estado.estadoPaquete }}</option>
             </select>
-        </div>
+        </div> -->
         <div class="form-group">
           <label for="">Codigo QR Paquete</label>
           <input type="text" class="form-control" formControlName="codigoQrPaquete"/>

@@ -40,7 +40,7 @@ export class NavigationComponent {
     this.isDarkThemeActive = isDarkModeActive;
   
     // Obtener los permisos del rol y filtrar los módulos correspondientes
-    const idRol = localStorage.getItem('rolId');
+    const idRol = localStorage.getItem('idRol');
   
     this.rolService.getRolPermisos(idRol).subscribe(
       (response) => {
@@ -88,7 +88,7 @@ export class NavigationComponent {
       if (result) {
         this.router.navigate(['landing-page']);
         localStorage.removeItem('token');
-        localStorage.removeItem('rolId'); // Elimina el ID del rol del localStorage
+        localStorage.removeItem('idRol'); // Elimina el ID del rol del localStorage
 
         this.isDarkThemeActive = false;
         this.document.body.classList.remove('dark-mode');
