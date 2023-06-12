@@ -20,24 +20,25 @@ import { ResponseInterface } from '../../../models/response.interface';
 export class EditPaqueteComponent implements OnInit {
 
   constructor(
-    private router: Router, 
-    private activatedRouter: ActivatedRoute, 
-    private api: PaqueteService, 
+    private router: Router,
+    private activatedRouter: ActivatedRoute,
+    private api: PaqueteService,
     private alerts: AlertsService,
-    ) { }
+  ) { }
 
   editForm = new FormGroup({
     idPaquete: new FormControl(''),
     codigoQrPaquete: new FormControl(''),
     documentoUsuario: new FormControl(''),
     documentoCliente: new FormControl(''),
-    //idEstado: new FormControl(''),
+    idEstado: new FormControl(''),
   })
 
   dataPaquete: PaqueteInterface[] = [];
   usuario: UsuarioInterface[] = [];
   cliente: ClienteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
+  loading: boolean = true;
 
   ngOnInit(): void {
 
@@ -49,9 +50,9 @@ export class EditPaqueteComponent implements OnInit {
         'codigoQrPaquete': this.dataPaquete[0]?.codigoQrPaquete || '',
         'documentoUsuario': this.dataPaquete[0]?.documentoUsuario || '',
         'documentoCliente': this.dataPaquete[0]?.documentoCliente || '',
-        //'idEstado': this.dataPaquete[0]?.idEstado || '',
+        'idEstado': this.dataPaquete[0]?.idEstado || 'idEstado',
       });
-
+      this.loading = false;
     });
     this.getUsuarioPaquete();
     this.getClientePaquete();
@@ -59,6 +60,7 @@ export class EditPaqueteComponent implements OnInit {
   }
 
   postForm(id: any) {
+    this.loading = true;
     this.api.putPaquete(id).subscribe(data => {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
@@ -68,43 +70,33 @@ export class EditPaqueteComponent implements OnInit {
       else {
         this.alerts.showError(respuesta.msj, "Error en la Modificación");
       }
+      this.loading = false;
     })
   }
 
   getUsuarioPaquete(): void {
-    this.api.getUsuario().subscribe(
-      (data: UsuarioInterface[]) => {
-        this.usuario = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getUsuario().subscribe(data => {
+      this.usuario = data;
+      this.loading = false;
+    });
   }
 
   getClientePaquete(): void {
-    this.api.getCliente().subscribe(
-      (data: ClienteInterface[]) => {
-        this.cliente = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getCliente().subscribe(data => {
+      this.cliente = data;
+      this.loading = false;
+    });
   }
 
   getEstadoPaquete(): void {
-    this.api.getEstadoPaquete().subscribe(
-      (data: EstadoPaqueteInterface[]) => {
-        this.estadosPaquete = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getEstadoPaquete().subscribe(data => {
+      this.estadosPaquete = data;
+      this.loading = false;
+    });
   }
 
   goBack() {
+    this.loading = true;
     this.router.navigate(['paquete/list-paquetes']);
   }
 }

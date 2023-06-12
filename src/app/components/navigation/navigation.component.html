@@ -4,9 +4,16 @@
     <mat-toolbar id="header">
       <h1>Menú</h1>
     </mat-toolbar>
-    <mat-nav-list *ngFor="let module of modules">
-      <a mat-list-item [routerLink]="module.route">{{ module.name }}</a>
-    </mat-nav-list>
+    <ng-container *ngIf="!showModules">
+      <div class="spinner-overlay" *ngIf="loading">
+        <div class="spinner">
+          <mat-spinner></mat-spinner>
+        </div>
+      </div>
+      <mat-nav-list *ngFor="let module of modules">
+        <a mat-list-item [routerLink]="module.route">{{ module.name }}</a>
+      </mat-nav-list>
+    </ng-container>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar class="custom-toolbar">
@@ -27,9 +34,9 @@
         <button mat-menu-item (click)="goToProfile()">Administrar usuario</button>
         <button mat-menu-item (click)="logout()">Cerrar sesión</button>
       </mat-menu>
-      
-      
-      
+
+
+
     </mat-toolbar>
     <ng-content></ng-content>
   </mat-sidenav-content>

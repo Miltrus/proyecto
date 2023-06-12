@@ -1,61 +1,43 @@
+<div class="spinner-overlay" *ngIf="loading">
+  <div class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
 <app-navigation>
-    <div class="container">
-      <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)" class="form-container">
-        <div class="form-row">
-          <div class="form-column">
-            <div class="form-group">
-              <mat-form-field class="mat-form-field">
-                <mat-label>Tipo de documento</mat-label>
-                <select matNativeControl formControlName="idTipoDocumento">
-                  <option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.idTipoDocumento">
-                    {{ tipoDocumento.nombreTipo }}
-                  </option>
-                </select>
-              </mat-form-field>
-            </div>
-            <div class="form-group">
-              <mat-form-field class="mat-form-field">
-                <mat-label>Nombre</mat-label>
-                <input matInput type="text" formControlName="nombreCliente" />
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="form-column">
-            <div class="form-group">
-              <mat-form-field class="mat-form-field">
-                <mat-label>Documento</mat-label>
-                <input matInput type="text" formControlName="documentoCliente" />
-              </mat-form-field>
-            </div>
-            <div class="form-group">
-              <mat-form-field class="mat-form-field">
-                <mat-label>Teléfono</mat-label>
-                <input matInput type="text" formControlName="telefonoCliente" />
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <mat-form-field class="mat-form-field">
-              <mat-label>Correo</mat-label>
-              <input matInput type="text" formControlName="correoCliente" />
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <mat-form-field class="mat-form-field">
-              <mat-label>Dirección</mat-label>
-              <input matInput type="text" formControlName="direccionCliente" />
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="form-actions">
-          <button mat-button color="warn" (click)="goBack()">Atrás</button>
-          <button mat-raised-button color="primary" type="submit">Guardar</button>
-        </div>
-      </form>
-    </div>
-  </app-navigation>
-  
+  <div class="container">
+    <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)">
+      <div class="form-group">
+        <label for="idTipoDocumento">Tipo de documento</label>
+        <select class="form-control" formControlName="idTipoDocumento">
+          <option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.idTipoDocumento">{{
+            tipoDocumento.nombreTipo }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Documento</label>
+        <input type="text" class="form-control" formControlName="documentoCliente" />
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Nombre</label>
+        <input type="text" class="form-control" formControlName="nombreCliente" />
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Telefono</label>
+        <input type="text" class="form-control" formControlName="telefonoCliente" />
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Correo</label>
+        <input type="text" class="form-control" formControlName="correoCliente" />
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Direccion</label>
+        <input type="text" class="form-control" formControlName="direccionCliente" />
+      </div>
+      <br><br />
+
+      <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
+      <button type="submit" mat-raised-button color='primary'>Guardar</button>
+
+    </form>
+  </div>
+</app-navigation>

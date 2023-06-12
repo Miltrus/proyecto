@@ -1,48 +1,54 @@
+<div class="spinner-overlay" *ngIf="loading">
+    <div class="spinner">
+        <mat-spinner></mat-spinner>
+    </div>
+</div>
 <app-navigation>
 
-<div class="container">
-    <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
-        <div class="form-group">
-            <label for="idTipoDocumento">Tipo de documento</label>
-            <select class="form-control" formControlName="idTipoDocumento">
-              <option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.idTipoDocumento">{{ tipoDocumento.nombreTipo }}</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="exampleFormControlInput1">Documento</label>
-            <input type="text" class="form-control" formControlName="documentoUsuario" readonly/>
-        </div>
-        <div class="form-group">
-            <label for="exampleFormControlInput1">Nombre</label>
-            <input type="text" class="form-control" formControlName="nombreUsuario"/>
-        </div>
-        <div class="form-group">
-            <label for="exampleFormControlInput1">Apellido</label>
-            <input type="text" class="form-control" formControlName="apellidoUsuario"/>
-        </div>
-        <div class="form-group">
-            <label for="exampleFormControlInput1">Telefono</label>
-            <input type="text" class="form-control" formControlName="telefonoUsuario"/>
-        </div>
-        <div class="form-group">
-            <label for="exampleFormControlInput1">Correo</label>
-            <input type="text" class="form-control" formControlName="correoUsuario"/>
-        </div>
-        <div class="form-group">
-            <label for="exampleFormControlInput1">Contraseña</label>
-            <input type="password" class="form-control" formControlName="contrasenaUsuario"/>
-        </div>
-        <div class="form-group">
-            <label for="idTipoDocumento">Rol</label>
-            <select class="form-control" formControlName="idRol">
-              <option *ngFor="let rol of rolUsuario" [value]="rol.idRol">{{ rol.nombreRol }}</option>
-            </select>
-        </div>
-        <br><br/> 
-        
-        <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
-        <button type="submit" mat-raised-button color='primary' >Guardar</button>
-        
-    </form>
-</div>
+    <div class="container">
+        <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
+            <div class="form-group">
+                <label for="idTipoDocumento">Tipo de documento</label>
+                <select class="form-control" formControlName="idTipoDocumento">
+                    <option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.idTipoDocumento">{{
+                        tipoDocumento.nombreTipo }}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Documento</label>
+                <input type="text" class="form-control" formControlName="documentoUsuario" readonly />
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Nombre</label>
+                <input type="text" class="form-control" formControlName="nombreUsuario" />
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Apellido</label>
+                <input type="text" class="form-control" formControlName="apellidoUsuario" />
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Telefono</label>
+                <input type="text" class="form-control" formControlName="telefonoUsuario" />
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Correo</label>
+                <input type="text" class="form-control" formControlName="correoUsuario" />
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Contraseña</label>
+                <input type="password" class="form-control" formControlName="contrasenaUsuario" />
+            </div>
+            <div class="form-group">
+                <label for="idTipoDocumento">Rol</label>
+                <select class="form-control" formControlName="idRol">
+                    <option *ngFor="let rol of rolUsuario" [value]="rol.idRol">{{ rol.nombreRol }}</option>
+                </select>
+            </div>
+            <br><br />
+
+            <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
+            <button type="submit" mat-raised-button color='primary'>Guardar</button>
+
+        </form>
+    </div>
 </app-navigation>

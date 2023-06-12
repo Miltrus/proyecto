@@ -18,12 +18,13 @@ export class NewRolComponent implements OnInit {
   constructor(private router: Router, private api: RolService, private alerts: AlertsService) { }
 
   newForm = new FormGroup({
-    nombreRol: new FormControl('', Validators.required) ,
+    nombreRol: new FormControl('', Validators.required),
     descripcionRol: new FormControl(''),
     permisosSeleccionados: new FormArray(<any>[])
   });
 
   permisos: PermisoInterface[] = [];
+  loading: boolean = true;
 
   ngOnInit(): void {
     this.getPermisos();
@@ -36,17 +37,19 @@ export class NewRolComponent implements OnInit {
         const control = new FormControl(false);
         (this.newForm.controls.permisosSeleccionados as FormArray<any>).push(control);
       });
+      this.loading = false;
     });
   }
-  
+
 
   postForm(form: RolInterface) {
+    this.loading = true;
     this.api.postRol(form).subscribe(data => {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
         this.alerts.showSuccess('El rol ha sido creado exitosamente.', 'Rol Creado');
         this.router.navigate(['rol/list-roles']);
-  
+
         // Obtén el último ID de rol creado
         this.api.getLastRolId().subscribe(lastRolId => {
           const idRol = lastRolId;
@@ -60,7 +63,7 @@ export class NewRolComponent implements OnInit {
                 idRol: idRol,
                 idPermiso: permisoId
               };
-  
+
               // Llama al método de la API para guardar el registro en la tabla intermedia
               this.api.guardarRolPermiso(rolPermiso).subscribe(response => {
                 // Maneja la respuesta si es necesario
@@ -68,14 +71,16 @@ export class NewRolComponent implements OnInit {
             }
           });
         });
-  
+
       } else {
         this.alerts.showError(respuesta.msj, 'Error al crear el rol');
       }
+      this.loading = false;
     });
   }
 
   goBack() {
+    this.loading = true;
     this.router.navigate(['rol/list-roles']);
   }
 

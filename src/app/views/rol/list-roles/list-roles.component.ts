@@ -24,10 +24,11 @@ export class ListRolesComponent implements OnInit {
     private router: Router,
     private alerts: AlertsService,
     private dialog: MatDialog,
-  ) {}
+  ) { }
 
   roles: RolInterface[] = [];
   dataSource: MatTableDataSource<RolInterface> = new MatTableDataSource();
+  loading: boolean = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('viewRolDialog') viewRolDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de rol
@@ -50,9 +51,16 @@ export class ListRolesComponent implements OnInit {
         data.forEach((rol: RolInterface) => {
           this.loadPermisosPorRol(rol.idRol);
         });
+
+
+        if (this.roles.length == 0) {
+          this.alerts.showError('No hay roles registrados.', 'Sin registros');
+        }
+
       },
       (error) => {
         console.log(error);
+        this.loading = false;
       }
     );
   }
@@ -72,6 +80,8 @@ export class ListRolesComponent implements OnInit {
         if (rol) {
           rol.permisos = permisos;
         }
+
+        this.loading = false;
       },
       (error) => {
         console.log(error);
@@ -87,10 +97,12 @@ export class ListRolesComponent implements OnInit {
   }
 
   editRol(id: any): void {
+    this.loading = true;
     this.router.navigate(['rol/edit-rol', id]);
   }
 
   newRol(): void {
+    this.loading = true;
     this.router.navigate(['rol/new-rol']);
   }
 
@@ -103,6 +115,7 @@ export class ListRolesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        this.loading = true;
         this.api.deleteRol(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
 
@@ -113,12 +126,15 @@ export class ListRolesComponent implements OnInit {
           } else {
             this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
           }
+          this.loading = false;
         });
       }
+      this.loading = false;
     });
   }
 
   goBack(): void {
+    this.loading = true;
     this.router.navigate(['dashboard']);
   }
 

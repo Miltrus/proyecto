@@ -15,9 +15,9 @@ import { RolInterface } from 'src/app/models/rol.interface';
   templateUrl: './new-usuario.component.html',
   styleUrls: ['./new-usuario.component.scss']
 })
-export class NewUsuarioComponent implements OnInit{
+export class NewUsuarioComponent implements OnInit {
 
-  constructor(private router:Router, private api:UsuarioService, private alerts:AlertsService) { }
+  constructor(private router: Router, private api: UsuarioService, private alerts: AlertsService) { }
 
   newForm = new FormGroup({
     documentoUsuario: new FormControl(''),
@@ -34,6 +34,7 @@ export class NewUsuarioComponent implements OnInit{
   tiposDocumento: TipoDocumentoInterface[] = []
   estadosUsuario: EstadoUsuarioInterface[] = [];
   rolUsuario: RolInterface[] = [];
+  loading: boolean = true;
 
   ngOnInit(): void {
     this.getTiposDocumento();
@@ -41,53 +42,44 @@ export class NewUsuarioComponent implements OnInit{
     this.getRolesUsuario();
   }
 
-  postForm(form: UsuarioInterface){
+  postForm(form: UsuarioInterface) {
+    this.loading = true;
     this.api.postUsuario(form).subscribe(data => {
       let respuesta: ResponseInterface = data;
-      if(respuesta.status == 'ok'){
+      if (respuesta.status == 'ok') {
         this.alerts.showSuccess('El usuario ha sido creado exitosamente.', 'Usuario creado');
         this.router.navigate(['usuario/list-usuarios']);
       }
-      else{
+      else {
         this.alerts.showError(respuesta.msj, 'Error al crear el usuario');
       }
+      this.loading = false;
     });
   }
 
   getTiposDocumento(): void {
-    this.api.getTipoDocumento().subscribe(
-      (data: TipoDocumentoInterface[]) => {
-        this.tiposDocumento = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getTipoDocumento().subscribe(data => {
+      this.tiposDocumento = data;
+      this.loading = false;
+    });
   }
 
   getEstadosUsuario(): void {
-    this.api.getEstadoUsuario().subscribe(
-      (data: EstadoUsuarioInterface[]) => {
-        this.estadosUsuario = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getEstadoUsuario().subscribe(data => {
+      this.estadosUsuario = data;
+      this.loading = false;
+    });
   }
 
   getRolesUsuario(): void {
-    this.api.getRolUsuario().subscribe(
-      (data: RolInterface[]) => {
-        this.rolUsuario = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getRolUsuario().subscribe(data => {
+      this.rolUsuario = data;
+      this.loading = false;
+    });
   }
 
-  goBack(){
+  goBack() {
+    this.loading = true;
     this.router.navigate(['usuario/list-usuarios']);
   }
 }

@@ -1,3 +1,8 @@
+<div class="spinner-overlay" *ngIf="loading">
+  <div class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
 <app-navigation>
   <div class="container">
     <h1>Roles</h1>
@@ -59,11 +64,14 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="['num', 'idRol', 'nombreRol', 'descripcionRol', 'permisos',  'acciones']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['num', 'idRol', 'nombreRol', 'descripcionRol', 'permisos',  'acciones']"></tr>
+        <tr mat-header-row *matHeaderRowDef="['num', 'idRol', 'nombreRol', 'descripcionRol', 'permisos',  'acciones']">
+        </tr>
+        <tr mat-row
+          *matRowDef="let row; columns: ['num', 'idRol', 'nombreRol', 'descripcionRol', 'permisos',  'acciones']"></tr>
       </table>
     </div>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements"></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+      aria-label="Select page of periodic elements"></mat-paginator>
     <br>
     <button mat-raised-button color='accent' (click)="goBack()">Volver a la lista</button>
   </div>

@@ -1,24 +1,26 @@
+<div class="spinner-overlay" *ngIf="loading">
+    <div class="spinner">
+        <mat-spinner></mat-spinner>
+    </div>
+</div>
 <app-navigation>
 
-<div class="container">
-    <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
-      <div class="form-group">
-        <label for="exampleFormControlInput1">Descripcion Rol</label>
-        <input type="text" class="form-control" formControlName="nombreRol"/>
-    </div>
-        <div class="form-group">
-            <label for="exampleFormControlInput1">Descripcion Rol</label>
-            <input type="text" class="form-control" formControlName="descripcionRol"/>
-        </div>
-        
-        
-       
-        <br><br/> 
-        
-        <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
-        <button type="submit" mat-raised-button color='primary' >Editar</button>
-        
-    </form>
-</div>
-</app-navigation>
+    <div class="container">
+        <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Descripcion Rol</label>
+                <input type="text" class="form-control" formControlName="nombreRol" />
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Descripcion Rol</label>
+                <input type="text" class="form-control" formControlName="descripcionRol" />
+            </div>
+            <br><br />
 
+            <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
+            <button type="submit" mat-raised-button color='primary'>Editar</button>
+
+        </form>
+    </div>
+
+</app-navigation>

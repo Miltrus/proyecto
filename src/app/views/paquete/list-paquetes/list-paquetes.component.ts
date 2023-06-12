@@ -45,6 +45,7 @@ export class ListPaquetesComponent implements OnInit {
   cliente: ClienteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
   dataSource = new MatTableDataSource(this.paquetes); //pal filtro
+  loading: boolean = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
@@ -60,18 +61,22 @@ export class ListPaquetesComponent implements OnInit {
         paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
         paquete.qrCodeUrl = await this.generateQRCode(paquete.codigoQrPaquete ?? ''); //siu
       });
+      this.loading = false;
     });
 
     this.api.getUsuario().subscribe(data => {
       this.usuario = data;
+      this.loading = false;
     });
 
     this.api.getCliente().subscribe(data => {
       this.cliente = data;
+      this.loading = false;
     });
 
     this.api.getEstadoPaquete().subscribe(data => {
       this.estadosPaquete = data;
+      this.loading = false;
     });
   }
 
@@ -88,10 +93,12 @@ export class ListPaquetesComponent implements OnInit {
   }
 
   editPaquete(id: any) {
+    this.loading = true;
     this.router.navigate(['paquete/edit-paquete', id]);
   }
 
   newPaquete() {
+    this.loading = true;
     this.router.navigate(['paquete/new-paquete']);
   }
 
@@ -104,6 +111,7 @@ export class ListPaquetesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        this.loading = true;
         this.api.deletePaquete(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
 
@@ -114,7 +122,11 @@ export class ListPaquetesComponent implements OnInit {
           } else {
             this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
           }
+          this.loading = false;
         });
+      } else {
+        this.alerts.showError('No se ha realizado ninguna accion', 'Eliminacion cancelada');
+        this.loading = false;
       }
     });
   }
@@ -136,7 +148,7 @@ export class ListPaquetesComponent implements OnInit {
   }
 
   generatePDF(idPaquete: string): void {
-    
+
     const paquete = this.paquetes.find(paquete => paquete.idPaquete === idPaquete);
 
     if (paquete) {
@@ -144,16 +156,17 @@ export class ListPaquetesComponent implements OnInit {
         content: [
           // Agrega otros elementos del PDF si es necesario
           { image: paquete.qrCodeUrl, width: 200 } as ContentImage, // Agrega la imagen del código QR con su URL
-  
+
         ],
       };
 
       pdfMake.createPdf(docDefinition).download(`QR_${idPaquete}.pdf`);
     }
   }
-  
+
 
   goBack() {
+    this.loading = true;
     this.router.navigate(['dashboard']);
   }
 

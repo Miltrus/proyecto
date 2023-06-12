@@ -13,17 +13,18 @@ import { PermisoInterface } from 'src/app/models/permiso.interface';
   templateUrl: './edit-rol.component.html',
   styleUrls: ['./edit-rol.component.scss']
 })
-export class EditRolComponent implements OnInit{
+export class EditRolComponent implements OnInit {
 
   constructor(
-    private router: Router, 
-    private activatedRouter: ActivatedRoute, 
-    private api: RolService, 
+    private router: Router,
+    private activatedRouter: ActivatedRoute,
+    private api: RolService,
     private alerts: AlertsService,
   ) { }
 
   dataRol: RolInterface[] = [];
   permisos: PermisoInterface[] = [];
+  loading: boolean = true;
 
   editForm = new FormGroup({
     idRol: new FormControl(''),
@@ -41,22 +42,26 @@ export class EditRolComponent implements OnInit{
         nombreRol: this.dataRol[0]?.nombreRol || '',
         descripcionRol: this.dataRol[0]?.descripcionRol || ''
       });
+      this.loading = false;
     });
   }
 
   postForm(id: any) {
+    this.loading = true;
     this.api.putRol(id).subscribe(data => {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El rol ha sido editado exitosamente.', 'Edición de Rol');
+        this.alerts.showSuccess('El rol ha sido editado exitosamente.', 'Rol actualizado');
         this.router.navigate(['rol/list-roles']);
       } else {
         this.alerts.showError(respuesta.msj, 'Error al editar el rol');
       }
+      this.loading = false;
     });
   }
 
-  goBack(){
+  goBack() {
+    this.loading = true;
     this.router.navigate(['rol/list-roles']);
   }
 }

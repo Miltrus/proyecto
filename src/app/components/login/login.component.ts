@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
 
 
   onLogin(form: LoginInterface) {
+    this.loading = true;
     this.api.onLogin(form).subscribe(data => {
       let dataResponse: ResponseInterface = data;
       if (dataResponse.status == 'ok') {
@@ -41,13 +42,14 @@ export class LoginComponent implements OnInit {
           localStorage.setItem("token", dataResponse.token);
           this.userData = dataResponse.user; // Almacenar los datos del usuario
           console.log(this.userData);
-          
+
           this.router.navigate(['dashboard']);
-          this.loading = false;
         }, 500);
+        this.loading = false;
         return true;
       } else {
         this.alerts.showError(dataResponse.msj, 'Error al iniciar sesión');
+        this.loading = false;
         return false;
       }
     });

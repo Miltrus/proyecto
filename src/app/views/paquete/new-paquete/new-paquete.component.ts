@@ -30,6 +30,7 @@ export class NewPaqueteComponent implements OnInit {
   usuario: UsuarioInterface[] = [];
   cliente: ClienteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
+  loading: boolean = true;
 
   ngOnInit(): void {
     this.getUsuarioPaquete();
@@ -37,17 +38,20 @@ export class NewPaqueteComponent implements OnInit {
     this.getEstadoPaquete();
 
     this.newForm.get('documentoCliente')?.valueChanges.subscribe((value) => {
+      this.loading = true;
       this.paqueteService.getDireccionCliente(value).subscribe((data) => {
         if (data.direccion) {
           this.newForm.patchValue({
             codigoQrPaquete: data.direccion
           });
+          this.loading = false;
         }
       });
     });
   }
 
   postForm(form: PaqueteInterface) {
+    this.loading = true;
     this.api.postPaquete(form).subscribe(data => {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
@@ -57,43 +61,33 @@ export class NewPaqueteComponent implements OnInit {
       else {
         this.alerts.showError(respuesta.msj, 'Error al crear el paquete');
       }
+      this.loading = false;
     });
   }
 
   getUsuarioPaquete(): void {
-    this.api.getUsuario().subscribe(
-      (data: UsuarioInterface[]) => {
-        this.usuario = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getUsuario().subscribe(data => {
+      this.usuario = data;
+      this.loading = false;
+    });
   }
 
   getClientePaquete(): void {
-    this.api.getCliente().subscribe(
-      (data: ClienteInterface[]) => {
-        this.cliente = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getCliente().subscribe(data => {
+      this.cliente = data;
+      this.loading = false;
+    });
   }
 
   getEstadoPaquete(): void {
-    this.api.getEstadoPaquete().subscribe(
-      (data: EstadoPaqueteInterface[]) => {
-        this.estadosPaquete = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getEstadoPaquete().subscribe(data => {
+      this.estadosPaquete = data;
+      this.loading = false;
+    });
   }
 
-  goBack(){
+  goBack() {
+    this.loading = true;
     this.router.navigate(['paquete/list-paquetes']);
   }
 }

@@ -14,17 +14,18 @@ import { ResponseInterface } from '../../../models/response.interface';
   templateUrl: './edit-cliente.component.html',
   styleUrls: ['./edit-cliente.component.scss']
 })
-export class EditClienteComponent implements OnInit{
+export class EditClienteComponent implements OnInit {
 
   constructor(
-    private router:Router, 
-    private activatedRouter:ActivatedRoute, 
-    private api:ClienteService,
-    private alerts:AlertsService,
+    private router: Router,
+    private activatedRouter: ActivatedRoute,
+    private api: ClienteService,
+    private alerts: AlertsService,
   ) { }
 
   dataCliente: ClienteInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
+  loading: boolean = true;
 
   editForm = new FormGroup({
     documentoCliente: new FormControl(''),
@@ -47,35 +48,35 @@ export class EditClienteComponent implements OnInit{
         'correoCliente': this.dataCliente[0]?.correoCliente || '',
         'direccionCliente': this.dataCliente[0]?.direccionCliente || '',
       });
+      this.loading = false;
     })
     this.getTiposDocumento();
   }
 
-  postForm(id: any){
+  postForm(id: any) {
+    this.loading = true;
     this.api.putCliente(id).subscribe(data => {
       let respuesta: ResponseInterface = data;
-      if(respuesta.status == 'ok'){
+      if (respuesta.status == 'ok') {
         this.alerts.showSuccess('El cliente ha sido modificado exitosamente.', 'Modificación Exitosa');
         this.router.navigate(['cliente/list-clientes']);
       }
-      else{
+      else {
         this.alerts.showError(respuesta.msj, "Error en la Modificación");
       }
+      this.loading = false;
     })
   }
 
   getTiposDocumento(): void {
-    this.api.getTipoDocumento().subscribe(
-      (data: TipoDocumentoInterface[]) => {
-        this.tiposDocumento = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getTipoDocumento().subscribe(data => {
+      this.tiposDocumento = data;
+      this.loading = false;
+    });
   }
 
-  goBack(){
+  goBack() {
+    this.loading = true;
     this.router.navigate(['cliente/list-clientes']);
   }
 }

@@ -1,7 +1,12 @@
+<div class="spinner-overlay" *ngIf="loading">
+  <div class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
 <app-navigation>
   <div class="container">
     <h1>Clientes</h1>
-    
+
     <div class="create-button-container">
 
       <button mat-raised-button color="primary" (click)="newCliente()">Crear nuevo cliente</button>
@@ -67,12 +72,16 @@
             </mat-menu>
           </td>
         </ng-container>
-        <tr mat-header-row *matHeaderRowDef="['num', 'documentoCliente', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['num', 'documentoCliente', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']"></tr>
+        <tr mat-header-row
+          *matHeaderRowDef="['num', 'documentoCliente', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']">
+        </tr>
+        <tr mat-row
+          *matRowDef="let row; columns: ['num', 'documentoCliente', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']">
+        </tr>
       </table>
     </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-    
+
     <br>
     <button mat-raised-button color='accent' (click)="goBack()">Volver a la lista</button>
     <br><br>
@@ -82,7 +91,7 @@
   <div class="dialogData">
     <h2>Información de cliente</h2>
     <p><strong>Documento:</strong> {{ dialogData.documentoCliente }}</p>
-    <p><strong>Tipo de Documento:</strong> {{ getTipoDocumento(dialogData.idTipoDocumento) }}</p>
+    <p><strong>Tipo de documento:</strong> {{ getTipoDocumento(dialogData.idTipoDocumento) }}</p>
     <p><strong>Nombre:</strong> {{ dialogData.nombreCliente }}</p>
     <p><strong>Teléfono:</strong> {{ dialogData.telefonoCliente }}</p>
     <p><strong>Correo:</strong> {{ dialogData.correoCliente }}</p>

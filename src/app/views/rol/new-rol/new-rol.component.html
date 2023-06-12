@@ -1,34 +1,38 @@
+<div class="spinner-overlay" *ngIf="loading">
+  <div class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
 <app-navigation>
 
-<div class="container">
+  <div class="container">
     <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)">
-        <div class="form-group">
-            <label for="exampleFormControlInput1">Nombre Rol</label>
-            <input type="text" class="form-control" formControlName="nombreRol">
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Nombre Rol</label>
+        <input type="text" class="form-control" formControlName="nombreRol">
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Descripcion Rol</label>
+        <input type="text" class="form-control" formControlName="descripcionRol" />
+      </div>
+      <br><br />
+      <div class="form-group" formArrayName="permisosSeleccionados">
+        <label>Permisos:</label>
+        <div *ngFor="let permiso of permisos; let i = index">
+          <label>
+            <input type="checkbox" [formControlName]="i">
+            {{ permiso.nombrePermiso }}
+          </label>
         </div>
-        <div class="form-group">
-            <label for="exampleFormControlInput1">Descripcion Rol</label>
-            <input type="text" class="form-control" formControlName="descripcionRol"/>
-        </div>
-        <br><br/> 
-        <div class="form-group" formArrayName="permisosSeleccionados">
-          <label>Permisos:</label>
-          <div *ngFor="let permiso of permisos; let i = index">
-            <label>
-              <input type="checkbox" [formControlName]="i">
-              {{ permiso.nombrePermiso }}
-            </label>
-          </div>
-          
-        </div>
-        
-        <br><br>
-          
-        
-        <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
-        <button type="submit" mat-raised-button color='primary' >Guardar</button>
-        
-    </form>
-</div>
-</app-navigation>
 
+      </div>
+
+      <br><br>
+
+
+      <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
+      <button type="submit" mat-raised-button color='primary'>Guardar</button>
+
+    </form>
+  </div>
+</app-navigation>

@@ -16,14 +16,14 @@ import { ResponseInterface } from '../../../models/response.interface';
   templateUrl: './edit-usuario.component.html',
   styleUrls: ['./edit-usuario.component.scss']
 })
-export class EditUsuarioComponent implements OnInit{
+export class EditUsuarioComponent implements OnInit {
 
   constructor(
-    private router:Router, 
-    private activatedRouter:ActivatedRoute, 
-    private api:UsuarioService, 
-    private alerts:AlertsService,
-    ) { }
+    private router: Router,
+    private activatedRouter: ActivatedRoute,
+    private api: UsuarioService,
+    private alerts: AlertsService,
+  ) { }
 
   editForm = new FormGroup({
     documentoUsuario: new FormControl(''),
@@ -37,14 +37,15 @@ export class EditUsuarioComponent implements OnInit{
     idEstado: new FormControl(''),
   })
 
-  dataUsuario : UsuarioInterface[] = [];
+  dataUsuario: UsuarioInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = []
   estadosUsuario: EstadoUsuarioInterface[] = [];
   rolUsuario: RolInterface[] = [];
+  loading: boolean = true;
 
   ngOnInit(): void {
     let documentoUsuario = this.activatedRouter.snapshot.paramMap.get('id');
-    
+
     this.api.getOneUsuario(documentoUsuario).subscribe(data => {
       this.dataUsuario = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
       this.editForm.setValue({
@@ -58,59 +59,51 @@ export class EditUsuarioComponent implements OnInit{
         'idRol': this.dataUsuario[0]?.idRol || '',
         'idEstado': this.dataUsuario[0]?.idEstado || '',
       });
+      this.loading = false;
     });
     this.getTiposDocumento();
     this.getEstadosUsuario();
     this.getRolesUsuario();
   }
 
-  postForm(id: any){
+  postForm(id: any) {
+    this.loading = true;
     this.api.putUsuario(id).subscribe(data => {
       let respuesta: ResponseInterface = data;
-      if(respuesta.status == 'ok'){
+      if (respuesta.status == 'ok') {
         this.alerts.showSuccess('El usuario ha sido modificado exitosamente.', 'Modificación Exitosa');
         this.router.navigate(['usuario/list-usuarios']);
       }
-      else{
+      else {
         this.alerts.showError(respuesta.msj, "Error en la Modificación");
       }
+      this.loading = false;
     })
   }
 
   getTiposDocumento(): void {
-    this.api.getTipoDocumento().subscribe(
-      (data: TipoDocumentoInterface[]) => {
-        this.tiposDocumento = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getTipoDocumento().subscribe(data => {
+      this.tiposDocumento = data;
+      this.loading = false;
+    });
   }
 
   getEstadosUsuario(): void {
-    this.api.getEstadoUsuario().subscribe(
-      (data: EstadoUsuarioInterface[]) => {
-        this.estadosUsuario = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getEstadoUsuario().subscribe(data => {
+      this.estadosUsuario = data;
+      this.loading = false;
+    });
   }
 
   getRolesUsuario(): void {
-    this.api.getRolUsuario().subscribe(
-      (data: RolInterface[]) => {
-        this.rolUsuario = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getRolUsuario().subscribe(data => {
+      this.rolUsuario = data;
+      this.loading = false;
+    });
   }
 
-  goBack(){
+  goBack() {
+    this.loading = true;
     this.router.navigate(['usuario/list-usuarios']);
   }
 }

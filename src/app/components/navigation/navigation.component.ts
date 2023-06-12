@@ -19,12 +19,37 @@ export class NavigationComponent {
   @ViewChild('userMenuTrigger') userMenuTrigger!: MatMenuTrigger;
   private breakpointObserver = inject(BreakpointObserver);
 
+  isDarkThemeActive = false;
+  showModules: boolean = true;
+  loading: boolean = true;
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private router: Router,
     private dialog: MatDialog,
     private rolService: RolService
-  ) {}
+  ) {
+    // Verificar si el modo oscuro está activo al iniciar el componente
+    const isDarkModeActive = this.document.body.classList.contains('dark-mode');
+    this.isDarkThemeActive = isDarkModeActive;
+
+    // Obtener los permisos del rol y filtrar los módulos correspondientes
+    const idRol = localStorage.getItem('idRol');
+    this.rolService.getRolPermisos(idRol).subscribe(
+      (response) => {
+        const permisos = response.idPermiso?.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
+
+        this.modules = this.modules.filter((module) => permisos.includes(module.name));
+        this.showModules = false;
+        this.loading = false;
+      },
+      (error) => {
+        console.error('Error al obtener los permisos del rol:', error);
+        this.showModules = false;
+        this.loading = false;
+      }
+    );
+  }
 
   modules = [
     { name: 'Roles', route: '/rol' },
@@ -34,32 +59,7 @@ export class NavigationComponent {
     { name: 'Novedades', route: '/novedad' },
   ];
 
-  ngOnInit(): void {
-    // Verificar si el modo oscuro está activo al iniciar el componente
-    const isDarkModeActive = this.document.body.classList.contains('dark-mode');
-    this.isDarkThemeActive = isDarkModeActive;
-  
-    // Obtener los permisos del rol y filtrar los módulos correspondientes
-    const idRol = localStorage.getItem('idRol');
-  
-    this.rolService.getRolPermisos(idRol).subscribe(
-      (response) => {
-        const permisos = response.idPermiso.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
-  
-        this.modules = this.modules.filter((module) =>
-          permisos.includes(module.name)
-        );
-      },
-      (error) => {
-        console.error('Error al obtener los permisos del rol:', error);
-        // Manejar el error según corresponda
-      }
-    );
-  }
-  
-  
 
-  isDarkThemeActive = false;
 
   onChange(newValue: boolean): void {
     if (newValue) {

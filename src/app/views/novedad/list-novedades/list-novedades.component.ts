@@ -31,6 +31,7 @@ export class ListNovedadesComponent implements OnInit {
   tiposNovedad: TipoNovedadInterface[] = [];
   entrega: EntregaInterface[] = [];
   dataSource = new MatTableDataSource(this.novedades); //pal filtro
+  loading: boolean = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
@@ -40,15 +41,17 @@ export class ListNovedadesComponent implements OnInit {
     this.api.getAllNovedades().subscribe(data => {
       this.novedades = data;
       this.dataSource.data = this.novedades; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
+      this.loading = false;
     });
 
     this.api.getTipoNovedad().subscribe(data => {
       this.tiposNovedad = data;
-      
+      this.loading = false;
     });
 
     this.api.getEntrega().subscribe(data => {
       this.entrega = data;
+      this.loading = false;
     });
   }
 
@@ -75,6 +78,7 @@ export class ListNovedadesComponent implements OnInit {
   }
 
   goBack() {
+    this.loading = true;
     this.router.navigate(['dashboard']);
   }
 

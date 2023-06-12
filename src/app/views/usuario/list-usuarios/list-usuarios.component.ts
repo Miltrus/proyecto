@@ -33,6 +33,7 @@ export class ListUsuariosComponent implements OnInit {
   estadosUsuario: EstadoUsuarioInterface[] = [];
   rolUsuario: RolInterface[] = [];
   dataSource = new MatTableDataSource(this.usuarios); //pal filtro
+  loading: boolean = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
@@ -42,18 +43,22 @@ export class ListUsuariosComponent implements OnInit {
     this.api.getAllUsuarios().subscribe(data => {
       this.usuarios = data;
       this.dataSource.data = this.usuarios; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
+      this.loading = false;
     });
 
     this.api.getTipoDocumento().subscribe(data => {
       this.tiposDocumento = data;
+      this.loading = false;
     });
 
     this.api.getEstadoUsuario().subscribe(data => {
       this.estadosUsuario = data;
+      this.loading = false;
     });
 
     this.api.getRolUsuario().subscribe(data => {
       this.rolUsuario = data;
+      this.loading = false;
     });
   }
 
@@ -70,10 +75,12 @@ export class ListUsuariosComponent implements OnInit {
   }
 
   editUsuario(id: any) {
+    this.loading = true;
     this.router.navigate(['usuario/edit-usuario', id]);
   }
 
   newUsuario() {
+    this.loading = true;
     this.router.navigate(['usuario/new-usuario']);
   }
 
@@ -86,6 +93,7 @@ export class ListUsuariosComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        this.loading = true;
         this.api.deleteUsuario(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
 
@@ -96,7 +104,11 @@ export class ListUsuariosComponent implements OnInit {
           } else {
             this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
           }
+          this.loading = false;
         });
+      } else {
+        this.alerts.showError('No se ha realizado ninguna accion', 'Eliminacion cancelada');
+        this.loading = false;
       }
     });
   }
@@ -117,6 +129,7 @@ export class ListUsuariosComponent implements OnInit {
   }
 
   goBack() {
+    this.loading = true;
     this.router.navigate(['dashboard']);
   }
 
@@ -139,6 +152,7 @@ export class ListUsuariosComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        this.loading = true;
         this.api.putUsuario(updatedUsuario).subscribe(data => {
           let respuesta: ResponseInterface = data;
 
@@ -149,11 +163,12 @@ export class ListUsuariosComponent implements OnInit {
           } else {
             this.alerts.showError(respuesta.msj, 'Error en la Actualización');
           }
+          this.loading = false;
         });
       } else {
-        this.alerts.showError('No se ha realizado ningún cambio.', 'Actualización Cancelada');
+        this.alerts.showError('No se ha realizado ningún cambio.', 'Actualización cancelada');
+        this.loading = false;
       }
     });
   }
-
 }

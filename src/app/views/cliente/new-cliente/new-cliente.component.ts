@@ -13,9 +13,9 @@ import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface'
   templateUrl: './new-cliente.component.html',
   styleUrls: ['./new-cliente.component.scss']
 })
-export class NewClienteComponent implements OnInit{
+export class NewClienteComponent implements OnInit {
 
-  constructor(private router:Router, private api:ClienteService, private alerts:AlertsService) { }
+  constructor(private router: Router, private api: ClienteService, private alerts: AlertsService) { }
 
   newForm = new FormGroup({
     documentoCliente: new FormControl(''),
@@ -27,36 +27,41 @@ export class NewClienteComponent implements OnInit{
   })
 
   tiposDocumento: TipoDocumentoInterface[] = []
-  
+  loading: boolean = true;
+
   ngOnInit(): void {
     this.getTiposDocumento();
   }
 
-  postForm(form: ClienteInterface){
+
+  postForm(form: ClienteInterface) {
+    this.loading = true;
     this.api.postCliente(form).subscribe(data => {
       let respuesta: ResponseInterface = data;
-      if(respuesta.status == 'ok'){
+      if (respuesta.status == 'ok') {
         this.alerts.showSuccess('El cliente ha sido creado exitosamente.', 'Cliente creado');
         this.router.navigate(['cliente/list-clientes']);
       }
-      else{
+      else {
         this.alerts.showError(respuesta.msj, 'Error al crear el cliente');
       }
+      this.loading = false;
     });
   }
 
+
   getTiposDocumento(): void {
-    this.api.getTipoDocumento().subscribe(
-      (data: TipoDocumentoInterface[]) => {
-        this.tiposDocumento = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.api.getTipoDocumento().subscribe(data => {
+      this.tiposDocumento = data;
+      this.loading = false;
+    });
   }
 
-  goBack(){
+
+
+
+  goBack() {
+    this.loading = true;
     this.router.navigate(['cliente/list-clientes']);
   }
 }

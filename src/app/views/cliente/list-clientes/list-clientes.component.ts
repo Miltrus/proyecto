@@ -29,6 +29,7 @@ export class ListClientesComponent implements OnInit {
   clientes: ClienteInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
   dataSource = new MatTableDataSource(this.clientes); //pal filtro
+  loading: boolean = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
@@ -36,18 +37,20 @@ export class ListClientesComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.api.getAllClientes().subscribe(data => { 
+    this.api.getAllClientes().subscribe(data => {
       this.clientes = data;
       this.dataSource.data = this.clientes; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
+      this.loading = false;
     });
 
     this.api.getTipoDocumento().subscribe(data => {
       this.tiposDocumento = data;
+      this.loading = false;
     });
   }
 
   ngAfterViewInit() { //para la paginacion y el ordenamiento
-    this.dataSource.paginator = this.paginator; 
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
@@ -59,10 +62,12 @@ export class ListClientesComponent implements OnInit {
   }
 
   editCliente(id: any) {
+    this.loading = true;
     this.router.navigate(['cliente/edit-cliente', id]);
   }
 
   newCliente() {
+    this.loading = true;
     this.router.navigate(['cliente/new-cliente']);
   }
 
@@ -75,6 +80,7 @@ export class ListClientesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        this.loading = true;
         this.api.deleteCliente(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
@@ -84,7 +90,11 @@ export class ListClientesComponent implements OnInit {
           } else {
             this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
           }
+          this.loading = false;
         });
+      } else {
+        this.alerts.showError('No se ha realizado ninguna accion', 'Eliminacion cancelada');
+        this.loading = false;
       }
     });
   }
@@ -95,6 +105,7 @@ export class ListClientesComponent implements OnInit {
   }
 
   goBack() {
+    this.loading = true;
     this.router.navigate(['dashboard']);
   }
 
