@@ -11,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-list-roles',
@@ -31,14 +32,16 @@ export class ListRolesComponent implements OnInit {
   loading: boolean = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
   @ViewChild('viewRolDialog') viewRolDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de rol
 
   ngOnInit(): void {
     this.loadRoles();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() { //para la paginacion
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   loadRoles(): void {
@@ -52,9 +55,8 @@ export class ListRolesComponent implements OnInit {
           this.loadPermisosPorRol(rol.idRol);
         });
 
-
-        if (this.roles.length == 0) {
-          this.alerts.showError('No hay roles registrados.', 'Sin registros');
+        if (this.roles.length < 1) {
+          this.alerts.showInfo('No hay roles registrados', 'Sin registros');
         }
 
       },
@@ -120,11 +122,11 @@ export class ListRolesComponent implements OnInit {
           let respuesta: ResponseInterface = data;
 
           if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El rol ha sido eliminado exitosamente.', 'Eliminación Exitosa');
+            this.alerts.showSuccess('El rol ha sido eliminado', 'Eliminación exitosa');
             this.roles = this.roles.filter(rol => rol.idRol !== id);
             this.dataSource.data = this.roles;
           } else {
-            this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
+            this.alerts.showError(respuesta.msj, 'Error en la eliminación');
           }
           this.loading = false;
         });

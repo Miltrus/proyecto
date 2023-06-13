@@ -1,29 +1,25 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertsService {
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(private toastr: ToastrService) { }
 
   showSuccess(message: string, title: string) {
-    const config: MatSnackBarConfig = new MatSnackBarConfig();
-    config.panelClass = ['success-snackbar']; // Clase CSS personalizada para personalizar la apariencia
-    config.duration = 5000; // Duración en milisegundos
-    config.verticalPosition = 'bottom';
-    config.horizontalPosition = 'center';
-
-    this.snackBar.open(message, title, config);
+    this.toastr.success(message, title)
   }
 
   showError(message: string, title: string) {
-    const config: MatSnackBarConfig = new MatSnackBarConfig();
-    config.panelClass = ['error-snackbar']; // Clase CSS personalizada para personalizar la apariencia
-    config.duration = 5000; // Duración en milisegundos
-    config.verticalPosition = 'bottom';
-    config.horizontalPosition = 'center';
+    this.toastr.error(message, title);
+  }
 
-    this.snackBar.open(message, title, config);
+  showWarning(message: string, title: string) {
+    this.toastr.warning(message, title);
+  }
+
+  showInfo(message: string, title: string) {
+    this.toastr.info(message, title);
   }
 }

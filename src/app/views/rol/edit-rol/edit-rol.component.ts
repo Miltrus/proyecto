@@ -51,10 +51,10 @@ export class EditRolComponent implements OnInit {
     this.api.putRol(id).subscribe(data => {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El rol ha sido editado exitosamente.', 'Rol actualizado');
+        this.alerts.showSuccess('El rol ha sido modificado', 'Modificacion exitosa');
         this.router.navigate(['rol/list-roles']);
       } else {
-        this.alerts.showError(respuesta.msj, 'Error al editar el rol');
+        this.alerts.showError(respuesta.msj, 'Error en la modificacion');
       }
       this.loading = false;
     });

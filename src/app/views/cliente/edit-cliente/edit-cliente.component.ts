@@ -58,11 +58,11 @@ export class EditClienteComponent implements OnInit {
     this.api.putCliente(id).subscribe(data => {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El cliente ha sido modificado exitosamente.', 'Modificación Exitosa');
+        this.alerts.showSuccess('El cliente ha sido modificado', 'Modificación exitosa');
         this.router.navigate(['cliente/list-clientes']);
       }
       else {
-        this.alerts.showError(respuesta.msj, "Error en la Modificación");
+        this.alerts.showError(respuesta.msj, "Error en la modificación");
       }
       this.loading = false;
     })

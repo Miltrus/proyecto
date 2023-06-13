@@ -39,7 +39,7 @@ export class NewClienteComponent implements OnInit {
     this.api.postCliente(form).subscribe(data => {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El cliente ha sido creado exitosamente.', 'Cliente creado');
+        this.alerts.showSuccess('El cliente ha sido creado exitosamente', 'Cliente creado');
         this.router.navigate(['cliente/list-clientes']);
       }
       else {

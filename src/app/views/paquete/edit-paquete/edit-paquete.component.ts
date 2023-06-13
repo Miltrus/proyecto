@@ -64,11 +64,11 @@ export class EditPaqueteComponent implements OnInit {
     this.api.putPaquete(id).subscribe(data => {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El paquete ha sido modificado exitosamente.', 'Modificación Exitosa');
+        this.alerts.showSuccess('El paquete ha sido modificado', 'Modificación exitosa');
         this.router.navigate(['paquete/list-paquetes']);
       }
       else {
-        this.alerts.showError(respuesta.msj, "Error en la Modificación");
+        this.alerts.showError(respuesta.msj, "Error en la modificación");
       }
       this.loading = false;
     })

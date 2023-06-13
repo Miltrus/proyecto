@@ -55,11 +55,11 @@ export class NewPaqueteComponent implements OnInit {
     this.api.postPaquete(form).subscribe(data => {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El paquete ha sido creado exitosamente.', 'Paquete creado');
+        this.alerts.showSuccess('El paquete ha sido registrado exitosamente', 'Paquete registrado');
         this.router.navigate(['paquete/list-paquetes']);
       }
       else {
-        this.alerts.showError(respuesta.msj, 'Error al crear el paquete');
+        this.alerts.showError(respuesta.msj, 'Error al registrar el paquete');
       }
       this.loading = false;
     });

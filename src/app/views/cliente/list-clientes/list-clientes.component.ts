@@ -39,6 +39,9 @@ export class ListClientesComponent implements OnInit {
 
     this.api.getAllClientes().subscribe(data => {
       this.clientes = data;
+      if (this.clientes.length == 0) {
+        this.alerts.showInfo('No hay clientes registrados', 'Sin registros');
+      }
       this.dataSource.data = this.clientes; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
       this.loading = false;
     });
@@ -84,16 +87,16 @@ export class ListClientesComponent implements OnInit {
         this.api.deleteCliente(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El cliente ha sido eliminado exitosamente.', 'Eliminación Exitosa');
+            this.alerts.showSuccess('El cliente ha sido eliminado', 'Eliminación exitosa');
             this.clientes = this.clientes.filter(cliente => cliente.documentoCliente !== id);
             this.dataSource.data = this.clientes; // Actualizar el dataSource con los nuevos datos
           } else {
-            this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
+            this.alerts.showError(respuesta.msj, 'Error en la eliminación');
           }
           this.loading = false;
         });
       } else {
-        this.alerts.showError('No se ha realizado ninguna accion', 'Eliminacion cancelada');
+        this.alerts.showInfo('No se ha realizado ninguna accion', 'Eliminacion cancelada');
         this.loading = false;
       }
     });

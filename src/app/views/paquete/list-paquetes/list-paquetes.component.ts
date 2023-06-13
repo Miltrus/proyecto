@@ -54,6 +54,9 @@ export class ListPaquetesComponent implements OnInit {
   ngOnInit(): void {
     this.api.getAllPaquetes().subscribe(data => {
       this.paquetes = data;
+      if (this.paquetes.length < 1) {
+        this.alerts.showInfo('No hay paquetes registrados', 'Sin registros');
+      }
       this.dataSource.data = this.paquetes;
 
       this.paquetes.forEach(async (paquete) => {
@@ -116,16 +119,16 @@ export class ListPaquetesComponent implements OnInit {
           let respuesta: ResponseInterface = data;
 
           if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El paquete ha sido eliminado exitosamente.', 'Eliminación Exitosa');
+            this.alerts.showSuccess('El paquete ha sido eliminado', 'Eliminación exitosa');
             this.paquetes = this.paquetes.filter(paquete => paquete.idPaquete !== id);
             this.dataSource.data = this.paquetes; //actualizamos el datasource
           } else {
-            this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
+            this.alerts.showError(respuesta.msj, 'Error en la eliminación');
           }
           this.loading = false;
         });
       } else {
-        this.alerts.showError('No se ha realizado ninguna accion', 'Eliminacion cancelada');
+        this.alerts.showInfo('No se ha realizado ninguna accion', 'Eliminacion cancelada');
         this.loading = false;
       }
     });

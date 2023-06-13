@@ -47,7 +47,7 @@ export class NewRolComponent implements OnInit {
     this.api.postRol(form).subscribe(data => {
       let respuesta: ResponseInterface = data;
       if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El rol ha sido creado exitosamente.', 'Rol Creado');
+        this.alerts.showSuccess('El rol ha sido creado exitosamente', 'Rol creado');
         this.router.navigate(['rol/list-roles']);
 
         // Obtén el último ID de rol creado

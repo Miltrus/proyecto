@@ -42,6 +42,9 @@ export class ListUsuariosComponent implements OnInit {
   ngOnInit(): void {
     this.api.getAllUsuarios().subscribe(data => {
       this.usuarios = data;
+      if (this.usuarios.length < 1) {
+        this.alerts.showInfo('No hay usuarios registrados', 'Sin registros');
+      }
       this.dataSource.data = this.usuarios; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
       this.loading = false;
     });
@@ -98,7 +101,7 @@ export class ListUsuariosComponent implements OnInit {
           let respuesta: ResponseInterface = data;
 
           if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El usuario ha sido eliminado exitosamente.', 'Eliminación Exitosa');
+            this.alerts.showSuccess('El usuario ha sido eliminado exitosamente', 'Eliminación exitosa');
             this.usuarios = this.usuarios.filter(usuario => usuario.documentoUsuario !== id);
             this.dataSource.data = this.usuarios; //actualizamos el datasource
           } else {
@@ -107,7 +110,7 @@ export class ListUsuariosComponent implements OnInit {
           this.loading = false;
         });
       } else {
-        this.alerts.showError('No se ha realizado ninguna accion', 'Eliminacion cancelada');
+        this.alerts.showInfo('No se ha realizado ninguna accion', 'Eliminacion cancelada');
         this.loading = false;
       }
     });
@@ -157,16 +160,16 @@ export class ListUsuariosComponent implements OnInit {
           let respuesta: ResponseInterface = data;
 
           if (respuesta.status === 'ok') {
-            this.alerts.showSuccess('El estado del usuario ha sido actualizado exitosamente.', 'Actualización Exitosa');
+            this.alerts.showSuccess('El estado del usuario ha sido actualizado exitosamente', 'Actualización exitosa');
             this.usuarios = this.usuarios.map(u => (u.documentoUsuario === updatedUsuario.documentoUsuario ? updatedUsuario : u));
             this.dataSource.data = this.usuarios; // actualizamos el datasource
           } else {
-            this.alerts.showError(respuesta.msj, 'Error en la Actualización');
+            this.alerts.showError(respuesta.msj, 'Error en la actualización');
           }
           this.loading = false;
         });
       } else {
-        this.alerts.showError('No se ha realizado ningún cambio.', 'Actualización cancelada');
+        this.alerts.showInfo('No se ha realizado ningún cambio', 'Actualización cancelada');
         this.loading = false;
       }
     });
