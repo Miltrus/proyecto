@@ -4,16 +4,23 @@
   </div>
 </div>
 <app-navigation>
+  <br><br>
 
   <div class="container">
     <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)">
-      <div class="form-group">
-        <label for="exampleFormControlInput1">Nombre Rol <b style="color: red;">*</b></label>
-        <input type="text" class="form-control" formControlName="nombreRol">
-      </div>
-      <div class="form-group">
-        <label for="exampleFormControlInput1">Descripcion Rol</label>
-        <input type="text" class="form-control" formControlName="descripcionRol" />
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Nombre Rol <b style="color: red;">*</b></label>
+            <input type="text" class="form-control" formControlName="nombreRol">
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Descripcion Rol</label>
+            <input type="text" class="form-control" formControlName="descripcionRol" />
+          </div>
+        </div>
       </div>
       <br><br />
       <div class="form-group" formArrayName="permisosSeleccionados">
@@ -24,7 +31,6 @@
             {{ permiso.nombrePermiso }}
           </label>
         </div>
-
       </div>
 
       <br><br>

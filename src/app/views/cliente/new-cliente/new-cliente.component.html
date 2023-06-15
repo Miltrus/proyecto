@@ -6,33 +6,51 @@
 <app-navigation>
   <div class="container">
     <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)">
-      <div class="form-group">
-        <label for="idTipoDocumento">Tipo de documento <b style="color: red;">*</b></label>
-        <mat-select class="form-control" formControlName="idTipoDocumento">
-          <mat-option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.idTipoDocumento">
-            {{ tipoDocumento.nombreTipo }}
-          </mat-option>
-        </mat-select>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label for="idTipoDocumento">Tipo de documento <b style="color: red;">*</b></label>
+            <mat-select class="form-control" formControlName="idTipoDocumento">
+              <mat-option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.idTipoDocumento">
+                {{ tipoDocumento.nombreTipo }}
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Documento <b style="color: red;">*</b></label>
+            <input type="text" class="form-control" formControlName="documentoCliente" />
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="exampleFormControlInput1">Documento <b style="color: red;">*</b></label>
-        <input type="text" class="form-control" formControlName="documentoCliente" />
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Nombre <b style="color: red;">*</b></label>
+            <input type="text" class="form-control" formControlName="nombreCliente" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Teléfono <b style="color: red;">*</b></label>
+            <input type="text" class="form-control" formControlName="telefonoCliente" />
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="exampleFormControlInput1">Nombre <b style="color: red;">*</b></label>
-        <input type="text" class="form-control" formControlName="nombreCliente" />
-      </div>
-      <div class="form-group">
-        <label for="exampleFormControlInput1">Teléfono <b style="color: red;">*</b></label>
-        <input type="text" class="form-control" formControlName="telefonoCliente" />
-      </div>
-      <div class="form-group">
-        <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
-        <input type="text" class="form-control" formControlName="correoCliente" />
-      </div>
-      <div class="form-group">
-        <label for="exampleFormControlInput1">Dirección <b style="color: red;">*</b></label>
-        <input type="text" class="form-control" formControlName="direccionCliente" />
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
+            <input type="text" class="form-control" formControlName="correoCliente" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Dirección <b style="color: red;">*</b></label>
+            <input type="text" class="form-control" formControlName="direccionCliente" />
+          </div>
+        </div>
       </div>
       <br><br />
 
