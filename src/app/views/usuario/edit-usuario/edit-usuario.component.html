@@ -8,41 +8,42 @@
     <div class="container">
         <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
             <div class="form-group">
-                <label for="idTipoDocumento">Tipo de documento</label>
-                <select class="form-control" formControlName="idTipoDocumento">
-                    <option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.idTipoDocumento">{{
-                        tipoDocumento.nombreTipo }}</option>
-                </select>
+                <label for="idTipoDocumento">Tipo de documento <b style="color: red;">*</b></label>
+                <mat-select class="form-control" formControlName="idTipoDocumento">
+                    <mat-option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.idTipoDocumento">{{
+                        tipoDocumento.nombreTipo }}</mat-option>
+                </mat-select>
             </div>
             <div class="form-group">
-                <label for="exampleFormControlInput1">Documento</label>
+                <label for="exampleFormControlInput1">Documento <b style="color: red;">*</b></label>
                 <input type="text" class="form-control" formControlName="documentoUsuario" readonly />
             </div>
             <div class="form-group">
-                <label for="exampleFormControlInput1">Nombre</label>
+                <label for="exampleFormControlInput1">Nombre <b style="color: red;">*</b></label>
                 <input type="text" class="form-control" formControlName="nombreUsuario" />
             </div>
             <div class="form-group">
-                <label for="exampleFormControlInput1">Apellido</label>
+                <label for="exampleFormControlInput1">Apellido <b style="color: red;">*</b></label>
                 <input type="text" class="form-control" formControlName="apellidoUsuario" />
             </div>
             <div class="form-group">
-                <label for="exampleFormControlInput1">Telefono</label>
+                <label for="exampleFormControlInput1">Teléfono <b style="color: red;">*</b></label>
                 <input type="text" class="form-control" formControlName="telefonoUsuario" />
             </div>
             <div class="form-group">
-                <label for="exampleFormControlInput1">Correo</label>
+                <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
                 <input type="text" class="form-control" formControlName="correoUsuario" />
             </div>
             <div class="form-group">
                 <label for="exampleFormControlInput1">Contraseña</label>
-                <input type="password" class="form-control" formControlName="contrasenaUsuario" />
+                <input type="password" class="form-control" formControlName="contrasenaUsuario"
+                    placeholder="****************" />
             </div>
             <div class="form-group">
-                <label for="idTipoDocumento">Rol</label>
-                <select class="form-control" formControlName="idRol">
-                    <option *ngFor="let rol of rolUsuario" [value]="rol.idRol">{{ rol.nombreRol }}</option>
-                </select>
+                <label for="idTipoDocumento">Rol <b style="color: red;">*</b></label>
+                <mat-select class="form-control" formControlName="idRol">
+                    <mat-option *ngFor="let rol of rolUsuario" [value]="rol.idRol">{{ rol.nombreRol }}</mat-option>
+                </mat-select>
             </div>
             <br><br />
 

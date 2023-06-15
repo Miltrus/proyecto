@@ -40,6 +40,7 @@ export class EditUsuarioComponent implements OnInit {
   dataUsuario: UsuarioInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = []
   estadosUsuario: EstadoUsuarioInterface[] = [];
+
   rolUsuario: RolInterface[] = [];
   loading: boolean = true;
 

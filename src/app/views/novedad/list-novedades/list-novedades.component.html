@@ -9,9 +9,12 @@
     <h1>Novedades</h1>
 
     <div class="create-button-container">
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>Busqueda de novedades</mat-label>
         <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Juan" #input autocomplete="off">
+        <button mat-button matSuffix>
+          <mat-icon color="primary">search</mat-icon> <!-- Icono de lupa -->
+        </button>
       </mat-form-field>
 
     </div>

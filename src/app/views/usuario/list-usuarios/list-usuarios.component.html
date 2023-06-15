@@ -11,9 +11,12 @@
     <div class="create-button-container">
       <button mat-raised-button color="primary" (click)="newUsuario()">Crear nuevo usuario</button>
       <span class="spacer"></span>
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>Busqueda de usuarios</mat-label>
         <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Juan" #input autocomplete="off">
+        <button mat-button matSuffix>
+          <mat-icon color="primary">search</mat-icon> <!-- Icono de lupa -->
+        </button>
       </mat-form-field>
 
     </div>

@@ -9,9 +9,12 @@
     <div class="create-button-container">
       <button mat-raised-button color="primary" (click)="newRol()">Crear nuevo rol</button>
       <span class="spacer"></span>
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>Busqueda de roles</mat-label>
         <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Administrador" #input autocomplete="off">
+        <button mat-button matSuffix>
+          <mat-icon color="primary">search</mat-icon> <!-- Icono de lupa -->
+        </button>
       </mat-form-field>
 
     </div>

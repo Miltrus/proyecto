@@ -8,7 +8,7 @@
     <div class="container">
         <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
             <div class="form-group">
-                <label for="exampleFormControlInput1">Descripcion Rol</label>
+                <label for="exampleFormControlInput1">Nombre Rol <b style="color: red;">*</b></label>
                 <input type="text" class="form-control" formControlName="nombreRol" />
             </div>
             <div class="form-group">

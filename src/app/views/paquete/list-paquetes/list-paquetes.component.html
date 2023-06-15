@@ -9,10 +9,14 @@
     <h1>Paquetes</h1>
     <button mat-raised-button color="primary" (click)="newPaquete()">Crear nuevo paquete</button>
     <span class="spacer"></span>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
       <mat-label>Busqueda de paquetes</mat-label>
       <input matInput (keyup)="applyFilter($event)" #input autocomplete="off">
+      <button mat-button matSuffix>
+        <mat-icon color="primary">search</mat-icon> <!-- Icono de lupa -->
+      </button>
     </mat-form-field>
+
     <div class="mat-elevation-z8 table-container">
       <table mat-table [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="num">
