@@ -14,31 +14,31 @@ import { Observable } from 'rxjs'; //
 })
 export class UsuarioService {
 
-  url:string = 'http://localhost:3030/';
+  url: string = 'http://localhost:3030/';
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  getAllUsuarios():Observable<UsuarioInterface[]>{
+  getAllUsuarios(): Observable<UsuarioInterface[]> {
     let address = this.url + 'usuario';
     return this.http.get<UsuarioInterface[]>(address);
   }
 
-  getOneUsuario(id: any):Observable<UsuarioInterface>{
+  getOneUsuario(id: any): Observable<UsuarioInterface> {
     let address = this.url + 'usuario/' + id;
     return this.http.get<UsuarioInterface>(address);
   }
 
-  postUsuario(form: UsuarioInterface):Observable<ResponseInterface>{
+  postUsuario(form: UsuarioInterface): Observable<ResponseInterface> {
     let address = this.url + 'usuario';
     return this.http.post<ResponseInterface>(address, form);
   }
 
-  putUsuario(id: any):Observable<ResponseInterface>{
+  putUsuario(id: any): Observable<ResponseInterface> {
     let address = this.url + 'usuario/' + id;
     return this.http.put<ResponseInterface>(address, id);
   }
 
-  deleteUsuario(id: any):Observable<ResponseInterface>{
+  deleteUsuario(id: any): Observable<ResponseInterface> {
     let addres = this.url + 'usuario/' + id;
     return this.http.delete<ResponseInterface>(addres);
   }

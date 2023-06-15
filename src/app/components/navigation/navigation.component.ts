@@ -8,6 +8,7 @@ import { DialogConfirmComponent, ConfirmDialogData } from '../dialog-confirm/dia
 import { DOCUMENT } from '@angular/common';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { RolService } from '../../services/api/rol/rol.service';
+import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 
 @Component({
   selector: 'app-navigation',
@@ -20,36 +21,7 @@ export class NavigationComponent {
   private breakpointObserver = inject(BreakpointObserver);
 
   isDarkThemeActive = false;
-  showModules: boolean = true;
   loading: boolean = true;
-
-  constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private router: Router,
-    private dialog: MatDialog,
-    private rolService: RolService
-  ) {
-    // Verificar si el modo oscuro está activo al iniciar el componente
-    const isDarkModeActive = this.document.body.classList.contains('dark-mode');
-    this.isDarkThemeActive = isDarkModeActive;
-
-    // Obtener los permisos del rol y filtrar los módulos correspondientes
-    const idRol = localStorage.getItem('idRol');
-    this.rolService.getRolPermisos(idRol).subscribe(
-      (response) => {
-        const permisos = response.idPermiso?.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
-
-        this.modules = this.modules.filter((module) => permisos.includes(module.name));
-        this.showModules = false;
-        this.loading = false;
-      },
-      (error) => {
-        console.error('Error al obtener los permisos del rol:', error);
-        this.showModules = false;
-        this.loading = false;
-      }
-    );
-  }
 
   modules = [
     { name: 'Roles', route: '/rol' },
@@ -59,14 +31,56 @@ export class NavigationComponent {
     { name: 'Novedades', route: '/novedad' },
   ];
 
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private router: Router,
+    private dialog: MatDialog,
+    private rolService: RolService,
+    private userService: UsuarioService,
+  ) {
+    const isDarkModeActive = this.document.body.classList.contains('dark-mode');
+    const storedTheme = localStorage.getItem('isDarkThemeActive');
+
+    this.isDarkThemeActive = storedTheme ? storedTheme === 'true' : isDarkModeActive;
+
+    if (this.isDarkThemeActive) {
+      this.document.body.classList.add('dark-mode');
+    } else {
+      this.document.body.classList.remove('dark-mode');
+    }
+    // Obtener los permisos del rol y filtrar los módulos correspondientes
+    const token = localStorage.getItem('token');
+    const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
+    const uid = decodedToken.uid;
+
+    this.userService.getOneUsuario(uid).subscribe(data => {
+      const rol = data.idRol;
+
+      this.rolService.getRolPermisos(rol).subscribe(data => {
+
+        const permisos = data.idPermiso?.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
+
+        this.modules = this.modules.filter((module) => permisos.includes(module.name));
+        this.loading = false;
+      }
+      );
+    });
+  }
+
+
+
 
 
   onChange(newValue: boolean): void {
+    this.isDarkThemeActive = newValue;
+
+    localStorage.setItem('isDarkThemeActive', String(newValue));
     if (newValue) {
       this.document.body.classList.add('dark-mode');
     } else {
       this.document.body.classList.remove('dark-mode');
     }
+    this.loading = false;
   };
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -88,7 +102,6 @@ export class NavigationComponent {
       if (result) {
         this.router.navigate(['landing-page']);
         localStorage.removeItem('token');
-        localStorage.removeItem('idRol'); // Elimina el ID del rol del localStorage
 
         this.isDarkThemeActive = false;
         this.document.body.classList.remove('dark-mode');

@@ -1,15 +1,15 @@
+<div class="spinner-overlay" *ngIf="loading">
+  <div class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
     <mat-toolbar id="header">
       <h1>Menú</h1>
     </mat-toolbar>
-    <ng-container *ngIf="!showModules">
-      <div class="spinner-overlay" *ngIf="loading">
-        <div class="spinner">
-          <mat-spinner></mat-spinner>
-        </div>
-      </div>
+    <ng-container *ngIf="!loading">
       <mat-nav-list *ngFor="let module of modules">
         <a mat-list-item [routerLink]="module.route">{{ module.name }}</a>
       </mat-nav-list>
@@ -23,9 +23,8 @@
       <span>Star <b>☆ </b>Routing</span>
       <span class="spacer"></span>
 
-      <mat-slide-toggle mat-icon-slide (ngModelChange)="onChange($event)" [(ngModel)]="isDarkThemeActive">
-
-      </mat-slide-toggle>
+      <mat-slide-toggle mat-icon-slide (ngModelChange)="onChange($event)"
+        [(ngModel)]="isDarkThemeActive"></mat-slide-toggle>
 
       <button mat-icon-button aria-label="Usuario" [matMenuTriggerFor]="userMenu">
         <mat-icon>account_circle</mat-icon>

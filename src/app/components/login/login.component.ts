@@ -3,7 +3,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LoginService } from '../../services/api/login/login.service';
 import { LoginInterface } from '../../models/login.interface';
 import { ResolveData, Router } from '@angular/router';
-import { ResponseInterface } from '../../models/response.interface';
 import { AlertsService } from '../../services/alerts/alerts.service';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
 
@@ -33,22 +32,18 @@ export class LoginComponent implements OnInit {
   onLogin(form: LoginInterface) {
     this.loading = true;
     this.api.onLogin(form).subscribe(data => {
-      let dataResponse: ResponseInterface = data;
-      if (dataResponse.status == 'ok') {
+      if (data.status == 'ok') {
         this.loading = true;
-        setTimeout(() => {
-          this.alerts.showSuccess('Inicio de sesión exitoso', 'Bienvenido');
-          localStorage.setItem("idRol", dataResponse.user.idRol);
-          localStorage.setItem("token", dataResponse.token);
-          this.userData = dataResponse.user; // Almacenar los datos del usuario
-          console.log(this.userData);
+        this.alerts.showSuccess('Inicio de sesión exitoso', 'Bienvenido');
+        localStorage.setItem("token", data.token);
+        this.userData = data.user; // Almacenar los datos del usuario
+        console.log(this.userData);
 
-          this.router.navigate(['dashboard']);
-        }, 500);
+        this.router.navigate(['dashboard']);
         this.loading = false;
         return true;
       } else {
-        this.alerts.showError(dataResponse.msj, 'Error al iniciar sesión');
+        this.alerts.showError(data.msj, 'Error al iniciar sesión');
         this.loading = false;
         return false;
       }
