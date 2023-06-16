@@ -26,15 +26,14 @@ export class EditUsuarioComponent implements OnInit {
   ) { }
 
   editForm = new FormGroup({
-    documentoUsuario: new FormControl(''),
-    idTipoDocumento: new FormControl(''),
-    nombreUsuario: new FormControl(''),
-    apellidoUsuario: new FormControl(''),
-    telefonoUsuario: new FormControl(''),
-    correoUsuario: new FormControl(''),
-    contrasenaUsuario: new FormControl(''),
-    idRol: new FormControl(''),
-    idEstado: new FormControl(''),
+    documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
+    idTipoDocumento: new FormControl('', [Validators.required]),
+    nombreUsuario: new FormControl('', [Validators.required]),
+    apellidoUsuario: new FormControl('', [Validators.required]),
+    telefonoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
+    correoUsuario: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}')]),
+    contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/i)]),
+    idRol: new FormControl('', [Validators.required])
   })
 
   dataUsuario: UsuarioInterface[] = [];
@@ -57,8 +56,7 @@ export class EditUsuarioComponent implements OnInit {
         'telefonoUsuario': this.dataUsuario[0]?.telefonoUsuario || '',
         'correoUsuario': this.dataUsuario[0]?.correoUsuario || '',
         'contrasenaUsuario': this.dataUsuario[0]?.contrasenaUsuario || '',
-        'idRol': this.dataUsuario[0]?.idRol || '',
-        'idEstado': this.dataUsuario[0]?.idEstado || '',
+        'idRol': this.dataUsuario[0]?.idRol || ''
       });
       this.loading = false;
     });

@@ -18,12 +18,12 @@ export class NewClienteComponent implements OnInit {
   constructor(private router: Router, private api: ClienteService, private alerts: AlertsService) { }
 
   newForm = new FormGroup({
-    documentoCliente: new FormControl(''),
-    idTipoDocumento: new FormControl(''),
-    nombreCliente: new FormControl(''),
-    telefonoCliente: new FormControl(''),
-    correoCliente: new FormControl(''),
-    direccionCliente: new FormControl(''),
+    documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
+    idTipoDocumento: new FormControl('', Validators.required),
+    nombreCliente: new FormControl('', Validators.required),
+    telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
+    correoCliente: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}')]),
+    direccionCliente: new FormControl('', Validators.required),
   })
 
   tiposDocumento: TipoDocumentoInterface[] = []

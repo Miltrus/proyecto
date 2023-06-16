@@ -21,9 +21,9 @@ export class NewPaqueteComponent implements OnInit {
   constructor(private router: Router, private api: PaqueteService, private alerts: AlertsService, private paqueteService: PaqueteService) { }
 
   newForm = new FormGroup({
-    codigoQrPaquete: new FormControl(''),
-    documentoUsuario: new FormControl(''),
-    documentoCliente: new FormControl(''),
+    codigoQrPaquete: new FormControl('', Validators.required),
+    documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
+    documentoCliente: new FormControl('', Validators.required),
     idEstado: new FormControl('1'),
   })
 

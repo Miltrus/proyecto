@@ -85,6 +85,7 @@ export class NewRolComponent implements OnInit {
 
           } else {
             this.alerts.showError(respuesta.msj, 'Error al crear el rol');
+            this.loading = false;
           }
         })
       } else {
