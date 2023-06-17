@@ -8,6 +8,8 @@ import { ClienteService } from '../../../services/api/cliente/cliente.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 
 @Component({
   selector: 'app-edit-cliente',
@@ -21,6 +23,7 @@ export class EditClienteComponent implements OnInit {
     private activatedRouter: ActivatedRoute,
     private api: ClienteService,
     private alerts: AlertsService,
+    private dialog: MatDialog,
   ) { }
 
   dataCliente: ClienteInterface[] = [];
@@ -32,7 +35,7 @@ export class EditClienteComponent implements OnInit {
     idTipoDocumento: new FormControl('', Validators.required),
     nombreCliente: new FormControl('', Validators.required),
     telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
-    correoCliente: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}')]),
+    correoCliente: new FormControl('', [Validators.required, Validators.email]),
     direccionCliente: new FormControl('', Validators.required),
   })
 
@@ -54,18 +57,29 @@ export class EditClienteComponent implements OnInit {
   }
 
   postForm(id: any) {
-    this.loading = true;
-    this.api.putCliente(id).subscribe(data => {
-      let respuesta: ResponseInterface = data;
-      if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El cliente ha sido modificado', 'Modificación exitosa');
-        this.router.navigate(['cliente/list-clientes']);
+    const dialogRef = this.dialog.open(DialogConfirmComponent, {
+      data: {
+        message: '¿Está seguro que deseas modificar este cliente?',
       }
-      else {
-        this.alerts.showError(respuesta.msj, "Error en la modificación");
-      }
-      this.loading = false;
     })
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.api.putCliente(id).subscribe(data => {
+          let respuesta: ResponseInterface = data;
+          if (respuesta.status == 'ok') {
+            this.alerts.showSuccess('El cliente ha sido modificado', 'Modificación exitosa');
+            this.router.navigate(['cliente/list-clientes']);
+          }
+          else {
+            this.alerts.showError(respuesta.msj, "Error en la modificación");
+            this.loading = false;
+          }
+        });
+      } else {
+        this.alerts.showInfo('No se ha modificado el cliente', 'Modificación cancelada');
+      }
+    });
   }
 
   getTiposDocumento(): void {

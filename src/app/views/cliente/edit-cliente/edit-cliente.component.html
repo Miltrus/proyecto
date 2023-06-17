@@ -58,7 +58,7 @@
                         <input type="text" class="form-control" formControlName="correoCliente"
                             [class.is-invalid]="editForm.get('correoCliente')?.invalid && editForm.get('correoCliente')?.touched" />
 
-                        <div *ngIf="editForm.get('correoCliente')?.errors?.['pattern'] && editForm.get('correoCliente')?.touched"
+                        <div *ngIf="editForm.get('correoCliente')?.errors?.['email'] && editForm.get('correoCliente')?.touched"
                             class="invalid-feedback">
                             Correo inválido.
                         </div>
@@ -75,7 +75,7 @@
             <br><br />
 
             <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
-            <button type="submit" mat-raised-button color='primary'>Guardar</button>
+            <button type="submit" mat-raised-button color='primary' [disabled]="editForm.invalid">Editar</button>
 
         </form>
     </div>

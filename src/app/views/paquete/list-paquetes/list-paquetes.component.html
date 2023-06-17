@@ -12,7 +12,7 @@
     <mat-form-field appearance="outline">
       <mat-label>Busqueda de paquetes</mat-label>
       <input matInput (keyup)="applyFilter($event)" #input autocomplete="off">
-      <button mat-button matSuffix>
+      <button mat-button matSuffix disabled>
         <mat-icon color="primary">search</mat-icon> <!-- Icono de lupa -->
       </button>
     </mat-form-field>

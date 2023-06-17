@@ -10,6 +10,8 @@ import { RolInterface } from '../../../models/rol.interface';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 
 @Component({
   selector: 'app-edit-usuario',
@@ -23,6 +25,7 @@ export class EditUsuarioComponent implements OnInit {
     private activatedRouter: ActivatedRoute,
     private api: UsuarioService,
     private alerts: AlertsService,
+    private dialog: MatDialog,
   ) { }
 
   editForm = new FormGroup({
@@ -31,7 +34,7 @@ export class EditUsuarioComponent implements OnInit {
     nombreUsuario: new FormControl('', [Validators.required]),
     apellidoUsuario: new FormControl('', [Validators.required]),
     telefonoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
-    correoUsuario: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}')]),
+    correoUsuario: new FormControl('', [Validators.required, Validators.email]),
     contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/i)]),
     idRol: new FormControl('', [Validators.required])
   })
@@ -66,18 +69,29 @@ export class EditUsuarioComponent implements OnInit {
   }
 
   postForm(id: any) {
-    this.loading = true;
-    this.api.putUsuario(id).subscribe(data => {
-      let respuesta: ResponseInterface = data;
-      if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El usuario ha sido modificado', 'Modificación exitosa');
-        this.router.navigate(['usuario/list-usuarios']);
+    const dialogRef = this.dialog.open(DialogConfirmComponent, {
+      data: {
+        message: '¿Está seguro que deseas modificar este usuario?',
       }
-      else {
-        this.alerts.showError(respuesta.msj, "Error en la modificación");
-      }
-      this.loading = false;
     })
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.api.putUsuario(id).subscribe(data => {
+          let respuesta: ResponseInterface = data;
+          if (respuesta.status == 'ok') {
+            this.alerts.showSuccess('El usuario ha sido modificado', 'Modificación exitosa');
+            this.router.navigate(['usuario/list-usuarios']);
+          }
+          else {
+            this.alerts.showError(respuesta.msj, "Error en la modificación");
+            this.loading = false;
+          }
+        });
+      } else {
+        this.alerts.showInfo('No se ha modificado el usuario', 'Modificación cancelada');
+      }
+    });
   }
 
   getTiposDocumento(): void {

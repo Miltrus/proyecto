@@ -77,7 +77,7 @@ export class ListClientesComponent implements OnInit {
   deleteCliente(id: any): void {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
       data: {
-        message: '¿Estás seguro de que deseas eliminar este cliente?'
+        message: '¿Estás seguro que deseas eliminar este cliente?'
       }
     });
 

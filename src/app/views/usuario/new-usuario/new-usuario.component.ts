@@ -9,6 +9,8 @@ import { ResponseInterface } from '../../../models/response.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { EstadoUsuarioInterface } from 'src/app/models/estado-usuario.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 
 @Component({
   selector: 'app-new-usuario',
@@ -17,7 +19,12 @@ import { RolInterface } from 'src/app/models/rol.interface';
 })
 export class NewUsuarioComponent implements OnInit {
 
-  constructor(private router: Router, private api: UsuarioService, private alerts: AlertsService) { }
+  constructor(
+    private router: Router,
+    private api: UsuarioService,
+    private alerts: AlertsService,
+    private dialog: MatDialog,
+  ) { }
 
   newForm = new FormGroup({
     documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
@@ -25,8 +32,8 @@ export class NewUsuarioComponent implements OnInit {
     nombreUsuario: new FormControl('', [Validators.required]),
     apellidoUsuario: new FormControl('', [Validators.required]),
     telefonoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
-    correoUsuario: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}')]),
-    contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/i)]),
+    correoUsuario: new FormControl('', [Validators.required, Validators.email]),
+    contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/)]),
     idRol: new FormControl('', [Validators.required]),
     idEstado: new FormControl('1'),
   })
@@ -50,17 +57,28 @@ export class NewUsuarioComponent implements OnInit {
   }
 
   postForm(form: UsuarioInterface) {
-    this.loading = true;
-    this.api.postUsuario(form).subscribe(data => {
-      let respuesta: ResponseInterface = data;
-      if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El usuario ha sido creado exitosamente.', 'Usuario creado');
-        this.router.navigate(['usuario/list-usuarios']);
+    const dialogRef = this.dialog.open(DialogConfirmComponent, {
+      data: {
+        message: '¿Estás seguro que deseas crear este usuario?'
       }
-      else {
-        this.alerts.showError(respuesta.msj, 'Error al crear el usuario');
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.api.postUsuario(form).subscribe(data => {
+          let respuesta: ResponseInterface = data;
+          if (respuesta.status == 'ok') {
+            this.alerts.showSuccess('El usuario ha sido creado exitosamente', 'Usuario creado');
+            this.router.navigate(['usuario/list-usuarios']);
+          }
+          else {
+            this.alerts.showError(respuesta.msj, 'Error al crear el usuario');
+            this.loading = false;
+          }
+        });
+      } else {
+        this.alerts.showInfo('El usuario no ha sido creado', 'Usuario no creado');
       }
-      this.loading = false;
     });
   }
 
@@ -89,27 +107,4 @@ export class NewUsuarioComponent implements OnInit {
     this.loading = true;
     this.router.navigate(['usuario/list-usuarios']);
   }
-
-
-  validarContrasena(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const regexMayuscula = /^(?=.*[A-Z])/;
-      const regexNumeros = /^(?=.*\d.*\d.*\d)/;
-      const regexCaracterEspecial = /^(?=.*[@#$%^&+=])/;
-      const regexLongitud = /^.{8,}$/;
-
-      if (
-        regexMayuscula.test(control.value) &&
-        regexNumeros.test(control.value) &&
-        regexCaracterEspecial.test(control.value) &&
-        regexLongitud.test(control.value)
-      ) {
-        return null; // La contraseña cumple todos los requisitos
-      } else {
-        return { 'contrasenaInvalida': true };
-      }
-    };
-  }
-
-
 }

@@ -7,6 +7,8 @@ import { ClienteService } from '../../../services/api/cliente/cliente.service';
 import { ClienteInterface } from '../../../models/cliente.interface';
 import { ResponseInterface } from '../../../models/response.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
+import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-new-cliente',
@@ -15,14 +17,19 @@ import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface'
 })
 export class NewClienteComponent implements OnInit {
 
-  constructor(private router: Router, private api: ClienteService, private alerts: AlertsService) { }
+  constructor(
+    private router: Router,
+    private api: ClienteService,
+    private alerts: AlertsService,
+    private dialog: MatDialog
+  ) { }
 
   newForm = new FormGroup({
     documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreCliente: new FormControl('', Validators.required),
     telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
-    correoCliente: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}')]),
+    correoCliente: new FormControl('', [Validators.required, Validators.email]),
     direccionCliente: new FormControl('', Validators.required),
   })
 
@@ -35,17 +42,28 @@ export class NewClienteComponent implements OnInit {
 
 
   postForm(form: ClienteInterface) {
-    this.loading = true;
-    this.api.postCliente(form).subscribe(data => {
-      let respuesta: ResponseInterface = data;
-      if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El cliente ha sido creado exitosamente', 'Cliente creado');
-        this.router.navigate(['cliente/list-clientes']);
+    const dialogRef = this.dialog.open(DialogConfirmComponent, {
+      data: {
+        message: '¿Estás seguro que deseas crear este cliente?'
       }
-      else {
-        this.alerts.showError(respuesta.msj, 'Error al crear el cliente');
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.api.postCliente(form).subscribe(data => {
+          let respuesta: ResponseInterface = data;
+          if (respuesta.status == 'ok') {
+            this.alerts.showSuccess('El cliente ha sido creado exitosamente', 'Cliente creado');
+            this.router.navigate(['cliente/list-clientes']);
+          }
+          else {
+            this.alerts.showError(respuesta.msj, 'Error al crear el cliente');
+            this.loading = false;
+          }
+        });
+      } else {
+        this.alerts.showInfo('El cliente no ha sido creado', 'Cliente no creado');
       }
-      this.loading = false;
     });
   }
 
@@ -56,9 +74,6 @@ export class NewClienteComponent implements OnInit {
       this.loading = false;
     });
   }
-
-
-
 
   goBack() {
     this.loading = true;

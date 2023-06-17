@@ -149,7 +149,7 @@ export class ListUsuariosComponent implements OnInit {
 
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
       data: {
-        message: `¿Estás seguro de que deseas cambiar el estado del usuario?`
+        message: `¿Estás seguro que deseas cambiar el estado del usuario?`
       }
     });
 
