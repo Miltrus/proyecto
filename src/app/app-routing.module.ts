@@ -8,48 +8,53 @@ import { rolePermissionGuard } from './auth/guards/rolePermission/role-permissio
 const routes: Routes = [
 
   { path: '', redirectTo: 'landing-page', pathMatch: 'full' }, //ruta x defecto
-  
+
   { path: 'landing-page', component: LandingPageComponent },
-  
+
   { path: 'login', loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule) },
 
   { path: 'dashboard', canMatch: [isLoggedInGuard], loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule) },
 
 
-  { path: 'rol', 
+  {
+    path: 'rol',
     canMatch: [isLoggedInGuard, rolePermissionGuard],
     data: { modules: [{ name: 'Roles' }] },
-    loadChildren: () => import('./views/rol/rol.module').then(m => m.RolModule) 
+    loadChildren: () => import('./views/rol/rol.module').then(m => m.RolModule)
   },
 
 
-  { path: 'cliente', 
+  {
+    path: 'cliente',
     canMatch: [isLoggedInGuard, rolePermissionGuard],
-    data: { modules: [{ name: 'Clientes' }] }, 
-    loadChildren: () => import('./views/cliente/cliente.module').then(m => m.ClienteModule) 
+    data: { modules: [{ name: 'Clientes' }] },
+    loadChildren: () => import('./views/cliente/cliente.module').then(m => m.ClienteModule)
   },
 
 
-  { path: 'usuario', 
-  canMatch: [isLoggedInGuard, rolePermissionGuard],
-  data: { modules: [{ name: 'Usuarios' }] }, 
-  loadChildren: () => import('./views/usuario/usuario.module').then(m => m.UsuarioModule) 
+  {
+    path: 'usuario',
+    canMatch: [isLoggedInGuard, rolePermissionGuard],
+    data: { modules: [{ name: 'Usuarios' }] },
+    loadChildren: () => import('./views/usuario/usuario.module').then(m => m.UsuarioModule)
   },
 
 
-  { path: 'paquete', 
-    canMatch: [isLoggedInGuard, rolePermissionGuard], 
+  {
+    path: 'paquete',
+    canMatch: [isLoggedInGuard, rolePermissionGuard],
     data: { modules: [{ name: 'Paquetes' }] },
     loadChildren: () => import('./views/paquete/paquete.module').then(m => m.PaqueteModule)
-   },
-
-
-  { path: 'novedad', 
-    canMatch: [isLoggedInGuard, rolePermissionGuard], 
-    data: { modules: [{ name: 'Novedades' }] },
-    loadChildren: () => import('./views/novedad/novedad.module').then(m => m.NovedadModule) 
   },
-  
+
+
+  {
+    path: 'novedad',
+    canMatch: [isLoggedInGuard, rolePermissionGuard],
+    data: { modules: [{ name: 'Novedades' }] },
+    loadChildren: () => import('./views/novedad/novedad.module').then(m => m.NovedadModule)
+  },
+
 
   { path: '**', loadChildren: () => import('./components/not-found/not-found.module').then(m => m.NotFoundModule) },
 ];

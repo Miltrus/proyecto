@@ -43,14 +43,15 @@ export class NewRolComponent implements OnInit {
     });
   }
 
-
-
   postForm(form: RolInterface) {
+    const permisosSeleccionados = this.newForm.value.permisosSeleccionados;
+    if (permisosSeleccionados.filter((permiso: boolean) => permiso).length < 1) {
+      this.alerts.showError('Debes seleccionar al menos un permiso', 'Error');
+      return; // Detener la ejecución del método si no se selecciona ningún permiso
+    }
+
     const decodedToken = JSON.parse(atob(this.token!.split('.')[1]));
-    console.log(decodedToken);
-
     const uid = decodedToken.uid;
-
     this.loading = true;
 
     this.userService.getOneUsuario(uid).subscribe(data => {
@@ -87,13 +88,14 @@ export class NewRolComponent implements OnInit {
             this.alerts.showError(respuesta.msj, 'Error al crear el rol');
             this.loading = false;
           }
-        })
+        });
       } else {
         this.alerts.showError('No tienes permisos para realizar esta acción', 'Error');
         this.router.navigate(['rol/list-roles']);
       }
     });
   }
+
 
   goBack() {
     this.loading = true;
