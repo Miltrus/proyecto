@@ -3,6 +3,7 @@
         <mat-spinner></mat-spinner>
     </div>
 </div>
+
 <app-navigation>
     <br><br>
 
@@ -12,7 +13,8 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Nombre Rol <b style="color: red;">*</b></label>
-                        <input type="text" class="form-control" formControlName="nombreRol" />
+                        <input type="text" class="form-control" formControlName="nombreRol"
+                            [class.is-invalid]="editForm.get('nombreRol')?.invalid && editForm.get('nombreRol')?.touched" />
                     </div>
                 </div>
                 <div class="col">
@@ -22,12 +24,23 @@
                     </div>
                 </div>
             </div>
-            <br><br />
 
-            <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
-            <button type="submit" mat-raised-button color='primary'>Editar</button>
+            <br><br>
 
+            <div class="form-group" formArrayName="permisos">
+                <label>Permisos:</label>
+                <div *ngFor="let permiso of permisos; let i = index">
+                    <label>
+                        <input type="checkbox" [formControlName]="i">
+                        {{ permiso.nombrePermiso }}
+                    </label>
+                </div>
+            </div>
+
+            <br><br>
+
+            <button type="button" mat-raised-button color="accent" (click)="goBack()">Atras</button> |
+            <button type="submit" mat-raised-button color='primary' [disabled]="editForm.invalid">Editar</button>
         </form>
     </div>
-
 </app-navigation>

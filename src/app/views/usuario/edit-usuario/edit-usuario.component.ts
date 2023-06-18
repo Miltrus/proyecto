@@ -30,13 +30,13 @@ export class EditUsuarioComponent implements OnInit {
 
   editForm = new FormGroup({
     documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
-    idTipoDocumento: new FormControl('', [Validators.required]),
-    nombreUsuario: new FormControl('', [Validators.required]),
-    apellidoUsuario: new FormControl('', [Validators.required]),
+    idTipoDocumento: new FormControl('', Validators.required),
+    nombreUsuario: new FormControl('', Validators.required),
+    apellidoUsuario: new FormControl('', Validators.required),
     telefonoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
     correoUsuario: new FormControl('', [Validators.required, Validators.email]),
-    contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/i)]),
-    idRol: new FormControl('', [Validators.required])
+    contrasenaUsuario: new FormControl('', [Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/i)]),
+    idRol: new FormControl('', Validators.required)
   })
 
   dataUsuario: UsuarioInterface[] = [];
