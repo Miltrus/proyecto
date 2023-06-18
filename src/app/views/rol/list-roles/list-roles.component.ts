@@ -94,7 +94,7 @@ export class ListRolesComponent implements OnInit {
   viewRol(rol: RolInterface): void {
     this.dialog.open(this.viewRolDialog, {
       data: rol,
-      width: '400px', // Ajusta el ancho del cuadro emergente según tus necesidades
+      width: '400px',
     });
   }
 
@@ -130,8 +130,11 @@ export class ListRolesComponent implements OnInit {
           }
           this.loading = false;
         });
+      } else {
+        this.alerts.showInfo('El rol no ha sido eliminado', 'Eliminación cancelada');
+        this.loading = false;
       }
-      this.loading = false;
+
     });
   }
 

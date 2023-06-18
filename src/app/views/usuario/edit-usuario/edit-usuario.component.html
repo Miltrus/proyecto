@@ -12,6 +12,7 @@
                     <div class="form-group">
                         <label for="idTipoDocumento">Tipo de documento <b style="color: red;">*</b></label>
                         <mat-select class="form-control" formControlName="idTipoDocumento"
+                            placeholder="---SELECCIONE---"
                             [class.is-invalid]="editForm.get('idTipoDocumento')?.invalid && editForm.get('idTipoDocumento')?.touched">
                             <mat-option *ngFor="let tipoDocumento of tiposDocumento"
                                 [value]="tipoDocumento.idTipoDocumento">{{
@@ -84,7 +85,7 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="idTipoDocumento">Rol <b style="color: red;">*</b></label>
-                        <mat-select class="form-control" formControlName="idRol"
+                        <mat-select class="form-control" formControlName="idRol" placeholder="---SELECCIONE---"
                             [class.is-invalid]="editForm.get('idRol')?.invalid && editForm.get('idRol')?.touched">
                             <mat-option *ngFor="let rol of rolUsuario" [value]="rol.idRol">{{ rol.nombreRol
                                 }}</mat-option>

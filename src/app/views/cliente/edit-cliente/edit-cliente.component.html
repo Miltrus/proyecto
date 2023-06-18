@@ -11,6 +11,7 @@
                     <div class="form-group">
                         <label for="idTipoDocumento">Tipo de documento <b style="color: red;">*</b></label>
                         <mat-select class="form-control" formControlName="idTipoDocumento"
+                            placeholder="---SELECCIONE---"
                             [class.is-invalid]="editForm.get('idTipoDocumento')?.invalid && editForm.get('idTipoDocumento')?.touched">
                             <mat-option *ngFor="let tipoDocumento of tiposDocumento"
                                 [value]="tipoDocumento.idTipoDocumento">{{

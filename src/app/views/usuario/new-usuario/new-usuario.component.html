@@ -11,6 +11,7 @@
                     <div class="form-group">
                         <label for="idTipoDocumento">Tipo de documento <b style="color: red;">*</b></label>
                         <mat-select class="form-control" formControlName="idTipoDocumento"
+                            placeholder="---SELECCIONE---"
                             [class.is-invalid]="newForm.get('idTipoDocumento')?.invalid && newForm.get('idTipoDocumento')?.touched">
                             <mat-option *ngFor="let tipoDocumento of tiposDocumento"
                                 [value]="tipoDocumento.idTipoDocumento">
@@ -84,7 +85,8 @@
                                 [class.is-invalid]="newForm.get('contrasenaUsuario')?.invalid && newForm.get('contrasenaUsuario')?.touched" />
 
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" (click)="toggleShowPassword()"
+                                <button class="btn btn-outline-secondary" type="button" style="margin-left: 5px;"
+                                    (click)="toggleShowPassword()"
                                     *ngIf="newForm.get('contrasenaUsuario')?.value !== ''">
                                     {{ showPassword ? 'Ocultar' : 'Mostrar' }}
                                 </button>
@@ -104,7 +106,7 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="idRol">Rol <b style="color: red;">*</b></label>
-                        <mat-select class="form-control" formControlName="idRol"
+                        <mat-select class="form-control" formControlName="idRol" placeholder="---SELECCIONE---"
                             [class.is-invalid]="newForm.get('idRol')?.invalid && newForm.get('idRol')?.touched">
                             <mat-option *ngFor="let rol of rolUsuario" [value]="rol.idRol">{{
                                 rol.nombreRol}}</mat-option>

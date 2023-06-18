@@ -110,7 +110,7 @@ export class ListUsuariosComponent implements OnInit {
           this.loading = false;
         });
       } else {
-        this.alerts.showInfo('No se ha realizado ninguna accion', 'Eliminacion cancelada');
+        this.alerts.showInfo('El usuario no ha sido eliminado', 'Eliminacion cancelada');
         this.loading = false;
       }
     });
