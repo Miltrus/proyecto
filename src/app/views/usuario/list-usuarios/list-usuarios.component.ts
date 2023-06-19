@@ -35,6 +35,10 @@ export class ListUsuariosComponent implements OnInit {
   dataSource = new MatTableDataSource(this.usuarios); //pal filtro
   loading: boolean = true;
 
+  token = localStorage.getItem('token');
+  decodedToken = JSON.parse(atob(this.token!.split('.')[1]));
+  uid = this.decodedToken.uid;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
   @ViewChild('viewUsuarioDialog') viewUsuarioDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
@@ -79,12 +83,26 @@ export class ListUsuariosComponent implements OnInit {
 
   editUsuario(id: any) {
     this.loading = true;
-    this.router.navigate(['usuario/edit-usuario', id]);
+    this.api.getOneUsuario(this.uid).subscribe(data => {
+      if (data.idRol != '1') {
+        this.alerts.showError('No tienes permisos para editar usuarios', 'Acceso denegado');
+      } else {
+        this.router.navigate(['usuario/edit-usuario', id]);
+      }
+      this.loading = false;
+    })
   }
 
   newUsuario() {
     this.loading = true;
-    this.router.navigate(['usuario/new-usuario']);
+    this.api.getOneUsuario(this.uid).subscribe(data => {
+      if (data.idRol != '1') {
+        this.alerts.showError('No tienes permisos para crear usuarios', 'Acceso denegado');
+      } else {
+        this.router.navigate(['usuario/new-usuario']);
+      }
+      this.loading = false;
+    })
   }
 
   deleteUsuario(id: any): void {
@@ -97,24 +115,82 @@ export class ListUsuariosComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
-        this.api.deleteUsuario(id).subscribe(data => {
-          let respuesta: ResponseInterface = data;
+        this.api.getOneUsuario(this.uid).subscribe(data => {
+          if (data.idRol == '1') {
+            if (id == this.uid) {
+              this.alerts.showError('No puedes eliminar tu propio usuario', 'Acceso denegado');
+              this.loading = false;
+              return;
+            }
+            this.api.deleteUsuario(id).subscribe(data => {
+              let respuesta: ResponseInterface = data;
 
-          if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El usuario ha sido eliminado exitosamente', 'Eliminación exitosa');
-            this.usuarios = this.usuarios.filter(usuario => usuario.documentoUsuario !== id);
-            this.dataSource.data = this.usuarios; //actualizamos el datasource
+              if (respuesta.status == 'ok') {
+                this.alerts.showSuccess('El usuario ha sido eliminado exitosamente', 'Eliminación exitosa');
+                this.usuarios = this.usuarios.filter(usuario => usuario.documentoUsuario !== id);
+                this.dataSource.data = this.usuarios; //actualizamos el datasource
+              } else {
+                this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
+              }
+              this.loading = false;
+            });
           } else {
-            this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
+            this.alerts.showError('No tienes permisos para eliminar usuarios', 'Acceso denegado');
+            this.loading = false;
           }
-          this.loading = false;
-        });
+        })
       } else {
         this.alerts.showInfo('El usuario no ha sido eliminado', 'Eliminacion cancelada');
-        this.loading = false;
       }
     });
   }
+
+
+
+  toggleEstado(usuario: UsuarioInterface): void {
+    const nuevoEstado = parseInt(usuario.idEstado, 10) === 1 ? 2 : 1;
+    const { contrasenaUsuario, ...userWithOutPwd } = usuario;
+    const updatedUsuario: UsuarioInterface = { ...userWithOutPwd, idEstado: nuevoEstado };
+
+    const dialogRef = this.dialog.open(DialogConfirmComponent, {
+      data: {
+        message: `¿Estás seguro que deseas cambiar el estado del usuario?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.api.getOneUsuario(this.uid).subscribe(data => {
+          if (data.idRol == '1') {
+            if (usuario.documentoUsuario == this.uid) {
+              this.alerts.showWarning('No puedes cambiar el estado de tu propio usuario', 'Acceso denegado');
+              this.loading = false;
+              return;
+            }
+            this.api.putUsuario(updatedUsuario).subscribe(data => {
+              let respuesta: ResponseInterface = data;
+
+              if (respuesta.status === 'ok') {
+                this.alerts.showSuccess('El estado del usuario ha sido actualizado exitosamente', 'Actualización exitosa');
+                this.usuarios = this.usuarios.map(u => (u.documentoUsuario === updatedUsuario.documentoUsuario ? updatedUsuario : u));
+                this.dataSource.data = this.usuarios; // actualizamos el datasource
+              } else {
+                this.alerts.showError(respuesta.msj, 'Error en la actualización');
+              }
+              this.loading = false;
+            });
+          } else {
+            this.alerts.showError('No tienes permisos para cambiar el estado de los usuarios', 'Modificacion cancelada');
+            this.loading = false;
+          }
+        })
+      } else {
+        this.alerts.showInfo('No se ha realizado ningún cambio', 'Actualización cancelada');
+      }
+    });
+  }
+
 
   getTipoDocumento(idTipoDocumento: any): string {
     const tipoDocumento = this.tiposDocumento.find(tipo => tipo.idTipoDocumento === idTipoDocumento);
@@ -139,39 +215,5 @@ export class ListUsuariosComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-
-  toggleEstado(usuario: UsuarioInterface): void {
-    const nuevoEstado = parseInt(usuario.idEstado, 10) === 1 ? 2 : 1;
-    const { contrasenaUsuario, ...userWithOutPwd } = usuario;
-    const updatedUsuario: UsuarioInterface = { ...userWithOutPwd, idEstado: nuevoEstado };
-
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: `¿Estás seguro que deseas cambiar el estado del usuario?`
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.loading = true;
-        this.api.putUsuario(updatedUsuario).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-
-          if (respuesta.status === 'ok') {
-            this.alerts.showSuccess('El estado del usuario ha sido actualizado exitosamente', 'Actualización exitosa');
-            this.usuarios = this.usuarios.map(u => (u.documentoUsuario === updatedUsuario.documentoUsuario ? updatedUsuario : u));
-            this.dataSource.data = this.usuarios; // actualizamos el datasource
-          } else {
-            this.alerts.showError(respuesta.msj, 'Error en la actualización');
-          }
-          this.loading = false;
-        });
-      } else {
-        this.alerts.showInfo('No se ha realizado ningún cambio', 'Actualización cancelada');
-        this.loading = false;
-      }
-    });
   }
 }

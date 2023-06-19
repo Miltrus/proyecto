@@ -35,6 +35,8 @@ export class NewRolComponent implements OnInit {
   permisos: PermisoInterface[] = [];
   loading: boolean = true;
   token = localStorage.getItem('token');
+  decodedToken = JSON.parse(atob(this.token!.split('.')[1]));
+  uid = this.decodedToken.uid;
 
   ngOnInit(): void {
     this.getPermisos();
@@ -64,12 +66,9 @@ export class NewRolComponent implements OnInit {
           this.alerts.showError('Debes seleccionar al menos un permiso', 'Error');
           return; // Detener la ejecución del método si no se selecciona ningún permiso
         }
-
-        const decodedToken = JSON.parse(atob(this.token!.split('.')[1]));
-        const uid = decodedToken.uid;
         this.loading = true;
 
-        this.userService.getOneUsuario(uid).subscribe(data => {
+        this.userService.getOneUsuario(this.uid).subscribe(data => {
           if (data.idRol == '1') {
             this.api.postRol(form).subscribe(data => {
               let respuesta: ResponseInterface = data;

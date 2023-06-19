@@ -43,6 +43,10 @@ export class NewUsuarioComponent implements OnInit {
   rolUsuario: RolInterface[] = [];
   loading: boolean = true;
 
+  token = localStorage.getItem('token');
+  decodedToken = JSON.parse(atob(this.token!.split('.')[1]));
+  uid = this.decodedToken.uid;
+
   showPassword: boolean = false;
 
   toggleShowPassword(): void {
@@ -56,6 +60,7 @@ export class NewUsuarioComponent implements OnInit {
     this.getRolesUsuario();
   }
 
+
   postForm(form: UsuarioInterface) {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
       data: {
@@ -65,17 +70,26 @@ export class NewUsuarioComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
-        this.api.postUsuario(form).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-          if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El usuario ha sido creado exitosamente', 'Usuario creado');
-            this.router.navigate(['usuario/list-usuarios']);
-          }
-          else {
-            this.alerts.showError(respuesta.msj, 'Error al crear el usuario');
+
+        this.api.getOneUsuario(this.uid).subscribe(data => {
+          if (data.idRol == '1') {
+            this.api.postUsuario(form).subscribe(data => {
+              let respuesta: ResponseInterface = data;
+              if (respuesta.status == 'ok') {
+                this.alerts.showSuccess('El usuario ha sido creado exitosamente', 'Usuario creado');
+                this.router.navigate(['usuario/list-usuarios']);
+
+              } else {
+                this.alerts.showError(respuesta.msj, 'Error al crear el usuario');
+                this.loading = false;
+              }
+            });
+          } else {
+            this.alerts.showError('No tienes permisos para realizar esta acción', 'Error');
             this.loading = false;
           }
         });
+
       } else {
         this.alerts.showInfo('El usuario no ha sido creado', 'Usuario no creado');
       }

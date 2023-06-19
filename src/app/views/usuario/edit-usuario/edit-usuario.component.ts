@@ -36,7 +36,8 @@ export class EditUsuarioComponent implements OnInit {
     telefonoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
     correoUsuario: new FormControl('', [Validators.required, Validators.email]),
     contrasenaUsuario: new FormControl('', [Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/i)]),
-    idRol: new FormControl('', Validators.required)
+    idRol: new FormControl('', Validators.required),
+    idEstado: new FormControl(''),
   })
 
   dataUsuario: UsuarioInterface[] = [];
@@ -45,6 +46,16 @@ export class EditUsuarioComponent implements OnInit {
 
   rolUsuario: RolInterface[] = [];
   loading: boolean = true;
+
+  token = localStorage.getItem('token');
+  decodedToken = JSON.parse(atob(this.token!.split('.')[1]));
+  uid = this.decodedToken.uid;
+
+  showPassword: boolean = false;
+
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
+  }
 
   ngOnInit(): void {
     let documentoUsuario = this.activatedRouter.snapshot.paramMap.get('id');
@@ -59,7 +70,8 @@ export class EditUsuarioComponent implements OnInit {
         'telefonoUsuario': this.dataUsuario[0]?.telefonoUsuario || '',
         'correoUsuario': this.dataUsuario[0]?.correoUsuario || '',
         'contrasenaUsuario': this.dataUsuario[0]?.contrasenaUsuario || '',
-        'idRol': this.dataUsuario[0]?.idRol || ''
+        'idRol': this.dataUsuario[0]?.idRol || '',
+        'idEstado': this.dataUsuario[0]?.idEstado || '',
       });
       this.loading = false;
     });
@@ -68,28 +80,38 @@ export class EditUsuarioComponent implements OnInit {
     this.getRolesUsuario();
   }
 
+
   postForm(id: any) {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
       data: {
-        message: '¿Está seguro que deseas modificar este usuario?',
+        message: '¿Estás seguro que deseas editar este usuario?'
       }
-    })
+    });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
-        this.api.putUsuario(id).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-          if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El usuario ha sido modificado', 'Modificación exitosa');
-            this.router.navigate(['usuario/list-usuarios']);
-          }
-          else {
-            this.alerts.showError(respuesta.msj, "Error en la modificación");
+
+        this.api.getOneUsuario(this.uid).subscribe(data => {
+          if (data.idRol == '1') {
+            this.api.putUsuario(id).subscribe(data => {
+              let respuesta: ResponseInterface = data;
+              if (respuesta.status == 'ok') {
+                this.alerts.showSuccess('El usuario ha sido modificado exitosamente', 'Modificacion exitosa');
+                this.router.navigate(['usuario/list-usuarios']);
+
+              } else {
+                this.alerts.showError(respuesta.msj, 'Error al modificar el usuario');
+                this.loading = false;
+              }
+            });
+          } else {
+            this.alerts.showError('No tienes permisos para realizar esta acción', 'Error');
             this.loading = false;
           }
         });
+
       } else {
-        this.alerts.showInfo('No se ha modificado el usuario', 'Modificación cancelada');
+        this.alerts.showInfo('El usuario no ha sido modificado', 'Modificacion cancelada');
       }
     });
   }
