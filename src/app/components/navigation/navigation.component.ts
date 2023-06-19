@@ -61,7 +61,6 @@ export class NavigationComponent {
         const permisos = data.idPermiso?.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
 
         this.modules = this.modules.filter((module) => permisos.includes(module.name));
-        this.loading = false;
       }
       );
     });
@@ -104,7 +103,6 @@ export class NavigationComponent {
         localStorage.removeItem('token');
 
         this.isDarkThemeActive = false;
-        this.document.body.classList.remove('dark-mode');
       }
     });
   }
