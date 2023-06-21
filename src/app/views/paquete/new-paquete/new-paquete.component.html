@@ -3,40 +3,86 @@
     <mat-spinner></mat-spinner>
   </div>
 </div>
-<app-navigation>
 
+<app-navigation>
   <div class="container">
-    <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)">
+    <h4>Remitente</h4>
+    <form [formGroup]="remitenteForm" (ngSubmit)="postRemitenteForm()">
+      <div class="col">
+        <div class="form-group">
+          <label for="">Cliente</label>
+          <select class="form-control" formControlName="documentoCliente"
+            [class.is-invalid]="remitenteForm.get('documentoCliente')?.invalid && remitenteForm.get('documentoCliente')?.touched">
+            <option *ngFor="let cli of cliente " [value]="cli.documentoCliente">{{ cli.nombreCliente }}</option>
+          </select>
+        </div>
+      </div>
       <div class="row">
         <div class="col">
           <div class="form-group">
-            <label for="">Mensajero</label>
-            <select class="form-control" formControlName="documentoUsuario"
-              [class.is-invalid]="newForm.get('documentoUsuario')?.invalid && newForm.get('documentoUsuario')?.touched">
-              <option *ngFor="let usu of usuario" [value]="usu.documentoUsuario">{{ usu.nombreUsuario }}</option>
-            </select>
+            <label for="">Dirección</label>
+            <input type="text" class="form-control" formControlName="codigoQrPaquete" readonly
+              [class.is-invalid]="remitenteForm.get('codigoQrPaquete')?.invalid && remitenteForm.get('codigoQrPaquete')?.touched" />
           </div>
         </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="">Correo</label>
+            <input type="text" class="form-control" formControlName="correoCliente" readonly
+              [class.is-invalid]="remitenteForm.get('correoCliente')?.invalid && remitenteForm.get('correoCliente')?.touched" />
+          </div>
+        </div>
+      </div>
+
+      <h4>Destinatario</h4>
+      <form [formGroup]="destinatarioForm" (ngSubmit)="postDestinatarioForm()">
         <div class="col">
           <div class="form-group">
             <label for="">Cliente</label>
             <select class="form-control" formControlName="documentoCliente"
-              [class.is-invalid]="newForm.get('documentoCliente')?.invalid && newForm.get('documentoCliente')?.touched">
+              [class.is-invalid]="destinatarioForm.get('documentoCliente')?.invalid && destinatarioForm.get('documentoCliente')?.touched">
               <option *ngFor="let cli of cliente " [value]="cli.documentoCliente">{{ cli.nombreCliente }}</option>
             </select>
           </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="">Direccion</label>
-        <input type="text" class="form-control" formControlName="codigoQrPaquete" readonly
-          [class.is-invalid]="newForm.get('codigoQrPaquete')?.invalid && newForm.get('codigoQrPaquete')?.touched" />
-      </div>
-      <br><br />
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="">Nombre</label>
+              <input type="text" class="form-control" formControlName="nombreCliente" readonly
+                [class.is-invalid]="destinatarioForm.get('nombreCliente')?.invalid && destinatarioForm.get('nombreCliente')?.touched" />
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="">Telefono</label>
+              <input type="text" class="form-control" formControlName="telefonoCliente" readonly
+                [class.is-invalid]="destinatarioForm.get('telefonoCliente')?.invalid && destinatarioForm.get('telefonoCliente')?.touched" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="">Dirección</label>
+              <input type="text" class="form-control" formControlName="codigoQrPaquete" readonly
+                [class.is-invalid]="destinatarioForm.get('codigoQrPaquete')?.invalid && destinatarioForm.get('codigoQrPaquete')?.touched" />
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="">Correo</label>
+              <input type="text" class="form-control" formControlName="correoCliente" readonly
+                [class.is-invalid]="destinatarioForm.get('correoCliente')?.invalid && destinatarioForm.get('correoCliente')?.touched" />
+            </div>
+          </div>
+        </div>
 
-      <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
-      <button type="submit" mat-raised-button color="primary">Guardar</button>
+        <br><br />
 
+        <button type="button" mat-raised-button color='accent' (click)="goBack()">Atrás</button> |
+        <button type="submit" mat-raised-button color="primary">Guardar</button>
+      </form>
     </form>
   </div>
 </app-navigation>

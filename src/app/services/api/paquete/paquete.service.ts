@@ -57,8 +57,23 @@ export class PaqueteService {
     return this.http.get<EstadoPaqueteInterface[]>(address);
   }
 
+  getNombreCliente(idCliente: any): Observable<any> {
+    const address = this.url + 'paquete/' + idCliente + '/nombre';
+    return this.http.get<any>(address);
+  }
+
+  getTelefonoCliente(idCliente: any): Observable<any> {
+    const address = this.url + 'paquete/' + idCliente + '/telefono';
+    return this.http.get<any>(address);
+  }
+
   getDireccionCliente(idCliente: any): Observable<any> {
     const address = this.url + 'paquete/' + idCliente + '/direccion';
+    return this.http.get<any>(address);
+  }
+
+  getCorreoCliente(idCliente: any): Observable<any> {
+    const address = this.url + 'paquete/' + idCliente + '/correo';
     return this.http.get<any>(address);
   }
 
