@@ -44,52 +44,41 @@ export class ListRolesComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  loadRoles(): void {
-    this.api.getAllRoles().subscribe(
-      (data: RolInterface[]) => {
-        this.roles = data;
-        this.dataSource.data = this.roles;
-
-        // Obtener los permisos por cada rol
-        data.forEach((rol: RolInterface) => {
-          this.loadPermisosPorRol(rol.idRol);
-        });
-
-        if (this.roles.length < 1) {
-          this.alerts.showInfo('No hay roles registrados', 'Sin registros');
-        }
-
-      },
-      (error) => {
-        console.log(error);
-        this.loading = false;
-      }
-    );
-  }
-
   loadPermisosPorRol(idRol: string): void {
-    this.api.getRolPermisos(idRol).subscribe(
-      (data: RolPermisoResponseInterface) => {
-        const permisos: PermisoInterface[] = data.idPermiso
-          ? data.idPermiso.filter((rolPermiso: RolPermisoInterface | null | undefined) => rolPermiso !== null && rolPermiso !== undefined)
-            .map((rolPermiso: RolPermisoInterface) => rolPermiso.permiso!)
-          : [];
+    this.api.getRolPermisos(idRol).subscribe(data => {
+      const permisos: PermisoInterface[] = data.idPermiso
+        ? data.idPermiso.filter((rolPermiso: RolPermisoInterface | null | undefined) => rolPermiso !== null && rolPermiso !== undefined)
+          .map((rolPermiso: RolPermisoInterface) => rolPermiso.permiso!)
+        : [];
 
-        // Encuentra el rol correspondiente en el arreglo 'roles'
-        const rol = this.roles.find((r: RolInterface) => r.idRol === idRol);
+      // Encuentra el rol correspondiente en el arreglo 'roles'
+      const rol = this.roles.find((r: RolInterface) => r.idRol === idRol);
 
-        // Asigna los permisos al rol encontrado
-        if (rol) {
-          rol.permisos = permisos;
-        }
-
-        this.loading = false;
-      },
-      (error) => {
-        console.log(error);
+      // Asigna los permisos al rol encontrado
+      if (rol) {
+        rol.permisos = permisos;
       }
-    );
+      this.loading = false;
+    })
   }
+
+  loadRoles(): void {
+    this.api.getAllRoles().subscribe(data => {
+      this.roles = data;
+      this.dataSource.data = this.roles;
+
+      // Obtener los permisos por cada rol
+      data.forEach((rol: RolInterface) => {
+        this.loadPermisosPorRol(rol.idRol);
+      });
+
+      if (this.roles.length < 1) {
+        this.alerts.showInfo('No hay roles registrados', 'Sin registros');
+        this.loading = false;
+      }
+    });
+  }
+
 
   viewRol(rol: RolInterface): void {
     this.dialog.open(this.viewRolDialog, {

@@ -49,21 +49,21 @@ export class NavigationComponent {
       this.document.body.classList.remove('dark-mode');
     }
     // Obtener los permisos del rol y filtrar los módulos correspondientes
-    const token = localStorage.getItem('token');
+    /* const token = localStorage.getItem('token');
     const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
-    const uid = decodedToken.uid;
+    const uid = decodedToken.uid; */
 
-    this.userService.getOneUsuario(uid).subscribe(data => {
+    /* this.userService.getOneUsuario(uid).subscribe(data => {
       const rol = data.idRol;
 
       this.rolService.getRolPermisos(rol).subscribe(data => {
 
         const permisos = data.idPermiso?.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
-
+        
         this.modules = this.modules.filter((module) => permisos.includes(module.name));
-        this.loading = false
-      });
-    });
+      }); */
+    this.loading = false
+    //});
   }
 
 

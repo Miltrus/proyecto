@@ -90,26 +90,17 @@ export class EditUsuarioComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
+        this.api.putUsuario(id).subscribe(data => {
+          let respuesta: ResponseInterface = data;
+          if (respuesta.status == 'ok') {
+            this.alerts.showSuccess('El usuario ha sido modificado exitosamente', 'Modificacion exitosa');
+            this.router.navigate(['usuario/list-usuarios']);
 
-        this.api.getOneUsuario(this.uid).subscribe(data => {
-          if (data.idRol == '1') {
-            this.api.putUsuario(id).subscribe(data => {
-              let respuesta: ResponseInterface = data;
-              if (respuesta.status == 'ok') {
-                this.alerts.showSuccess('El usuario ha sido modificado exitosamente', 'Modificacion exitosa');
-                this.router.navigate(['usuario/list-usuarios']);
-
-              } else {
-                this.alerts.showError(respuesta.msj, 'Error al modificar el usuario');
-                this.loading = false;
-              }
-            });
           } else {
-            this.alerts.showError('No tienes permisos para realizar esta acción', 'Error');
+            this.alerts.showError(respuesta.msj, 'Error al modificar el usuario');
             this.loading = false;
           }
         });
-
       } else {
         this.alerts.showInfo('El usuario no ha sido modificado', 'Modificacion cancelada');
       }

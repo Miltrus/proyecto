@@ -13,31 +13,31 @@ import { RolPermisoResponseInterface } from 'src/app/models/rol-permiso-response
 })
 export class RolService {
 
-  url:string = 'http://localhost:3030/';
+  url: string = 'http://localhost:3030/';
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  getAllRoles():Observable<RolInterface[]>{
+  getAllRoles(): Observable<RolInterface[]> {
     let address = this.url + 'rol';
     return this.http.get<RolInterface[]>(address);
   }
 
-  getOneRol(id: any):Observable<RolInterface>{
+  getOneRol(id: any): Observable<RolInterface> {
     let address = this.url + 'rol/' + id;
     return this.http.get<RolInterface>(address);
   }
 
-  postRol(form: RolInterface):Observable<ResponseInterface>{
+  postRol(form: RolInterface): Observable<ResponseInterface> {
     let address = this.url + 'rol';
     return this.http.post<ResponseInterface>(address, form);
   }
 
-  putRol(id: any):Observable<ResponseInterface>{
+  putRol(id: any, permisosSeleccionados: boolean[]): Observable<ResponseInterface> {
     let address = this.url + 'rol/' + id;
-    return this.http.put<ResponseInterface>(address, id);
+    return this.http.put<ResponseInterface>(address, { id, permisosSeleccionados });
   }
 
-  deleteRol(id: any):Observable<ResponseInterface>{
+  deleteRol(id: any): Observable<ResponseInterface> {
     let addres = this.url + 'rol/' + id;
     return this.http.delete<ResponseInterface>(addres);
   }
@@ -51,7 +51,7 @@ export class RolService {
     let address = this.url + 'rol/lastId';
     return this.http.get<any>(address);
   }
-  
+
   guardarRolPermiso(rolPermiso: RolPermisoInterface): Observable<ResponseInterface> {
     let address = this.url + 'rolPermiso';
     return this.http.post<ResponseInterface>(address, rolPermiso);

@@ -21,7 +21,6 @@ export const isLoggedInGuard: CanMatchFn = (route, state) => {
 
           if (expirationDate < new Date()) {
             localStorage.removeItem('token');
-            localStorage.removeItem('idRol');
             router.navigate(['login']);
             alerts.showWarning('Por favor inicie sesión nuevamente', 'Su sesión ha expirado');
             return false;
@@ -32,7 +31,6 @@ export const isLoggedInGuard: CanMatchFn = (route, state) => {
         } else {
           router.navigate(['login']);
           localStorage.removeItem('token');
-          localStorage.removeItem('idRol');
           alerts.showWarning(response.msj, 'Su sesión ha expirado');
           return false;
         }

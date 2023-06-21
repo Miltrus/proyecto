@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { RolService } from '../../../services/api/rol/rol.service';
@@ -22,13 +22,41 @@ export class NewRolComponent implements OnInit {
     private router: Router,
     private api: RolService,
     private alerts: AlertsService,
-    private userService: UsuarioService,
     private dialog: MatDialog,
+    private formBuilder: FormBuilder,
   ) { }
 
-  newForm = new FormGroup({
+  selectListar = false;
+  selectCrear = false;
+  selectEditar = false;
+  selectEliminar = false;
+
+  // ...
+
+  updateCheckboxes(nombrePermiso: string, event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const value = target.checked;
+
+    this.permisosSeleccionadosFormArray.controls.forEach((control, index) => {
+      const permiso = this.permisos[index];
+      if (permiso?.nombrePermiso?.startsWith(nombrePermiso)) {
+        control.patchValue(value);
+      }
+    });
+  }
+
+
+  updateAllCheckboxes(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const value = target.checked;
+
+    this.permisosSeleccionadosFormArray.controls.forEach((control) => {
+      control.patchValue(value);
+    });
+  }
+
+  newForm = this.formBuilder.group({
     nombreRol: new FormControl('', Validators.required),
-    descripcionRol: new FormControl(''),
     permisosSeleccionados: new FormArray(<any>[])
   });
 
@@ -42,12 +70,15 @@ export class NewRolComponent implements OnInit {
     this.getPermisos();
   }
 
+  get permisosSeleccionadosFormArray() {
+    return this.newForm.get('permisosSeleccionados') as FormArray;
+  }
+
   getPermisos(): void {
-    this.api.getAllPermisos().subscribe(data => {
+    this.api.getAllPermisos().subscribe((data) => {
       this.permisos = data;
       this.permisos.forEach(() => {
-        const control = new FormControl(false);
-        (this.newForm.controls.permisosSeleccionados as FormArray<any>).push(control);
+        this.permisosSeleccionadosFormArray.push(this.formBuilder.control(false));
       });
       this.loading = false;
     });
@@ -67,43 +98,35 @@ export class NewRolComponent implements OnInit {
           return; // Detener la ejecución del método si no se selecciona ningún permiso
         }
         this.loading = true;
-
-        this.userService.getOneUsuario(this.uid).subscribe(data => {
-          if (data.idRol == '1') {
-            this.api.postRol(form).subscribe(data => {
-              let respuesta: ResponseInterface = data;
-              if (respuesta.status == 'ok') {
-                this.alerts.showSuccess('El rol ha sido creado exitosamente', 'Rol creado');
-                this.router.navigate(['rol/list-roles']);
-
-                // Obtén el último ID de rol creado
-                this.api.getLastRolId().subscribe(lastRolId => {
-                  const idRol = lastRolId;
-                  // Obtén los permisos seleccionados del formulario
-                  const permisosSeleccionados = this.newForm.value.permisosSeleccionados;
-                  // Itera sobre los permisos seleccionados y guárdalos en la tabla intermedia
-                  permisosSeleccionados.forEach((permisoSeleccionado: boolean, index: number) => {
-                    if (permisoSeleccionado) {
-                      const permisoId = this.permisos[index].idPermiso;
-                      const rolPermiso: RolPermisoInterface = {
-                        idRol: idRol,
-                        idPermiso: permisoId
-                      };
-
-                      // Llama al método de la API para guardar el registro en la tabla intermedia
-                      this.api.guardarRolPermiso(rolPermiso).subscribe(response => { });
-                    }
-                  });
-                });
-
-              } else {
-                this.alerts.showError(respuesta.msj, 'Error al crear el rol');
-                this.loading = false;
-              }
-            });
-          } else {
-            this.alerts.showError('No tienes permisos para realizar esta acción', 'Error');
+        this.api.postRol(form).subscribe(data => {
+          let respuesta: ResponseInterface = data;
+          if (respuesta.status == 'ok') {
+            this.alerts.showSuccess('El rol ha sido creado exitosamente', 'Rol creado');
             this.router.navigate(['rol/list-roles']);
+
+            // Obtén el último ID de rol creado
+            this.api.getLastRolId().subscribe(lastRolId => {
+              const idRol = lastRolId;
+              // Obtén los permisos seleccionados del formulario
+              const permisosSeleccionados = this.newForm.value.permisosSeleccionados;
+              // Itera sobre los permisos seleccionados y guárdalos en la tabla intermedia
+              permisosSeleccionados.forEach((permisoSeleccionado: boolean, index: number) => {
+                if (permisoSeleccionado) {
+                  const permisoId = this.permisos[index].idPermiso;
+                  const rolPermiso: RolPermisoInterface = {
+                    idRol: idRol,
+                    idPermiso: permisoId
+                  };
+
+                  // Llama al método de la API para guardar el registro en la tabla intermedia
+                  this.api.guardarRolPermiso(rolPermiso).subscribe(data => { });
+                }
+              });
+            });
+
+          } else {
+            this.alerts.showError(respuesta.msj, 'Error al crear el rol');
+            this.loading = false;
           }
         });
 

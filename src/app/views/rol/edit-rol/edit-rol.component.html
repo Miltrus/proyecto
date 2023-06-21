@@ -3,7 +3,6 @@
         <mat-spinner></mat-spinner>
     </div>
 </div>
-
 <app-navigation>
     <br><br>
 
@@ -17,30 +16,82 @@
                             [class.is-invalid]="editForm.get('nombreRol')?.invalid && editForm.get('nombreRol')?.touched" />
                     </div>
                 </div>
+            </div>
+            <br><br><br>
+
+            <h2>Permisos</h2><br><br>
+            <div class="row">
                 <div class="col">
-                    <div class="form-group">
-                        <label for="exampleFormControlInput1">Descripcion Rol</label>
-                        <input type="text" class="form-control" formControlName="descripcionRol" />
+                    <input type="checkbox" (change)="updateCheckboxes('listar-', $event)">
+                    <strong>LISTAR</strong><br><br>
+                    <div formArrayName="permisosSeleccionados">
+                        <ng-container *ngFor="let permiso of permisos; let i = index">
+                            <div *ngIf="permiso?.nombrePermiso?.startsWith('listar-')">
+                                <label>
+                                    <input type="checkbox" [formControlName]="i">
+                                    {{ permiso?.nombrePermiso }}
+                                </label>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="col">
+                    <input type="checkbox" (change)="updateCheckboxes('crear-', $event)" />
+                    <strong>CREAR</strong><br><br>
+                    <div formArrayName="permisosSeleccionados">
+                        <ng-container *ngFor="let permiso of permisos; let i = index">
+                            <div *ngIf="permiso?.nombrePermiso?.startsWith('crear-')">
+                                <label>
+                                    <input type="checkbox" [formControlName]="i">
+                                    {{ permiso?.nombrePermiso }}
+                                </label>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <input type="checkbox" (change)="updateCheckboxes('editar-', $event)">
+                    <strong>EDITAR</strong><br><br>
+                    <div formArrayName="permisosSeleccionados">
+                        <ng-container *ngFor="let permiso of permisos; let i = index">
+                            <div *ngIf="permiso?.nombrePermiso?.startsWith('editar-')">
+                                <label>
+                                    <input type="checkbox" [formControlName]="i">
+                                    {{ permiso?.nombrePermiso }}
+                                </label>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="col">
+                    <input type="checkbox" (change)="updateCheckboxes('eliminar-', $event)">
+                    <strong>ELIMINAR</strong><br><br>
+                    <div formArrayName="permisosSeleccionados">
+                        <ng-container *ngFor="let permiso of permisos; let i = index">
+                            <div *ngIf="permiso?.nombrePermiso?.startsWith('eliminar-')">
+                                <label>
+                                    <input type="checkbox" [formControlName]="i">
+                                    {{ permiso?.nombrePermiso }}
+                                </label>
+                            </div>
+                        </ng-container>
                     </div>
                 </div>
             </div>
 
             <br><br>
 
-            <div class="form-group" formArrayName="permisos">
-                <label>Permisos:</label>
-                <div *ngFor="let permiso of permisos; let i = index">
-                    <label>
-                        <input type="checkbox" [formControlName]="i">
-                        {{ permiso.nombrePermiso }}
-                    </label>
-                </div>
-            </div>
+            <label>
+                <input type="checkbox" (change)="updateAllCheckboxes($event)">
+                Seleccionar todos los permisos
+            </label>
 
             <br><br>
 
-            <button type="button" mat-raised-button color="accent" (click)="goBack()">Atras</button> |
-            <button type="submit" mat-raised-button color='primary' [disabled]="editForm.invalid">Editar</button>
+            <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
+            <button type="submit" mat-raised-button color='primary' [disabled]="editForm.invalid">Guardar</button>
+
         </form>
     </div>
 </app-navigation>

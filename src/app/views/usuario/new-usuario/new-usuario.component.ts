@@ -28,13 +28,13 @@ export class NewUsuarioComponent implements OnInit {
 
   newForm = new FormGroup({
     documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
-    idTipoDocumento: new FormControl('', [Validators.required]),
-    nombreUsuario: new FormControl('', [Validators.required]),
-    apellidoUsuario: new FormControl('', [Validators.required]),
+    idTipoDocumento: new FormControl('', Validators.required),
+    nombreUsuario: new FormControl('', Validators.required),
+    apellidoUsuario: new FormControl('', Validators.required),
     telefonoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
     correoUsuario: new FormControl('', [Validators.required, Validators.email]),
     contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/)]),
-    idRol: new FormControl('', [Validators.required]),
+    idRol: new FormControl('', Validators.required),
     idEstado: new FormControl('1'),
   })
 
@@ -43,9 +43,6 @@ export class NewUsuarioComponent implements OnInit {
   rolUsuario: RolInterface[] = [];
   loading: boolean = true;
 
-  token = localStorage.getItem('token');
-  decodedToken = JSON.parse(atob(this.token!.split('.')[1]));
-  uid = this.decodedToken.uid;
 
   showPassword: boolean = false;
 
@@ -70,22 +67,14 @@ export class NewUsuarioComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
+        this.api.postUsuario(form).subscribe(data => {
+          let respuesta: ResponseInterface = data;
+          if (respuesta.status == 'ok') {
+            this.alerts.showSuccess('El usuario ha sido creado exitosamente', 'Usuario creado');
+            this.router.navigate(['usuario/list-usuarios']);
 
-        this.api.getOneUsuario(this.uid).subscribe(data => {
-          if (data.idRol == '1') {
-            this.api.postUsuario(form).subscribe(data => {
-              let respuesta: ResponseInterface = data;
-              if (respuesta.status == 'ok') {
-                this.alerts.showSuccess('El usuario ha sido creado exitosamente', 'Usuario creado');
-                this.router.navigate(['usuario/list-usuarios']);
-
-              } else {
-                this.alerts.showError(respuesta.msj, 'Error al crear el usuario');
-                this.loading = false;
-              }
-            });
           } else {
-            this.alerts.showError('No tienes permisos para realizar esta acción', 'Error');
+            this.alerts.showError(respuesta.msj, 'Error al crear el usuario');
             this.loading = false;
           }
         });

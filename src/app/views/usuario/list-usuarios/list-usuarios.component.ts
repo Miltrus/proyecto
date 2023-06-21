@@ -83,26 +83,12 @@ export class ListUsuariosComponent implements OnInit {
 
   editUsuario(id: any) {
     this.loading = true;
-    this.api.getOneUsuario(this.uid).subscribe(data => {
-      if (data.idRol != '1') {
-        this.alerts.showError('No tienes permisos para editar usuarios', 'Acceso denegado');
-      } else {
-        this.router.navigate(['usuario/edit-usuario', id]);
-      }
-      this.loading = false;
-    })
+    this.router.navigate(['usuario/edit-usuario', id]);
   }
 
   newUsuario() {
     this.loading = true;
-    this.api.getOneUsuario(this.uid).subscribe(data => {
-      if (data.idRol != '1') {
-        this.alerts.showError('No tienes permisos para crear usuarios', 'Acceso denegado');
-      } else {
-        this.router.navigate(['usuario/new-usuario']);
-      }
-      this.loading = false;
-    })
+    this.router.navigate(['usuario/new-usuario']);
   }
 
   deleteUsuario(id: any): void {
@@ -115,30 +101,23 @@ export class ListUsuariosComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
-        this.api.getOneUsuario(this.uid).subscribe(data => {
-          if (data.idRol == '1') {
-            if (id == this.uid) {
-              this.alerts.showError('No puedes eliminar tu propio usuario', 'Acceso denegado');
-              this.loading = false;
-              return;
-            }
-            this.api.deleteUsuario(id).subscribe(data => {
-              let respuesta: ResponseInterface = data;
+        if (id == this.uid) {
+          this.alerts.showError('No puedes eliminar tu propio usuario', 'Acceso denegado');
+          this.loading = false;
+          return;
+        }
+        this.api.deleteUsuario(id).subscribe(data => {
+          let respuesta: ResponseInterface = data;
 
-              if (respuesta.status == 'ok') {
-                this.alerts.showSuccess('El usuario ha sido eliminado exitosamente', 'Eliminación exitosa');
-                this.usuarios = this.usuarios.filter(usuario => usuario.documentoUsuario !== id);
-                this.dataSource.data = this.usuarios; //actualizamos el datasource
-              } else {
-                this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
-              }
-              this.loading = false;
-            });
+          if (respuesta.status == 'ok') {
+            this.alerts.showSuccess('El usuario ha sido eliminado exitosamente', 'Eliminación exitosa');
+            this.usuarios = this.usuarios.filter(usuario => usuario.documentoUsuario !== id);
+            this.dataSource.data = this.usuarios; //actualizamos el datasource
           } else {
-            this.alerts.showError('No tienes permisos para eliminar usuarios', 'Acceso denegado');
-            this.loading = false;
+            this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
           }
-        })
+          this.loading = false;
+        });
       } else {
         this.alerts.showInfo('El usuario no ha sido eliminado', 'Eliminacion cancelada');
       }
@@ -161,30 +140,23 @@ export class ListUsuariosComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
-        this.api.getOneUsuario(this.uid).subscribe(data => {
-          if (data.idRol == '1') {
-            if (usuario.documentoUsuario == this.uid) {
-              this.alerts.showWarning('No puedes cambiar el estado de tu propio usuario', 'Acceso denegado');
-              this.loading = false;
-              return;
-            }
-            this.api.putUsuario(updatedUsuario).subscribe(data => {
-              let respuesta: ResponseInterface = data;
+        if (usuario.documentoUsuario == this.uid) {
+          this.alerts.showWarning('No puedes cambiar el estado de tu propio usuario', 'Acceso denegado');
+          this.loading = false;
+          return;
+        }
+        this.api.putUsuario(updatedUsuario).subscribe(data => {
+          let respuesta: ResponseInterface = data;
 
-              if (respuesta.status === 'ok') {
-                this.alerts.showSuccess('El estado del usuario ha sido actualizado exitosamente', 'Actualización exitosa');
-                this.usuarios = this.usuarios.map(u => (u.documentoUsuario === updatedUsuario.documentoUsuario ? updatedUsuario : u));
-                this.dataSource.data = this.usuarios; // actualizamos el datasource
-              } else {
-                this.alerts.showError(respuesta.msj, 'Error en la actualización');
-              }
-              this.loading = false;
-            });
+          if (respuesta.status === 'ok') {
+            this.alerts.showSuccess('El estado del usuario ha sido actualizado exitosamente', 'Actualización exitosa');
+            this.usuarios = this.usuarios.map(u => (u.documentoUsuario === updatedUsuario.documentoUsuario ? updatedUsuario : u));
+            this.dataSource.data = this.usuarios; // actualizamos el datasource
           } else {
-            this.alerts.showError('No tienes permisos para cambiar el estado de los usuarios', 'Modificacion cancelada');
-            this.loading = false;
+            this.alerts.showError(respuesta.msj, 'Error en la actualización');
           }
-        })
+          this.loading = false;
+        });
       } else {
         this.alerts.showInfo('No se ha realizado ningún cambio', 'Actualización cancelada');
       }

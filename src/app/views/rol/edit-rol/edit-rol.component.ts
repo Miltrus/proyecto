@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RolInterface } from '../../../models/rol.interface';
 import { RolService } from '../../../services/api/rol/rol.service';
-import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
@@ -22,17 +22,59 @@ export class EditRolComponent implements OnInit {
     private api: RolService,
     private alerts: AlertsService,
     private dialog: MatDialog,
+    private formBuilder: FormBuilder,
   ) { }
 
   dataRol: RolInterface[] = [];
   permisos: PermisoInterface[] = []; // Nueva propiedad para almacenar los permisos asociados al rol
+  permisosSeleccionados: string[] = []; // Nueva propiedad para almacenar los permisos seleccionados
   loading: boolean = true;
+
+  selectListar = false;
+  selectCrear = false;
+  selectEditar = false;
+  selectEliminar = false;
+
+  // ...
+
+  updateCheckboxes(nombrePermiso: string, event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const value = target.checked;
+
+    this.permisosSeleccionados = [];
+
+    this.permisosSeleccionadosFormArray.controls.forEach((control, index) => {
+      const permiso = this.permisos[index];
+      if (permiso?.nombrePermiso?.startsWith(nombrePermiso)) {
+        control.patchValue(value);
+        if (value) {
+          this.permisosSeleccionados.push(permiso.nombrePermiso);
+        }
+      }
+    });
+  }
+
+  updateAllCheckboxes(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const value = target.checked;
+
+    this.permisosSeleccionados = [];
+
+    this.permisosSeleccionadosFormArray.controls.forEach((control, index) => {
+      control.patchValue(value);
+      const permiso = this.permisos[index];
+      if (value) {
+        this.permisosSeleccionados.push(permiso.nombrePermiso);
+      }
+    });
+  }
+
+
 
   editForm = new FormGroup({
     idRol: new FormControl(''),
     nombreRol: new FormControl('', Validators.required),
-    descripcionRol: new FormControl(''),
-    permisos: new FormArray([]) // FormArray para los permisos
+    permisosSeleccionados: new FormArray(<any>[])
   });
 
   ngOnInit(): void {
@@ -42,18 +84,21 @@ export class EditRolComponent implements OnInit {
       this.editForm.patchValue({
         idRol: this.dataRol[0]?.idRol || '',
         nombreRol: this.dataRol[0]?.nombreRol || '',
-        descripcionRol: this.dataRol[0]?.descripcionRol || ''
       });
       this.loading = false;
     });
 
-    this.api.getAllPermisos().subscribe(data => {
+    this.api.getAllPermisos().subscribe((data) => {
       this.permisos = data;
-      // Crear los controles de formulario para los permisos
       this.permisos.forEach(() => {
-        (this.editForm.get('permisos') as FormArray).push(new FormControl(false));
+        this.permisosSeleccionadosFormArray.push(this.formBuilder.control(false));
       });
+      this.loading = false;
     });
+  }
+
+  get permisosSeleccionadosFormArray() {
+    return this.editForm.get('permisosSeleccionados') as FormArray;
   }
 
   postForm(id: any) {
@@ -65,7 +110,8 @@ export class EditRolComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
-        this.api.putRol(id).subscribe(data => {
+        const permisosSeleccionados = this.permisosSeleccionadosFormArray.value;
+        this.api.putRol(id, permisosSeleccionados).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El rol ha sido modificado', 'Modificación exitosa');
@@ -81,6 +127,7 @@ export class EditRolComponent implements OnInit {
       }
     });
   }
+
 
   goBack() {
     this.loading = true;
