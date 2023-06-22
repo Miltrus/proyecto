@@ -9,6 +9,7 @@ import { ResponseInterface } from '../../../models/response.interface';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
+import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
 
 
 @Component({
@@ -21,104 +22,131 @@ export class NewPaqueteComponent implements OnInit {
   constructor(private router: Router, private api: PaqueteService, private alerts: AlertsService, private paqueteService: PaqueteService) { }
 
   remitenteForm = new FormGroup({
-    codigoQrPaquete: new FormControl('', Validators.required),
-    correoCliente: new FormControl('', Validators.required),
-    documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
-    documentoCliente: new FormControl('', Validators.required),
+    documentoRemitente: new FormControl('', Validators.required),
+    nombreRemitente: new FormControl('', Validators.required),
+    telefonoRemitente: new FormControl('', Validators.required),
+    correoRemitente: new FormControl('', Validators.required),
     idEstado: new FormControl('1'),
   });
 
   destinatarioForm = new FormGroup({
-    codigoQrPaquete: new FormControl('', Validators.required),
-    nombreCliente: new FormControl('', Validators.required),
-    telefonoCliente: new FormControl('', Validators.required),
-    correoCliente: new FormControl('', Validators.required),
-    documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
-    documentoCliente: new FormControl('', Validators.required),
-    idEstado: new FormControl('1'),
+    documentoDestinatario: new FormControl('', Validators.required),
+    direccionDestinatario: new FormControl('', Validators.required),
+    nombreDestinatario: new FormControl('', Validators.required),
+    telefonoDestinatario: new FormControl('', Validators.required),
+    correoDestinatario: new FormControl('', Validators.required),
   });
 
   usuario: UsuarioInterface[] = [];
-  cliente: ClienteInterface[] = [];
+  remitente: ClienteInterface[] = [];
+  destinatario: ClienteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
+  tamanoPaquete: TamanoPaqueteInterface[] = [];
   loading: boolean = true;
 
   ngOnInit(): void {
     this.getUsuarioPaquete();
-    this.getClientePaquete();
+    this.getRemitentePaquete();
+    this.getDestinatarioPaquete();
     this.getEstadoPaquete();
 
-    this.remitenteForm.get('documentoCliente')?.valueChanges.subscribe((value) => {
+    /* this.remitenteForm.get('documentoRemitente')?.valueChanges.subscribe((value) => {
       this.loading = true;
-      this.paqueteService.getDireccionCliente(value).subscribe((data) => {
-        if (data.direccion) {
+      this.paqueteService.getDocumentoRemitente(value).subscribe((data) => {
+        if (data.documento) {
           this.remitenteForm.patchValue({
-            codigoQrPaquete: data.direccion
+            documentoRemitente: data.documento
+          });
+          this.loading = false;
+        }
+      });
+    }); */
+
+    this.remitenteForm.get('documentoRemitente')?.valueChanges.subscribe((value) => {
+      this.loading = true;
+      this.paqueteService.getNombreRemitente(value).subscribe((data) => {
+        if (data.nombre) {
+          this.remitenteForm.patchValue({
+            nombreRemitente: data.nombre
           });
           this.loading = false;
         }
       });
     });
 
-    this.remitenteForm.get('documentoCliente')?.valueChanges.subscribe((value) => {
+    this.remitenteForm.get('documentoRemitente')?.valueChanges.subscribe((value) => {
       this.loading = true;
-      this.paqueteService.getCorreoCliente(value).subscribe((data) => {
+      this.paqueteService.getTelefonoRemitente(value).subscribe((data) => {
+        if (data.telefono) {
+          this.remitenteForm.patchValue({
+            telefonoRemitente: data.telefono
+          });
+          this.loading = false;
+        }
+      });
+    });
+
+    this.remitenteForm.get('documentoRemitente')?.valueChanges.subscribe((value) => {
+      this.loading = true;
+      this.paqueteService.getCorreoRemitente(value).subscribe((data) => {
         if (data.correo) {
           this.remitenteForm.patchValue({
-            correoCliente: data.correo
+            correoRemitente: data.correo
           });
           this.loading = false;
         }
       });
     });
 
-    this.destinatarioForm.get('documentoCliente')?.valueChanges.subscribe((value) => {
+
+    this.destinatarioForm.get('documentoDestinatario')?.valueChanges.subscribe((value) => {
       this.loading = true;
-      this.paqueteService.getNombreCliente(value).subscribe((data) => {
+      this.paqueteService.getNombreDestinatario(value).subscribe((data) => {
         if (data.nombre) {
           this.destinatarioForm.patchValue({
-            nombreCliente: data.nombre
+            nombreDestinatario: data.nombre
           });
           this.loading = false;
         }
       });
     });
 
-    this.destinatarioForm.get('documentoCliente')?.valueChanges.subscribe((value) => {
+    this.destinatarioForm.get('documentoDestinatario')?.valueChanges.subscribe((value) => {
       this.loading = true;
-      this.paqueteService.getTelefonoCliente(value).subscribe((data) => {
+      this.paqueteService.getTelefonoDestinatario(value).subscribe((data) => {
         if (data.telefono) {
           this.destinatarioForm.patchValue({
-            telefonoCliente: data.telefono
+            telefonoDestinatario: data.telefono
           });
           this.loading = false;
         }
       });
     });
 
-    this.destinatarioForm.get('documentoCliente')?.valueChanges.subscribe((value) => {
+    this.destinatarioForm.get('documentoDestinatario')?.valueChanges.subscribe((value) => {
       this.loading = true;
-      this.paqueteService.getDireccionCliente(value).subscribe((data) => {
-        if (data.direccion) {
-          this.destinatarioForm.patchValue({
-            codigoQrPaquete: data.direccion
-          });
-          this.loading = false;
-        }
-      });
-    });
-
-    this.destinatarioForm.get('documentoCliente')?.valueChanges.subscribe((value) => {
-      this.loading = true;
-      this.paqueteService.getCorreoCliente(value).subscribe((data) => {
+      this.paqueteService.getCorreoDestinatario(value).subscribe((data) => {
         if (data.correo) {
           this.destinatarioForm.patchValue({
-            correoCliente: data.correo
+            correoDestinatario: data.correo
           });
           this.loading = false;
         }
       });
     });
+
+    this.destinatarioForm.get('documentoDestinatario')?.valueChanges.subscribe((value) => {
+      this.loading = true;
+      this.paqueteService.getDireccionDestinatario(value).subscribe((data) => {
+        if (data.direccion) {
+          this.destinatarioForm.patchValue({
+            direccionDestinatario: data.direccion
+          });
+          this.loading = false;
+        }
+      });
+    });
+
   }
 
   postRemitenteForm() {
@@ -156,9 +184,16 @@ export class NewPaqueteComponent implements OnInit {
     });
   }
 
-  getClientePaquete(): void {
-    this.api.getCliente().subscribe(data => {
-      this.cliente = data;
+  getRemitentePaquete(): void {
+    this.api.getRemitente().subscribe(data => {
+      this.remitente = data;
+      this.loading = false;
+    });
+  }
+
+  getDestinatarioPaquete(): void {
+    this.api.getDestinatario().subscribe(data => {
+      this.destinatario = data;
       this.loading = false;
     });
   }

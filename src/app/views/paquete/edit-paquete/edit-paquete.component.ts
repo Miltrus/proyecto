@@ -42,7 +42,7 @@ export class EditPaqueteComponent implements OnInit {
 
   ngOnInit(): void {
 
-    let idPaquete = this.activatedRouter.snapshot.paramMap.get('id');
+    /* let idPaquete = this.activatedRouter.snapshot.paramMap.get('id');
     this.api.getOnePaquete(idPaquete).subscribe(data => {
       this.dataPaquete = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
       this.editForm.setValue({
@@ -56,7 +56,7 @@ export class EditPaqueteComponent implements OnInit {
     });
     this.getUsuarioPaquete();
     this.getClientePaquete();
-    this.getEstadoPaquete();
+    this.getEstadoPaquete(); */
   }
 
   postForm(id: any) {
@@ -81,12 +81,12 @@ export class EditPaqueteComponent implements OnInit {
     });
   }
 
-  getClientePaquete(): void {
+  /* getClientePaquete(): void {
     this.api.getCliente().subscribe(data => {
       this.cliente = data;
       this.loading = false;
     });
-  }
+  } */
 
   getEstadoPaquete(): void {
     this.api.getEstadoPaquete().subscribe(data => {

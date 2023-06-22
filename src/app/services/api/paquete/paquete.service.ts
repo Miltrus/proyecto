@@ -4,6 +4,7 @@ import { PaqueteInterface } from '../../../models/paquete.interface';
 import { UsuarioInterface } from '../../../models/usuario.interface';
 import { ClienteInterface } from '../../../models/cliente.interface';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
+import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; // 
@@ -47,32 +48,62 @@ export class PaqueteService {
     return this.http.get<UsuarioInterface[]>(address);
   }
 
-  getCliente(): Observable<ClienteInterface[]> {
-    const address = this.url + 'cliente';
-    return this.http.get<ClienteInterface[]>(address);
-  }
-
   getEstadoPaquete(): Observable<EstadoPaqueteInterface[]> {
     const address = this.url + 'estadoPaquete';
     return this.http.get<EstadoPaqueteInterface[]>(address);
   }
 
-  getNombreCliente(idCliente: any): Observable<any> {
+  getTamanonPaquete(): Observable<TamanoPaqueteInterface[]> {
+    const address = this.url + 'tamanoPaquete';
+    return this.http.get<TamanoPaqueteInterface[]>(address);
+  }
+
+  getRemitente(): Observable<ClienteInterface[]> {
+    const address = this.url + 'cliente';
+    return this.http.get<ClienteInterface[]>(address);
+  }
+
+  getDestinatario(): Observable<ClienteInterface[]> {
+    const address = this.url + 'cliente';
+    return this.http.get<ClienteInterface[]>(address);
+  }
+
+  getDocumentoRemitente(idCliente: any): Observable<any> {
+    const address = this.url + 'paquete/' + idCliente + '/documento';
+    return this.http.get<any>(address);
+  }
+
+  getNombreRemitente(idCliente: any): Observable<any> {
     const address = this.url + 'paquete/' + idCliente + '/nombre';
     return this.http.get<any>(address);
   }
 
-  getTelefonoCliente(idCliente: any): Observable<any> {
+  getTelefonoRemitente(idCliente: any): Observable<any> {
     const address = this.url + 'paquete/' + idCliente + '/telefono';
     return this.http.get<any>(address);
   }
 
-  getDireccionCliente(idCliente: any): Observable<any> {
+  getCorreoRemitente(idCliente: any): Observable<any> {
+    const address = this.url + 'paquete/' + idCliente + '/correo';
+    return this.http.get<any>(address);
+  }
+
+  getNombreDestinatario(idCliente: any): Observable<any> {
+    const address = this.url + 'paquete/' + idCliente + '/nombre';
+    return this.http.get<any>(address);
+  }
+
+  getTelefonoDestinatario(idCliente: any): Observable<any> {
+    const address = this.url + 'paquete/' + idCliente + '/telefono';
+    return this.http.get<any>(address);
+  }
+
+  getDireccionDestinatario(idCliente: any): Observable<any> {
     const address = this.url + 'paquete/' + idCliente + '/direccion';
     return this.http.get<any>(address);
   }
 
-  getCorreoCliente(idCliente: any): Observable<any> {
+  getCorreoDestinatario(idCliente: any): Observable<any> {
     const address = this.url + 'paquete/' + idCliente + '/correo';
     return this.http.get<any>(address);
   }

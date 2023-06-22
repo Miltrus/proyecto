@@ -72,10 +72,10 @@ export class ListPaquetesComponent implements OnInit {
       this.loading = false;
     });
 
-    this.api.getCliente().subscribe(data => {
-      this.cliente = data;
-      this.loading = false;
-    });
+    /*  this.api.getCliente().subscribe(data => {
+       this.cliente = data;
+       this.loading = false;
+     }); */
 
     this.api.getEstadoPaquete().subscribe(data => {
       this.estadosPaquete = data;
