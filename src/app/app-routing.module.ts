@@ -18,35 +18,40 @@ const routes: Routes = [
 
   {
     path: 'rol',
-    canMatch: [isLoggedInGuard],
+    canMatch: [isLoggedInGuard, rolePermissionGuard],
+    data: { permiso: 'Roles' },
     loadChildren: () => import('./views/rol/rol.module').then(m => m.RolModule)
   },
 
 
   {
     path: 'cliente',
-    canMatch: [isLoggedInGuard],
+    canMatch: [isLoggedInGuard, rolePermissionGuard],
+    data: { permiso: 'Clientes' },
     loadChildren: () => import('./views/cliente/cliente.module').then(m => m.ClienteModule)
   },
 
 
   {
     path: 'usuario',
-    canMatch: [isLoggedInGuard],
+    canMatch: [isLoggedInGuard, rolePermissionGuard],
+    data: { permiso: 'Usuarios' },
     loadChildren: () => import('./views/usuario/usuario.module').then(m => m.UsuarioModule)
   },
 
 
   {
     path: 'paquete',
-    canMatch: [isLoggedInGuard],
+    canMatch: [isLoggedInGuard, rolePermissionGuard],
+    data: { permiso: 'Paquetes' },
     loadChildren: () => import('./views/paquete/paquete.module').then(m => m.PaqueteModule)
   },
 
 
   {
     path: 'novedad',
-    canMatch: [isLoggedInGuard],
+    canMatch: [isLoggedInGuard, rolePermissionGuard],
+    data: { permiso: 'Novedades' },
     loadChildren: () => import('./views/novedad/novedad.module').then(m => m.NovedadModule)
   },
 

@@ -25,8 +25,8 @@ export class NavigationComponent {
 
   modules = [
     { name: 'Roles', route: '/rol' },
-    { name: 'Clientes', route: '/cliente' },
     { name: 'Usuarios', route: '/usuario' },
+    { name: 'Clientes', route: '/cliente' },
     { name: 'Paquetes', route: '/paquete' },
     { name: 'Novedades', route: '/novedad' },
   ];
@@ -48,27 +48,24 @@ export class NavigationComponent {
     } else {
       this.document.body.classList.remove('dark-mode');
     }
-    // Obtener los permisos del rol y filtrar los módulos correspondientes
-    /* const token = localStorage.getItem('token');
-    const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
-    const uid = decodedToken.uid; */
 
-    /* this.userService.getOneUsuario(uid).subscribe(data => {
+    const token = localStorage.getItem('token');
+    const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
+    const uid = decodedToken.uid;
+
+    this.userService.getOneUsuario(uid).subscribe(data => {
       const rol = data.idRol;
 
+      // Obtener los permisos del rol y filtrar los módulos correspondientes
       this.rolService.getRolPermisos(rol).subscribe(data => {
 
         const permisos = data.idPermiso?.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
-        
+
         this.modules = this.modules.filter((module) => permisos.includes(module.name));
-      }); */
-    this.loading = false
-    //});
+        this.loading = false;
+      });
+    });
   }
-
-
-
-
 
   onChange(newValue: boolean): void {
     this.isDarkThemeActive = newValue;
@@ -80,14 +77,13 @@ export class NavigationComponent {
       this.document.body.classList.remove('dark-mode');
     }
     this.loading = false;
-  };
+  }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
       shareReplay()
     );
-
 
   logout(): void {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {

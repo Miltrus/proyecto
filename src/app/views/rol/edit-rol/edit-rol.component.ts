@@ -69,8 +69,6 @@ export class EditRolComponent implements OnInit {
     });
   }
 
-
-
   editForm = new FormGroup({
     idRol: new FormControl(''),
     nombreRol: new FormControl('', Validators.required),
@@ -82,7 +80,7 @@ export class EditRolComponent implements OnInit {
     this.api.getOneRol(idRol).subscribe(data => {
       this.dataRol = data ? [data] : [];
       this.editForm.patchValue({
-        idRol: this.dataRol[0]?.idRol || '',
+        idRol: this.dataRol[0]?.idRol || 'idRol',
         nombreRol: this.dataRol[0]?.nombreRol || '',
       });
       this.loading = false;
@@ -110,8 +108,8 @@ export class EditRolComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
-        const permisosSeleccionados = this.permisosSeleccionadosFormArray.value;
-        this.api.putRol(id, permisosSeleccionados).subscribe(data => {
+        //const permisosSeleccionados = this.permisosSeleccionadosFormArray.value;
+        this.api.putRol(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El rol ha sido modificado', 'Modificación exitosa');

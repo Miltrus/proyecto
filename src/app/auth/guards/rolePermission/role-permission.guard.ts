@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
+import { AlertsService } from 'src/app/services/alerts/alerts.service';
 import { RolService } from 'src/app/services/api/rol/rol.service';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 
@@ -9,8 +10,9 @@ export const rolePermissionGuard: CanMatchFn = (route, segments) => {
   const rolService = inject(RolService);
   const userService = inject(UsuarioService);
   const router = inject(Router);
+  const alerts = inject(AlertsService);
 
-  const requiredPermission = route.data?.['permission'];
+  const permiso = route.data?.['permiso'];
 
   const token = localStorage.getItem('token');
   const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
@@ -24,7 +26,7 @@ export const rolePermissionGuard: CanMatchFn = (route, segments) => {
         mergeMap((response) => {
           const permisos = response.idPermiso?.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso) || [];
 
-          const hasPermission = permisos.includes(requiredPermission);
+          const hasPermission = permisos.includes(permiso);
 
           if (hasPermission) {
             return of(true);

@@ -19,64 +19,13 @@
       </div>
       <br><br><br>
 
-      <h2>Permisos</h2><br><br>
-      <div class="row">
-        <div class="col">
-          <input type="checkbox" (change)="updateCheckboxes('listar-', $event)">
-          <strong>LISTAR</strong><br><br>
-          <div formArrayName="permisosSeleccionados">
-            <ng-container *ngFor="let permiso of permisos; let i = index">
-              <div *ngIf="permiso?.nombrePermiso?.startsWith('listar-')">
-                <label>
-                  <input type="checkbox" [formControlName]="i">
-                  {{ permiso?.nombrePermiso }}
-                </label>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-        <div class="col">
-          <input type="checkbox" (change)="updateCheckboxes('crear-', $event)" />
-          <strong>CREAR</strong><br><br>
-          <div formArrayName="permisosSeleccionados">
-            <ng-container *ngFor="let permiso of permisos; let i = index">
-              <div *ngIf="permiso?.nombrePermiso?.startsWith('crear-')">
-                <label>
-                  <input type="checkbox" [formControlName]="i">
-                  {{ permiso?.nombrePermiso }}
-                </label>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-
-        <div class="col">
-          <input type="checkbox" (change)="updateCheckboxes('editar-', $event)">
-          <strong>EDITAR</strong><br><br>
-          <div formArrayName="permisosSeleccionados">
-            <ng-container *ngFor="let permiso of permisos; let i = index">
-              <div *ngIf="permiso?.nombrePermiso?.startsWith('editar-')">
-                <label>
-                  <input type="checkbox" [formControlName]="i">
-                  {{ permiso?.nombrePermiso }}
-                </label>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-        <div class="col">
-          <input type="checkbox" (change)="updateCheckboxes('eliminar-', $event)">
-          <strong>ELIMINAR</strong><br><br>
-          <div formArrayName="permisosSeleccionados">
-            <ng-container *ngFor="let permiso of permisos; let i = index">
-              <div *ngIf="permiso?.nombrePermiso?.startsWith('eliminar-')">
-                <label>
-                  <input type="checkbox" [formControlName]="i">
-                  {{ permiso?.nombrePermiso }}
-                </label>
-              </div>
-            </ng-container>
-          </div>
+      <div class="form-group" formArrayName="permisosSeleccionados">
+        <label>Permisos <b style="color: red;">*</b></label>
+        <div *ngFor="let permiso of permisos; let i = index">
+          <label>
+            <input type="checkbox" [formControlName]="i">
+            {{ permiso.nombrePermiso }}
+          </label>
         </div>
       </div>
 

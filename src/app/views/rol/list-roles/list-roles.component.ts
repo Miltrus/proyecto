@@ -30,6 +30,7 @@ export class ListRolesComponent implements OnInit {
   roles: RolInterface[] = [];
   dataSource: MatTableDataSource<RolInterface> = new MatTableDataSource();
   loading: boolean = true;
+  totalPermisosCargados: number = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
@@ -57,9 +58,13 @@ export class ListRolesComponent implements OnInit {
       // Asigna los permisos al rol encontrado
       if (rol) {
         rol.permisos = permisos;
+        this.totalPermisosCargados++;
+
+        if (this.totalPermisosCargados === this.roles.length) {
+          this.loading = false;
+        }
       }
-      this.loading = false;
-    })
+    });
   }
 
   loadRoles(): void {
@@ -78,7 +83,6 @@ export class ListRolesComponent implements OnInit {
       }
     });
   }
-
 
   viewRol(rol: RolInterface): void {
     this.dialog.open(this.viewRolDialog, {
@@ -123,7 +127,6 @@ export class ListRolesComponent implements OnInit {
         this.alerts.showInfo('El rol no ha sido eliminado', 'Eliminación cancelada');
         this.loading = false;
       }
-
     });
   }
 

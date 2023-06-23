@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { RolService } from '../../../services/api/rol/rol.service';
@@ -7,7 +7,6 @@ import { RolInterface } from '../../../models/rol.interface';
 import { ResponseInterface } from '../../../models/response.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
-import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 
@@ -23,28 +22,15 @@ export class NewRolComponent implements OnInit {
     private api: RolService,
     private alerts: AlertsService,
     private dialog: MatDialog,
-    private formBuilder: FormBuilder,
   ) { }
 
-  selectListar = false;
-  selectCrear = false;
-  selectEditar = false;
-  selectEliminar = false;
+  newForm = new FormGroup({
+    nombreRol: new FormControl('', Validators.required),
+    permisosSeleccionados: new FormArray(<any>[])
+  });
 
-  // ...
-
-  updateCheckboxes(nombrePermiso: string, event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const value = target.checked;
-
-    this.permisosSeleccionadosFormArray.controls.forEach((control, index) => {
-      const permiso = this.permisos[index];
-      if (permiso?.nombrePermiso?.startsWith(nombrePermiso)) {
-        control.patchValue(value);
-      }
-    });
-  }
-
+  permisos: PermisoInterface[] = [];
+  loading: boolean = true;
 
   updateAllCheckboxes(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -55,34 +41,25 @@ export class NewRolComponent implements OnInit {
     });
   }
 
-  newForm = this.formBuilder.group({
-    nombreRol: new FormControl('', Validators.required),
-    permisosSeleccionados: new FormArray(<any>[])
-  });
-
-  permisos: PermisoInterface[] = [];
-  loading: boolean = true;
-  token = localStorage.getItem('token');
-  decodedToken = JSON.parse(atob(this.token!.split('.')[1]));
-  uid = this.decodedToken.uid;
+  get permisosSeleccionadosFormArray() {
+    return this.newForm.get('permisosSeleccionados') as FormArray;
+  }
 
   ngOnInit(): void {
     this.getPermisos();
   }
 
-  get permisosSeleccionadosFormArray() {
-    return this.newForm.get('permisosSeleccionados') as FormArray;
-  }
-
   getPermisos(): void {
-    this.api.getAllPermisos().subscribe((data) => {
+    this.api.getAllPermisos().subscribe(data => {
       this.permisos = data;
       this.permisos.forEach(() => {
-        this.permisosSeleccionadosFormArray.push(this.formBuilder.control(false));
+        const control = new FormControl(false);
+        (this.newForm.controls.permisosSeleccionados as FormArray<any>).push(control);
       });
       this.loading = false;
     });
   }
+
 
   postForm(form: RolInterface) {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {

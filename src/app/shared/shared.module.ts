@@ -28,6 +28,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DialogConfirmComponent } from '../components/dialog-confirm/dialog-confirm.component';
 import { MatSelectModule } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatOptionModule,
     MatSlideToggleModule,
     MatProgressSpinnerModule,
+    MatExpansionModule,
   ],
 
   exports: [
@@ -90,6 +92,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatOptionModule,
     MatSlideToggleModule,
     MatProgressSpinnerModule,
+    MatExpansionModule,
   ],
 })
 export class SharedModule { }

@@ -32,9 +32,9 @@ export class RolService {
     return this.http.post<ResponseInterface>(address, form);
   }
 
-  putRol(id: any, permisosSeleccionados: boolean[]): Observable<ResponseInterface> {
+  putRol(id: any): Observable<ResponseInterface> {
     let address = this.url + 'rol/' + id;
-    return this.http.put<ResponseInterface>(address, { id, permisosSeleccionados });
+    return this.http.put<ResponseInterface>(address, id);
   }
 
   deleteRol(id: any): Observable<ResponseInterface> {

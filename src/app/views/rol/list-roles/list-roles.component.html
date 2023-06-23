@@ -56,7 +56,7 @@
                 <mat-icon [ngStyle]="{'color': '#AED581'}">visibility</mat-icon>
                 <span>Ver</span>
               </button>
-              <button mat-menu-item (click)="editRol(rol.idRol)">
+              <button mat-menu-item (click)="editRol(rol.idRol)" [disabled]="rol.idRol === 1">
                 <mat-icon [ngStyle]="{'color': '#5E35B1'}">edit</mat-icon>
                 <span>Editar</span>
               </button>
