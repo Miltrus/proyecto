@@ -61,4 +61,12 @@ export class RolService {
     let address = this.url + 'rolPermiso/' + idRol + '/permisos';
     return this.http.get<RolPermisoResponseInterface>(address);
   }
+
+  putRolPermiso(idRol: any, idPermisos: any[]): Observable<ResponseInterface> {
+    let address = this.url + 'rolPermiso/' + idRol;
+    let body = { idRol: idRol, idPermisos: idPermisos }; // Crear el objeto JSON con las propiedades correspondientes
+    return this.http.put<ResponseInterface>(address, body);
+  }
+
+
 }

@@ -39,11 +39,11 @@
         <ng-container matColumnDef="permisos">
           <th mat-header-cell *matHeaderCellDef>Permisos</th>
           <td mat-cell *matCellDef="let rol" class="max-width-cell">
-            <ul>
-              <li *ngFor="let permiso of rol.permisos">{{ permiso.nombrePermiso }}</li>
-            </ul>
+            + {{ rol.permisos.length }} permisos
           </td>
         </ng-container>
+
+
 
         <ng-container matColumnDef="acciones">
           <th mat-header-cell *matHeaderCellDef>Acciones</th>

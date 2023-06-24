@@ -65,7 +65,8 @@ export class ViewProfileComponent implements OnInit {
 
   openEditProfileDialog(): void {
     const dialogRef = this.dialog.open(EditProfileComponent, {
-      width: '1000px',
+      width: '75%',
+      height: '75%',
       data: { userData: this.userData } // Pasamos los datos del usuario al cuadro emergente
     });
 

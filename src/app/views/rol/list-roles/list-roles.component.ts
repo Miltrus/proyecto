@@ -6,7 +6,6 @@ import { ResponseInterface } from 'src/app/models/response.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
-import { RolPermisoResponseInterface } from 'src/app/models/rol-permiso-response.interface';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
@@ -30,7 +29,7 @@ export class ListRolesComponent implements OnInit {
   roles: RolInterface[] = [];
   dataSource: MatTableDataSource<RolInterface> = new MatTableDataSource();
   loading: boolean = true;
-  totalPermisosCargados: number = 0;
+  totalPermisosCargados = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento

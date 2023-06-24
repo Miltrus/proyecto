@@ -6,6 +6,7 @@ import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 import { RolInterface } from 'src/app/models/rol.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
+import { AlertsService } from 'src/app/services/alerts/alerts.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -15,15 +16,22 @@ import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog
 export class EditProfileComponent implements OnInit {
 
   editForm!: FormGroup; // el signo de exclamación "!" para indicar que será inicializada posteriormente
+  pwdForm!: FormGroup;
   rolUsuario: RolInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
   loading: boolean = true;
 
+  showPasswordChange: boolean = false;
   showPassword: boolean = false;
 
   toggleShowPassword(): void {
     this.showPassword = !this.showPassword;
   }
+
+  togglePasswordChange() {
+    this.showPasswordChange = !this.showPasswordChange;
+  }
+
 
   constructor(
     private dialogRef: MatDialogRef<EditProfileComponent>,
@@ -31,6 +39,7 @@ export class EditProfileComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UsuarioService,
     private dialog: MatDialog,
+    private alerts: AlertsService,
   ) { }
 
   ngOnInit(): void {
@@ -55,9 +64,11 @@ export class EditProfileComponent implements OnInit {
       apellidoUsuario: [this.data.userData.apellidoUsuario, Validators.required],
       telefonoUsuario: [this.data.userData.telefonoUsuario, [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       correoUsuario: [this.data.userData.correoUsuario, [Validators.required, Validators.email]],
-      contrasenaUsuario: [this.data.userData.contrasenaUsuario, [Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/)]],
       idRol: [this.data.userData.idRol, Validators.required],
     });
+    this.pwdForm = this.formBuilder.group({
+      contrasenaUsuario: ['', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/)]],
+    })
   }
 
   saveChanges(): void {
@@ -71,11 +82,14 @@ export class EditProfileComponent implements OnInit {
         if (this.editForm.valid) {
           const updatedData: UsuarioInterface = {
             ...this.data.userData,
-            ...this.editForm.value
+            ...this.editForm.value,
+            ...this.pwdForm.value
           };
           this.userService.putUsuario(updatedData).subscribe(() => { });
 
           this.dialogRef.close(updatedData);
+
+          this.alerts.showSuccess('Cambios guardados exitosamente', 'Usuario actualizado');
         }
       }
     });

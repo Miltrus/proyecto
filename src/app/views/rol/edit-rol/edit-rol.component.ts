@@ -8,6 +8,7 @@ import { ResponseInterface } from '../../../models/response.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
+import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
 
 @Component({
   selector: 'app-edit-rol',
@@ -26,33 +27,9 @@ export class EditRolComponent implements OnInit {
   ) { }
 
   dataRol: RolInterface[] = [];
-  permisos: PermisoInterface[] = []; // Nueva propiedad para almacenar los permisos asociados al rol
-  permisosSeleccionados: string[] = []; // Nueva propiedad para almacenar los permisos seleccionados
+  permisos: PermisoInterface[] = []; // pa almacenar los permisos asociados al rol
+  permisosSeleccionados: string[] = []; // pa almacenar los permisos seleccionados
   loading: boolean = true;
-
-  selectListar = false;
-  selectCrear = false;
-  selectEditar = false;
-  selectEliminar = false;
-
-  // ...
-
-  updateCheckboxes(nombrePermiso: string, event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const value = target.checked;
-
-    this.permisosSeleccionados = [];
-
-    this.permisosSeleccionadosFormArray.controls.forEach((control, index) => {
-      const permiso = this.permisos[index];
-      if (permiso?.nombrePermiso?.startsWith(nombrePermiso)) {
-        control.patchValue(value);
-        if (value) {
-          this.permisosSeleccionados.push(permiso.nombrePermiso);
-        }
-      }
-    });
-  }
 
   updateAllCheckboxes(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -68,6 +45,7 @@ export class EditRolComponent implements OnInit {
       }
     });
   }
+
 
   editForm = new FormGroup({
     idRol: new FormControl(''),
@@ -93,7 +71,25 @@ export class EditRolComponent implements OnInit {
       });
       this.loading = false;
     });
+
+    // Obtener los permisos asociados al rol y marcar los checkboxes correspondientes
+    this.api.getRolPermisos(idRol).subscribe(data => {
+      this.loading = true;
+      const permisos: PermisoInterface[] = data.idPermiso
+        ? data.idPermiso.filter((rolPermiso: RolPermisoInterface | null | undefined) => rolPermiso !== null && rolPermiso !== undefined)
+          .map((rolPermiso: RolPermisoInterface) => rolPermiso.permiso!)
+        : [];
+
+      this.permisosSeleccionados = permisos.map((permiso: PermisoInterface) => permiso.nombrePermiso);
+
+      this.permisosSeleccionadosFormArray.controls.forEach((control, index) => {
+        const permiso = this.permisos[index];
+        control.setValue(this.permisosSeleccionados.includes(permiso.nombrePermiso));
+      });
+      this.loading = false;
+    });
   }
+
 
   get permisosSeleccionadosFormArray() {
     return this.editForm.get('permisosSeleccionados') as FormArray;
@@ -102,20 +98,27 @@ export class EditRolComponent implements OnInit {
   postForm(id: any) {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
       data: {
-        message: '¿Está seguro que deseas modificar este rol?',
+        message: '¿Estás seguro que deseas modificar este rol?',
       }
-    })
+    });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
-        //const permisosSeleccionados = this.permisosSeleccionadosFormArray.value;
-        this.api.putRol(id).subscribe(data => {
+
+        // Obtén los permisos seleccionados
+        const nuevosPermisos = this.permisosSeleccionadosFormArray.controls
+          .map((control, index) => control.value ? this.permisos[index].idPermiso : null)
+          .filter(permiso => permiso !== null);
+
+
+
+        this.api.putRol(id).subscribe(data => { });
+        this.api.putRolPermiso(id.idRol, nuevosPermisos).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El rol ha sido modificado', 'Modificación exitosa');
             this.router.navigate(['rol/list-roles']);
-          }
-          else {
+          } else {
             this.alerts.showError(respuesta.msj, "Error en la modificación");
             this.loading = false;
           }
@@ -125,6 +128,7 @@ export class EditRolComponent implements OnInit {
       }
     });
   }
+
 
 
   goBack() {
