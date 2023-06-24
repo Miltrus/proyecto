@@ -110,6 +110,6 @@ export class NavigationComponent {
   }
 
   goToProfile(): void {
-    this.router.navigate(['usuario/profile']);
+    this.router.navigate(['profile']);
   }
 }

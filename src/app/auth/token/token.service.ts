@@ -8,7 +8,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class TokenService {
 
-  url:string = 'http://localhost:3030/';
+  url: string = 'http://localhost:3030/';
 
   constructor(private http: HttpClient) { }
 

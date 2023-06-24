@@ -39,6 +39,12 @@ const routes: Routes = [
     loadChildren: () => import('./views/usuario/usuario.module').then(m => m.UsuarioModule)
   },
 
+  {
+    path: 'profile',
+    canMatch: [isLoggedInGuard],
+    loadChildren: () => import('./views/profile/profile.module').then(m => m.ProfileModule)
+  },
+
 
   {
     path: 'paquete',

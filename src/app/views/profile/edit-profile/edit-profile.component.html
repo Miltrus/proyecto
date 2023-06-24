@@ -1,0 +1,121 @@
+<div class="spinner-overlay" *ngIf="loading">
+    <div class="spinner">
+        <mat-spinner></mat-spinner>
+    </div>
+</div>
+<h2 mat-dialog-title>Editar perfil</h2>
+<div mat-dialog-content>
+    <div class="content">
+        <form [formGroup]="editForm">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="idTipoDocumento">Tipo de documento <b style="color: red;">*</b></label>
+                        <mat-select class="form-control" formControlName="idTipoDocumento"
+                            placeholder="---SELECCIONE---"
+                            [class.is-invalid]="editForm.get('idTipoDocumento')?.invalid && editForm.get('idTipoDocumento')?.touched">
+                            <mat-option *ngFor="let tipoDocumento of tiposDocumento"
+                                [value]="tipoDocumento.idTipoDocumento">{{
+                                tipoDocumento.nombreTipo }}
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Documento <b style="color: red;">*</b></label>
+                        <input type="text" class="form-control" formControlName="documentoUsuario"
+                            [class.is-invalid]="editForm.get('documentoUsuario')?.invalid && editForm.get('documentoUsuario')?.touched" />
+                        <div *ngIf="editForm.get('documentoUsuario')?.errors?.['pattern'] && editForm.get('documentoUsuario')?.touched"
+                            class="invalid-feedback">
+                            Documento inválido, debe contener solo números.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Nombre <b style="color: red;">*</b></label>
+                        <input type="text" class="form-control" formControlName="nombreUsuario"
+                            [class.is-invalid]="editForm.get('nombreUsuario')?.invalid && editForm.get('nombreUsuario')?.touched" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Apellido <b style="color: red;">*</b></label>
+                        <input type="text" class="form-control" formControlName="apellidoUsuario"
+                            [class.is-invalid]="editForm.get('apellidoUsuario')?.invalid && editForm.get('apellidoUsuario')?.touched" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Teléfono <b style="color: red;">*</b></label>
+                        <input type="text" class="form-control" formControlName="telefonoUsuario"
+                            [class.is-invalid]="editForm.get('telefonoUsuario')?.invalid && editForm.get('telefonoUsuario')?.touched" />
+                        <div *ngIf="editForm.get('telefonoUsuario')?.errors?.['pattern'] && editForm.get('telefonoUsuario')?.touched"
+                            class="invalid-feedback">
+                            Teléfono inválido, debe contener 10 dígitos numéricos.
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
+                        <input type="text" class="form-control" formControlName="correoUsuario"
+                            [class.is-invalid]="editForm.get('correoUsuario')?.invalid && editForm.get('correoUsuario')?.touched" />
+
+                        <div *ngIf="editForm.get('correoUsuario')?.errors?.['email'] && editForm.get('correoUsuario')?.touched"
+                            class="invalid-feedback">
+                            Correo inválido.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Contraseña</label>
+                        <div class="input-group">
+                            <input type="{{ showPassword ? 'text' : 'password' }}" class="form-control"
+                                placeholder="**********" formControlName="contrasenaUsuario"
+                                [class.is-invalid]="editForm.get('contrasenaUsuario')?.invalid && editForm.get('contrasenaUsuario')?.touched" />
+
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" style="margin-left: 5px;"
+                                    (click)="toggleShowPassword()"
+                                    *ngIf="editForm.get('contrasenaUsuario')?.value !== ''">
+                                    {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+                                </button>
+                            </div>
+                            <div *ngIf="editForm.get('contrasenaUsuario')?.hasError('pattern') && editForm.get('contrasenaUsuario')?.touched"
+                                class="invalid-feedback">
+                                La contraseña debe contener mínimo 8 dígitos, una mayúscula, una minuscula, minimo 3
+                                numeros y
+                                al menos un caracter
+                                especial.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="idTipoDocumento">Rol <b style="color: red;">*</b></label>
+                        <mat-select class="form-control" formControlName="idRol" placeholder="---SELECCIONE---"
+                            [class.is-invalid]="editForm.get('idRol')?.invalid && editForm.get('idRol')?.touched">
+                            <mat-option *ngFor="let rol of rolUsuario" [value]="rol.idRol">{{ rol.nombreRol
+                                }}</mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+            </div>
+            <br><br />
+
+            <button type="button" mat-raised-button color='accent' (click)="closeDialog()">Atras</button> |
+            <button type="submit" mat-raised-button color='primary' (click)="saveChanges()"
+                [disabled]="editForm.invalid">Gurdar cambios</button>
+        </form>
+    </div>
+</div>
