@@ -55,10 +55,12 @@
             (paquete.documentoDestinatario).nombre
             }}</td>
         </ng-container>
+
         <ng-container matColumnDef="codigoQrPaquete">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Codigo QR</th>
           <td mat-cell *matCellDef="let paquete"><img [src]="paquete.qrCodeUrl" alt="qr-image" class="qr-image"></td>
         </ng-container>
+
         <ng-container matColumnDef="idEstado">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
           <td mat-cell *matCellDef="let paquete" class="max-width-cell">{{ getEstadoPaquete (paquete.idEstado) }}</td>
