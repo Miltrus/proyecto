@@ -69,7 +69,7 @@ export class PaqueteService {
   }
 
   getDireccionDestinatario(idCliente: any): Observable<any> {
-    const address = this.url + 'paquete/' + idCliente + '/direccionDestinatario';
+    const address = this.url + 'paquete/' + idCliente + '/direccion';
     return this.http.get<any>(address);
   }
 

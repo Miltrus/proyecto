@@ -58,9 +58,9 @@ export class NewPaqueteComponent implements OnInit {
 
     this.newForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
       this.paqueteService.getDireccionDestinatario(value).subscribe(data => {
-        if (data.direccionDestinatario) {
+        if (data.direccion) {
           this.newForm.patchValue({
-            codigoQrPaquete: data.direccionDestinatario
+            codigoQrPaquete: data.direccion
           });
         }
       });
