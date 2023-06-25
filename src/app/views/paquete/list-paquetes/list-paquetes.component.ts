@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { PaqueteService } from '../../../services/api/paquete/paquete.service';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
@@ -7,6 +7,7 @@ import { PaqueteInterface } from 'src/app/models/paquete.interface';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
+import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
 import { MatDialog } from '@angular/material/dialog';
 
 import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/dialog-confirm/dialog-confirm.component';
@@ -42,13 +43,16 @@ export class ListPaquetesComponent implements OnInit {
 
   paquetes: PaqueteInterface[] = [];
   usuario: UsuarioInterface[] = [];
-  cliente: ClienteInterface[] = [];
+  remitente: ClienteInterface[] = [];
+  destinatario: ClienteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
+  tamano: TamanoPaqueteInterface[] = [];
   dataSource = new MatTableDataSource(this.paquetes); //pal filtro
   loading: boolean = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
+  @ViewChild('viewPaqueteDialog') viewPaqueteDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
 
   ngOnInit(): void {
@@ -59,11 +63,11 @@ export class ListPaquetesComponent implements OnInit {
       }
       this.dataSource.data = this.paquetes;
 
-      this.paquetes.forEach(async (paquete) => {
+      /* this.paquetes.forEach(async (paquete) => {
         const qrCodeBase64 = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
         paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
         paquete.qrCodeUrl = await this.generateQRCode(paquete.codigoQrPaquete ?? ''); //siu
-      });
+      }); */
       this.loading = false;
     });
 
@@ -72,13 +76,23 @@ export class ListPaquetesComponent implements OnInit {
       this.loading = false;
     });
 
-    /*  this.api.getCliente().subscribe(data => {
-       this.cliente = data;
-       this.loading = false;
-     }); */
+    this.api.getDestinatario().subscribe(data => {
+      this.destinatario = data;
+      this.loading = false;
+    });
+
+    this.api.getRemitente().subscribe(data => {
+      this.remitente = data;
+      this.loading = false;
+    });
 
     this.api.getEstadoPaquete().subscribe(data => {
       this.estadosPaquete = data;
+      this.loading = false;
+    });
+
+    this.api.getTamanoPaquete().subscribe(data => {
+      this.tamano = data;
       this.loading = false;
     });
   }
@@ -88,12 +102,19 @@ export class ListPaquetesComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  async generateQRCode(data: string): Promise<string> {
+  viewPaquete(usuario: PaqueteInterface): void {
+    this.dialog.open(this.viewPaqueteDialog, {
+      data: usuario,
+      width: '400px', // Ajusta el ancho del cuadro emergente según tus necesidades
+    });
+  }
+
+  /* async generateQRCode(data: string): Promise<string> {
     const canvas = document.createElement('canvas');
     await QRCode.toCanvas(canvas, data);
     const qrCodeBase64 = canvas.toDataURL('image/png');
     return qrCodeBase64;
-  }
+  } */
 
   editPaquete(id: any) {
     this.loading = true;
@@ -134,15 +155,29 @@ export class ListPaquetesComponent implements OnInit {
     });
   }
 
-  getUsuarioPaquete(documentoUsuario: any): string {
-    const documento = this.usuario.find(documentoU => documentoU.documentoUsuario === documentoUsuario);
-    return documento?.nombreUsuario || '';
+  getUsuarioPaquete(documentoUsuario: any): { nombre: string, apellido: string } {
+    const mensajero = this.usuario.find(documentoU => documentoU.documentoUsuario === documentoUsuario);
+    if (mensajero && mensajero.nombreUsuario && mensajero.apellidoUsuario) {
+      return { nombre: mensajero.nombreUsuario, apellido: mensajero.apellidoUsuario };
+    }
+    return { nombre: '', apellido: '' };
+  }
+
+  getRemitentePaquete(documentoRemitente: any): { nombre: string, telefono: string, correo: string } {
+    const remitente = this.remitente.find(documentoR => documentoR.documentoCliente === documentoRemitente);
+    if (remitente && remitente.nombreCliente && remitente.telefonoCliente && remitente.correoCliente) {
+      return { nombre: remitente.nombreCliente, telefono: remitente.telefonoCliente, correo: remitente.correoCliente };
+    }
+    return { nombre: '', telefono: '', correo: '' };
   }
 
 
-  getClientePaquete(documentoCliente: any): string {
-    const cliente = this.cliente.find(documentoC => documentoC.documentoCliente === documentoCliente);
-    return cliente?.nombreCliente || '';
+  getDestinatarioPaquete(documentoDestinatario: any,): { nombre: string, telefono: string, correo: string, direccion: string } {
+    const destinatario = this.destinatario.find(documentoD => documentoD.documentoCliente === documentoDestinatario);
+    if (destinatario && destinatario.nombreCliente && destinatario.telefonoCliente && destinatario.correoCliente && destinatario.direccionCliente) {
+      return { nombre: destinatario.nombreCliente, telefono: destinatario.telefonoCliente, correo: destinatario.correoCliente, direccion: destinatario.direccionCliente };
+    }
+    return { nombre: '', telefono: '', correo: '', direccion: '' };
   }
 
   getEstadoPaquete(idEstado: any): string {
@@ -150,7 +185,12 @@ export class ListPaquetesComponent implements OnInit {
     return estadoPaquete?.estadoPaquete || '';
   }
 
-  generatePDF(idPaquete: string): void {
+  getTamanoPaquete(idTamano: any): string {
+    const tamanoPaquete = this.tamano.find(tam => tam.idTamano === idTamano);
+    return tamanoPaquete?.tamanoPaquete || '';
+  }
+
+  /* generatePDF(idPaquete: string): void {
 
     const paquete = this.paquetes.find(paquete => paquete.idPaquete === idPaquete);
 
@@ -165,7 +205,7 @@ export class ListPaquetesComponent implements OnInit {
 
       pdfMake.createPdf(docDefinition).download(`QR_${idPaquete}.pdf`);
     }
-  }
+  } */
 
 
   goBack() {

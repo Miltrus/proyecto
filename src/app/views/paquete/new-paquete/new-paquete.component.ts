@@ -10,6 +10,8 @@ import { UsuarioInterface } from 'src/app/models/usuario.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
 import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
+import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -19,163 +21,66 @@ import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface'
 })
 export class NewPaqueteComponent implements OnInit {
 
-  constructor(private router: Router, private api: PaqueteService, private alerts: AlertsService, private paqueteService: PaqueteService) { }
+  constructor(
+    private router: Router,
+    private api: PaqueteService,
+    private alerts: AlertsService,
+    private dialog: MatDialog
+  ) { }
 
-  remitenteForm = new FormGroup({
+  newForm = new FormGroup({
     documentoRemitente: new FormControl('', Validators.required),
-    nombreRemitente: new FormControl('', Validators.required),
-    telefonoRemitente: new FormControl('', Validators.required),
-    correoRemitente: new FormControl('', Validators.required),
-    idEstado: new FormControl('1'),
-  });
-
-  destinatarioForm = new FormGroup({
     documentoDestinatario: new FormControl('', Validators.required),
-    direccionDestinatario: new FormControl('', Validators.required),
-    nombreDestinatario: new FormControl('', Validators.required),
-    telefonoDestinatario: new FormControl('', Validators.required),
-    correoDestinatario: new FormControl('', Validators.required),
+    pesoPaquete: new FormControl('', Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')),
+    idTamano: new FormControl('', Validators.required),
+    idEstado: new FormControl('1'),
   });
 
   usuario: UsuarioInterface[] = [];
   remitente: ClienteInterface[] = [];
   destinatario: ClienteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
-  tamanoPaquete: TamanoPaqueteInterface[] = [];
+  tamanos: TamanoPaqueteInterface[] = [];
   loading: boolean = true;
+
+  selectedRemitente: ClienteInterface | undefined;
+  selectedDestinatario: ClienteInterface | undefined;
+
 
   ngOnInit(): void {
     this.getUsuarioPaquete();
     this.getRemitentePaquete();
     this.getDestinatarioPaquete();
     this.getEstadoPaquete();
-
-    /* this.remitenteForm.get('documentoRemitente')?.valueChanges.subscribe((value) => {
-      this.loading = true;
-      this.paqueteService.getDocumentoRemitente(value).subscribe((data) => {
-        if (data.documento) {
-          this.remitenteForm.patchValue({
-            documentoRemitente: data.documento
-          });
-          this.loading = false;
-        }
-      });
-    }); */
-
-    this.remitenteForm.get('documentoRemitente')?.valueChanges.subscribe((value) => {
-      this.loading = true;
-      this.paqueteService.getNombreRemitente(value).subscribe((data) => {
-        if (data.nombre) {
-          this.remitenteForm.patchValue({
-            nombreRemitente: data.nombre
-          });
-          this.loading = false;
-        }
-      });
-    });
-
-    this.remitenteForm.get('documentoRemitente')?.valueChanges.subscribe((value) => {
-      this.loading = true;
-      this.paqueteService.getTelefonoRemitente(value).subscribe((data) => {
-        if (data.telefono) {
-          this.remitenteForm.patchValue({
-            telefonoRemitente: data.telefono
-          });
-          this.loading = false;
-        }
-      });
-    });
-
-    this.remitenteForm.get('documentoRemitente')?.valueChanges.subscribe((value) => {
-      this.loading = true;
-      this.paqueteService.getCorreoRemitente(value).subscribe((data) => {
-        if (data.correo) {
-          this.remitenteForm.patchValue({
-            correoRemitente: data.correo
-          });
-          this.loading = false;
-        }
-      });
-    });
-
-
-    this.destinatarioForm.get('documentoDestinatario')?.valueChanges.subscribe((value) => {
-      this.loading = true;
-      this.paqueteService.getNombreDestinatario(value).subscribe((data) => {
-        if (data.nombre) {
-          this.destinatarioForm.patchValue({
-            nombreDestinatario: data.nombre
-          });
-          this.loading = false;
-        }
-      });
-    });
-
-    this.destinatarioForm.get('documentoDestinatario')?.valueChanges.subscribe((value) => {
-      this.loading = true;
-      this.paqueteService.getTelefonoDestinatario(value).subscribe((data) => {
-        if (data.telefono) {
-          this.destinatarioForm.patchValue({
-            telefonoDestinatario: data.telefono
-          });
-          this.loading = false;
-        }
-      });
-    });
-
-    this.destinatarioForm.get('documentoDestinatario')?.valueChanges.subscribe((value) => {
-      this.loading = true;
-      this.paqueteService.getCorreoDestinatario(value).subscribe((data) => {
-        if (data.correo) {
-          this.destinatarioForm.patchValue({
-            correoDestinatario: data.correo
-          });
-          this.loading = false;
-        }
-      });
-    });
-
-    this.destinatarioForm.get('documentoDestinatario')?.valueChanges.subscribe((value) => {
-      this.loading = true;
-      this.paqueteService.getDireccionDestinatario(value).subscribe((data) => {
-        if (data.direccion) {
-          this.destinatarioForm.patchValue({
-            direccionDestinatario: data.direccion
-          });
-          this.loading = false;
-        }
-      });
-    });
-
+    this.getTamanoPaquete();
   }
 
-  postRemitenteForm() {
-    this.loading = true;
-    this.api.postPaquete(this.remitenteForm.value).subscribe(data => {
-      let respuesta: ResponseInterface = data;
-      if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El paquete del remitente ha sido registrado exitosamente', 'Paquete registrado');
-        this.router.navigate(['paquete/list-paquetes']);
-      } else {
-        this.alerts.showError(respuesta.msj, 'Error al registrar el paquete del remitente');
+  postForm(form: PaqueteInterface) {
+    const dialogRef = this.dialog.open(DialogConfirmComponent, {
+      data: {
+        message: '¿Estás seguro que deseas registrar este paquete?'
       }
-      this.loading = false;
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.api.postPaquete(form).subscribe(data => {
+          let respuesta: ResponseInterface = data;
+          if (respuesta.status == 'ok') {
+            this.alerts.showSuccess('El paquete ha sido creado exitosamente', 'Paquete registrado');
+            this.router.navigate(['paquete/list-paquetes']);
+          }
+          else {
+            this.alerts.showError(respuesta.msj, 'Error al registrar el paquete');
+            this.loading = false;
+          }
+        });
+      } else {
+        this.alerts.showInfo('El paquete no ha sido creado', 'Paquete no creado');
+      }
     });
   }
 
-  postDestinatarioForm() {
-    this.loading = true;
-    this.api.postPaquete(this.destinatarioForm.value).subscribe(data => {
-      let respuesta: ResponseInterface = data;
-      if (respuesta.status == 'ok') {
-        this.alerts.showSuccess('El paquete del destinatario ha sido registrado exitosamente', 'Paquete registrado');
-        this.router.navigate(['paquete/list-paquetes']);
-      } else {
-        this.alerts.showError(respuesta.msj, 'Error al registrar el paquete del destinatario');
-      }
-      this.loading = false;
-    });
-  }
 
   getUsuarioPaquete(): void {
     this.api.getUsuario().subscribe(data => {
@@ -203,6 +108,23 @@ export class NewPaqueteComponent implements OnInit {
       this.estadosPaquete = data;
       this.loading = false;
     });
+  }
+
+  getTamanoPaquete(): void {
+    this.api.getTamanoPaquete().subscribe(data => {
+      this.tamanos = data;
+      this.loading = false;
+    });
+  }
+
+  onRemitenteSelectionChange(event: any) {
+    const documentoCliente = event.value;
+    this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === documentoCliente);
+  }
+
+  onDestinatarioSelectionChange(event: any) {
+    const documentoCliente = event.value;
+    this.selectedDestinatario = this.destinatario.find(desti => desti.documentoCliente === documentoCliente);
   }
 
   goBack() {

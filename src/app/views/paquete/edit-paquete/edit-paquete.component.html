@@ -1,4 +1,4 @@
-<!-- <div class="spinner-overlay" *ngIf="loading">
+<div class="spinner-overlay" *ngIf="loading">
   <div class="spinner">
     <mat-spinner></mat-spinner>
   </div>
@@ -6,35 +6,138 @@
 <app-navigation>
 
   <div class="container">
-    <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
-      <div class="form-group">
-        <label for="exampleFormControlInput1">Codigo QR Paquete</label>
-        <input type="text" class="form-control" formControlName="codigoQrPaquete" />
-      </div>
-      <div class="form-group">
-        <label for="">Mensajero</label>
-        <select class="form-control" formControlName="documentoUsuario">
-          <option *ngFor="let usu of usuario" [value]="usu.documentoUsuario">{{ usu.nombreUsuario }}</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="">Cliente</label>
-        <select class="form-control" formControlName="documentoCliente">
-          <option *ngFor="let cli of cliente " [value]="cli.documentoCliente">{{ cli.nombreCliente }}</option>
-        </select>
-      </div>
-      <div class="form-group">
-            <label for="">Estado</label>
-            <select class="form-control" formControlName="idEstado">
-              <option *ngFor="let estado of estadosPaquete" [value]="estado.idEstado">{{ estado.estadoPaquete }}</option>
-            </select>
+    <div class="container">
+      <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
+        <div class="row">
+          <h4>Remitente</h4>
+          <div class="col">
+            <div class="form-group">
+              <label for="documentoRemitente">Nombre<b style="color: red;">*</b></label>
+              <mat-select class="form-control" formControlName="documentoRemitente" placeholder="---SELECCIONE---"
+                [class.is-invalid]="editForm.get('documentoRemitente')?.invalid && editForm.get('documentoRemitente')?.touched"
+                (selectionChange)="onRemitenteSelectionChange($event)">
+                <mat-option *ngFor="let remi of remitente" [value]="remi.documentoCliente">
+                  {{ remi.nombreCliente }}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">N° de Documento</label>
+              <input type="text" class="form-control" [value]="selectedRemitente?.documentoCliente" [placeholder]="selectedRemitente?.documentoCliente" disabled />
+            </div>
+          </div>
         </div>
-      <br><br />
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Correo</label>
+              <input type="text" class="form-control" [value]="selectedRemitente?.correoCliente" placeholder="" disabled />
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Telefono</label>
+              <input type="text" class="form-control" [value]="selectedRemitente?.telefonoCliente" placeholder="" disabled />
+            </div>
+          </div>
+        </div><br>
 
-      <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
-      <button type="submit" mat-raised-button color='primary'>Guardar</button>
+        <div class="row">
+          <h4>Destinatario</h4>
+          <div class="col">
+            <div class="form-group">
+              <label for="documentoDestinatario">Nombre<b style="color: red;">*</b></label>
+              <mat-select class="form-control" formControlName="documentoDestinatario" placeholder="---SELECCIONE---"
+                [class.is-invalid]="editForm.get('documentoDestinatario')?.invalid && editForm.get('documentoDestinatario')?.touched"
+                (selectionChange)="onDestinatarioSelectionChange($event)">
+                <mat-option *ngFor="let dest of destinatario" [value]="dest.documentoCliente">
+                  {{ dest.nombreCliente }}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">N° de Documento</label>
+              <input type="text" class="form-control" [value]="selectedDestinatario?.documentoCliente" disabled />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Correo</label>
+              <input type="text" class="form-control" [value]="selectedDestinatario?.correoCliente" disabled />
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Telefono</label>
+              <input type="text" class="form-control" [value]="selectedDestinatario?.telefonoCliente" disabled />
+            </div>
+          </div>
+        </div>
+        <!-- <div class="row">
+          <div class="col">
+            
+          </div>
+          <div class="col"></div>
+        </div><br> -->
 
-    </form>
+        <div class="row">
+          <h4>Paquete</h4>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Peso</label>
+              <input type="text" class="form-control" formControlName="pesoPaquete"
+                [class.is-invalid]="editForm.get('pesoPaquete')?.invalid && editForm.get('pesoPaquete')?.touched" />
+              <div *ngIf="editForm.get('pesoPaquete')?.errors?.['pattern'] && editForm.get('pesoPaquete')?.touched"
+                class="invalid-feedback">
+                Campo no válido. Debe contener solo números y no más de 2 decimales.
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="">Tamaño<b style="color: red;">*</b></label>
+              <mat-select class="form-control" formControlName="idTamano" placeholder="---SELECCIONE---"
+                [class.is-invalid]="editForm.get('idTamano')?.invalid && editForm.get('idTamano')?.touched">
+                <mat-option *ngFor="let t of tamanos" [value]="t.idTamano">
+                  {{ t.tamanoPaquete }}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="col">
+              <div class="form-group">
+                <label for="">Estado<b style="color: red;">*</b></label>
+                <mat-select class="form-control" formControlName="idEstado" placeholder="---SELECCIONE---"
+                  [class.is-invalid]="editForm.get('idEstado')?.invalid && editForm.get('idEstado')?.touched">
+                  <mat-option *ngFor="let e of estadosPaquete" [value]="e.idEstado">
+                    {{ e.estadoPaquete }}
+                  </mat-option>
+                </mat-select>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Direccion</label>
+              <input type="text" class="form-control" [value]="selectedDestinatario?.direccionCliente" disabled />
+            </div>
+          </div>
+        </div><br>
+
+        <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
+        <button type="submit" mat-raised-button color='primary' [disabled]="editForm.invalid">Editar</button>
+
+      </form>
+    </div>
   </div>
 
-</app-navigation> -->
+</app-navigation>

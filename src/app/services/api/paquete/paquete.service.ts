@@ -48,16 +48,6 @@ export class PaqueteService {
     return this.http.get<UsuarioInterface[]>(address);
   }
 
-  getEstadoPaquete(): Observable<EstadoPaqueteInterface[]> {
-    const address = this.url + 'estadoPaquete';
-    return this.http.get<EstadoPaqueteInterface[]>(address);
-  }
-
-  getTamanonPaquete(): Observable<TamanoPaqueteInterface[]> {
-    const address = this.url + 'tamanoPaquete';
-    return this.http.get<TamanoPaqueteInterface[]>(address);
-  }
-
   getRemitente(): Observable<ClienteInterface[]> {
     const address = this.url + 'cliente';
     return this.http.get<ClienteInterface[]>(address);
@@ -68,44 +58,14 @@ export class PaqueteService {
     return this.http.get<ClienteInterface[]>(address);
   }
 
-  getDocumentoRemitente(idCliente: any): Observable<any> {
-    const address = this.url + 'paquete/' + idCliente + '/documento';
-    return this.http.get<any>(address);
+  getEstadoPaquete(): Observable<EstadoPaqueteInterface[]> {
+    const address = this.url + 'estadoPaquete';
+    return this.http.get<EstadoPaqueteInterface[]>(address);
   }
 
-  getNombreRemitente(idCliente: any): Observable<any> {
-    const address = this.url + 'paquete/' + idCliente + '/nombre';
-    return this.http.get<any>(address);
-  }
-
-  getTelefonoRemitente(idCliente: any): Observable<any> {
-    const address = this.url + 'paquete/' + idCliente + '/telefono';
-    return this.http.get<any>(address);
-  }
-
-  getCorreoRemitente(idCliente: any): Observable<any> {
-    const address = this.url + 'paquete/' + idCliente + '/correo';
-    return this.http.get<any>(address);
-  }
-
-  getNombreDestinatario(idCliente: any): Observable<any> {
-    const address = this.url + 'paquete/' + idCliente + '/nombre';
-    return this.http.get<any>(address);
-  }
-
-  getTelefonoDestinatario(idCliente: any): Observable<any> {
-    const address = this.url + 'paquete/' + idCliente + '/telefono';
-    return this.http.get<any>(address);
-  }
-
-  getDireccionDestinatario(idCliente: any): Observable<any> {
-    const address = this.url + 'paquete/' + idCliente + '/direccion';
-    return this.http.get<any>(address);
-  }
-
-  getCorreoDestinatario(idCliente: any): Observable<any> {
-    const address = this.url + 'paquete/' + idCliente + '/correo';
-    return this.http.get<any>(address);
+  getTamanoPaquete(): Observable<TamanoPaqueteInterface[]> {
+    const address = this.url + 'tamanoPaquete';
+    return this.http.get<TamanoPaqueteInterface[]>(address);
   }
 
 }

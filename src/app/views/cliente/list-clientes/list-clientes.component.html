@@ -15,7 +15,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Busqueda de clientes</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Juan" #input autocomplete="off">
+        <input matInput (keyup)="applyFilter($event)" #input autocomplete="off">
         <button mat-button matSuffix disabled>
           <mat-icon color="primary">search</mat-icon> <!-- Icono de lupa -->
         </button>
