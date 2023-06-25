@@ -63,11 +63,11 @@ export class ListPaquetesComponent implements OnInit {
       }
       this.dataSource.data = this.paquetes;
 
-      /* this.paquetes.forEach(async (paquete) => {
+      this.paquetes.forEach(async (paquete) => {
         const qrCodeBase64 = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
         paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
-        paquete.qrCodeUrl = await this.generateQRCode(paquete.codigoQrPaquete ?? ''); //siu
-      }); */
+        paquete.qrCodeUrl = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
+      });
       this.loading = false;
     });
 
@@ -109,12 +109,12 @@ export class ListPaquetesComponent implements OnInit {
     });
   }
 
-  /* async generateQRCode(data: string): Promise<string> {
+  async generateQRCode(data: string): Promise<string> {
     const canvas = document.createElement('canvas');
     await QRCode.toCanvas(canvas, data);
     const qrCodeBase64 = canvas.toDataURL('image/png');
     return qrCodeBase64;
-  } */
+  }
 
   editPaquete(id: any) {
     this.loading = true;
@@ -190,22 +190,19 @@ export class ListPaquetesComponent implements OnInit {
     return tamanoPaquete?.tamanoPaquete || '';
   }
 
-  /* generatePDF(idPaquete: string): void {
-
+  generatePDF(idPaquete: string): void {
     const paquete = this.paquetes.find(paquete => paquete.idPaquete === idPaquete);
 
     if (paquete) {
       const docDefinition = {
         content: [
-          // Agrega otros elementos del PDF si es necesario
-          { image: paquete.qrCodeUrl, width: 200 } as ContentImage, // Agrega la imagen del código QR con su URL
-
-        ],
+          { image: paquete.qrCodeUrl, width: 200, height: 200, alignment: 'center' } as ContentImage,
+        ]
       };
 
       pdfMake.createPdf(docDefinition).download(`QR_${idPaquete}.pdf`);
     }
-  } */
+  }
 
 
   goBack() {

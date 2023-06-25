@@ -55,6 +55,10 @@
             (paquete.documentoDestinatario).nombre
             }}</td>
         </ng-container>
+        <ng-container matColumnDef="codigoQrPaquete">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Codigo QR</th>
+          <td mat-cell *matCellDef="let paquete"><img [src]="paquete.qrCodeUrl" alt="qr-image" class="qr-image"></td>
+        </ng-container>
         <ng-container matColumnDef="idEstado">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
           <td mat-cell *matCellDef="let paquete" class="max-width-cell">{{ getEstadoPaquete (paquete.idEstado) }}</td>
@@ -67,10 +71,10 @@
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #actionsMenu="matMenu">
-              <!-- <button mat-menu-item (click)="generatePDF(paquete.idPaquete)">
+              <button mat-menu-item (click)="generatePDF(paquete.idPaquete)">
                 <mat-icon [ngStyle]="{'color': '#AED581'}">picture_as_pdf</mat-icon>
                 <span>PDF</span>
-              </button> -->
+              </button>
               <button mat-menu-item (click)="viewPaquete(paquete)">
                 <mat-icon [ngStyle]="{'color': '#AED581'}">visibility</mat-icon>
                 <span>Ver</span>
@@ -88,10 +92,10 @@
         </ng-container>
 
         <tr mat-header-row
-          *matHeaderRowDef="['num', 'documentoUsuario', 'idTamano', 'documentoRemitente', 'documentoDestinatario', 'idEstado', 'acciones']">
+          *matHeaderRowDef="['num', 'documentoUsuario', 'idTamano', 'documentoRemitente', 'documentoDestinatario','codigoQrPaquete', 'idEstado' , 'acciones']">
         </tr>
         <tr mat-row
-          *matRowDef="let row; columns: ['num', 'documentoUsuario', 'idTamano', 'documentoRemitente', 'documentoDestinatario', 'idEstado', 'acciones']">
+          *matRowDef="let row; columns: ['num', 'documentoUsuario', 'idTamano', 'documentoRemitente', 'documentoDestinatario', 'codigoQrPaquete', 'idEstado', 'acciones']">
         </tr>
       </table>
     </div>

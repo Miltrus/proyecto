@@ -25,7 +25,8 @@ export class NewPaqueteComponent implements OnInit {
     private router: Router,
     private api: PaqueteService,
     private alerts: AlertsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private paqueteService: PaqueteService
   ) { }
 
   newForm = new FormGroup({
@@ -33,6 +34,7 @@ export class NewPaqueteComponent implements OnInit {
     documentoDestinatario: new FormControl('', Validators.required),
     pesoPaquete: new FormControl('', Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')),
     idTamano: new FormControl('', Validators.required),
+    codigoQrPaquete: new FormControl(''),
     idEstado: new FormControl('1'),
   });
 
@@ -53,6 +55,18 @@ export class NewPaqueteComponent implements OnInit {
     this.getDestinatarioPaquete();
     this.getEstadoPaquete();
     this.getTamanoPaquete();
+
+    this.newForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
+      this.paqueteService.getDireccionDestinatario(value).subscribe(data => {
+        if (data.direccionDestinatario) {
+          this.newForm.patchValue({
+            codigoQrPaquete: data.direccionDestinatario
+          });
+        }
+      });
+
+    }
+    );
   }
 
   postForm(form: PaqueteInterface) {

@@ -68,4 +68,9 @@ export class PaqueteService {
     return this.http.get<TamanoPaqueteInterface[]>(address);
   }
 
+  getDireccionDestinatario(idCliente: any): Observable<any> {
+    const address = this.url + 'paquete/' + idCliente + '/direccionDestinatario';
+    return this.http.get<any>(address);
+  }
+
 }
