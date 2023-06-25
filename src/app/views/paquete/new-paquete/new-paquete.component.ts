@@ -44,6 +44,7 @@ export class NewPaqueteComponent implements OnInit {
   estadosPaquete: EstadoPaqueteInterface[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
   loading: boolean = true;
+  hideCodigoQrPaquete: boolean = true;
 
   selectedRemitente: ClienteInterface | undefined;
   selectedDestinatario: ClienteInterface | undefined;
@@ -139,6 +140,9 @@ export class NewPaqueteComponent implements OnInit {
   onDestinatarioSelectionChange(event: any) {
     const documentoCliente = event.value;
     this.selectedDestinatario = this.destinatario.find(desti => desti.documentoCliente === documentoCliente);
+  }
+  mostrarCodigoQrPaquete() {
+    this.hideCodigoQrPaquete = false;
   }
 
   goBack() {
