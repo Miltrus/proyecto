@@ -27,7 +27,6 @@ export class NewUsuarioComponent implements OnInit {
   ) { }
 
   newForm = new FormGroup({
-    idUsuario: new FormControl(''),
     documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreUsuario: new FormControl('', Validators.required),
@@ -69,6 +68,7 @@ export class NewUsuarioComponent implements OnInit {
       if (result) {
         this.loading = true;
         this.api.postUsuario(form).subscribe(data => {
+
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El usuario ha sido creado exitosamente', 'Usuario creado');

@@ -1,5 +1,5 @@
 export interface UsuarioInterface {
-    idUsuario?: string | null | undefined;
+    idUsuario?: any | null | undefined;
     documentoUsuario?: string | null | undefined;
     idTipoDocumento?: string | null | undefined;
     nombreUsuario?: string | null | undefined;

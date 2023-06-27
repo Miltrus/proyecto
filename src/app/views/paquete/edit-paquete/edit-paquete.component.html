@@ -6,6 +6,8 @@
 <app-navigation>
 
   <div class="container">
+    <h2>Editar paquete</h2>
+    <br>
     <div class="container">
       <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
         <div class="row">
@@ -14,8 +16,10 @@
             <div class="form-group">
               <label for="documentoRemitente">Nombre<b style="color: red;">*</b></label>
               <mat-select class="form-control" formControlName="documentoRemitente" placeholder="---SELECCIONE---"
-                [class.is-invalid]="editForm.get('documentoRemitente')?.invalid && editForm.get('documentoRemitente')?.touched"
-                (selectionChange)="onRemitenteSelectionChange($event)">
+                [ngClass]="{
+                'is-invalid': editForm.get('documentoRemitente')?.invalid && (editForm.get('documentoRemitente')?.touched || editForm.get('documentoRemitente')?.dirty),
+                'is-valid': editForm.get('documentoRemitente')?.valid && (editForm.get('documentoRemitente')?.touched || editForm.get('documentoRemitente')?.dirty)
+              }" (selectionChange)="onRemitenteSelectionChange($event)">
                 <mat-option *ngFor="let remi of remitente" [value]="remi.documentoCliente">
                   {{ remi.nombreCliente }}
                 </mat-option>
@@ -53,8 +57,10 @@
             <div class="form-group">
               <label for="documentoDestinatario">Nombre<b style="color: red;">*</b></label>
               <mat-select class="form-control" formControlName="documentoDestinatario" placeholder="---SELECCIONE---"
-                [class.is-invalid]="editForm.get('documentoDestinatario')?.invalid && editForm.get('documentoDestinatario')?.touched"
-                (selectionChange)="onDestinatarioSelectionChange($event)">
+                [ngClass]="{
+                'is-invalid': editForm.get('documentoDestinatario')?.invalid && (editForm.get('documentoDestinatario')?.touched || editForm.get('documentoDestinatario')?.dirty),
+                'is-valid': editForm.get('documentoDestinatario')?.valid && (editForm.get('documentoDestinatario')?.touched || editForm.get('documentoDestinatario')?.dirty)
+              }" (selectionChange)="onDestinatarioSelectionChange($event)">
                 <mat-option *ngFor="let dest of destinatario" [value]="dest.documentoCliente">
                   {{ dest.nombreCliente }}
                 </mat-option>
@@ -82,22 +88,17 @@
             </div>
           </div>
         </div>
-        <!-- <div class="row">
-          <div class="col">
-            
-          </div>
-          <div class="col"></div>
-        </div><br> -->
-
+        <br>
         <div class="row">
           <h4>Paquete</h4>
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Peso</label>
-              <input type="text" class="form-control" formControlName="pesoPaquete"
-                [class.is-invalid]="editForm.get('pesoPaquete')?.invalid && editForm.get('pesoPaquete')?.touched" />
-              <div *ngIf="editForm.get('pesoPaquete')?.errors?.['pattern'] && editForm.get('pesoPaquete')?.touched"
-                class="invalid-feedback">
+              <input type="text" class="form-control" formControlName="pesoPaquete" [ngClass]="{
+                'is-invalid': editForm.get('pesoPaquete')?.invalid && (editForm.get('pesoPaquete')?.touched || editForm.get('pesoPaquete')?.dirty),
+                'is-valid': editForm.get('pesoPaquete')?.valid && (editForm.get('pesoPaquete')?.touched || editForm.get('pesoPaquete')?.dirty)
+              }">
+              <div *ngIf="editForm.get('pesoPaquete')?.errors?.['pattern']" class="invalid-feedback">
                 Campo no válido. Debe contener solo números y no más de 2 decimales.
               </div>
             </div>
@@ -137,7 +138,7 @@
 
         <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
         <button type="submit" mat-raised-button color='primary' [disabled]="editForm.invalid">Editar</button>
-
+        <br><br>
       </form>
     </div>
   </div>

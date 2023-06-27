@@ -6,125 +6,136 @@
 
 <app-navigation>
   <div class="container">
-    <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)">
+    <h2>Registrar paquete</h2>
+    <br>
+    <div class="container">
+      <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)">
 
-      <div class="row">
-        <h4>Remitente</h4>
-        <div class="col">
-          <div class="form-group">
-            <label for="documentoRemitente">Nombre<b style="color: red;">*</b></label>
-            <mat-select class="form-control" formControlName="documentoRemitente" placeholder="---SELECCIONE---"
-              [class.is-invalid]="newForm.get('documentoRemitente')?.invalid && newForm.get('documentoRemitente')?.touched"
-              (selectionChange)="onRemitenteSelectionChange($event)">
-              <mat-option *ngFor="let remi of remitente" [value]="remi.documentoCliente">
-                {{ remi.nombreCliente }}
-              </mat-option>
-            </mat-select>
+        <div class="row">
+          <h4>Remitente</h4>
+          <div class="col">
+            <div class="form-group">
+              <label for="documentoRemitente">Nombre<b style="color: red;">*</b></label>
+              <mat-select class="form-control" formControlName="documentoRemitente" placeholder="---SELECCIONE---"
+                [ngClass]="{
+              'is-invalid': newForm.get('documentoRemitente')?.invalid && (newForm.get('documentoRemitente')?.touched || newForm.get('documentoRemitente')?.dirty),
+              'is-valid': newForm.get('documentoRemitente')?.valid && (newForm.get('documentoRemitente')?.touched || newForm.get('documentoRemitente')?.dirty)
+            }" (selectionChange)="onRemitenteSelectionChange($event)">
+                <mat-option *ngFor="let remi of remitente" [value]="remi.documentoCliente">
+                  {{ remi.nombreCliente }}
+                </mat-option>
+              </mat-select>
+            </div>
           </div>
-        </div>
-        <div class="col">
-          <div class="form-group">
-            <label for="exampleFormControlInput1">N° de Documento</label>
-            <input type="text" class="form-control" [value]="selectedRemitente?.documentoCliente" disabled />
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Correo</label>
-            <input type="text" class="form-control" [value]="selectedRemitente?.correoCliente" disabled />
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Telefono</label>
-            <input type="text" class="form-control" [value]="selectedRemitente?.telefonoCliente" disabled />
-          </div>
-        </div>
-      </div><br>
-
-      <div class="row">
-        <h4>Destinatario</h4>
-        <div class="col">
-          <div class="form-group">
-            <label for="documentoDestinatario">Nombre<b style="color: red;">*</b></label>
-            <mat-select class="form-control" formControlName="documentoDestinatario" placeholder="---SELECCIONE---"
-              [class.is-invalid]="newForm.get('documentoDestinatario')?.invalid && newForm.get('documentoDestinatario')?.touched"
-              (selectionChange)="onDestinatarioSelectionChange($event)">
-              <mat-option *ngFor="let dest of destinatario" [value]="dest.documentoCliente">
-                {{ dest.nombreCliente }}
-              </mat-option>
-            </mat-select>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group">
-            <label for="exampleFormControlInput1">N° de Documento</label>
-            <input type="text" class="form-control" [value]="selectedDestinatario?.documentoCliente" disabled />
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Correo</label>
-            <input type="text" class="form-control" [value]="selectedDestinatario?.correoCliente" disabled />
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Telefono</label>
-            <input type="text" class="form-control" [value]="selectedDestinatario?.telefonoCliente" disabled />
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Direccion</label>
-            <input type="text" class="form-control" [value]="selectedDestinatario?.direccionCliente" disabled />
-          </div>
-        </div>
-        <div class="col">
-
-        </div>
-      </div><br>
-
-      <div class="form-group" *ngIf="!hideCodigoQrPaquete">
-        <label for="">Codigo QR Paquete</label>
-        <input type="text" class="form-control" formControlName="codigoQrPaquete" />
-      </div>
-
-
-      <div class="row">
-        <h4>Paquete</h4>
-        <div class="col">
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Peso</label>
-            <input type="text" class="form-control" formControlName="pesoPaquete"
-              [class.is-invalid]="newForm.get('pesoPaquete')?.invalid && newForm.get('pesoPaquete')?.touched" />
-            <div *ngIf="newForm.get('pesoPaquete')?.errors?.['pattern'] && newForm.get('pesoPaquete')?.touched"
-              class="invalid-feedback">
-              Campo no válido. Debe contener solo números y no más de 2 decimales.
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">N° de Documento</label>
+              <input type="text" class="form-control" [value]="selectedRemitente?.documentoCliente" disabled />
             </div>
           </div>
         </div>
-        <div class="col">
-          <div class="form-group">
-            <label for="">Tamaño<b style="color: red;">*</b></label>
-            <mat-select class="form-control" formControlName="idTamano" placeholder="---SELECCIONE---"
-              [class.is-invalid]="newForm.get('idTamano')?.invalid && newForm.get('idTamano')?.touched">
-              <mat-option *ngFor="let t of tamanos" [value]="t.idTamano">
-                {{ t.tamanoPaquete }}
-              </mat-option>
-            </mat-select>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Correo</label>
+              <input type="text" class="form-control" [value]="selectedRemitente?.correoCliente" disabled />
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Telefono</label>
+              <input type="text" class="form-control" [value]="selectedRemitente?.telefonoCliente" disabled />
+            </div>
+          </div>
+        </div><br>
+
+        <div class="row">
+          <h4>Destinatario</h4>
+          <div class="col">
+            <div class="form-group">
+              <label for="documentoDestinatario">Nombre<b style="color: red;">*</b></label>
+              <mat-select class="form-control" formControlName="documentoDestinatario" placeholder="---SELECCIONE---"
+                [ngClass]="{
+              'is-invalid': newForm.get('documentoDestinatario')?.invalid && (newForm.get('documentoDestinatario')?.touched || newForm.get('documentoDestinatario')?.dirty),
+              'is-valid': newForm.get('documentoDestinatario')?.valid && (newForm.get('documentoDestinatario')?.touched || newForm.get('documentoDestinatario')?.dirty)
+            }" (selectionChange)="onDestinatarioSelectionChange($event)">
+                <mat-option *ngFor="let dest of destinatario" [value]="dest.documentoCliente">
+                  {{ dest.nombreCliente }}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">N° de Documento</label>
+              <input type="text" class="form-control" [value]="selectedDestinatario?.documentoCliente" disabled />
+            </div>
           </div>
         </div>
-      </div><br>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Correo</label>
+              <input type="text" class="form-control" [value]="selectedDestinatario?.correoCliente" disabled />
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Telefono</label>
+              <input type="text" class="form-control" [value]="selectedDestinatario?.telefonoCliente" disabled />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Direccion</label>
+              <input type="text" class="form-control" [value]="selectedDestinatario?.direccionCliente" disabled />
+            </div>
+          </div>
+          <div class="col">
 
-      <button type="button" mat-raised-button color='accent' (click)="goBack()">Atrás</button> |
-      <button type="submit" mat-raised-button color="primary" [disabled]="newForm.invalid">Guardar</button>
-    </form>
+          </div>
+        </div><br>
+
+        <div class="form-group" *ngIf="!hideCodigoQrPaquete">
+          <label for="">Codigo QR Paquete</label>
+          <input type="text" class="form-control" formControlName="codigoQrPaquete" />
+        </div>
+
+
+        <div class="row">
+          <h4>Paquete</h4>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Peso</label>
+              <input type="text" class="form-control" formControlName="pesoPaquete" [ngClass]="{
+              'is-invalid': newForm.get('pesoPaquete')?.invalid && (newForm.get('pesoPaquete')?.touched || newForm.get('pesoPaquete')?.dirty),
+              'is-valid': newForm.get('pesoPaquete')?.valid && (newForm.get('pesoPaquete')?.touched || newForm.get('pesoPaquete')?.dirty)
+            }">
+              <div *ngIf="newForm.get('pesoPaquete')?.errors?.['pattern']" class="invalid-feedback">
+                Campo no válido. Debe contener solo números y no más de 2 decimales.
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="">Tamaño<b style="color: red;">*</b></label>
+              <mat-select class="form-control" formControlName="idTamano" placeholder="---SELECCIONE---" [ngClass]="{
+              'is-invalid': newForm.get('idTamano')?.invalid && (newForm.get('idTamano')?.touched || newForm.get('idTamano')?.dirty),
+              'is-valid': newForm.get('idTamano')?.valid && (newForm.get('idTamano')?.touched || newForm.get('idTamano')?.dirty)
+            }">
+                <mat-option *ngFor="let t of tamanos" [value]="t.idTamano">
+                  {{ t.tamanoPaquete }}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div><br>
+
+        <button type="button" mat-raised-button color='accent' (click)="goBack()">Atrás</button> |
+        <button type="submit" mat-raised-button color="primary" [disabled]="newForm.invalid">Guardar</button>
+      </form>
+    </div>
   </div>
 </app-navigation>

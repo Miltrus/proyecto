@@ -55,10 +55,12 @@ export class EditProfileComponent implements OnInit {
     });
 
     this.initializeForm();
+    console.log(this.data.userData.idUsuario);
   }
 
   initializeForm(): void {
     this.editForm = this.formBuilder.group({
+      idUsuario: [this.data.userData.idUsuario],
       documentoUsuario: [this.data.userData.documentoUsuario, [Validators.required, Validators.pattern('^[0-9]+$')]],
       idTipoDocumento: [this.data.userData.idTipoDocumento, Validators.required],
       nombreUsuario: [this.data.userData.nombreUsuario, Validators.required],

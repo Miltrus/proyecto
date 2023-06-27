@@ -74,12 +74,13 @@ export class ListUsuariosComponent implements OnInit {
   viewUsuario(usuario: UsuarioInterface): void {
     this.dialog.open(this.viewUsuarioDialog, {
       data: usuario,
-      width: '400px', // Ajusta el ancho del cuadro emergente según tus necesidades
+      width: '400px',
     });
   }
 
   editUsuario(id: any) {
     this.loading = true;
+
     this.router.navigate(['usuario/edit-usuario', id]);
   }
 
@@ -103,12 +104,13 @@ export class ListUsuariosComponent implements OnInit {
           this.loading = false;
           return;
         }
+
         this.api.deleteUsuario(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
 
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El usuario ha sido eliminado exitosamente', 'Eliminación exitosa');
-            this.usuarios = this.usuarios.filter(usuario => usuario.documentoUsuario !== id);
+            this.usuarios = this.usuarios.filter(usuario => usuario.idUsuario !== id);
             this.dataSource.data = this.usuarios; //actualizamos el datasource
           } else {
             this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
@@ -142,7 +144,6 @@ export class ListUsuariosComponent implements OnInit {
           this.loading = false;
           return;
         }
-        console.log(this.uid);
         this.api.putUsuario(updatedUsuario).subscribe(data => {
           let respuesta: ResponseInterface = data;
 
