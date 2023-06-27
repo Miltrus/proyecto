@@ -96,7 +96,7 @@
               <label for="exampleFormControlInput1">Peso</label>
               <input type="text" class="form-control" formControlName="pesoPaquete" [ngClass]="{
                 'is-invalid': editForm.get('pesoPaquete')?.invalid && (editForm.get('pesoPaquete')?.touched || editForm.get('pesoPaquete')?.dirty),
-                'is-valid': editForm.get('pesoPaquete')?.valid && (editForm.get('pesoPaquete')?.touched || editForm.get('pesoPaquete')?.dirty)
+                'is-valid': editForm.get('pesoPaquete')?.valid && editForm.get('pesoPaquete')?.dirty
               }">
               <div *ngIf="editForm.get('pesoPaquete')?.errors?.['pattern']" class="invalid-feedback">
                 Campo no válido. Debe contener solo números y no más de 2 decimales.
