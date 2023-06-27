@@ -132,7 +132,6 @@ export class EditUsuarioComponent implements OnInit {
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El usuario ha sido modificado exitosamente', 'Modificacion exitosa');
             this.router.navigate(['usuario/list-usuarios']);
-
           } else {
             this.alerts.showError(respuesta.msj, 'Error al modificar el usuario');
             this.loading = false;

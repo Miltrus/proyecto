@@ -95,8 +95,14 @@
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Contraseña</label>
                         <div class="input-group">
-                            <input class="form-control" readonly placeholder="**********" />
+                            <input class="form-control" disabled placeholder="**********" />
                         </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="idRol">Rol</label>
+                        <input class="form-control" formControlName="idRol" [value]="getRolNombre()" readonly>
                     </div>
                 </div>
             </div>

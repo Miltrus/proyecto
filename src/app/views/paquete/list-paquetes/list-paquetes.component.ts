@@ -56,19 +56,19 @@ export class ListPaquetesComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.api.getAllPaquetes().subscribe(data => {
-      this.paquetes = data;
-      if (this.paquetes.length < 1) {
-        this.alerts.showInfo('No hay paquetes registrados', 'Sin registros');
+    this.api.getAllPaquetes().subscribe(async data => {
+      if (Array.isArray(data)) {
+
+        this.paquetes = data;
+        this.dataSource.data = this.paquetes;
+        this.paquetes.forEach(async (paquete) => {
+          const qrCodeBase64 = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
+          paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
+          paquete.qrCodeUrl = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
+        });
       }
 
-      this.paquetes.forEach(async (paquete) => {
-        const qrCodeBase64 = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
-        paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
-        paquete.qrCodeUrl = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
-      });
       this.loading = false;
-      this.dataSource.data = this.paquetes;
     });
 
     this.api.getUsuario().subscribe(data => {
@@ -76,12 +76,8 @@ export class ListPaquetesComponent implements OnInit {
       this.loading = false;
     });
 
-    this.api.getDestinatario().subscribe(data => {
+    this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.destinatario = data;
-      this.loading = false;
-    });
-
-    this.api.getRemitente().subscribe(data => {
       this.remitente = data;
       this.loading = false;
     });
@@ -213,7 +209,5 @@ export class ListPaquetesComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    console.log(this.dataSource.filter);
-    console.log(this.dataSource)
   }
 }

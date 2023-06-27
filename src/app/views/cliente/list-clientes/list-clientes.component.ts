@@ -39,12 +39,17 @@ export class ListClientesComponent implements OnInit {
 
     this.api.getAllClientes().subscribe(data => {
       this.clientes = data;
-      if (this.clientes.length === 0) {
+
+      this.dataSource.data = this.clientes; // Actualizar el dataSource con los clientes obtenidos
+
+      if (this.dataSource.data.length < 1) {
         this.alerts.showInfo('No hay clientes registrados', 'Sin registros');
       }
-      this.dataSource.data = this.clientes; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
+
       this.loading = false;
     });
+
+
 
     this.api.getTipoDocumento().subscribe(data => {
       this.tiposDocumento = data;

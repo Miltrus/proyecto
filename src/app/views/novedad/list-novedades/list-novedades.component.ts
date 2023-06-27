@@ -40,10 +40,10 @@ export class ListNovedadesComponent implements OnInit {
   ngOnInit(): void {
     this.api.getAllNovedades().subscribe(data => {
       this.novedades = data;
-      if (this.novedades.length < 1) {
+      this.dataSource.data = this.novedades; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
+      if (this.dataSource.data.length < 1) {
         this.alerts.showInfo('No hay novedades registradas', 'Sin registros');
       }
-      this.dataSource.data = this.novedades; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
       this.loading = false;
     });
 

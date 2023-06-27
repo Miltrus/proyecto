@@ -70,7 +70,6 @@ export class ViewProfileComponent implements OnInit {
       height: '75%',
       data: { userData: this.userData } // Pasamos los datos del usuario al cuadro emergente
     });
-    console.log(this.userData);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

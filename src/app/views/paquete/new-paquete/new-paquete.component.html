@@ -98,9 +98,10 @@
           </div>
         </div><br>
 
-        <div class="form-group" *ngIf="!hideCodigoQrPaquete">
+        <div class="form-group" *ngIf="!mostrarCodigoQrPaquete">
           <label for="">Codigo QR Paquete</label>
-          <input type="text" class="form-control" formControlName="codigoQrPaquete" />
+          <input type="text" class="form-control" formControlName="codigoQrPaquete"
+            [value]="selectedDestinatario?.direccionCliente" />
         </div>
 
 

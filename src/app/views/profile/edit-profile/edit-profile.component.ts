@@ -51,11 +51,11 @@ export class EditProfileComponent implements OnInit {
 
     this.userService.getRolUsuario().subscribe((roles) => {
       this.rolUsuario = roles;
+
       this.loading = false;
     });
 
     this.initializeForm();
-    console.log(this.data.userData.idUsuario);
   }
 
   initializeForm(): void {
@@ -67,7 +67,7 @@ export class EditProfileComponent implements OnInit {
       apellidoUsuario: [this.data.userData.apellidoUsuario, Validators.required],
       telefonoUsuario: [this.data.userData.telefonoUsuario, [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       correoUsuario: [this.data.userData.correoUsuario, [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]],
-      idRol: [this.data.userData.idRol, Validators.required],
+      idRol: [this.data.userData.idRol],
     });
     this.pwdForm = this.formBuilder.group({
       contrasenaUsuario: ['', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/)]],
@@ -105,6 +105,12 @@ export class EditProfileComponent implements OnInit {
         });
       }
     });
+  }
+
+  getRolNombre(): string {
+    const idRol = this.data.userData.idRol;
+    const rol = this.rolUsuario.find((rol) => rol.idRol === idRol);
+    return rol ? rol.nombreRol : '';
   }
 
   closeDialog(): void {

@@ -39,33 +39,42 @@ export class NewPaqueteComponent implements OnInit {
   });
 
   usuario: UsuarioInterface[] = [];
-  remitente: ClienteInterface[] = [];
-  destinatario: ClienteInterface[] = [];
+  remitente: any[] = [];
+  destinatario: any[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
   loading: boolean = true;
   hideCodigoQrPaquete: boolean = true;
+  respuesta: ResponseInterface | ClienteInterface[] | any = [];
 
   selectedRemitente: ClienteInterface | undefined;
   selectedDestinatario: ClienteInterface | undefined;
 
 
   ngOnInit(): void {
+    this.api.getRemitenteAndDestinatario().subscribe(data => {
+      this.remitente = data;
+      this.destinatario = data;
+      this.loading = false;
+
+      if (data.length == 0) {
+        this.alerts.showInfo('No hay ningun cliente registrado', 'No hay clientes');
+        return;
+      }
+    });
     this.getUsuarioPaquete();
-    this.getRemitentePaquete();
-    this.getDestinatarioPaquete();
     this.getEstadoPaquete();
     this.getTamanoPaquete();
 
     this.newForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
       this.paqueteService.getDireccionDestinatario(value).subscribe(data => {
+
         if (data.direccion) {
           this.newForm.patchValue({
             codigoQrPaquete: data.direccion
           });
         }
       });
-
     }
     );
   }
@@ -80,6 +89,7 @@ export class NewPaqueteComponent implements OnInit {
       if (result) {
         this.loading = true;
         this.api.postPaquete(form).subscribe(data => {
+
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El paquete ha sido creado exitosamente', 'Paquete registrado');
@@ -104,19 +114,6 @@ export class NewPaqueteComponent implements OnInit {
     });
   }
 
-  getRemitentePaquete(): void {
-    this.api.getRemitente().subscribe(data => {
-      this.remitente = data;
-      this.loading = false;
-    });
-  }
-
-  getDestinatarioPaquete(): void {
-    this.api.getDestinatario().subscribe(data => {
-      this.destinatario = data;
-      this.loading = false;
-    });
-  }
 
   getEstadoPaquete(): void {
     this.api.getEstadoPaquete().subscribe(data => {
@@ -128,6 +125,12 @@ export class NewPaqueteComponent implements OnInit {
   getTamanoPaquete(): void {
     this.api.getTamanoPaquete().subscribe(data => {
       this.tamanos = data;
+      this.loading = false;
+    });
+  }
+  getDestinatarioPaquete(): void {
+    this.api.getRemitenteAndDestinatario().subscribe(data => {
+      this.destinatario = data;
       this.loading = false;
     });
   }

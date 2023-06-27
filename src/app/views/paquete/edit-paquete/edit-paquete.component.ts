@@ -47,6 +47,7 @@ export class EditPaqueteComponent implements OnInit {
   estadosPaquete: EstadoPaqueteInterface[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
   loading: boolean = true;
+  hideCodigoQrPaquete: boolean = true;
 
   selectedRemitente: ClienteInterface | undefined;
   selectedDestinatario: ClienteInterface | undefined = undefined;
@@ -58,7 +59,6 @@ export class EditPaqueteComponent implements OnInit {
       this.dataPaquete = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
       this.editForm.setValue({
         'idPaquete': this.dataPaquete[0]?.idPaquete || 'idPaquete',
-
         'codigoQrPaquete': this.dataPaquete[0]?.codigoQrPaquete || '', //si dataRol[0] es null, asignamos un string vacio, si no se hace esto da error
         'documentoRemitente': this.dataPaquete[0]?.documentoRemitente || 'documentoRemitente',
         'documentoDestinatario': this.dataPaquete[0]?.documentoDestinatario || 'documentoDestinatario',
@@ -70,8 +70,7 @@ export class EditPaqueteComponent implements OnInit {
       this.loading = false;
     });
     this.getUsuarioPaquete();
-    this.getRemitentePaquete();
-    this.getDestinatarioPaquete();
+    this.getRemitenteAndDestinatarioPaquete();
     this.getEstadoPaquete();
     this.getTamanoPaquete(); //:v
   }
@@ -109,24 +108,14 @@ export class EditPaqueteComponent implements OnInit {
     });
   }
 
-  getRemitentePaquete(): void {
-    this.api.getRemitente().subscribe(data => {
+  getRemitenteAndDestinatarioPaquete(): void {
+    this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.remitente = data;
       // Obtén el remitente seleccionado al cargar la página
       const remitenteSeleccionado = this.editForm.get('documentoRemitente')?.value;
       // Busca el remitente seleccionado en la lista de remitentes
       this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === remitenteSeleccionado);
-      this.loading = false;
-    });
-  }
 
-  updateCodigoQr(): void {
-    const direccionDestinatario = this.selectedDestinatario?.direccionCliente || '';
-    this.editForm.patchValue({ codigoQrPaquete: direccionDestinatario });
-  }
-
-  getDestinatarioPaquete(): void {
-    this.api.getDestinatario().subscribe(data => {
       this.destinatario = data;
       // Obtén el remitente seleccionado al cargar la página
       const destinatarioSeleccionado = this.editForm.get('documentoDestinatario')?.value;
@@ -134,6 +123,11 @@ export class EditPaqueteComponent implements OnInit {
       this.selectedDestinatario = this.destinatario.find(dest => dest.documentoCliente === destinatarioSeleccionado);
       this.loading = false;
     });
+  }
+
+  updateCodigoQr(): void {
+    const direccionDestinatario = this.selectedDestinatario?.direccionCliente || '';
+    this.editForm.patchValue({ codigoQrPaquete: direccionDestinatario });
   }
 
   getEstadoPaquete(): void {
@@ -165,6 +159,9 @@ export class EditPaqueteComponent implements OnInit {
     } else {
       this.editForm.patchValue({ codigoQrPaquete: '' });
     }
+  }
+  mostrarCodigoQrPaquete() {
+    this.hideCodigoQrPaquete = false;
   }
 
   goBack() {

@@ -48,12 +48,7 @@ export class PaqueteService {
     return this.http.get<UsuarioInterface[]>(address);
   }
 
-  getRemitente(): Observable<ClienteInterface[]> {
-    const address = this.url + 'cliente';
-    return this.http.get<ClienteInterface[]>(address);
-  }
-
-  getDestinatario(): Observable<ClienteInterface[]> {
+  getRemitenteAndDestinatario(): Observable<ClienteInterface[]> {
     const address = this.url + 'cliente';
     return this.http.get<ClienteInterface[]>(address);
   }
