@@ -33,6 +33,7 @@ export class EditClienteComponent implements OnInit {
   loading: boolean = true;
 
   editForm = new FormGroup({
+    idCliente: new FormControl(''),
     documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreCliente: new FormControl('', Validators.required),
@@ -49,6 +50,7 @@ export class EditClienteComponent implements OnInit {
       ([dataCliente, tiposDocumento]) => {
         this.dataCliente = dataCliente ? [dataCliente] : [];
         this.editForm.setValue({
+          'idCliente': this.dataCliente[0]?.idCliente || '',
           'documentoCliente': this.dataCliente[0]?.documentoCliente || 'documentoCliente',
           'idTipoDocumento': this.dataCliente[0]?.idTipoDocumento || '',
           'nombreCliente': this.dataCliente[0]?.nombreCliente || '',

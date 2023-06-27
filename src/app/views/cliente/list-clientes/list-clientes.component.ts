@@ -88,7 +88,7 @@ export class ListClientesComponent implements OnInit {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El cliente ha sido eliminado', 'Eliminación exitosa');
-            this.clientes = this.clientes.filter(cliente => cliente.documentoCliente !== id);
+            this.clientes = this.clientes.filter(cliente => cliente.idCliente !== id);
             this.dataSource.data = this.clientes; // Actualizar el dataSource con los nuevos datos
           } else {
             this.alerts.showError(respuesta.msj, 'Error en la eliminación');

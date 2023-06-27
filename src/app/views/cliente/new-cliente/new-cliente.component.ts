@@ -25,6 +25,7 @@ export class NewClienteComponent implements OnInit {
   ) { }
 
   newForm = new FormGroup({
+    idCliente: new FormControl(''),
     documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreCliente: new FormControl('', Validators.required),
