@@ -105,24 +105,33 @@ export class EditRolComponent implements OnInit {
       if (result) {
         this.loading = true;
 
-        // Obtén los permisos seleccionados
-        const nuevosPermisos = this.permisosSeleccionadosFormArray.controls
-          .map((control, index) => control.value ? this.permisos[index].idPermiso : null)
-          .filter(permiso => permiso !== null);
+        if (id.idRol === 1 || id.idRol === 2) {
+          this.alerts.showError('No se puede modificar este rol', 'Error en la modificación');
+          this.loading = false;
+        } else {
+          this.api.putRol(id).subscribe(data => {
+            // Obtén los permisos seleccionados
+            if (data.idRol === 1 || data.idRol === 2) {
+              this.alerts.showError('No se puede modificar este rol', 'Error en la modificación');
+              return;
+            }
+            const nuevosPermisos = this.permisosSeleccionadosFormArray.controls
+              .map((control, index) => control.value ? this.permisos[index].idPermiso : null)
+              .filter(permiso => permiso !== null);
+            this.api.putRolPermiso(id.idRol, nuevosPermisos).subscribe(data => {
+              let respuesta: ResponseInterface = data;
+              if (respuesta.status == 'ok') {
+                this.alerts.showSuccess('El rol ha sido modificado', 'Modificación exitosa');
+                this.router.navigate(['rol/list-roles']);
+              } else {
+                this.alerts.showError(respuesta.msj, "Error en la modificación");
+                this.loading = false;
+              }
+            });
+          });
 
+        }
 
-
-        this.api.putRol(id).subscribe(data => { });
-        this.api.putRolPermiso(id.idRol, nuevosPermisos).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-          if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El rol ha sido modificado', 'Modificación exitosa');
-            this.router.navigate(['rol/list-roles']);
-          } else {
-            this.alerts.showError(respuesta.msj, "Error en la modificación");
-            this.loading = false;
-          }
-        });
       } else {
         this.alerts.showInfo('No se ha modificado el rol', 'Modificación cancelada');
       }

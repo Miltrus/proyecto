@@ -45,6 +45,7 @@ export class EditProfileComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getTipoDocumento().subscribe((tiposDocumento) => {
       this.tiposDocumento = tiposDocumento;
+
       this.loading = false;
     });
 
@@ -63,7 +64,7 @@ export class EditProfileComponent implements OnInit {
       nombreUsuario: [this.data.userData.nombreUsuario, Validators.required],
       apellidoUsuario: [this.data.userData.apellidoUsuario, Validators.required],
       telefonoUsuario: [this.data.userData.telefonoUsuario, [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      correoUsuario: [this.data.userData.correoUsuario, [Validators.required, Validators.email]],
+      correoUsuario: [this.data.userData.correoUsuario, [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]],
       idRol: [this.data.userData.idRol, Validators.required],
     });
     this.pwdForm = this.formBuilder.group({
@@ -79,18 +80,27 @@ export class EditProfileComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        if (this.editForm.valid) {
-          const updatedData: UsuarioInterface = {
-            ...this.data.userData,
-            ...this.editForm.value,
-            ...this.pwdForm.value
-          };
-          this.userService.putUsuario(updatedData).subscribe(() => { });
+        this.loading = true;
+        const updatedData: UsuarioInterface = {
+          ...this.data.userData,
+          ...this.editForm.value,
+        };
 
-          this.dialogRef.close(updatedData);
-
-          this.alerts.showSuccess('Cambios guardados exitosamente', 'Usuario actualizado');
+        if (this.showPasswordChange) {
+          updatedData.contrasenaUsuario = this.pwdForm.value.contrasenaUsuario;
+        } else {
+          delete updatedData.contrasenaUsuario; // Eliminar la propiedad si el botón "Cambiar contraseña" no está activado
         }
+
+        this.userService.putUsuario(updatedData).subscribe(data => {
+          if (data.status == 'ok') {
+            this.alerts.showSuccess('Cambios guardados exitosamente', 'Usuario actualizado');
+            this.dialogRef.close(updatedData);
+          } else {
+            this.alerts.showError(data.msj, 'Error');
+          }
+          this.loading = false;
+        });
       }
     });
   }

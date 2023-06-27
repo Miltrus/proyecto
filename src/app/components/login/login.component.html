@@ -30,11 +30,15 @@
         <p>
           <mat-form-field appearance="outline">
             <mat-label>Contraseña</mat-label>
-            <input id="password" formControlName="contrasenaUsuario" matInput placeholder="Contraseña" type="password">
-            <mat-icon matSuffix color="primary">lock</mat-icon>
+            <input id="password" formControlName="contrasenaUsuario" matInput placeholder="Contraseña"
+              [type]="showPassword ? 'text' : 'password'">
+            <mat-icon matSuffix (click)="togglePasswordVisibility()" [color]="showPassword ? 'warn' : 'primary'">
+              {{ showPassword ? 'visibility_off' : 'visibility' }}
+            </mat-icon>
           </mat-form-field>
         </p>
       </div>
+
       <!-- <input type="text" id="login" class="fadeIn second" formControlName="correoUsuario" placeholder="Email">
       <input type="password" id="password" class="fadeIn third" formControlName="contrasenaUsuario" placeholder="Contraseña"> -->
       <input type="submit" color="primary" class="fadeIn fourth" value="Iniciar sesión">

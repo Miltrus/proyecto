@@ -25,7 +25,8 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">N° de Documento</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.documentoCliente" [placeholder]="selectedRemitente?.documentoCliente" disabled />
+              <input type="text" class="form-control" [value]="selectedRemitente?.documentoCliente"
+                [placeholder]="selectedRemitente?.documentoCliente" disabled />
             </div>
           </div>
         </div>
@@ -33,13 +34,15 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Correo</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.correoCliente" placeholder="" disabled />
+              <input type="text" class="form-control" [value]="selectedRemitente?.correoCliente" placeholder=""
+                disabled />
             </div>
           </div>
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Telefono</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.telefonoCliente" placeholder="" disabled />
+              <input type="text" class="form-control" [value]="selectedRemitente?.telefonoCliente" placeholder=""
+                disabled />
             </div>
           </div>
         </div><br>
@@ -112,8 +115,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col">
-            <div class="col">
+          <!-- <div class="col">
               <div class="form-group">
                 <label for="">Estado<b style="color: red;">*</b></label>
                 <mat-select class="form-control" formControlName="idEstado" placeholder="---SELECCIONE---"
@@ -123,8 +125,7 @@
                   </mat-option>
                 </mat-select>
               </div>
-            </div>
-          </div>
+          </div> -->
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Direccion</label>
@@ -132,6 +133,7 @@
             </div>
           </div>
         </div><br>
+
 
         <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
         <button type="submit" mat-raised-button color='primary' [disabled]="editForm.invalid">Editar</button>

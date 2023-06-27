@@ -30,15 +30,19 @@ export class EditUsuarioComponent implements OnInit {
   ) { }
 
   editForm = new FormGroup({
+    idUsuario: new FormControl(''),
     documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreUsuario: new FormControl('', Validators.required),
     apellidoUsuario: new FormControl('', Validators.required),
     telefonoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
-    correoUsuario: new FormControl('', [Validators.required, Validators.email]),
-    contrasenaUsuario: new FormControl('', Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/)),
+    correoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     idRol: new FormControl('', Validators.required),
     idEstado: new FormControl(''),
+  });
+
+  pwdForm = new FormGroup({
+    contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/)]),
   })
 
   dataUsuario: UsuarioInterface[] = [];
@@ -48,10 +52,15 @@ export class EditUsuarioComponent implements OnInit {
   rolUsuario: RolInterface[] = [];
   loading: boolean = true;
 
+  showPasswordChange: boolean = false;
   showPassword: boolean = false;
 
   toggleShowPassword(): void {
     this.showPassword = !this.showPassword;
+  }
+
+  togglePasswordChange() {
+    this.showPasswordChange = !this.showPasswordChange;
   }
 
   ngOnInit(): void {
@@ -72,16 +81,19 @@ export class EditUsuarioComponent implements OnInit {
 
         this.dataUsuario = oneUsuario ? [oneUsuario] : [];
         this.editForm.setValue({
-          'documentoUsuario': this.dataUsuario[0]?.documentoUsuario || 'documentoUsuario',
+          'idUsuario': this.dataUsuario[0]?.idUsuario || '',
+          'documentoUsuario': this.dataUsuario[0]?.documentoUsuario || '',
           'idTipoDocumento': this.dataUsuario[0]?.idTipoDocumento || '',
           'nombreUsuario': this.dataUsuario[0]?.nombreUsuario || '',
           'apellidoUsuario': this.dataUsuario[0]?.apellidoUsuario || '',
           'telefonoUsuario': this.dataUsuario[0]?.telefonoUsuario || '',
           'correoUsuario': this.dataUsuario[0]?.correoUsuario || '',
-          'contrasenaUsuario': this.dataUsuario[0]?.contrasenaUsuario || '',
           'idRol': this.dataUsuario[0]?.idRol || '',
           'idEstado': this.dataUsuario[0]?.idEstado || '',
         });
+        this.pwdForm.setValue({
+          'contrasenaUsuario': this.dataUsuario[0]?.contrasenaUsuario || '',
+        })
 
         this.loading = false;
       },
@@ -103,7 +115,18 @@ export class EditUsuarioComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
-        this.api.putUsuario(id).subscribe(data => {
+        const updatedData: UsuarioInterface = {
+          ...this.dataUsuario[0],
+          ...this.editForm.value,
+        }
+
+        if (this.showPasswordChange) {
+          updatedData.contrasenaUsuario = this.pwdForm.value.contrasenaUsuario;
+        } else {
+          delete updatedData.contrasenaUsuario; // Eliminar la propiedad si el botón "Cambiar contraseña" no está activado
+        }
+
+        this.api.putUsuario(updatedData).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El usuario ha sido modificado exitosamente', 'Modificacion exitosa');

@@ -9,17 +9,20 @@
 
     <div class="create-button-container">
 
-      <button mat-raised-button color="primary" (click)="newCliente()">Crear nuevo cliente</button>
-
-      <span class="spacer"></span>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Busqueda de clientes</mat-label>
-        <input matInput (keyup)="applyFilter($event)" #input autocomplete="off">
-        <button mat-button matSuffix disabled>
-          <mat-icon color="primary">search</mat-icon> <!-- Icono de lupa -->
-        </button>
-      </mat-form-field>
+      <div class="row">
+        <div class="col">
+          <button mat-raised-button color="primary" (click)="newCliente()">Crear nuevo cliente</button>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Busqueda de clientes</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Juan" #input autocomplete="off">
+            <button mat-button matSuffix disabled>
+              <mat-icon color="primary">search</mat-icon> <!-- Icono de lupa -->
+            </button>
+          </mat-form-field>
+        </div>
+      </div>
 
     </div>
 
@@ -29,30 +32,37 @@
           <th mat-header-cell *matHeaderCellDef>#</th>
           <td mat-cell *matCellDef="let cliente; let i = index" class="max-width-cell">{{ i + 1 }}</td>
         </ng-container>
+
         <ng-container matColumnDef="documentoCliente">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Documento</th>
           <td mat-cell *matCellDef="let cliente" class="max-width-cell">{{ cliente.documentoCliente }}</td>
         </ng-container>
+
         <ng-container matColumnDef="idTipoDocumento">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo documento</th>
           <td mat-cell *matCellDef="let cliente" class="max-width-cell">{{ cliente.idTipoDocumento }}</td>
         </ng-container>
+
         <ng-container matColumnDef="nombreCliente">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
           <td mat-cell *matCellDef="let cliente" class="max-width-cell">{{ cliente.nombreCliente }}</td>
         </ng-container>
+
         <ng-container matColumnDef="telefonoCliente">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
           <td mat-cell *matCellDef="let cliente" class="max-width-cell">{{ cliente.telefonoCliente }}</td>
         </ng-container>
+
         <ng-container matColumnDef="correoCliente">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Correo</th>
           <td mat-cell *matCellDef="let cliente" class="max-width-cell">{{ cliente.correoCliente }}</td>
         </ng-container>
+
         <ng-container matColumnDef="direccionCliente">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Dirección</th>
           <td mat-cell *matCellDef="let cliente" class="max-width-cell">{{ cliente.direccionCliente }}</td>
         </ng-container>
+
         <ng-container matColumnDef="acciones">
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let cliente">
@@ -75,6 +85,7 @@
             </mat-menu>
           </td>
         </ng-container>
+
         <tr mat-header-row
           *matHeaderRowDef="['num', 'documentoCliente', 'nombreCliente', 'telefonoCliente', 'correoCliente', 'direccionCliente', 'acciones']">
         </tr>

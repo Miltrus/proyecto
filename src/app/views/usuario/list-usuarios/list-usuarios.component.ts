@@ -12,6 +12,7 @@ import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/d
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { forkJoin } from 'rxjs';
 
 
 @Component({
@@ -33,40 +34,36 @@ export class ListUsuariosComponent implements OnInit {
   estadosUsuario: EstadoUsuarioInterface[] = [];
   rolUsuario: RolInterface[] = [];
   dataSource = new MatTableDataSource(this.usuarios); //pal filtro
-  loading: boolean = true;/* 
+  loading: boolean = true;
 
   token = localStorage.getItem('token');
   decodedToken = JSON.parse(atob(this.token!.split('.')[1]));
-  uid = this.decodedToken.uid; */
+  uid = this.decodedToken.uid;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
   @ViewChild('viewUsuarioDialog') viewUsuarioDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
   ngOnInit(): void {
-    this.api.getAllUsuarios().subscribe(data => {
-      this.usuarios = data;
-      if (this.usuarios.length < 1) {
-        this.alerts.showInfo('No hay usuarios registrados', 'Sin registros');
+    const getAllUsuarios$ = this.api.getAllUsuarios();
+    const getTipoDocumento$ = this.api.getTipoDocumento();
+    const getEstadoUsuario$ = this.api.getEstadoUsuario();
+    const getRolUsuario$ = this.api.getRolUsuario();
+
+    forkJoin([getAllUsuarios$, getTipoDocumento$, getEstadoUsuario$, getRolUsuario$]).subscribe(
+      ([usuarios, tiposDocumento, estadosUsuario, rolUsuario]) => {
+        this.usuarios = usuarios;
+        this.tiposDocumento = tiposDocumento;
+        this.estadosUsuario = estadosUsuario;
+        this.rolUsuario = rolUsuario;
+        this.dataSource.data = this.usuarios;
+        this.loading = false;
+      },
+      (error) => {
+        console.error(error);
+        this.loading = false;
       }
-      this.dataSource.data = this.usuarios; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
-      this.loading = false;
-    });
-
-    this.api.getTipoDocumento().subscribe(data => {
-      this.tiposDocumento = data;
-      this.loading = false;
-    });
-
-    this.api.getEstadoUsuario().subscribe(data => {
-      this.estadosUsuario = data;
-      this.loading = false;
-    });
-
-    this.api.getRolUsuario().subscribe(data => {
-      this.rolUsuario = data;
-      this.loading = false;
-    });
+    );
   }
 
   ngAfterViewInit() { //para la paginacion
@@ -100,12 +97,12 @@ export class ListUsuariosComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.loading = true;/* 
+        this.loading = true;
         if (id == this.uid) {
           this.alerts.showError('No puedes eliminar tu propio usuario', 'Acceso denegado');
           this.loading = false;
           return;
-        } */
+        }
         this.api.deleteUsuario(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
 
@@ -139,12 +136,13 @@ export class ListUsuariosComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.loading = true;/* 
-        if (usuario.documentoUsuario == this.uid) {
+        this.loading = true;
+        if (usuario.idUsuario == this.uid) {
           this.alerts.showWarning('No puedes cambiar el estado de tu propio usuario', 'Acceso denegado');
           this.loading = false;
           return;
-        } */
+        }
+        console.log(this.uid);
         this.api.putUsuario(updatedUsuario).subscribe(data => {
           let respuesta: ResponseInterface = data;
 

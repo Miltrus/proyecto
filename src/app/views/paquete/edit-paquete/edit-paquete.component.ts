@@ -33,6 +33,7 @@ export class EditPaqueteComponent implements OnInit {
   editForm = new FormGroup({
     idPaquete: new FormControl(''),
     documentoRemitente: new FormControl('', Validators.required),
+    codigoQrPaquete: new FormControl(''),
     documentoDestinatario: new FormControl('', Validators.required),
     pesoPaquete: new FormControl('', Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')),
     idTamano: new FormControl('', Validators.required),
@@ -52,10 +53,12 @@ export class EditPaqueteComponent implements OnInit {
 
   ngOnInit(): void {
     let idPaquete = this.activatedRouter.snapshot.paramMap.get('id');
+    this.updateCodigoQr();
     this.api.getOnePaquete(idPaquete).subscribe(data => {
       this.dataPaquete = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
       this.editForm.setValue({
         'idPaquete': this.dataPaquete[0]?.idPaquete || 'idPaquete',
+        'codigoQrPaquete': this.dataPaquete[0]?.codigoQrPaquete || 'codigoQrPaquete',
         'documentoRemitente': this.dataPaquete[0]?.documentoRemitente || 'documentoRemitente',
         'documentoDestinatario': this.dataPaquete[0]?.documentoDestinatario || 'documentoDestinatario',
         'pesoPaquete': this.dataPaquete[0]?.pesoPaquete || '',
@@ -67,9 +70,6 @@ export class EditPaqueteComponent implements OnInit {
     });
     this.getUsuarioPaquete();
     this.getRemitentePaquete();
-    
-      
-      /* console.log(this.remitente); */
     this.getDestinatarioPaquete();
     this.getEstadoPaquete();
     this.getTamanoPaquete();
@@ -80,7 +80,7 @@ export class EditPaqueteComponent implements OnInit {
       data: {
         message: '¿Está seguro que deseas modificar este paquete?',
       }
-    })
+    });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
@@ -119,6 +119,11 @@ export class EditPaqueteComponent implements OnInit {
     });
   }
 
+  updateCodigoQr(): void {
+    const direccionDestinatario = this.selectedDestinatario?.direccionCliente || '';
+    this.editForm.patchValue({ codigoQrPaquete: direccionDestinatario });
+  }
+
   getDestinatarioPaquete(): void {
     this.api.getDestinatario().subscribe(data => {
       this.destinatario = data;
@@ -152,6 +157,13 @@ export class EditPaqueteComponent implements OnInit {
   onDestinatarioSelectionChange(event: any) {
     const documentoCliente = event.value;
     this.selectedDestinatario = this.destinatario.find(desti => desti.documentoCliente === documentoCliente);
+
+    if (this.selectedDestinatario) {
+      const direccionDestinatario = this.selectedDestinatario.direccionCliente || '';
+      this.editForm.patchValue({ codigoQrPaquete: direccionDestinatario });
+    } else {
+      this.editForm.patchValue({ codigoQrPaquete: '' });
+    }
   }
 
   goBack() {

@@ -61,7 +61,6 @@ export class ListPaquetesComponent implements OnInit {
       if (this.paquetes.length < 1) {
         this.alerts.showInfo('No hay paquetes registrados', 'Sin registros');
       }
-      this.dataSource.data = this.paquetes;
 
       this.paquetes.forEach(async (paquete) => {
         const qrCodeBase64 = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
@@ -69,6 +68,7 @@ export class ListPaquetesComponent implements OnInit {
         paquete.qrCodeUrl = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
       });
       this.loading = false;
+      this.dataSource.data = this.paquetes;
     });
 
     this.api.getUsuario().subscribe(data => {
@@ -213,5 +213,7 @@ export class ListPaquetesComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    console.log(this.dataSource.filter);
+    console.log(this.dataSource)
   }
 }

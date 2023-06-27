@@ -18,7 +18,7 @@ const routes: Routes = [
 
   {
     path: 'rol',
-    canMatch: [isLoggedInGuard, rolePermissionGuard],
+    canMatch: [isLoggedInGuard],
     data: { permiso: 'Roles' },
     loadChildren: () => import('./views/rol/rol.module').then(m => m.RolModule)
   },
@@ -34,7 +34,7 @@ const routes: Routes = [
 
   {
     path: 'usuario',
-    canMatch: [isLoggedInGuard, rolePermissionGuard],
+    canMatch: [isLoggedInGuard],
     data: { permiso: 'Usuarios' },
     loadChildren: () => import('./views/usuario/usuario.module').then(m => m.UsuarioModule)
   },

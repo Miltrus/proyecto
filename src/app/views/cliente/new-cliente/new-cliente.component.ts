@@ -29,7 +29,7 @@ export class NewClienteComponent implements OnInit {
     idTipoDocumento: new FormControl('', Validators.required),
     nombreCliente: new FormControl('', Validators.required),
     telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
-    correoCliente: new FormControl('', [Validators.required, Validators.email]),
+    correoCliente: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     direccionCliente: new FormControl('', Validators.required),
   })
 

@@ -13,8 +13,10 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Nombre Rol <b style="color: red;">*</b></label>
-                        <input type="text" class="form-control" formControlName="nombreRol"
-                            [class.is-invalid]="editForm.get('nombreRol')?.invalid && editForm.get('nombreRol')?.touched" />
+                        <input type="text" class="form-control" formControlName="nombreRol" [ngClass]="{
+                            'is-invalid': editForm.get('nombreRol')?.invalid && (editForm.get('nombreRol')?.touched || editForm.get('nombreRol')?.dirty),
+                            'is-valid': editForm.get('nombreRol')?.valid && (editForm.get('nombreRol')?.touched || editForm.get('nombreRol')?.dirty)
+                        }" />
                     </div>
                 </div>
             </div>

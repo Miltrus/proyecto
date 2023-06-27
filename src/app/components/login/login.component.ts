@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
 
   loading = false;
   userData: UsuarioInterface | null = null;
+  showPassword: boolean = false;
 
 
   ngOnInit(): void {
@@ -45,6 +46,10 @@ export class LoginComponent implements OnInit {
         return false;
       }
     });
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 
   goBack() {
