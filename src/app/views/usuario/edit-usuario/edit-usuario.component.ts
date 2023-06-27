@@ -30,7 +30,7 @@ export class EditUsuarioComponent implements OnInit {
   ) { }
 
   editForm = new FormGroup({
-    idUsuario: new FormControl(''),
+    idUsuario: new FormControl('idUsuario'),
     documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreUsuario: new FormControl('', Validators.required),
@@ -64,12 +64,12 @@ export class EditUsuarioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let documentoUsuario = this.activatedRouter.snapshot.paramMap.get('id');
+    let idUsuario = this.activatedRouter.snapshot.paramMap.get('id');
 
     const tipoDocumento$ = this.api.getTipoDocumento();
     const estadoUsuario$ = this.api.getEstadoUsuario();
     const rolUsuario$ = this.api.getRolUsuario();
-    const oneUsuario$ = this.api.getOneUsuario(documentoUsuario);
+    const oneUsuario$ = this.api.getOneUsuario(idUsuario);
 
     this.loading = true;
 
@@ -80,6 +80,7 @@ export class EditUsuarioComponent implements OnInit {
         this.rolUsuario = rolUsuario;
 
         this.dataUsuario = oneUsuario ? [oneUsuario] : [];
+
         this.editForm.setValue({
           'idUsuario': this.dataUsuario[0]?.idUsuario || '',
           'documentoUsuario': this.dataUsuario[0]?.documentoUsuario || '',
