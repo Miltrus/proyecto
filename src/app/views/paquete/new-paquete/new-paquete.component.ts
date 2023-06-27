@@ -12,6 +12,7 @@ import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface'
 import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { MatDialog } from '@angular/material/dialog';
+import { AddClienteComponent } from '../add-cliente/add-cliente.component';
 
 
 @Component({
@@ -143,6 +144,13 @@ export class NewPaqueteComponent implements OnInit {
   }
   mostrarCodigoQrPaquete() {
     this.hideCodigoQrPaquete = false;
+  }
+
+  openAddClienteDialog(): void {
+    const dialogRef = this.dialog.open(AddClienteComponent, {
+      width: '75%',
+      height: '50%'
+    });
   }
 
   goBack() {
