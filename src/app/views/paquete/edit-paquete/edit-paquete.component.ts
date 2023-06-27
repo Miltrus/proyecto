@@ -73,7 +73,7 @@ export class EditPaqueteComponent implements OnInit {
     this.getRemitentePaquete();
     this.getDestinatarioPaquete();
     this.getEstadoPaquete();
-    this.getTamanoPaquete();
+    this.getTamanoPaquete(); //:v
   }
 
   postForm(id: any) {
