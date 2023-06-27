@@ -30,7 +30,7 @@ export class EditUsuarioComponent implements OnInit {
   ) { }
 
   editForm = new FormGroup({
-    idUsuario: new FormControl('idUsuario'),
+    idUsuario: new FormControl(''),
     documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreUsuario: new FormControl('', Validators.required),

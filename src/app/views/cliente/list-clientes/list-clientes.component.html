@@ -74,11 +74,11 @@
                 <mat-icon [ngStyle]="{'color': '#AED581'}">visibility</mat-icon>
                 <span>Ver</span>
               </button>
-              <button mat-menu-item (click)="editCliente(cliente.documentoCliente)">
+              <button mat-menu-item (click)="editCliente(cliente.idCliente)">
                 <mat-icon [ngStyle]="{'color': '#5E35B1'}">edit</mat-icon>
                 <span>Editar</span>
               </button>
-              <button mat-menu-item (click)="deleteCliente(cliente.documentoCliente)">
+              <button mat-menu-item (click)="deleteCliente(cliente.idCliente)">
                 <mat-icon [ngStyle]="{'color': 'red'}">delete</mat-icon>
                 <span>Eliminar</span>
               </button>

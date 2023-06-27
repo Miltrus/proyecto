@@ -58,7 +58,8 @@ export class EditPaqueteComponent implements OnInit {
       this.dataPaquete = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
       this.editForm.setValue({
         'idPaquete': this.dataPaquete[0]?.idPaquete || 'idPaquete',
-        'codigoQrPaquete': this.dataPaquete[0]?.codigoQrPaquete || 'codigoQrPaquete',
+
+        'codigoQrPaquete': this.dataPaquete[0]?.codigoQrPaquete || '', //si dataRol[0] es null, asignamos un string vacio, si no se hace esto da error
         'documentoRemitente': this.dataPaquete[0]?.documentoRemitente || 'documentoRemitente',
         'documentoDestinatario': this.dataPaquete[0]?.documentoDestinatario || 'documentoDestinatario',
         'pesoPaquete': this.dataPaquete[0]?.pesoPaquete || '',
@@ -72,7 +73,7 @@ export class EditPaqueteComponent implements OnInit {
     this.getRemitentePaquete();
     this.getDestinatarioPaquete();
     this.getEstadoPaquete();
-    this.getTamanoPaquete();
+    this.getTamanoPaquete(); //:v
   }
 
   postForm(id: any) {
