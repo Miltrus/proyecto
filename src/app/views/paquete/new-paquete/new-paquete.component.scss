@@ -1,4 +1,30 @@
-.spinner-overlay {
+.form-column {
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-actions {
+    margin-top: 20px;
+    text-align: right;
+  }
+  
+  @media (max-width: 767px) {
+    .form-container {
+      max-width: 100%;
+      padding: 0 20px;
+    }
+  
+    .form-column {
+      flex-basis: 100%;
+      margin-right: 0;
+    }
+  }
+  
+  .spinner-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -8,11 +34,33 @@
     align-items: center;
     justify-content: center;
     z-index: 9999;
-}
-
-.spinner {
+  }
+  
+  .spinner {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100px;
-}
+  }
+  
+  .mat-select-arrow {
+    right: 8px;
+    /* Ajusta este valor según sea necesario */
+  }
+
+  .btn-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  
+  .btn-circle:hover {
+    background-color: #f0f0f0;
+  }
+  

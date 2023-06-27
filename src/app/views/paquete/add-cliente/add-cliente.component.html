@@ -1,0 +1,100 @@
+<div class="spinner-overlay" *ngIf="loading">
+    <div class="spinner">
+      <mat-spinner></mat-spinner>
+    </div>
+  </div>
+    <div class="container">
+      <h2>Crear cliente</h2>
+      <br>
+      <div class="container">
+        <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)">
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label for="idTipoDocumento">Tipo de documento <b style="color: red;">*</b></label>
+                <mat-select class="form-control" formControlName="idTipoDocumento" placeholder="---SELECCIONE---"
+                  [ngClass]="{
+                  'is-invalid': newForm.get('idTipoDocumento')?.invalid && (newForm.get('idTipoDocumento')?.touched || newForm.get('idTipoDocumento')?.dirty),
+                  'is-valid': newForm.get('idTipoDocumento')?.valid && (newForm.get('idTipoDocumento')?.touched || newForm.get('idTipoDocumento')?.dirty)
+                }">
+                  <mat-option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.idTipoDocumento">
+                    {{ tipoDocumento.nombreTipo }}
+                  </mat-option>
+                </mat-select>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Documento <b style="color: red;">*</b></label>
+                <input type="text" class="form-control" formControlName="documentoCliente" [ngClass]="{
+                  'is-invalid': newForm.get('documentoCliente')?.invalid && (newForm.get('documentoCliente')?.touched || newForm.get('documentoCliente')?.dirty),
+                  'is-valid': newForm.get('documentoCliente')?.valid && (newForm.get('documentoCliente')?.touched || newForm.get('documentoCliente')?.dirty)
+                }">
+  
+                <div *ngIf="newForm.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
+                  Documento inválido, debe contener solo números.
+                </div>
+  
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Nombre <b style="color: red;">*</b></label>
+                <input type="text" class="form-control" formControlName="nombreCliente" [ngClass]="{
+                  'is-invalid': newForm.get('nombreCliente')?.invalid && (newForm.get('nombreCliente')?.touched || newForm.get('nombreCliente')?.dirty),
+                  'is-valid': newForm.get('nombreCliente')?.valid && (newForm.get('nombreCliente')?.touched || newForm.get('nombreCliente')?.dirty)
+                }">
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Teléfono <b style="color: red;">*</b></label>
+                <input type="text" class="form-control" formControlName="telefonoCliente" [ngClass]="{
+                  'is-invalid': newForm.get('telefonoCliente')?.invalid && (newForm.get('telefonoCliente')?.touched || newForm.get('telefonoCliente')?.dirty),
+                  'is-valid': newForm.get('telefonoCliente')?.valid && (newForm.get('telefonoCliente')?.touched || newForm.get('telefonoCliente')?.dirty)
+                }">
+  
+                <div *ngIf="newForm.get('telefonoCliente')?.errors?.['pattern']" class="invalid-feedback">
+                  Teléfono inválido, debe contener 10 dígitos numéricos.
+                </div>
+  
+              </div>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
+                <input type="text" class="form-control" formControlName="correoCliente" [ngClass]="{
+                  'is-invalid': newForm.get('correoCliente')?.invalid && (newForm.get('correoCliente')?.touched || newForm.get('correoCliente')?.dirty),
+                  'is-valid': newForm.get('correoCliente')?.valid && (newForm.get('correoCliente')?.touched || newForm.get('correoCliente')?.dirty)
+                }">
+  
+                <div *ngIf="newForm.get('correoCliente')?.errors?.['pattern']" class="invalid-feedback">
+                  Correo inválido.
+                </div>
+  
+              </div>
+            </div>
+  
+            <div class="col">
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Dirección <b style="color: red;">*</b></label>
+                <input type="text" class="form-control" formControlName="direccionCliente" [ngClass]="{
+                  'is-invalid': newForm.get('direccionCliente')?.invalid && (newForm.get('direccionCliente')?.touched || newForm.get('direccionCliente')?.dirty),
+                  'is-valid': newForm.get('direccionCliente')?.valid && (newForm.get('direccionCliente')?.touched || newForm.get('direccionCliente')?.dirty)
+                }">
+              </div>
+            </div>
+          </div>
+          <br><br />
+  
+          <button type="button" mat-raised-button color='accent' (click)="closeDialog()">Atras</button> |
+          <button type="submit" mat-raised-button color='primary' [disabled]="newForm.invalid">Guardar</button>
+  
+        </form>
+      </div>
+    </div>

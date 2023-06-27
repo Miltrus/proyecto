@@ -6,6 +6,7 @@ import { NewPaqueteComponent } from './new-paquete/new-paquete.component';
 import { EditPaqueteComponent } from './edit-paquete/edit-paquete.component';
 
 import { SharedModule } from 'src/app/shared/shared.module';
+import { AddClienteComponent } from './add-cliente/add-cliente.component';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ListPaquetesComponent,
     NewPaqueteComponent,
     EditPaqueteComponent,
+    AddClienteComponent,
   ],
   imports: [
     SharedModule,
