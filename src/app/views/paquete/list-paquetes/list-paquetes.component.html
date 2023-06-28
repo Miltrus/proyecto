@@ -87,7 +87,7 @@
                 <span>Editar</span>
               </button>
               <button mat-menu-item (click)="deletePaquete(paquete.idPaquete)"
-                [disabled]="paquete.idEstado === 2 || paquete.idEstado === 3 || paquete.idEstado === 4">
+                >
                 <mat-icon [ngStyle]="{'color': 'red'}">delete</mat-icon>
                 <span>Eliminar</span>
               </button>

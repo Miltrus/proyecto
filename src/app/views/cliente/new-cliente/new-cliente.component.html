@@ -31,9 +31,8 @@
                 'is-invalid': newForm.get('documentoCliente')?.invalid && (newForm.get('documentoCliente')?.touched || newForm.get('documentoCliente')?.dirty),
                 'is-valid': newForm.get('documentoCliente')?.valid && (newForm.get('documentoCliente')?.touched || newForm.get('documentoCliente')?.dirty)
               }">
-
               <div *ngIf="newForm.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
-                Documento inválido, debe contener solo números.
+                Documento inválido, debe contener solo números y minimo 7 dígitos.
               </div>
 
             </div>

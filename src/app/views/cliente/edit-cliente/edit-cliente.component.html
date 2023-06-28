@@ -28,13 +28,13 @@
                     <div class="col">
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Documento <b style="color: red;">*</b></label>
-                            <input type="text" class="form-control" formControlName="documentoCliente" readonly
+                            <input type="text" class="form-control" formControlName="documentoCliente"
                                 [ngClass]="{
                             'is-invalid': editForm.get('documentoCliente')?.invalid && (editForm.get('documentoCliente')?.touched || editForm.get('documentoCliente')?.dirty),
                             'is-valid': editForm.get('documentoCliente')?.valid && (editForm.get('documentoCliente')?.touched || editForm.get('documentoCliente')?.dirty)
                           }">
                             <div *ngIf="editForm.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
-                                Documento inválido, debe contener solo números.
+                                Documento inválido, debe contener solo números y minimo 7 dígitos.
                             </div>
                         </div>
                     </div>
