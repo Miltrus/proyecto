@@ -59,8 +59,8 @@ export class AddClienteComponent implements OnInit {
           }
           else {
             this.alerts.showError(respuesta.msj, 'Error al crear el cliente');
+            this.loading = false;
           }
-          this.loading = false;
         });
       } else {
         this.alerts.showInfo('El cliente no ha sido creado', 'Cliente no creado');
