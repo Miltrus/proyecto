@@ -192,7 +192,7 @@ export class ListPaquetesComponent implements OnInit {
     const tamanoPaquete = this.tamano.find(tam => tam.idTamano === idTamano);
     return tamanoPaquete?.tamanoPaquete || '';
   }
-  
+
   getTipoPaquete(idTipo: any): string {
     const tipoPaquete = this.tipos.find(tip => tip.idTipo === idTipo);
     return tipoPaquete?.tipoPaquete || '';
@@ -209,16 +209,17 @@ export class ListPaquetesComponent implements OnInit {
             style: 'tableExample',
             table: {
               widths: ['50%', '50%'],
-              heights: (index) => (index === 8 ? 150 : 30),
+              heights: (index) => (index === 9 ? 150 : 30),
               body: [
                 ['Remitente', this.getRemitentePaquete(paquete.documentoRemitente).nombre],
                 ['Destinatario', paquete.nombreDestinatario],
                 ['Teléfono del destinatario', paquete.telefonoDestinatario],
                 ['Correo del destinatario', paquete.correoDestinatario],
                 ['Dirección del destinatario', paquete.codigoQrPaquete],
+                ['Peso del paquete', paquete.pesoPaquete + ' kg'],
                 ['Tamaño del paquete', this.getTamanoPaquete(paquete.idTamano)],
-                ['Estado del paquete', this.getEstadoPaquete(paquete.idEstado)],
                 ['Contenido del paquete', paquete.contenidoPaquete],
+                ['Estado del paquete', this.getEstadoPaquete(paquete.idEstado)],
                 [
                   { text: 'Código QR', style: 'subheader' },
                   { image: paquete.qrCodeUrl.toString(), width: 100, height: 100, alignment: 'center' }
@@ -255,6 +256,7 @@ export class ListPaquetesComponent implements OnInit {
       });
     }
   }
+
 
   goBack() {
     this.loading = true;
