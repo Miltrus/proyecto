@@ -13,6 +13,7 @@ import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
+import { AddClienteComponent } from '../add-cliente/add-cliente.component';
 
 
 @Component({
@@ -174,6 +175,15 @@ export class EditPaqueteComponent implements OnInit {
   }
   mostrarCodigoQrPaquete() {
     this.hideCodigoQrPaquete = false;
+  }
+
+  openAddClienteDialog(): void {
+    const dialogRef = this.dialog.open(AddClienteComponent, {
+      width: '70%',
+      height: '70%'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
 
   goBack() {

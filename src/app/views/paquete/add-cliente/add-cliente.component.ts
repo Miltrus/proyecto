@@ -64,6 +64,7 @@ export class AddClienteComponent implements OnInit {
         });
       } else {
         this.alerts.showInfo('El cliente no ha sido creado', 'Cliente no creado');
+        this.loading = false;
       }
     });
   }

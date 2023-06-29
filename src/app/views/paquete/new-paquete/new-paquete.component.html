@@ -199,6 +199,9 @@
               <div *ngIf="newForm.get('fechaAproxEntrega')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
               </div>
+              <div *ngIf="newForm.get('fechaAproxEntrega')?.errors?.['fechaPasada']" class="invalid-feedback">
+                Fecha no válida.
+              </div>              
             </div>
           </div>
         </div>

@@ -11,7 +11,11 @@
     <div class="container">
       <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
         <div class="row">
-          <h4>Remitente</h4>
+          <h4>Remitente
+            <button class="btn btn-circle" type="button" (click)="openAddClienteDialog()">
+              <span class="material-icons" style="color: green;">add</span>
+            </button>
+          </h4>
           <div class="col">
             <div class="form-group">
               <label for="documentoRemitente">Nombre<b style="color: red;">*</b></label>

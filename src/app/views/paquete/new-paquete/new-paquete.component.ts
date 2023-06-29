@@ -33,13 +33,13 @@ export class NewPaqueteComponent implements OnInit {
   newForm = new FormGroup({
     codigoQrPaquete: new FormControl('', Validators.required),
     pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{0,3}?$')]),
-    unidadesPaquete: new FormControl('',[ Validators.required, Validators.pattern('^[0-9]{0,3}$')]),
+    unidadesPaquete: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{0,3}$')]),
     contenidoPaquete: new FormControl('', Validators.required),
     documentoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
     nombreDestinatario: new FormControl('', Validators.required),
     correoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     telefonoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
-    fechaAproxEntrega: new FormControl('', Validators.required),
+    fechaAproxEntrega: new FormControl('', [Validators.required, this.validateFechaPasada.bind(this)]),
     documentoRemitente: new FormControl('', Validators.required),
     idTamano: new FormControl('', Validators.required),
     idEstado: new FormControl('1'),
@@ -85,6 +85,28 @@ export class NewPaqueteComponent implements OnInit {
     }
     );
   }
+
+
+  // Función de validación personalizada
+  validateFechaPasada(control: FormControl): { [key: string]: boolean } | null {
+    const fechaSeleccionada = control.value;
+    const fechaActual = new Date();
+  
+    // Establecer las horas, minutos, segundos y milisegundos de la fecha actual a 0
+    fechaActual.setHours(0, 0, 0, 0);
+    
+    // Crear una nueva instancia de la fecha seleccionada y establecer las horas, minutos, segundos y milisegundos a 0
+    const fechaSeleccionadaSinHora = new Date(fechaSeleccionada);
+    fechaSeleccionadaSinHora.setHours(0, 0, 0, 0);
+    
+    if (fechaSeleccionadaSinHora < fechaActual) {
+      console.log(fechaSeleccionada, '|', fechaActual);
+      return { fechaPasada: true };
+    }
+  
+    return null;
+  }
+
 
   postForm(form: PaqueteInterface) {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
@@ -169,7 +191,6 @@ export class NewPaqueteComponent implements OnInit {
       height: '70%'
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.loading = true;
     });
   }
 
