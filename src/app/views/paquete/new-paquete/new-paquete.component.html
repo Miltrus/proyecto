@@ -72,7 +72,7 @@
           </div>
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">N° de Documento</label>
+              <label for="exampleFormControlInput1">N° de Documento<b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="documentoDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('documentoDestinatario')?.invalid && (newForm.get('documentoDestinatario')?.touched || newForm.get('documentoDestinatario')?.dirty),
                 'is-valid': newForm.get('documentoDestinatario')?.valid && newForm.get('documentoDestinatario')?.dirty
@@ -89,7 +89,7 @@
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">Correo</label>
+              <label for="exampleFormControlInput1">Correo<b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="correoDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('correoDestinatario')?.invalid && (newForm.get('correoDestinatario')?.touched || newForm.get('correoDestinatario')?.dirty),
                 'is-valid': newForm.get('correoDestinatario')?.valid && newForm.get('correoDestinatario')?.dirty
@@ -104,7 +104,7 @@
           </div>
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">Telefono</label>
+              <label for="exampleFormControlInput1">Telefono<b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="telefonoDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('telefonoDestinatario')?.invalid && (newForm.get('telefonoDestinatario')?.touched || newForm.get('telefonoDestinatario')?.dirty),
                 'is-valid': newForm.get('telefonoDestinatario')?.valid && newForm.get('telefonoDestinatario')?.dirty
@@ -121,7 +121,7 @@
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label for="">Direccion</label>
+              <label for="">Direccion<b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="codigoQrPaquete" [ngClass]="{
                 'is-invalid': newForm.get('codigoQrPaquete')?.invalid && (newForm.get('codigoQrPaquete')?.touched || newForm.get('codigoQrPaquete')?.dirty),
                 'is-valid': newForm.get('codigoQrPaquete')?.valid && newForm.get('codigoQrPaquete')?.dirty
@@ -158,24 +158,6 @@
           </div>
           <div class="col">
             <div class="form-group">
-              <label for="">Tamaño<b style="color: red;">*</b></label>
-              <mat-select class="form-control" formControlName="idTamano" placeholder="---SELECCIONE---" [ngClass]="{
-              'is-invalid': newForm.get('idTamano')?.invalid && (newForm.get('idTamano')?.touched || newForm.get('idTamano')?.dirty),
-              'is-valid': newForm.get('idTamano')?.valid && (newForm.get('idTamano')?.touched || newForm.get('idTamano')?.dirty)
-            }">
-                <mat-option *ngFor="let t of tamanos" [value]="t.idTamano">
-                  {{ t.tamanoPaquete }}
-                </mat-option>
-              </mat-select>
-              <div *ngIf="newForm.get('idTamano')?.errors?.['required']" class="invalid-feedback">
-                Este campo es obligatorio.
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
               <label for="exampleFormControlInput1">Unidades<b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="unidadesPaquete" [ngClass]="{
               'is-invalid': newForm.get('unidadesPaquete')?.invalid && (newForm.get('unidadesPaquete')?.touched || newForm.get('unidadesPaquete')?.dirty),
@@ -185,6 +167,51 @@
                 Campo no válido. Debe contener solo números con un maximo de 3 digitos.
               </div>
               <div *ngIf="newForm.get('unidadesPaquete')?.errors?.['required']" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="">Tamaño</label>
+              <mat-select class="form-control" formControlName="idTamano" placeholder="---SELECCIONE---" [ngClass]="{
+              'is-invalid': newForm.get('idTamano')?.invalid && (newForm.get('idTamano')?.touched || newForm.get('idTamano')?.dirty),
+              'is-valid': newForm.get('idTamano')?.valid && (newForm.get('idTamano')?.touched || newForm.get('idTamano')?.dirty)
+            }">
+                <mat-option *ngFor="let t of tamanos" [value]="t.idTamano">
+                  {{ t.tamanoPaquete }}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="">Tipo<b style="color: red;">*</b></label>
+              <mat-select class="form-control" formControlName="idTipo" placeholder="---SELECCIONE---" [ngClass]="{
+              'is-invalid': newForm.get('idTipo')?.invalid && (newForm.get('idTipo')?.touched || newForm.get('idTipo')?.dirty),
+              'is-valid': newForm.get('idTipo')?.valid && (newForm.get('idTipo')?.touched || newForm.get('idTipo')?.dirty)
+            }">
+                <mat-option *ngFor="let t of tipos" [value]="t.idTipo">
+                  {{ t.tipoPaquete }}
+                </mat-option>
+              </mat-select>
+              <div *ngIf="newForm.get('idTipo')?.errors?.['required']" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Contenido del paquete<b style="color: red;">*</b></label>
+              <textarea class="form-control" formControlName="contenidoPaquete" [ngClass]="{
+                'is-invalid': newForm.get('contenidoPaquete')?.invalid && (newForm.get('contenidoPaquete')?.touched || newForm.get('contenidoPaquete')?.dirty),
+                'is-valid': newForm.get('contenidoPaquete')?.valid && newForm.get('contenidoPaquete')?.dirty
+              }"></textarea>
+              <div *ngIf="newForm.get('contenidoPaquete')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
               </div>
             </div>
@@ -201,20 +228,6 @@
               </div>
               <div *ngIf="newForm.get('fechaAproxEntrega')?.errors?.['fechaPasada']" class="invalid-feedback">
                 Fecha no válida.
-              </div>              
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label for="exampleFormControlInput1">Contenido del paquete<b style="color: red;">*</b></label>
-              <input type="text" class="form-control" formControlName="contenidoPaquete" [ngClass]="{
-              'is-invalid': newForm.get('contenidoPaquete')?.invalid && (newForm.get('contenidoPaquete')?.touched || newForm.get('contenidoPaquete')?.dirty),
-              'is-valid': newForm.get('contenidoPaquete')?.valid && newForm.get('contenidoPaquete')?.dirty
-            }">
-              <div *ngIf="newForm.get('contenidoPaquete')?.errors?.['required']" class="invalid-feedback">
-                Este campo es obligatorio.
               </div>
             </div>
           </div>

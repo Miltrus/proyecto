@@ -127,8 +127,9 @@
     <p><strong>Dirección:</strong> {{ dialogData.codigoQrPaquete }}</p><br>
     <h4>Paquete:</h4>
     <p><strong>Peso:</strong> {{ dialogData.pesoPaquete }} Kg</p>
-    <p><strong>Tamaño:</strong> {{ getTamanoPaquete(dialogData.idTamano) }}</p>
     <p><strong>Unidades:</strong> {{ dialogData.unidadesPaquete }}</p>
+    <p><strong>Tamaño:</strong> {{ getTamanoPaquete(dialogData.idTamano) }}</p>
+    <p><strong>Tipo:</strong> {{ getTipoPaquete(dialogData.idTipo) }}</p>
     <p><strong>Fecha Aprox Entrega:</strong> {{ dialogData.fechaAproxEntrega }}</p>
     <p><strong>Contenido:</strong> {{ dialogData.contenidoPaquete }}</p>
   </div>
