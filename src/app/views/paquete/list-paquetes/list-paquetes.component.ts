@@ -187,19 +187,62 @@ export class ListPaquetesComponent implements OnInit {
   }
 
   generatePDF(idPaquete: string): void {
-    const paquete = this.paquetes.find(paquete => paquete.idPaquete === idPaquete);
+    const paquete = this.paquetes.find((paquete) => paquete.idPaquete === idPaquete);
 
-    if (paquete) {
-      const docDefinition = {
+    if (paquete && paquete.qrCodeUrl) {
+      const docDefinition: TDocumentDefinitions = {
         content: [
-          { image: paquete.qrCodeUrl, width: 200, height: 200, alignment: 'center' } as ContentImage,
-        ]
+          { text: 'Registro de paquete', style: 'header' },
+          {
+            style: 'tableExample',
+            table: {
+              widths: ['50%', '50%'],
+              heights: (index) => (index === 8 ? 150 : 30),
+              body: [
+                ['Remitente', this.getRemitentePaquete(paquete.documentoRemitente).nombre],
+                ['Destinatario', paquete.nombreDestinatario],
+                ['Teléfono del destinatario', paquete.telefonoDestinatario],
+                ['Correo del destinatario', paquete.correoDestinatario],
+                ['Dirección del destinatario', paquete.codigoQrPaquete],
+                ['Tamaño del paquete', this.getTamanoPaquete(paquete.idTamano)],
+                ['Estado del paquete', this.getEstadoPaquete(paquete.idEstado)],
+                ['Contenido del paquete', paquete.contenidoPaquete],
+                [
+                  { text: 'Código QR', style: 'subheader' },
+                  { image: paquete.qrCodeUrl.toString(), width: 100, height: 100, alignment: 'center' }
+                ]
+              ] as any[][]
+            }
+          }
+        ],
+        styles: {
+          header: {
+            fontSize: 18,
+            bold: true,
+            alignment: 'center',
+            margin: [0, 0, 0, 10]
+          },
+          subheader: {
+            fontSize: 14,
+            margin: [0, 10, 0, 5]
+          },
+          tableExample: {
+            margin: [0, 5, 0, 15]
+          }
+        },
+        pageOrientation: 'landscape',
+        pageBreakBefore: (currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) => {
+          return currentNode.headlineLevel === 1 && followingNodesOnPage.length === 0 && currentNode.startPosition.top >= 750;
+        }
       };
 
-      pdfMake.createPdf(docDefinition).download(`QR_${idPaquete}.pdf`);
+      const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+      pdfDocGenerator.getBlob((blob: Blob) => {
+        const pdfBlobUrl = URL.createObjectURL(blob);
+        window.open(pdfBlobUrl, '_blank');
+      });
     }
   }
-
 
   goBack() {
     this.loading = true;

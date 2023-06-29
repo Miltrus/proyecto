@@ -3,9 +3,8 @@
     <mat-spinner></mat-spinner>
   </div>
 </div>
+
 <div class="wrapper fadeInDown">
-
-
   <div id="formContent">
     <!-- Tabs Titles -->
 
@@ -16,11 +15,11 @@
 
     <!-- Login Form -->
     <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm.value)">
-      <!--enviamos el valor del form a la funcion onLogin-->
+      <!-- Enviamos el valor del formulario a la función onLogin -->
       <div class="fadeIn second">
         <p>
           <mat-form-field appearance="outline">
-            <mat-label>Correo electronico</mat-label>
+            <mat-label>Correo electrónico</mat-label>
             <input id="login" formControlName="correoUsuario" matInput placeholder="Correo">
             <mat-icon matSuffix color="primary">person</mat-icon>
           </mat-form-field>
@@ -45,7 +44,7 @@
 
       <!-- Botón Volver Atrás -->
       <div class="back-button">
-        <button class="fadeIn fourth" type="button" (click)="goBack()">Volver atras</button>
+        <button class="fadeIn fourth" type="button" (click)="goBack()">Volver atrás</button>
       </div>
     </form>
   </div>
