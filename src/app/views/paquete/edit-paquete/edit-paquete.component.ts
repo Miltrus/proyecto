@@ -32,12 +32,18 @@ export class EditPaqueteComponent implements OnInit {
 
   editForm = new FormGroup({
     idPaquete: new FormControl(''),
+    codigoQrPaquete: new FormControl('', Validators.required),
+    pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]),
+    unidadesPaquete: new FormControl('',[ Validators.required, Validators.pattern('^[0-9]+$')]),
+    contenidoPaquete: new FormControl('', Validators.required),
+    documentoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
+    nombreDestinatario: new FormControl('', Validators.required),
+    correoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
+    telefonoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
+    fechaAproxEntrega: new FormControl('', Validators.required),
     documentoRemitente: new FormControl('', Validators.required),
-    codigoQrPaquete: new FormControl(''),
-    documentoDestinatario: new FormControl('', Validators.required),
-    pesoPaquete: new FormControl('', Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')),
     idTamano: new FormControl('', Validators.required),
-    idEstado: new FormControl('', Validators.required),
+    idEstado: new FormControl('1'),
   })
 
   dataPaquete: PaqueteInterface[] = [];
@@ -60,9 +66,15 @@ export class EditPaqueteComponent implements OnInit {
       this.editForm.setValue({
         'idPaquete': this.dataPaquete[0]?.idPaquete || 'idPaquete',
         'codigoQrPaquete': this.dataPaquete[0]?.codigoQrPaquete || '', //si dataRol[0] es null, asignamos un string vacio, si no se hace esto da error
-        'documentoRemitente': this.dataPaquete[0]?.documentoRemitente || 'documentoRemitente',
-        'documentoDestinatario': this.dataPaquete[0]?.documentoDestinatario || 'documentoDestinatario',
         'pesoPaquete': this.dataPaquete[0]?.pesoPaquete || '',
+        'unidadesPaquete': this.dataPaquete[0]?.unidadesPaquete || '',
+        'contenidoPaquete': this.dataPaquete[0]?.contenidoPaquete || '',
+        'documentoDestinatario': this.dataPaquete[0]?.documentoDestinatario || 'documentoDestinatario',
+        'nombreDestinatario': this.dataPaquete[0]?.nombreDestinatario || '',
+        'correoDestinatario': this.dataPaquete[0]?.correoDestinatario || '',
+        'telefonoDestinatario': this.dataPaquete[0]?.telefonoDestinatario || '',
+        'fechaAproxEntrega': this.dataPaquete[0]?.fechaAproxEntrega || '',
+        'documentoRemitente': this.dataPaquete[0]?.documentoRemitente || '',
         'idTamano': this.dataPaquete[0]?.idTamano || 'idTamano',
         'idEstado': this.dataPaquete[0]?.idEstado || 'idEstado',
       });

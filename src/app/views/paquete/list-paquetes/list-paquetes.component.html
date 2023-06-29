@@ -51,8 +51,7 @@
         </ng-container>
         <ng-container matColumnDef="documentoDestinatario">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Destinatario</th>
-          <td mat-cell *matCellDef="let paquete" class="max-width-cell">{{ getDestinatarioPaquete
-            (paquete.documentoDestinatario).nombre
+          <td mat-cell *matCellDef="let paquete" class="max-width-cell">{{ paquete.nombreDestinatario
             }}</td>
         </ng-container>
 
@@ -122,13 +121,15 @@
     <p><strong>Correo:</strong> {{ getRemitentePaquete(dialogData.documentoRemitente).correo }}</p><br>
     <h4>Destinatario:</h4>
     <p><strong>Documento:</strong> {{ dialogData.documentoDestinatario }}</p>
-    <p><strong>Nombre:</strong> {{ getDestinatarioPaquete(dialogData.documentoDestinatario).nombre }}</p>
-    <p><strong>Telefono:</strong> {{ getDestinatarioPaquete(dialogData.documentoDestinatario).telefono }}</p>
-    <p><strong>Correo:</strong> {{ getDestinatarioPaquete(dialogData.documentoDestinatario).correo }}</p>
-    <p><strong>Dirección:</strong> {{ getDestinatarioPaquete(dialogData.documentoDestinatario).direccion }}</p><br>
+    <p><strong>Nombre:</strong> {{ dialogData.nombreDestinatario }}</p>
+    <p><strong>Telefono:</strong> {{ dialogData.telefonoDestinatario }}</p>
+    <p><strong>Correo:</strong> {{ dialogData.correoDestinatario }}</p>
+    <p><strong>Dirección:</strong> {{ dialogData.codigoQrPaquete }}</p><br>
     <h4>Paquete:</h4>
     <p><strong>Peso:</strong> {{ dialogData.pesoPaquete }} Kg</p>
     <p><strong>Tamaño:</strong> {{ getTamanoPaquete(dialogData.idTamano) }}</p>
-    <p><strong>Mensajero:</strong> {{ getUsuarioPaquete(dialogData.documentoUsuario).nombre }} </p>
+    <p><strong>Unidades:</strong> {{ dialogData.unidadesPaquete }}</p>
+    <p><strong>Fecha Aprox Entrega:</strong> {{ dialogData.fechaAproxEntrega }}</p>
+    <p><strong>Contenido:</strong> {{ dialogData.contenidoPaquete }}</p>
   </div>
 </ng-template>

@@ -31,11 +31,17 @@ export class NewPaqueteComponent implements OnInit {
   ) { }
 
   newForm = new FormGroup({
+    codigoQrPaquete: new FormControl('', Validators.required),
+    pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{0,3}?$')]),
+    unidadesPaquete: new FormControl('',[ Validators.required, Validators.pattern('^[0-9]{0,3}$')]),
+    contenidoPaquete: new FormControl('', Validators.required),
+    documentoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
+    nombreDestinatario: new FormControl('', Validators.required),
+    correoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
+    telefonoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
+    fechaAproxEntrega: new FormControl('', Validators.required),
     documentoRemitente: new FormControl('', Validators.required),
-    documentoDestinatario: new FormControl('', Validators.required),
-    pesoPaquete: new FormControl('', Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')),
     idTamano: new FormControl('', Validators.required),
-    codigoQrPaquete: new FormControl(''),
     idEstado: new FormControl('1'),
   });
 
@@ -92,6 +98,7 @@ export class NewPaqueteComponent implements OnInit {
         this.api.postPaquete(form).subscribe(data => {
 
           let respuesta: ResponseInterface = data;
+          //console.log(form);
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El paquete ha sido creado exitosamente', 'Paquete registrado');
             this.router.navigate(['paquete/list-paquetes']);
@@ -136,6 +143,13 @@ export class NewPaqueteComponent implements OnInit {
     });
   }
 
+  onDestinatarioInput(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const value = inputElement.value;
+    this.selectedDestinatario = this.destinatario.find(dest => dest.nombreCliente === value);
+    console.log(value);
+  }
+
   onRemitenteSelectionChange(event: any) {
     const documentoCliente = event.value;
     this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === documentoCliente);
@@ -152,7 +166,13 @@ export class NewPaqueteComponent implements OnInit {
   openAddClienteDialog(): void {
     const dialogRef = this.dialog.open(AddClienteComponent, {
       width: '75%',
-      height: '50%'
+      height: '75%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.destinatario = result;
+      }
     });
   }
 
