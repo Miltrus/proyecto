@@ -39,9 +39,13 @@
             {{ paquete.documentoUsuario ? paquete.documentoUsuario : 'SIN ASIGNAR' }}
           </td>
         </ng-container>
-        <ng-container matColumnDef="idTamano">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Tamaño</th>
-          <td mat-cell *matCellDef="let paquete" class="max-width-cell">{{ getTamanoPaquete (paquete.idTamano) }}</td>
+        <ng-container matColumnDef="idTipo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+          <td mat-cell *matCellDef="let paquete" class="max-width-cell">{{ getTipoPaquete (paquete.idTipo) }}</td>
+        </ng-container>
+        <ng-container matColumnDef="pesoPaquete">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Peso</th>
+          <td mat-cell *matCellDef="let paquete" class="max-width-cell">{{ paquete.pesoPaquete }} kg</td>
         </ng-container>
         <ng-container matColumnDef="documentoRemitente">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Remitente</th>
@@ -85,8 +89,7 @@
                 <mat-icon [ngStyle]="{'color': '#5E35B1'}">edit</mat-icon>
                 <span>Editar</span>
               </button>
-              <button mat-menu-item (click)="deletePaquete(paquete.idPaquete)"
-                >
+              <button mat-menu-item (click)="deletePaquete(paquete.idPaquete)">
                 <mat-icon [ngStyle]="{'color': 'red'}">delete</mat-icon>
                 <span>Eliminar</span>
               </button>
@@ -95,10 +98,10 @@
         </ng-container>
 
         <tr mat-header-row
-          *matHeaderRowDef="['num', 'documentoUsuario', 'idTamano', 'documentoRemitente', 'documentoDestinatario','codigoQrPaquete', 'idEstado' , 'acciones']">
+          *matHeaderRowDef="['num', 'documentoUsuario', 'idTipo', 'pesoPaquete', 'documentoRemitente', 'documentoDestinatario','codigoQrPaquete', 'idEstado' , 'acciones']">
         </tr>
         <tr mat-row
-          *matRowDef="let row; columns: ['num', 'documentoUsuario', 'idTamano', 'documentoRemitente', 'documentoDestinatario', 'codigoQrPaquete', 'idEstado', 'acciones']">
+          *matRowDef="let row; columns: ['num', 'documentoUsuario', 'idTipo', 'pesoPaquete', 'documentoRemitente', 'documentoDestinatario', 'codigoQrPaquete', 'idEstado', 'acciones']">
         </tr>
       </table>
     </div>
@@ -127,8 +130,9 @@
     <p><strong>Dirección:</strong> {{ dialogData.codigoQrPaquete }}</p><br>
     <h4>Paquete:</h4>
     <p><strong>Peso:</strong> {{ dialogData.pesoPaquete }} Kg</p>
-    <p><strong>Tamaño:</strong> {{ getTamanoPaquete(dialogData.idTamano) }}</p>
     <p><strong>Unidades:</strong> {{ dialogData.unidadesPaquete }}</p>
+    <p><strong>Tamaño:</strong> {{ getTamanoPaquete(dialogData.idTamano) }}</p>
+    <p><strong>Tipo:</strong> {{ getTipoPaquete(dialogData.idTipo) }}</p>
     <p><strong>Fecha Aprox Entrega:</strong> {{ dialogData.fechaAproxEntrega }}</p>
     <p><strong>Contenido:</strong> {{ dialogData.contenidoPaquete }}</p>
   </div>

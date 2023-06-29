@@ -3,8 +3,10 @@
         <mat-spinner></mat-spinner>
     </div>
 </div>
+
 <app-navigation>
     <div class="container">
+        <br>
         <h2>Crear usuario</h2>
         <br>
         <div class="container">
@@ -20,9 +22,12 @@
                             }">
                                 <mat-option *ngFor="let tipoDocumento of tiposDocumento"
                                     [value]="tipoDocumento.idTipoDocumento">
-                                    {{ tipoDocumento.nombreTipo }}
+                                    {{ tipoDocumento.nombreTipo }} 
                                 </mat-option>
                             </mat-select>
+                            <div *ngIf="newForm.get('idTipoDocumento')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
 
@@ -35,8 +40,11 @@
                             }" />
 
                             <div *ngIf="newForm.get('documentoUsuario')?.errors?.['pattern']" class="invalid-feedback">
-                                Documento invalido, solo debe contener numeros y minimo 6 digitos.
+                                Campo no válido. Debe contener solo números, minimo 7 y maximo 10.
                             </div>
+                            <div *ngIf="newForm.get('documentoUsuario')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                 </div>
@@ -49,6 +57,9 @@
                             'is-invalid': newForm.get('nombreUsuario')?.invalid && (newForm.get('nombreUsuario')?.touched || newForm.get('nombreUsuario')?.dirty),
                             'is-valid': newForm.get('nombreUsuario')?.valid && (newForm.get('nombreUsuario')?.touched || newForm.get('nombreUsuario')?.dirty)
                         }" />
+                        <div *ngIf="newForm.get('nombreUsuario')?.errors?.['required']" class="invalid-feedback">
+                            Este campo es obligatorio.
+                          </div>
                         </div>
                     </div>
                     <div class="col">
@@ -58,6 +69,9 @@
                             'is-invalid': newForm.get('apellidoUsuario')?.invalid && (newForm.get('apellidoUsuario')?.touched || newForm.get('apellidoUsuario')?.dirty),
                             'is-valid': newForm.get('apellidoUsuario')?.valid && (newForm.get('apellidoUsuario')?.touched || newForm.get('apellidoUsuario')?.dirty)
                         }" />
+                        <div *ngIf="newForm.get('apellidoUsuario')?.errors?.['required']" class="invalid-feedback">
+                            Este campo es obligatorio.
+                          </div>
                         </div>
                     </div>
                 </div>
@@ -74,6 +88,9 @@
                             <div *ngIf="newForm.get('telefonoUsuario')?.errors?.['pattern']" class="invalid-feedback">
                                 Teléfono inválido, debe contener 10 dígitos numéricos.
                             </div>
+                            <div *ngIf="newForm.get('telefonoUsuario')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
 
                         </div>
                     </div>
@@ -88,6 +105,9 @@
                             <div *ngIf="newForm.get('correoUsuario')?.errors?.['pattern']" class="invalid-feedback">
                                 Correo inválido.
                             </div>
+                            <div *ngIf="newForm.get('correoUsuario')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                 </div>
@@ -105,19 +125,19 @@
 
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" style="margin-left: 5px;"
-                                        (click)="toggleShowPassword()"
-                                        *ngIf="newForm.get('contrasenaUsuario')?.value !== ''">
+                                        (click)="toggleShowPassword()">
                                         {{ showPassword ? 'Ocultar' : 'Mostrar' }}
                                     </button>
                                 </div>
 
                                 <div *ngIf="newForm.get('contrasenaUsuario')?.errors?.['pattern']"
                                     class="invalid-feedback">
-                                    La contraseña debe contener mínimo 8 dígitos, una mayúscula, una minuscula, minimo 3
-                                    numeros y
-                                    al menos un caracter
-                                    especial.
+                                    La contraseña debe contener mínimo 8 dígitos, una mayúscula, una minúscula, mínimo 3
+                                    números y al menos un carácter especial.
                                 </div>
+                                <div *ngIf="newForm.get('contrasenaUsuario')?.errors?.['required']" class="invalid-feedback">
+                                    Este campo es obligatorio.
+                                  </div>
                             </div>
                         </div>
 
@@ -133,12 +153,15 @@
                                 <mat-option *ngFor="let rol of rolUsuario" [value]="rol.idRol">{{
                                     rol.nombreRol}}</mat-option>
                             </mat-select>
+                            <div *ngIf="newForm.get('idRol')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                 </div>
                 <br><br />
 
-                <button type="button" mat-raised-button color="accent" (click)="goBack()">Atras</button> |
+                <button type="button" mat-raised-button color="accent" (click)="goBack()">Atrás</button> |
                 <button type="submit" mat-raised-button color='primary' [disabled]="newForm.invalid">Guardar</button>
             </form>
         </div>

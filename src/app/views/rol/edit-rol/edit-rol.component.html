@@ -6,6 +6,7 @@
 
 <app-navigation>
     <div class="container">
+        <br>
         <h2>Editar rol</h2>
         <br>
         <div class="container">
@@ -13,11 +14,14 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
-                            <label for="exampleFormControlInput1">Nombre rol <b style="color: red;">*</b></label>
+                            <label for="exampleFormControlInput1">Nombre del rol <b style="color: red;">*</b></label>
                             <input type="text" class="form-control" formControlName="nombreRol" [ngClass]="{
                             'is-invalid': editForm.get('nombreRol')?.invalid && (editForm.get('nombreRol')?.touched || editForm.get('nombreRol')?.dirty),
                             'is-valid': editForm.get('nombreRol')?.valid && (editForm.get('nombreRol')?.touched || editForm.get('nombreRol')?.dirty)
                         }" />
+                        <div *ngIf="editForm.get('nombreRol')?.errors?.['required']" class="invalid-feedback">
+                            Este campo es obligatorio.
+                          </div>
                         </div>
                     </div>
                 </div>
@@ -43,7 +47,7 @@
 
                 <br>
 
-                <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
+                <button type="button" mat-raised-button color='accent' (click)="goBack()">Atrás</button> |
                 <button type="submit" mat-raised-button color='primary' [disabled]="editForm.invalid">Guardar</button>
             </form>
         </div>

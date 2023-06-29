@@ -3,8 +3,10 @@
         <mat-spinner></mat-spinner>
     </div>
 </div>
+
 <app-navigation>
     <div class="container">
+        <br>
         <h2>Editar cliente</h2>
         <br>
         <div class="container">
@@ -19,23 +21,29 @@
                                 'is-valid': editForm.get('idTipoDocumento')?.valid && (editForm.get('idTipoDocumento')?.touched || editForm.get('idTipoDocumento')?.dirty)
                               }">
                                 <mat-option *ngFor="let tipoDocumento of tiposDocumento"
-                                    [value]="tipoDocumento.idTipoDocumento">{{
-                                    tipoDocumento.nombreTipo }}
+                                    [value]="tipoDocumento.idTipoDocumento">{{ tipoDocumento.nombreTipo }}
                                 </mat-option>
                             </mat-select>
+
+                            <div *ngIf="editForm.get('idTipoDocumento')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Documento <b style="color: red;">*</b></label>
-                            <input type="text" class="form-control" formControlName="documentoCliente"
-                                [ngClass]="{
+                            <input type="text" class="form-control" formControlName="documentoCliente" [ngClass]="{
                             'is-invalid': editForm.get('documentoCliente')?.invalid && (editForm.get('documentoCliente')?.touched || editForm.get('documentoCliente')?.dirty),
                             'is-valid': editForm.get('documentoCliente')?.valid && (editForm.get('documentoCliente')?.touched || editForm.get('documentoCliente')?.dirty)
                           }">
                             <div *ngIf="editForm.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
-                                Documento inválido, debe contener solo números y minimo 7 dígitos.
+                                Campo inválido. Debe contener solo números, minimo 7 y maximo 10.
                             </div>
+
+                            <div *ngIf="editForm.get('documentoCliente')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                 </div>
@@ -45,9 +53,12 @@
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Nombre <b style="color: red;">*</b></label>
                             <input type="text" class="form-control" formControlName="nombreCliente" [ngClass]="{
-                            'is-invalid': editForm.get('nombreCliente')?.invalid && (editForm.get('nombreCliente')?.touched || editForm.get('nombreCliente')?.dirty),
-                            'is-valid': editForm.get('nombreCliente')?.valid && (editForm.get('nombreCliente')?.touched || editForm.get('nombreCliente')?.dirty)
-                          }">
+                                'is-invalid': editForm.get('nombreCliente')?.invalid && (editForm.get('nombreCliente')?.touched || editForm.get('nombreCliente')?.dirty),
+                                'is-valid': editForm.get('nombreCliente')?.valid && (editForm.get('nombreCliente')?.touched || editForm.get('nombreCliente')?.dirty)
+                                }">
+                                <div *ngIf="editForm.get('nombreCliente')?.errors?.['required']" class="invalid-feedback">
+                                    Este campo es obligatorio.
+                                </div>
                         </div>
                     </div>
                     <div class="col">
@@ -60,6 +71,10 @@
 
                             <div *ngIf="editForm.get('telefonoCliente')?.errors?.['pattern']" class="invalid-feedback">
                                 Teléfono inválido, debe contener 10 dígitos numéricos.
+                            </div>
+
+                            <div *ngIf="editForm.get('telefonoCliente')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
                             </div>
 
                         </div>
@@ -78,6 +93,10 @@
                             <div *ngIf="editForm.get('correoCliente')?.errors?.['pattern']" class="invalid-feedback">
                                 Correo inválido.
                             </div>
+
+                            <div *ngIf="editForm.get('correoCliente')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                     <div class="col">
@@ -87,13 +106,17 @@
                             'is-invalid': editForm.get('direccionCliente')?.invalid && (editForm.get('direccionCliente')?.touched || editForm.get('direccionCliente')?.dirty),
                             'is-valid': editForm.get('direccionCliente')?.valid && (editForm.get('direccionCliente')?.touched || editForm.get('direccionCliente')?.dirty)
                           }">
+
+                          <div *ngIf="editForm.get('direccionCliente')?.errors?.['required']" class="invalid-feedback">
+                            Este campo es obligatorio.
+                          </div>
                         </div>
                     </div>
                 </div>
                 <br><br />
 
-                <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
-                <button type="submit" mat-raised-button color='primary' [disabled]="editForm.invalid">Editar</button>
+                <button type="button" mat-raised-button color="accent" (click)="goBack()">Atrás</button> |
+                <button type="submit" mat-raised-button color="primary" [disabled]="editForm.invalid">Editar</button>
 
             </form>
         </div>

@@ -20,6 +20,7 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browse
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ContentImage, TDocumentDefinitions } from 'pdfmake/interfaces';
+import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 
 // Configurar las fuentes
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
@@ -47,6 +48,7 @@ export class ListPaquetesComponent implements OnInit {
   destinatario: ClienteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
   tamano: TamanoPaqueteInterface[] = [];
+  tipos: TipoPaqueteInterface[] = [];
   dataSource = new MatTableDataSource(this.paquetes); //pal filtro
   loading: boolean = true;
 
@@ -89,6 +91,11 @@ export class ListPaquetesComponent implements OnInit {
 
     this.api.getTamanoPaquete().subscribe(data => {
       this.tamano = data;
+      this.loading = false;
+    });
+
+    this.api.getTipoPaquete().subscribe(data => {
+      this.tipos = data;
       this.loading = false;
     });
   }
@@ -186,17 +193,67 @@ export class ListPaquetesComponent implements OnInit {
     return tamanoPaquete?.tamanoPaquete || '';
   }
 
-  generatePDF(idPaquete: string): void {
-    const paquete = this.paquetes.find(paquete => paquete.idPaquete === idPaquete);
+  getTipoPaquete(idTipo: any): string {
+    const tipoPaquete = this.tipos.find(tip => tip.idTipo === idTipo);
+    return tipoPaquete?.tipoPaquete || '';
+  }
 
-    if (paquete) {
-      const docDefinition = {
+  generatePDF(idPaquete: string): void {
+    const paquete = this.paquetes.find((paquete) => paquete.idPaquete === idPaquete);
+
+    if (paquete && paquete.qrCodeUrl) {
+      const docDefinition: TDocumentDefinitions = {
         content: [
-          { image: paquete.qrCodeUrl, width: 200, height: 200, alignment: 'center' } as ContentImage,
-        ]
+          { text: 'Registro de paquete', style: 'header' },
+          {
+            style: 'tableExample',
+            table: {
+              widths: ['50%', '50%'],
+              heights: (index) => (index === 9 ? 150 : 30),
+              body: [
+                ['Remitente', this.getRemitentePaquete(paquete.documentoRemitente).nombre],
+                ['Destinatario', paquete.nombreDestinatario],
+                ['Teléfono del destinatario', paquete.telefonoDestinatario],
+                ['Correo del destinatario', paquete.correoDestinatario],
+                ['Dirección del destinatario', paquete.codigoQrPaquete],
+                ['Peso del paquete', paquete.pesoPaquete + ' kg'],
+                ['Tamaño del paquete', this.getTamanoPaquete(paquete.idTamano)],
+                ['Contenido del paquete', paquete.contenidoPaquete],
+                ['Estado del paquete', this.getEstadoPaquete(paquete.idEstado)],
+                [
+                  { text: 'Código QR', style: 'subheader' },
+                  { image: paquete.qrCodeUrl.toString(), width: 100, height: 100, alignment: 'center' }
+                ]
+              ] as any[][]
+            }
+          }
+        ],
+        styles: {
+          header: {
+            fontSize: 18,
+            bold: true,
+            alignment: 'center',
+            margin: [0, 0, 0, 10]
+          },
+          subheader: {
+            fontSize: 14,
+            margin: [0, 10, 0, 5]
+          },
+          tableExample: {
+            margin: [0, 5, 0, 15]
+          }
+        },
+        pageOrientation: 'landscape',
+        pageBreakBefore: (currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) => {
+          return currentNode.headlineLevel === 1 && followingNodesOnPage.length === 0 && currentNode.startPosition.top >= 750;
+        }
       };
 
-      pdfMake.createPdf(docDefinition).download(`QR_${idPaquete}.pdf`);
+      const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+      pdfDocGenerator.getBlob((blob: Blob) => {
+        const pdfBlobUrl = URL.createObjectURL(blob);
+        window.open(pdfBlobUrl, '_blank');
+      });
     }
   }
 

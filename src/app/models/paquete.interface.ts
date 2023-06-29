@@ -11,9 +11,10 @@ export interface PaqueteInterface {
     nombreDestinatario?: string | null | undefined;
     correoDestinatario?: string | null | undefined;
     telefonoDestinatario?: string | null | undefined;
-    fechaAproxEntrega?: string | null | undefined;
+    fechaAproxEntrega?: any | null | undefined;
     documentoRemitente?: string | null | undefined;
     documentoUsuario?: string | null | undefined;
     idEstado?: string | null | undefined;
     idTamano?: string | null | undefined;
+    idTipo?: string | null | undefined;
 }

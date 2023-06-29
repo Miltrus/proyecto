@@ -5,17 +5,16 @@
 </div>
 <app-navigation>
   <div class="container">
+    <br>
     <h1>Clientes</h1>
-
     <div class="create-button-container">
-
       <div class="row">
         <div class="col">
           <button mat-raised-button color="primary" (click)="newCliente()">Crear nuevo cliente</button>
         </div>
         <div class="col">
           <mat-form-field appearance="outline">
-            <mat-label>Busqueda de clientes</mat-label>
+            <mat-label>Búsqueda de clientes</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Juan" #input autocomplete="off">
             <button mat-button matSuffix disabled>
               <mat-icon color="primary">search</mat-icon> <!-- Icono de lupa -->
@@ -23,7 +22,6 @@
           </mat-form-field>
         </div>
       </div>
-
     </div>
 
     <div class="mat-elevation-z8 table-container">
@@ -96,11 +94,11 @@
     </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator><br>
     <div *ngIf="dataSource.filteredData.length === 0" class="no-results-message" style="text-align: center;">
-      <strong>NO SE HAN ENCONTRARON RESULTADOS.</strong>
+      <strong>NO SE HAN ENCONTRADO RESULTADOS.</strong>
     </div>
 
     <br>
-    <button mat-raised-button color='accent' (click)="goBack()">Volver a la lista</button>
+    <button mat-raised-button color="accent" (click)="goBack()">Volver a la lista</button>
     <br><br>
   </div>
 </app-navigation>
@@ -112,6 +110,6 @@
     <p><strong>Nombre:</strong> {{ dialogData.nombreCliente }}</p>
     <p><strong>Teléfono:</strong> {{ dialogData.telefonoCliente }}</p>
     <p><strong>Correo:</strong> {{ dialogData.correoCliente }}</p>
-    <p><strong>Direccion:</strong> {{ dialogData.direccionCliente }}</p>
+    <p><strong>Dirección:</strong> {{ dialogData.direccionCliente }}</p>
   </div>
 </ng-template>

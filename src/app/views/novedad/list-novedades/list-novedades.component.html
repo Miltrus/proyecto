@@ -3,17 +3,18 @@
     <mat-spinner></mat-spinner>
   </div>
 </div>
-<app-navigation>
 
+<app-navigation>
   <div class="container">
+    <br>
     <h1>Novedades</h1>
 
     <div class="create-button-container">
       <div class="row">
         <div class="col">
           <mat-form-field appearance="outline">
-            <mat-label>Busqueda de novedades</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Devolucion" #input autocomplete="off">
+            <mat-label>Búsqueda de novedades</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Devolución" #input autocomplete="off">
             <button mat-button matSuffix disabled>
               <mat-icon color="primary">search</mat-icon> <!-- Icono de lupa -->
             </button>
@@ -37,7 +38,7 @@
         </ng-container>
 
         <ng-container matColumnDef="descripcionNovedad">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripcion</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripción</th>
           <td mat-cell *matCellDef="let novedad" class="max-width-cell">{{ novedad.descripcionNovedad }}</td>
         </ng-container>
 
@@ -73,21 +74,25 @@
         </tr>
       </table>
     </div>
+
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-      aria-label="Select page of periodic elements"></mat-paginator><br>
+      aria-label="Select page of periodic elements"></mat-paginator>
+    <br>
     <div *ngIf="dataSource.filteredData.length === 0" class="no-results-message" style="text-align: center;">
-      <strong>NO SE HAN ENCONTRARON RESULTADOS.</strong>
+      <strong>NO SE HAN ENCONTRADO RESULTADOS.</strong>
     </div>
     <br>
+
     <button mat-raised-button color='accent' (click)="goBack()">Volver a la lista</button>
     <br><br>
   </div>
 </app-navigation>
+
 <ng-template #viewNovedadDialog let-dialogData>
   <div class="dialogData">
     <h2>Información de novedad</h2>
     <p><strong>ID:</strong> {{ dialogData.idNovedad }}</p>
-    <p><strong>Descripcion:</strong> {{ dialogData.descripcionNovedad }}</p>
+    <p><strong>Descripción:</strong> {{ dialogData.descripcionNovedad }}</p>
     <p><strong>Tipo:</strong> {{ getTipoNovedad(dialogData.idTipoNovedad) }}</p>
     <p><strong>Entrega:</strong> {{ getEntrega(dialogData.idEntrega) }}</p>
   </div>
