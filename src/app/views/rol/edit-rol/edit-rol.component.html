@@ -19,6 +19,9 @@
                             'is-invalid': editForm.get('nombreRol')?.invalid && (editForm.get('nombreRol')?.touched || editForm.get('nombreRol')?.dirty),
                             'is-valid': editForm.get('nombreRol')?.valid && (editForm.get('nombreRol')?.touched || editForm.get('nombreRol')?.dirty)
                         }" />
+                        <div *ngIf="editForm.get('nombreRol')?.errors?.['required']" class="invalid-feedback">
+                            Este campo es obligatorio.
+                          </div>
                         </div>
                     </div>
                 </div>

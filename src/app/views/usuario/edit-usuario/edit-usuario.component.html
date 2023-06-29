@@ -23,6 +23,9 @@
                                 <mat-option *ngFor="let tipoDocumento of tiposDocumento"
                                     [value]="tipoDocumento.idTipoDocumento">{{ tipoDocumento.nombreTipo }}</mat-option>
                             </mat-select>
+                            <div *ngIf="editForm.get('idTipoDocumento')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                     <div class="col">
@@ -34,8 +37,11 @@
                             }" />
 
                             <div *ngIf="editForm.get('documentoUsuario')?.errors?.['pattern']" class="invalid-feedback">
-                                Documento inválido, debe contener solo números y mínimo 6 dígitos.
+                                Campo no válido. Debe contener solo números, minimo 7 y maximo 10.
                             </div>
+                            <div *ngIf="editForm.get('documentoUsuario')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                 </div>
@@ -48,6 +54,9 @@
                                 'is-invalid': editForm.get('nombreUsuario')?.invalid && (editForm.get('nombreUsuario')?.touched || editForm.get('nombreUsuario')?.dirty),
                                 'is-valid': editForm.get('nombreUsuario')?.valid && (editForm.get('nombreUsuario')?.touched || editForm.get('nombreUsuario')?.dirty)
                             }" />
+                            <div *ngIf="editForm.get('nombreUsuario')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                     <div class="col">
@@ -57,6 +66,9 @@
                                 'is-invalid': editForm.get('apellidoUsuario')?.invalid && (editForm.get('apellidoUsuario')?.touched || editForm.get('apellidoUsuario')?.dirty),
                                 'is-valid': editForm.get('apellidoUsuario')?.valid && (editForm.get('apellidoUsuario')?.touched || editForm.get('apellidoUsuario')?.dirty)
                             }" />
+                            <div *ngIf="editForm.get('apellidoUsuario')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                 </div>
@@ -73,6 +85,9 @@
                             <div *ngIf="editForm.get('telefonoUsuario')?.errors?.['pattern']" class="invalid-feedback">
                                 Teléfono inválido, debe contener 10 dígitos numéricos.
                             </div>
+                            <div *ngIf="editForm.get('telefonoUsuario')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                     <div class="col">
@@ -86,6 +101,9 @@
                             <div *ngIf="editForm.get('correoUsuario')?.errors?.['pattern']" class="invalid-feedback">
                                 Correo inválido.
                             </div>
+                            <div *ngIf="editForm.get('correoUsuario')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                 </div>
@@ -130,8 +148,7 @@
 
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" style="margin-left: 5px;"
-                                    (click)="toggleShowPassword()"
-                                    *ngIf="pwdForm.get('contrasenaUsuario')?.value !== ''">
+                                    (click)="toggleShowPassword()">
                                     {{ showPassword ? 'Ocultar' : 'Mostrar' }}
                                 </button>
                             </div>
@@ -140,6 +157,9 @@
                                 La contraseña debe contener mínimo 8 dígitos, una mayúscula, una minúscula, mínimo 3
                                 números y al menos un caracter especial.
                             </div>
+                            <div *ngIf="pwdForm.get('contrasenaUsuario')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                              </div>
                         </div>
                     </div>
                 </form>

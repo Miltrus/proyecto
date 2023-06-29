@@ -42,12 +42,42 @@ export class EditPaqueteComponent implements OnInit {
     nombreDestinatario: new FormControl('', Validators.required),
     correoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     telefonoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
-    fechaAproxEntrega: new FormControl('', Validators.required),
+    fechaAproxEntrega: new FormControl('', [Validators.required, this.validateFechaPasada]),
     documentoRemitente: new FormControl('', Validators.required),
     idTamano: new FormControl(),
     idEstado: new FormControl('1'),
     idTipo: new FormControl('', Validators.required),
   })
+
+  getFechAct() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+  
+    return `${year}-${month}-${day}`;
+  }
+
+  validateFechaPasada(control: FormControl): { [key: string]: boolean } | null {
+    const fechaSeleccionada = control.value;
+    const fechaActual = new Date();
+    
+    // Establecer las horas, minutos, segundos y milisegundos de la fecha actual a 0
+    fechaActual.setHours(0, 0, 0, 0);
+    
+    // Crear una nueva instancia de la fecha seleccionada y establecer las horas, minutos, segundos y milisegundos a 0
+    const fechaSeleccionadaSinHora = new Date(fechaSeleccionada);
+    fechaSeleccionadaSinHora.setHours(0, 0, 0, 0);
+    
+    // Sumar un día a la fecha seleccionada
+    fechaSeleccionadaSinHora.setDate(fechaSeleccionadaSinHora.getDate() + 1);
+    
+    if (fechaSeleccionadaSinHora < fechaActual) {
+      return { fechaPasada: true };
+    }
+    
+    return null;
+  }
 
   dataPaquete: PaqueteInterface[] = [];
   usuario: UsuarioInterface[] = [];
@@ -99,7 +129,6 @@ export class EditPaqueteComponent implements OnInit {
         message: '¿Está seguro que deseas modificar este paquete?',
       }
     });
-    console.log(id)
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;

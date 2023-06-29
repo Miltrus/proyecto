@@ -34,7 +34,7 @@ export class EditClienteComponent implements OnInit {
 
   editForm = new FormGroup({
     idCliente: new FormControl(''),
-    documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,}$')]),
+    documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreCliente: new FormControl('', Validators.required),
     telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),

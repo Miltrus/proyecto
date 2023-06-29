@@ -28,8 +28,11 @@ export class NewPaqueteComponent implements OnInit {
     private api: PaqueteService,
     private alerts: AlertsService,
     private dialog: MatDialog,
-    private paqueteService: PaqueteService
+    private paqueteService: PaqueteService,
   ) { }
+
+  
+  
 
   newForm = new FormGroup({
     codigoQrPaquete: new FormControl('', Validators.required),
@@ -40,12 +43,21 @@ export class NewPaqueteComponent implements OnInit {
     nombreDestinatario: new FormControl('', Validators.required),
     correoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     telefonoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
-    fechaAproxEntrega: new FormControl('', [Validators.required, this.validateFechaPasada.bind(this)]),
+    fechaAproxEntrega: new FormControl('', [Validators.required, this.validateFechaPasada]),
     documentoRemitente: new FormControl('', Validators.required),
     idTamano: new FormControl(),
     idEstado: new FormControl('1'),
     idTipo: new FormControl('', Validators.required),
   });
+
+  getFechAct() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+  
+    return `${year}-${month}-${day}`;
+  }
 
   usuario: UsuarioInterface[] = [];
   remitente: any[] = [];
@@ -91,11 +103,10 @@ export class NewPaqueteComponent implements OnInit {
   }
 
 
-  // Función de validación personalizada
   validateFechaPasada(control: FormControl): { [key: string]: boolean } | null {
     const fechaSeleccionada = control.value;
     const fechaActual = new Date();
-  
+    
     // Establecer las horas, minutos, segundos y milisegundos de la fecha actual a 0
     fechaActual.setHours(0, 0, 0, 0);
     
@@ -103,13 +114,16 @@ export class NewPaqueteComponent implements OnInit {
     const fechaSeleccionadaSinHora = new Date(fechaSeleccionada);
     fechaSeleccionadaSinHora.setHours(0, 0, 0, 0);
     
+    // Sumar un día a la fecha seleccionada
+    fechaSeleccionadaSinHora.setDate(fechaSeleccionadaSinHora.getDate() + 1);
+    
     if (fechaSeleccionadaSinHora < fechaActual) {
-      console.log(fechaSeleccionada, '|', fechaActual);
       return { fechaPasada: true };
     }
-  
+    
     return null;
   }
+  
 
 
   postForm(form: PaqueteInterface) {
@@ -118,7 +132,6 @@ export class NewPaqueteComponent implements OnInit {
         message: '¿Estás seguro que deseas registrar este paquete?'
       }
     });
-    console.log("FORMULARIO: ",form);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
@@ -181,7 +194,6 @@ export class NewPaqueteComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     const value = inputElement.value;
     this.selectedDestinatario = this.destinatario.find(dest => dest.nombreCliente === value);
-    console.log(value);
   }
 
   onRemitenteSelectionChange(event: any) {

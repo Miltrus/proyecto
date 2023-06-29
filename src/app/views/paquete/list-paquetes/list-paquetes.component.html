@@ -39,9 +39,9 @@
             {{ paquete.documentoUsuario ? paquete.documentoUsuario : 'SIN ASIGNAR' }}
           </td>
         </ng-container>
-        <ng-container matColumnDef="idTamano">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Tamaño</th>
-          <td mat-cell *matCellDef="let paquete" class="max-width-cell">{{ getTamanoPaquete (paquete.idTamano) }}</td>
+        <ng-container matColumnDef="idTipo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+          <td mat-cell *matCellDef="let paquete" class="max-width-cell">{{ getTipoPaquete (paquete.idTipo) }}</td>
         </ng-container>
         <ng-container matColumnDef="pesoPaquete">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Peso</th>
@@ -98,10 +98,10 @@
         </ng-container>
 
         <tr mat-header-row
-          *matHeaderRowDef="['num', 'documentoUsuario', 'idTamano', 'pesoPaquete', 'documentoRemitente', 'documentoDestinatario','codigoQrPaquete', 'idEstado' , 'acciones']">
+          *matHeaderRowDef="['num', 'documentoUsuario', 'idTipo', 'pesoPaquete', 'documentoRemitente', 'documentoDestinatario','codigoQrPaquete', 'idEstado' , 'acciones']">
         </tr>
         <tr mat-row
-          *matRowDef="let row; columns: ['num', 'documentoUsuario', 'idTamano', 'pesoPaquete', 'documentoRemitente', 'documentoDestinatario', 'codigoQrPaquete', 'idEstado', 'acciones']">
+          *matRowDef="let row; columns: ['num', 'documentoUsuario', 'idTipo', 'pesoPaquete', 'documentoRemitente', 'documentoDestinatario', 'codigoQrPaquete', 'idEstado', 'acciones']">
         </tr>
       </table>
     </div>

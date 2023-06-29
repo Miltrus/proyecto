@@ -28,7 +28,7 @@ export class NewUsuarioComponent implements OnInit {
 
   newForm = new FormGroup({
     idCliente: new FormControl(''),
-    documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,}$')]),
+    documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreUsuario: new FormControl('', Validators.required),
     apellidoUsuario: new FormControl('', Validators.required),

@@ -18,6 +18,9 @@
               'is-invalid': newForm.get('nombreRol')?.invalid && (newForm.get('nombreRol')?.touched || newForm.get('nombreRol')?.dirty),
               'is-valid': newForm.get('nombreRol')?.valid && (newForm.get('nombreRol')?.touched || newForm.get('nombreRol')?.dirty)
           }">
+          <div *ngIf="newForm.get('nombreRol')?.errors?.['required']" class="invalid-feedback">
+            Este campo es obligatorio.
+          </div>
             </div>
           </div>
         </div>
