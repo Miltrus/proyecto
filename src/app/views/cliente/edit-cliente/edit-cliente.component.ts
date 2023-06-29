@@ -34,7 +34,7 @@ export class EditClienteComponent implements OnInit {
 
   editForm = new FormGroup({
     idCliente: new FormControl(''),
-    documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
+    documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,}$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreCliente: new FormControl('', Validators.required),
     telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
@@ -43,15 +43,15 @@ export class EditClienteComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    let documentoCliente = this.activatedRouter.snapshot.paramMap.get('id');
+    let idCliente = this.activatedRouter.snapshot.paramMap.get('id');
     this.loading = true;
 
-    forkJoin([this.api.getOneCliente(documentoCliente), this.api.getTipoDocumento()]).subscribe(
+    forkJoin([this.api.getOneCliente(idCliente), this.api.getTipoDocumento()]).subscribe(
       ([dataCliente, tiposDocumento]) => {
         this.dataCliente = dataCliente ? [dataCliente] : [];
         this.editForm.setValue({
           'idCliente': this.dataCliente[0]?.idCliente || '',
-          'documentoCliente': this.dataCliente[0]?.documentoCliente || 'documentoCliente',
+          'documentoCliente': this.dataCliente[0]?.documentoCliente || '',
           'idTipoDocumento': this.dataCliente[0]?.idTipoDocumento || '',
           'nombreCliente': this.dataCliente[0]?.nombreCliente || '',
           'telefonoCliente': this.dataCliente[0]?.telefonoCliente || '',

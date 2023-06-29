@@ -65,7 +65,7 @@ export class NewPaqueteComponent implements OnInit {
       this.loading = false;
 
       if (data.length == 0) {
-        this.alerts.showInfo('No hay ningun cliente registrado', 'No hay clientes');
+        this.alerts.showWarning('No hay ningun cliente registrado', 'No hay clientes');
         return;
       }
     });
@@ -165,14 +165,11 @@ export class NewPaqueteComponent implements OnInit {
 
   openAddClienteDialog(): void {
     const dialogRef = this.dialog.open(AddClienteComponent, {
-      width: '75%',
-      height: '75%'
+      width: '70%',
+      height: '70%'
     });
-
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.destinatario = result;
-      }
+      this.loading = true;
     });
   }
 
