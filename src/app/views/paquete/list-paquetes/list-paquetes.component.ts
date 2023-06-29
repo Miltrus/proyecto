@@ -20,6 +20,7 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browse
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ContentImage, TDocumentDefinitions } from 'pdfmake/interfaces';
+import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 
 // Configurar las fuentes
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
@@ -47,6 +48,7 @@ export class ListPaquetesComponent implements OnInit {
   destinatario: ClienteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
   tamano: TamanoPaqueteInterface[] = [];
+  tipos: TipoPaqueteInterface[] = [];
   dataSource = new MatTableDataSource(this.paquetes); //pal filtro
   loading: boolean = true;
 
@@ -89,6 +91,11 @@ export class ListPaquetesComponent implements OnInit {
 
     this.api.getTamanoPaquete().subscribe(data => {
       this.tamano = data;
+      this.loading = false;
+    });
+
+    this.api.getTipoPaquete().subscribe(data => {
+      this.tipos = data;
       this.loading = false;
     });
   }
@@ -184,6 +191,11 @@ export class ListPaquetesComponent implements OnInit {
   getTamanoPaquete(idTamano: any): string {
     const tamanoPaquete = this.tamano.find(tam => tam.idTamano === idTamano);
     return tamanoPaquete?.tamanoPaquete || '';
+  }
+  
+  getTipoPaquete(idTipo: any): string {
+    const tipoPaquete = this.tipos.find(tip => tip.idTipo === idTipo);
+    return tipoPaquete?.tipoPaquete || '';
   }
 
   generatePDF(idPaquete: string): void {

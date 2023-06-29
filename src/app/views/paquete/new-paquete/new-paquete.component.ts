@@ -13,6 +13,7 @@ import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface'
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddClienteComponent } from '../add-cliente/add-cliente.component';
+import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 
 
 @Component({
@@ -32,7 +33,7 @@ export class NewPaqueteComponent implements OnInit {
 
   newForm = new FormGroup({
     codigoQrPaquete: new FormControl('', Validators.required),
-    pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{0,3}?$')]),
+    pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^\\d{0,3}(\\.\\d{0,2})?$')]),
     unidadesPaquete: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{0,3}$')]),
     contenidoPaquete: new FormControl('', Validators.required),
     documentoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
@@ -41,8 +42,9 @@ export class NewPaqueteComponent implements OnInit {
     telefonoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     fechaAproxEntrega: new FormControl('', [Validators.required, this.validateFechaPasada.bind(this)]),
     documentoRemitente: new FormControl('', Validators.required),
-    idTamano: new FormControl('', Validators.required),
+    idTamano: new FormControl(),
     idEstado: new FormControl('1'),
+    idTipo: new FormControl('', Validators.required),
   });
 
   usuario: UsuarioInterface[] = [];
@@ -50,6 +52,7 @@ export class NewPaqueteComponent implements OnInit {
   destinatario: any[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
+  tipos: TipoPaqueteInterface[] = [];
   loading: boolean = true;
   hideCodigoQrPaquete: boolean = true;
   respuesta: ResponseInterface | ClienteInterface[] | any = [];
@@ -72,6 +75,7 @@ export class NewPaqueteComponent implements OnInit {
     this.getUsuarioPaquete();
     this.getEstadoPaquete();
     this.getTamanoPaquete();
+    this.getTipoPaquete();
 
     this.newForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
       this.paqueteService.getDireccionDestinatario(value).subscribe(data => {
@@ -114,13 +118,13 @@ export class NewPaqueteComponent implements OnInit {
         message: '¿Estás seguro que deseas registrar este paquete?'
       }
     });
+    console.log("FORMULARIO: ",form);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
         this.api.postPaquete(form).subscribe(data => {
 
           let respuesta: ResponseInterface = data;
-          //console.log(form);
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El paquete ha sido creado exitosamente', 'Paquete registrado');
             this.router.navigate(['paquete/list-paquetes']);
@@ -158,6 +162,14 @@ export class NewPaqueteComponent implements OnInit {
       this.loading = false;
     });
   }
+
+  getTipoPaquete(): void {
+    this.api.getTipoPaquete().subscribe(data => {
+      this.tipos = data;
+      this.loading = false;
+    });
+  }
+
   getDestinatarioPaquete(): void {
     this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.destinatario = data;

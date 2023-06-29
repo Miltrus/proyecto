@@ -8,6 +8,7 @@ import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface'
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; // 
+import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +62,11 @@ export class PaqueteService {
   getTamanoPaquete(): Observable<TamanoPaqueteInterface[]> {
     const address = this.url + 'tamanoPaquete';
     return this.http.get<TamanoPaqueteInterface[]>(address);
+  }
+
+  getTipoPaquete(): Observable<TipoPaqueteInterface[]> {
+    const address = this.url + 'tipoPaquete';
+    return this.http.get<TipoPaqueteInterface[]>(address);
   }
 
   getDireccionDestinatario(idCliente: any): Observable<any> {

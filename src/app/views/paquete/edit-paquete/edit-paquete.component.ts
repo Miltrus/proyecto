@@ -14,6 +14,7 @@ import { ResponseInterface } from '../../../models/response.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { AddClienteComponent } from '../add-cliente/add-cliente.component';
+import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 
 
 @Component({
@@ -34,7 +35,7 @@ export class EditPaqueteComponent implements OnInit {
   editForm = new FormGroup({
     idPaquete: new FormControl(''),
     codigoQrPaquete: new FormControl('', Validators.required),
-    pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]),
+    pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^\\d{0,3}(\\.\\d{0,2})?$')]),
     unidadesPaquete: new FormControl('',[ Validators.required, Validators.pattern('^[0-9]+$')]),
     contenidoPaquete: new FormControl('', Validators.required),
     documentoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
@@ -43,8 +44,9 @@ export class EditPaqueteComponent implements OnInit {
     telefonoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     fechaAproxEntrega: new FormControl('', Validators.required),
     documentoRemitente: new FormControl('', Validators.required),
-    idTamano: new FormControl('', Validators.required),
+    idTamano: new FormControl(),
     idEstado: new FormControl('1'),
+    idTipo: new FormControl('', Validators.required),
   })
 
   dataPaquete: PaqueteInterface[] = [];
@@ -53,6 +55,7 @@ export class EditPaqueteComponent implements OnInit {
   destinatario: ClienteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
+  tipos: TipoPaqueteInterface[] = [];
   loading: boolean = true;
   hideCodigoQrPaquete: boolean = true;
 
@@ -70,14 +73,15 @@ export class EditPaqueteComponent implements OnInit {
         'pesoPaquete': this.dataPaquete[0]?.pesoPaquete || '',
         'unidadesPaquete': this.dataPaquete[0]?.unidadesPaquete || '',
         'contenidoPaquete': this.dataPaquete[0]?.contenidoPaquete || '',
-        'documentoDestinatario': this.dataPaquete[0]?.documentoDestinatario || 'documentoDestinatario',
+        'documentoDestinatario': this.dataPaquete[0]?.documentoDestinatario || '',
         'nombreDestinatario': this.dataPaquete[0]?.nombreDestinatario || '',
         'correoDestinatario': this.dataPaquete[0]?.correoDestinatario || '',
         'telefonoDestinatario': this.dataPaquete[0]?.telefonoDestinatario || '',
         'fechaAproxEntrega': this.dataPaquete[0]?.fechaAproxEntrega || '',
         'documentoRemitente': this.dataPaquete[0]?.documentoRemitente || '',
-        'idTamano': this.dataPaquete[0]?.idTamano || 'idTamano',
+        'idTamano': this.dataPaquete[0]?.idTamano ,
         'idEstado': this.dataPaquete[0]?.idEstado || 'idEstado',
+        'idTipo': this.dataPaquete[0]?.idTipo || 'idTipo'
       });
 
       this.loading = false;
@@ -86,6 +90,7 @@ export class EditPaqueteComponent implements OnInit {
     this.getRemitenteAndDestinatarioPaquete();
     this.getEstadoPaquete();
     this.getTamanoPaquete(); //:v
+    this.getTipoPaquete();
   }
 
   postForm(id: any) {
@@ -94,6 +99,7 @@ export class EditPaqueteComponent implements OnInit {
         message: '¿Está seguro que deseas modificar este paquete?',
       }
     });
+    console.log(id)
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
@@ -153,6 +159,13 @@ export class EditPaqueteComponent implements OnInit {
   getTamanoPaquete(): void {
     this.api.getTamanoPaquete().subscribe(data => {
       this.tamanos = data;
+      this.loading = false;
+    });
+  }
+
+  getTipoPaquete(): void {
+    this.api.getTipoPaquete().subscribe(data => {
+      this.tipos = data;
       this.loading = false;
     });
   }

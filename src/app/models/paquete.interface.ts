@@ -16,4 +16,5 @@ export interface PaqueteInterface {
     documentoUsuario?: string | null | undefined;
     idEstado?: string | null | undefined;
     idTamano?: string | null | undefined;
+    idTipo?: string | null | undefined;
 }
