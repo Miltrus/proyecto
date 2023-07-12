@@ -80,7 +80,7 @@
                 'is-valid': editForm.get('documentoDestinatario')?.valid && editForm.get('documentoDestinatario')?.dirty
               }" />
               <div *ngIf="editForm.get('documentoDestinatario')?.errors?.['pattern']" class="invalid-feedback">
-                Campo inválido. Debe contener solo números, minimo 7 y maximo 10.
+                Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
               </div>
               <div *ngIf="editForm.get('documentoDestinatario')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -112,7 +112,7 @@
                 'is-valid': editForm.get('telefonoDestinatario')?.valid && editForm.get('telefonoDestinatario')?.dirty
               }" />
               <div *ngIf="editForm.get('telefonoDestinatario')?.errors?.['pattern']" class="invalid-feedback">
-                Campo inválido. Debe contener 10 números.
+                Teléfono inválido, debe contener 10 dígitos numéricos.
               </div>
               <div *ngIf="editForm.get('telefonoDestinatario')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -124,7 +124,7 @@
           <div class="col">
             <div class="form-group">
               <label for="">Direccion<b style="color: red;">*</b></label>
-              <input type="text" class="form-control" formControlName="codigoQrPaquete" [ngClass]="{
+              <input type="text" class="form-control" formControlName="codigoQrPaquete" #inputPlaces [ngClass]="{
                 'is-invalid': editForm.get('codigoQrPaquete')?.invalid && (editForm.get('codigoQrPaquete')?.touched || editForm.get('codigoQrPaquete')?.dirty),
                 'is-valid': editForm.get('codigoQrPaquete')?.valid && editForm.get('codigoQrPaquete')?.dirty
               }" />
@@ -220,7 +220,8 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Fecha aproximada de entrega<b style="color: red;">*</b></label>
-              <input type="date" class="form-control" [min]="getFechAct()" formControlName="fechaAproxEntrega" [ngClass]="{
+              <input type="date" class="form-control" [min]="getFechAct()" formControlName="fechaAproxEntrega"
+                [ngClass]="{
               'is-invalid': editForm.get('fechaAproxEntrega')?.invalid && (editForm.get('fechaAproxEntrega')?.touched || editForm.get('fechaAproxEntrega')?.dirty),
               'is-valid': editForm.get('fechaAproxEntrega')?.valid && editForm.get('fechaAproxEntrega')?.dirty
             }">

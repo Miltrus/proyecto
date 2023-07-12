@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { LoginService } from '../../services/api/login/login.service';
+import { LoginService } from '../../services/api/login.service';
 import { LoginInterface } from '../../models/login.interface';
 import { ResolveData, Router } from '@angular/router';
 import { AlertsService } from '../../services/alerts/alerts.service';
@@ -14,7 +14,7 @@ import { UsuarioInterface } from 'src/app/models/usuario.interface';
 export class LoginComponent implements OnInit {
 
   loginForm = new FormGroup({
-    correoUsuario: new FormControl('', Validators.required),
+    correoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     contrasenaUsuario: new FormControl('', Validators.required)
   })
 

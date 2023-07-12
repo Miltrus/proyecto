@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { NovedadService } from '../../../services/api/novedad/novedad.service';
+import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
+import { NovedadService } from '../../../services/api/novedad.service';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from 'src/app/models/response.interface';
@@ -11,6 +11,7 @@ import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/d
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Subscription, forkJoin } from 'rxjs';
 
 
 @Component({
@@ -18,7 +19,7 @@ import { MatSort } from '@angular/material/sort';
   templateUrl: './list-novedades.component.html',
   styleUrls: ['./list-novedades.component.scss']
 })
-export class ListNovedadesComponent implements OnInit {
+export class ListNovedadesComponent implements OnInit, OnDestroy {
 
   constructor(
     private api: NovedadService,
@@ -26,6 +27,8 @@ export class ListNovedadesComponent implements OnInit {
     private alerts: AlertsService,
     private dialog: MatDialog,
   ) { }
+
+  private subscriptions: Subscription = new Subscription();
 
   novedades: NovedadInterface[] = [];
   tiposNovedad: TipoNovedadInterface[] = [];
@@ -38,36 +41,33 @@ export class ListNovedadesComponent implements OnInit {
   @ViewChild('viewNovedadDialog') viewNovedadDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
   ngOnInit(): void {
-    this.api.getAllNovedades().subscribe(data => {
-      this.novedades = data;
-      this.dataSource.data = this.novedades; //actualizamos el datasource ya que inicialmente contiene el arreglo vacio de clientes
+    this.loading = true;
+
+    const forkJoinSub = forkJoin([
+      this.api.getAllNovedades(),
+      this.api.getTipoNovedad(),
+      this.api.getEntrega()
+    ]).subscribe(([novedades, tiposNovedad, entrega]) => {
+      this.novedades = novedades;
+      this.dataSource.data = this.novedades;
       if (this.dataSource.data.length < 1) {
-        this.alerts.showInfo('No hay novedades registradas', 'Sin registros');
+        this.alerts.showInfo('No hay novedades registradas.', 'Sin registros');
       }
+      this.tiposNovedad = tiposNovedad;
+      this.entrega = entrega;
       this.loading = false;
     });
-
-    this.api.getTipoNovedad().subscribe(data => {
-      this.tiposNovedad = data;
-      this.loading = false;
-    });
-
-    this.api.getEntrega().subscribe(data => {
-      this.entrega = data;
-      this.loading = false;
-    });
+    this.subscriptions.add(forkJoinSub);
   }
 
-  ngAfterViewInit() { //para la paginacion
+  ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  viewNovedad(novedad: NovedadInterface): void {
-    this.dialog.open(this.viewNovedadDialog, {
-      data: novedad,
-      width: '400px', // Ajusta el ancho del cuadro emergente según tus necesidades
-    });
+  ngOnDestroy(): void {
+    // Desuscribirse de todas las suscripciones
+    this.subscriptions.unsubscribe();
   }
 
   getTipoNovedad(idTipoNovedad: any): string {
@@ -78,6 +78,13 @@ export class ListNovedadesComponent implements OnInit {
   getEntrega(idEntrega: any): string {
     const entrega = this.entrega.find(estado => estado.idEntrega === idEntrega);
     return entrega?.idEntrega || '';
+  }
+
+  viewNovedad(novedad: NovedadInterface): void {
+    this.dialog.open(this.viewNovedadDialog, {
+      data: novedad,
+      width: '400px',
+    });
   }
 
   goBack() {

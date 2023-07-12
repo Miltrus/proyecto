@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ListPaquetesComponent } from './list-paquetes/list-paquetes.component';
 import { NewPaqueteComponent } from './new-paquete/new-paquete.component';
 import { EditPaqueteComponent } from './edit-paquete/edit-paquete.component';
+import { unsavedChangesGuard } from 'src/app/auth/guards/unsaved-changes.guard';
 
 const routes: Routes = [
 
@@ -10,9 +11,9 @@ const routes: Routes = [
 
   { path: 'list-paquetes', component: ListPaquetesComponent },
 
-  { path: 'new-paquete', component: NewPaqueteComponent },
+  { path: 'new-paquete', canDeactivate: [unsavedChangesGuard], component: NewPaqueteComponent },
 
-  { path: 'edit-paquete/:id', component: EditPaqueteComponent },
+  { path: 'edit-paquete/:id', canDeactivate: [unsavedChangesGuard], component: EditPaqueteComponent },
 
 ];
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { PaqueteService } from '../../../services/api/paquete/paquete.service';
+import { PaqueteService } from '../../../services/api/paquete.service';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from 'src/app/models/response.interface';

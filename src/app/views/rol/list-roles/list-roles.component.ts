@@ -1,5 +1,5 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { RolService } from '../../../services/api/rol/rol.service';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { RolService } from '../../../services/api/rol.service';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from 'src/app/models/response.interface';
@@ -11,13 +11,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-list-roles',
   templateUrl: './list-roles.component.html',
   styleUrls: ['./list-roles.component.scss']
 })
-export class ListRolesComponent implements OnInit {
+export class ListRolesComponent implements OnInit, OnDestroy {
 
   constructor(
     private api: RolService,
@@ -25,6 +26,8 @@ export class ListRolesComponent implements OnInit {
     private alerts: AlertsService,
     private dialog: MatDialog,
   ) { }
+
+  private subscriptions: Subscription = new Subscription();
 
   roles: RolInterface[] = [];
   dataSource: MatTableDataSource<RolInterface> = new MatTableDataSource();
@@ -44,8 +47,14 @@ export class ListRolesComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
+  ngOnDestroy(): void {
+    // Desuscribirse de todas las suscripciones
+    this.subscriptions.unsubscribe();
+  }
+
+
   loadPermisosPorRol(idRol: string): void {
-    this.api.getRolPermisos(idRol).subscribe(data => {
+    const rolPermiSub = this.api.getRolPermisos(idRol).subscribe(data => {
       const permisos: PermisoInterface[] = data.idPermiso
         ? data.idPermiso.filter((rolPermiso: RolPermisoInterface | null | undefined) => rolPermiso !== null && rolPermiso !== undefined)
           .map((rolPermiso: RolPermisoInterface) => rolPermiso.permiso!)
@@ -64,10 +73,11 @@ export class ListRolesComponent implements OnInit {
         }
       }
     });
+    this.subscriptions.add(rolPermiSub);
   }
 
   loadRoles(): void {
-    this.api.getAllRoles().subscribe(data => {
+    const allRolesSub = this.api.getAllRoles().subscribe(data => {
       this.roles = data;
       this.dataSource.data = this.roles;
 
@@ -81,6 +91,7 @@ export class ListRolesComponent implements OnInit {
         this.loading = false;
       }
     });
+    this.subscriptions.add(allRolesSub);
   }
 
   viewRol(rol: RolInterface): void {
@@ -107,10 +118,10 @@ export class ListRolesComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    const dialogRefSub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
-        this.api.deleteRol(id).subscribe(data => {
+        const deleteRolSub = this.api.deleteRol(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
 
           if (respuesta.status == 'ok') {
@@ -122,11 +133,13 @@ export class ListRolesComponent implements OnInit {
           }
           this.loading = false;
         });
+        this.subscriptions.add(deleteRolSub);
       } else {
         this.alerts.showInfo('El rol no ha sido eliminado', 'Eliminación cancelada');
         this.loading = false;
       }
     });
+    this.subscriptions.add(dialogRefSub);
   }
 
   goBack(): void {

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ResponseInterface } from '../../../models/response.interface';
-import { UsuarioInterface } from '../../../models/usuario.interface';
-import { TipoDocumentoInterface } from '../../../models/tipo-documento.interface';
-import { EstadoUsuarioInterface } from '../../../models/estado-usuario.interface';
+import { ResponseInterface } from '../../models/response.interface';
+import { UsuarioInterface } from '../../models/usuario.interface';
+import { TipoDocumentoInterface } from '../../models/tipo-documento.interface';
+import { EstadoUsuarioInterface } from '../../models/estado-usuario.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs'; // 
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 
 @Injectable({

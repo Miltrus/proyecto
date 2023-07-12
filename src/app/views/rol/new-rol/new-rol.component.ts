@@ -1,21 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
-import { RolService } from '../../../services/api/rol/rol.service';
+import { RolService } from '../../../services/api/rol.service';
 import { RolInterface } from '../../../models/rol.interface';
 import { ResponseInterface } from '../../../models/response.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
+import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 
 @Component({
   selector: 'app-new-rol',
   templateUrl: './new-rol.component.html',
   styleUrls: ['./new-rol.component.scss']
 })
-export class NewRolComponent implements OnInit {
+export class NewRolComponent implements OnInit, HasUnsavedChanges {
+
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(e: BeforeUnloadEvent) {
+    return this.hasUnsavedChanges() === false;
+  }
 
   constructor(
     private router: Router,
@@ -23,6 +29,13 @@ export class NewRolComponent implements OnInit {
     private alerts: AlertsService,
     private dialog: MatDialog,
   ) { }
+
+  savedChanges: boolean = false;
+
+  hasUnsavedChanges(): boolean {
+    this.loading = false;
+    return this.newForm.dirty && !this.savedChanges;
+  }
 
   newForm = new FormGroup({
     nombreRol: new FormControl('', Validators.required),
@@ -76,6 +89,7 @@ export class NewRolComponent implements OnInit {
         }
         this.loading = true;
         this.api.postRol(form).subscribe(data => {
+          this.savedChanges = true;
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El rol ha sido creado exitosamente', 'Rol creado');

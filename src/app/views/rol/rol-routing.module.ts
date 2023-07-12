@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ListRolesComponent } from './list-roles/list-roles.component';
 import { NewRolComponent } from './new-rol/new-rol.component';
 import { EditRolComponent } from './edit-rol/edit-rol.component';
+import { unsavedChangesGuard } from 'src/app/auth/guards/unsaved-changes.guard';
 
 const routes: Routes = [
 
@@ -11,9 +12,9 @@ const routes: Routes = [
 
   { path: 'list-roles', component: ListRolesComponent, },
 
-  { path: 'new-rol', component: NewRolComponent },
+  { path: 'new-rol', canDeactivate: [unsavedChangesGuard], component: NewRolComponent },
 
-  { path: 'edit-rol/:id', component: EditRolComponent },
+  { path: 'edit-rol/:id', canDeactivate: [unsavedChangesGuard], component: EditRolComponent },
 
 ];
 

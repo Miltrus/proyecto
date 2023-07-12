@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { UsuarioService } from '../../../services/api/usuario/usuario.service';
+import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
+import { UsuarioService } from '../../../services/api/usuario.service';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from 'src/app/models/response.interface';
@@ -12,7 +12,7 @@ import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/d
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { forkJoin } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 
 
 @Component({
@@ -20,7 +20,7 @@ import { forkJoin } from 'rxjs';
   templateUrl: './list-usuarios.component.html',
   styleUrls: ['./list-usuarios.component.scss']
 })
-export class ListUsuariosComponent implements OnInit {
+export class ListUsuariosComponent implements OnInit, OnDestroy {
 
   constructor(
     private api: UsuarioService,
@@ -28,6 +28,8 @@ export class ListUsuariosComponent implements OnInit {
     private alerts: AlertsService,
     private dialog: MatDialog,
   ) { }
+
+  private subscriptions: Subscription = new Subscription();
 
   usuarios: UsuarioInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
@@ -50,7 +52,7 @@ export class ListUsuariosComponent implements OnInit {
     const getEstadoUsuario$ = this.api.getEstadoUsuario();
     const getRolUsuario$ = this.api.getRolUsuario();
 
-    forkJoin([getAllUsuarios$, getTipoDocumento$, getEstadoUsuario$, getRolUsuario$]).subscribe(
+    const forkJoinSub = forkJoin([getAllUsuarios$, getTipoDocumento$, getEstadoUsuario$, getRolUsuario$]).subscribe(
       ([usuarios, tiposDocumento, estadosUsuario, rolUsuario]) => {
         this.usuarios = usuarios;
         this.tiposDocumento = tiposDocumento;
@@ -64,11 +66,17 @@ export class ListUsuariosComponent implements OnInit {
         this.loading = false;
       }
     );
+    this.subscriptions.add(forkJoinSub);
   }
 
   ngAfterViewInit() { //para la paginacion
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    // Desuscribirse de todas las suscripciones
+    this.subscriptions.unsubscribe();
   }
 
   viewUsuario(usuario: UsuarioInterface): void {
@@ -96,7 +104,7 @@ export class ListUsuariosComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    const dialogRefDelSub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
         if (id == this.uid) {
@@ -105,7 +113,7 @@ export class ListUsuariosComponent implements OnInit {
           return;
         }
 
-        this.api.deleteUsuario(id).subscribe(data => {
+        const delUserSUb = this.api.deleteUsuario(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
 
           if (respuesta.status == 'ok') {
@@ -117,12 +125,13 @@ export class ListUsuariosComponent implements OnInit {
           }
           this.loading = false;
         });
+        this.subscriptions.add(delUserSUb);
       } else {
         this.alerts.showInfo('El usuario no ha sido eliminado', 'Eliminacion cancelada');
       }
     });
+    this.subscriptions.add(dialogRefDelSub);
   }
-
 
 
   toggleEstado(usuario: UsuarioInterface): void {
@@ -136,7 +145,7 @@ export class ListUsuariosComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    const dialogRefToggSub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
         if (usuario.idUsuario == this.uid) {
@@ -144,7 +153,7 @@ export class ListUsuariosComponent implements OnInit {
           this.loading = false;
           return;
         }
-        this.api.putUsuario(updatedUsuario).subscribe(data => {
+        const putUserSub = this.api.putUsuario(updatedUsuario).subscribe(data => {
           let respuesta: ResponseInterface = data;
 
           if (respuesta.status === 'ok') {
@@ -156,10 +165,12 @@ export class ListUsuariosComponent implements OnInit {
           }
           this.loading = false;
         });
+        this.subscriptions.add(putUserSub);
       } else {
         this.alerts.showInfo('No se ha realizado ningún cambio', 'Actualización cancelada');
       }
     });
+    this.subscriptions.add(dialogRefToggSub);
   }
 
 

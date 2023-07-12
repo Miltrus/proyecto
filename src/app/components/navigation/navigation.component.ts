@@ -7,8 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent, ConfirmDialogData } from '../dialog-confirm/dialog-confirm.component';
 import { DOCUMENT } from '@angular/common';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { RolService } from '../../services/api/rol/rol.service';
-import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
+import { RolService } from '../../services/api/rol.service';
+import { UsuarioService } from 'src/app/services/api/usuario.service';
 
 @Component({
   selector: 'app-navigation',

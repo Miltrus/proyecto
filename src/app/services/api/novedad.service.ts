@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ResponseInterface } from '../../../models/response.interface';
-import { NovedadInterface } from '../../../models/novedad.interface';
-import { TipoNovedadInterface } from '../../../models/tipo-novedad.interface';
-import { EntregaInterface } from '../../../models/entrega.interface';
+import { ResponseInterface } from '../../models/response.interface';
+import { NovedadInterface } from '../../models/novedad.interface';
+import { TipoNovedadInterface } from '../../models/tipo-novedad.interface';
+import { EntregaInterface } from '../../models/entrega.interface';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; // 

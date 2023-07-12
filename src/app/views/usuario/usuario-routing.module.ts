@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ListUsuariosComponent } from './list-usuarios/list-usuarios.component';
 import { NewUsuarioComponent } from './new-usuario/new-usuario.component';
 import { EditUsuarioComponent } from './edit-usuario/edit-usuario.component';
+import { unsavedChangesGuard } from 'src/app/auth/guards/unsaved-changes.guard';
 
 
 const routes: Routes = [
@@ -11,9 +12,9 @@ const routes: Routes = [
 
   { path: 'list-usuarios', component: ListUsuariosComponent },
 
-  { path: 'new-usuario', component: NewUsuarioComponent },
+  { path: 'new-usuario', canDeactivate: [unsavedChangesGuard], component: NewUsuarioComponent },
 
-  { path: 'edit-usuario/:id', component: EditUsuarioComponent },
+  { path: 'edit-usuario/:id', canDeactivate: [unsavedChangesGuard], component: EditUsuarioComponent },
 ];
 
 

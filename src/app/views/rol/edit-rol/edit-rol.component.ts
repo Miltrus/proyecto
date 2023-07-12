@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RolInterface } from '../../../models/rol.interface';
-import { RolService } from '../../../services/api/rol/rol.service';
+import { RolService } from '../../../services/api/rol.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
@@ -9,13 +9,19 @@ import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
+import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 
 @Component({
   selector: 'app-edit-rol',
   templateUrl: './edit-rol.component.html',
   styleUrls: ['./edit-rol.component.scss']
 })
-export class EditRolComponent implements OnInit {
+export class EditRolComponent implements OnInit, HasUnsavedChanges {
+
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(e: BeforeUnloadEvent) {
+    return this.hasUnsavedChanges() === false;
+  }
 
   constructor(
     private router: Router,
@@ -25,6 +31,13 @@ export class EditRolComponent implements OnInit {
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
   ) { }
+
+  savedChanges: boolean = false;
+
+  hasUnsavedChanges(): boolean {
+    this.loading = false;
+    return this.editForm.dirty && !this.savedChanges;
+  }
 
   dataRol: RolInterface[] = [];
   permisos: PermisoInterface[] = []; // pa almacenar los permisos asociados al rol
@@ -119,6 +132,7 @@ export class EditRolComponent implements OnInit {
               .map((control, index) => control.value ? this.permisos[index].idPermiso : null)
               .filter(permiso => permiso !== null);
             this.api.putRolPermiso(id.idRol, nuevosPermisos).subscribe(data => {
+              this.savedChanges = true;
               let respuesta: ResponseInterface = data;
               if (respuesta.status == 'ok') {
                 this.alerts.showSuccess('El rol ha sido modificado', 'Modificación exitosa');

@@ -1,19 +1,25 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UsuarioInterface } from '../../../models/usuario.interface';
-import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
+import { UsuarioService } from 'src/app/services/api/usuario.service';
 import { RolInterface } from 'src/app/models/rol.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { AlertsService } from 'src/app/services/alerts/alerts.service';
+import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss']
 })
-export class EditProfileComponent implements OnInit {
+export class EditProfileComponent implements OnInit, HasUnsavedChanges {
+
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(e: BeforeUnloadEvent) {
+    return this.hasUnsavedChanges() === false;
+  }
 
   editForm!: FormGroup; // el signo de exclamación "!" para indicar que será inicializada posteriormente
   pwdForm!: FormGroup;
@@ -24,15 +30,6 @@ export class EditProfileComponent implements OnInit {
   showPasswordChange: boolean = false;
   showPassword: boolean = false;
 
-  toggleShowPassword(): void {
-    this.showPassword = !this.showPassword;
-  }
-
-  togglePasswordChange() {
-    this.showPasswordChange = !this.showPasswordChange;
-  }
-
-
   constructor(
     private dialogRef: MatDialogRef<EditProfileComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { userData: UsuarioInterface },
@@ -41,6 +38,13 @@ export class EditProfileComponent implements OnInit {
     private dialog: MatDialog,
     private alerts: AlertsService,
   ) { }
+
+  savedChanges: boolean = false;
+
+  hasUnsavedChanges(): boolean {
+    this.loading = false;
+    return (this.editForm.dirty || this.pwdForm.dirty) && !this.savedChanges;
+  }
 
   ngOnInit(): void {
     this.userService.getTipoDocumento().subscribe((tiposDocumento) => {
@@ -70,7 +74,7 @@ export class EditProfileComponent implements OnInit {
       idRol: [this.data.userData.idRol],
     });
     this.pwdForm = this.formBuilder.group({
-      contrasenaUsuario: ['', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/)]],
+      contrasenaUsuario: ['', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=?.:,"°~;_¿¡*/{}|<>()]).{8,}$/)]],
     })
   }
 
@@ -95,6 +99,7 @@ export class EditProfileComponent implements OnInit {
         }
 
         this.userService.putUsuario(updatedData).subscribe(data => {
+          this.savedChanges = true;
           if (data.status == 'ok') {
             this.alerts.showSuccess('Cambios guardados exitosamente', 'Usuario actualizado');
             this.dialogRef.close(updatedData);
@@ -114,6 +119,28 @@ export class EditProfileComponent implements OnInit {
   }
 
   closeDialog(): void {
-    this.dialogRef.close();
+    if (this.editForm.dirty) {
+      const dialogRef = this.dialog.open(DialogConfirmComponent, {
+        data: {
+          title: 'Cambios sin guardar',
+          message: '¿Estás seguro que deseas salir?'
+        }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.dialogRef.close();
+        }
+      });
+    } else {
+      this.dialogRef.close();
+    }
+  }
+
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  togglePasswordChange() {
+    this.showPasswordChange = !this.showPasswordChange;
   }
 }

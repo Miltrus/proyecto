@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ResponseInterface } from '../../../models/response.interface';
-import { PaqueteInterface } from '../../../models/paquete.interface';
-import { UsuarioInterface } from '../../../models/usuario.interface';
-import { ClienteInterface } from '../../../models/cliente.interface';
+import { ResponseInterface } from '../../models/response.interface';
+import { PaqueteInterface } from '../../models/paquete.interface';
+import { UsuarioInterface } from '../../models/usuario.interface';
+import { ClienteInterface } from '../../models/cliente.interface';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
 import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
 

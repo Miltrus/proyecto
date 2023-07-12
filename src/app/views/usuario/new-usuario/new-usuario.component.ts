@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
-import { UsuarioService } from '../../../services/api/usuario/usuario.service';
+import { UsuarioService } from '../../../services/api/usuario.service';
 import { UsuarioInterface } from '../../../models/usuario.interface';
 import { ResponseInterface } from '../../../models/response.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
@@ -11,13 +11,20 @@ import { EstadoUsuarioInterface } from 'src/app/models/estado-usuario.interface'
 import { RolInterface } from 'src/app/models/rol.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
+import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
+import { Subscription, forkJoin, tap } from 'rxjs';
 
 @Component({
   selector: 'app-new-usuario',
   templateUrl: './new-usuario.component.html',
   styleUrls: ['./new-usuario.component.scss']
 })
-export class NewUsuarioComponent implements OnInit {
+export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges {
+
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(e: BeforeUnloadEvent) {
+    return this.hasUnsavedChanges() === false;
+  }
 
   constructor(
     private router: Router,
@@ -26,15 +33,24 @@ export class NewUsuarioComponent implements OnInit {
     private dialog: MatDialog,
   ) { }
 
+  private subscriptions: Subscription = new Subscription();
+
+  savedChanges: boolean = false;
+
+  hasUnsavedChanges(): boolean {
+    this.loading = false;
+    return this.newForm.dirty && !this.savedChanges;
+  }
+
   newForm = new FormGroup({
-    idCliente: new FormControl(''),
+    idUsuario: new FormControl(''),
     documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreUsuario: new FormControl('', Validators.required),
     apellidoUsuario: new FormControl('', Validators.required),
     telefonoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
     correoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
-    contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/)]),
+    contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=?.:,"°~;_¿¡*/{}|<>()]).{8,}$/)]),
     idRol: new FormControl('', Validators.required),
     idEstado: new FormControl('1'),
   })
@@ -47,17 +63,30 @@ export class NewUsuarioComponent implements OnInit {
 
   showPassword: boolean = false;
 
-  toggleShowPassword(): void {
-    this.showPassword = !this.showPassword;
-  }
-
 
   ngOnInit(): void {
-    this.getTiposDocumento();
-    this.getEstadosUsuario();
-    this.getRolesUsuario();
+    this.loading = true;
+
+    const forkJoinSub = forkJoin([
+      this.api.getTipoDocumento(),
+      this.api.getEstadoUsuario(),
+      this.api.getRolUsuario()
+    ]).pipe(
+      tap(([tiposDocumento, estadosUsuario, rolesUsuario]) => {
+        this.tiposDocumento = tiposDocumento;
+        this.estadosUsuario = estadosUsuario;
+        this.rolUsuario = rolesUsuario;
+      })
+    ).subscribe(() => {
+      this.loading = false;
+    });
+    this.subscriptions.add(forkJoinSub);
   }
 
+  ngOnDestroy(): void {
+    // Desuscribirse de todas las suscripciones
+    this.subscriptions.unsubscribe();
+  }
 
   postForm(form: UsuarioInterface) {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
@@ -65,11 +94,11 @@ export class NewUsuarioComponent implements OnInit {
         message: '¿Estás seguro que deseas crear este usuario?'
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    const dialogRefSub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
-        this.api.postUsuario(form).subscribe(data => {
-
+        const postUserSub = this.api.postUsuario(form).subscribe(data => {
+          this.savedChanges = true;
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El usuario ha sido creado exitosamente', 'Usuario creado');
@@ -80,36 +109,20 @@ export class NewUsuarioComponent implements OnInit {
             this.loading = false;
           }
         });
-
+        this.subscriptions.add(postUserSub);
       } else {
         this.alerts.showInfo('El usuario no ha sido creado', 'Usuario no creado');
       }
     });
-  }
-
-  getTiposDocumento(): void {
-    this.api.getTipoDocumento().subscribe(data => {
-      this.tiposDocumento = data;
-      this.loading = false;
-    });
-  }
-
-  getEstadosUsuario(): void {
-    this.api.getEstadoUsuario().subscribe(data => {
-      this.estadosUsuario = data;
-      this.loading = false;
-    });
-  }
-
-  getRolesUsuario(): void {
-    this.api.getRolUsuario().subscribe(data => {
-      this.rolUsuario = data;
-      this.loading = false;
-    });
+    this.subscriptions.add(dialogRefSub);
   }
 
   goBack() {
-    this.loading = true;
     this.router.navigate(['usuario/list-usuarios']);
+    this.loading = true;
+  }
+
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
   }
 }

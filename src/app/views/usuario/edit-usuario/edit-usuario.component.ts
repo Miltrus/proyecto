@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { TipoDocumentoInterface } from '../../../models/tipo-documento.interface';
 import { UsuarioInterface } from '../../../models/usuario.interface';
-import { UsuarioService } from '../../../services/api/usuario/usuario.service';
+import { UsuarioService } from '../../../services/api/usuario.service';
 import { EstadoUsuarioInterface } from '../../../models/estado-usuario.interface';
 import { RolInterface } from '../../../models/rol.interface';
 
@@ -12,14 +12,20 @@ import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
-import { forkJoin } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
+import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 
 @Component({
   selector: 'app-edit-usuario',
   templateUrl: './edit-usuario.component.html',
   styleUrls: ['./edit-usuario.component.scss']
 })
-export class EditUsuarioComponent implements OnInit {
+export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestroy {
+
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(e: BeforeUnloadEvent) {
+    return this.hasUnsavedChanges() === false;
+  }
 
   constructor(
     private router: Router,
@@ -28,6 +34,15 @@ export class EditUsuarioComponent implements OnInit {
     private alerts: AlertsService,
     private dialog: MatDialog,
   ) { }
+
+  private subscriptions: Subscription = new Subscription();
+
+  savedChanges: boolean = false;
+
+  hasUnsavedChanges(): boolean {
+    this.loading = false;
+    return (this.editForm.dirty || this.pwdForm.dirty) && !this.savedChanges;
+  }
 
   editForm = new FormGroup({
     idUsuario: new FormControl(''),
@@ -42,7 +57,7 @@ export class EditUsuarioComponent implements OnInit {
   });
 
   pwdForm = new FormGroup({
-    contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=*]).{8,}$/)]),
+    contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=?.:,"°~;_¿¡*/{}|<>()]).{8,}$/)]),
   })
 
   dataUsuario: UsuarioInterface[] = [];
@@ -55,13 +70,6 @@ export class EditUsuarioComponent implements OnInit {
   showPasswordChange: boolean = false;
   showPassword: boolean = false;
 
-  toggleShowPassword(): void {
-    this.showPassword = !this.showPassword;
-  }
-
-  togglePasswordChange() {
-    this.showPasswordChange = !this.showPasswordChange;
-  }
 
   ngOnInit(): void {
     let idUsuario = this.activatedRouter.snapshot.paramMap.get('id');
@@ -73,7 +81,7 @@ export class EditUsuarioComponent implements OnInit {
 
     this.loading = true;
 
-    forkJoin([tipoDocumento$, estadoUsuario$, rolUsuario$, oneUsuario$]).subscribe(
+    const forkJoinSub = forkJoin([tipoDocumento$, estadoUsuario$, rolUsuario$, oneUsuario$]).subscribe(
       ([tipoDocumento, estadoUsuario, rolUsuario, oneUsuario]) => {
         this.tiposDocumento = tipoDocumento;
         this.estadosUsuario = estadoUsuario;
@@ -103,9 +111,13 @@ export class EditUsuarioComponent implements OnInit {
         this.loading = false;
       }
     );
+    this.subscriptions.add(forkJoinSub);
   }
 
-
+  ngOnDestroy(): void {
+    // Desuscribirse de todas las suscripciones
+    this.subscriptions.unsubscribe();
+  }
 
   postForm(id: any) {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
@@ -113,7 +125,7 @@ export class EditUsuarioComponent implements OnInit {
         message: '¿Estás seguro que deseas editar este usuario?'
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    const dialogRefSub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loading = true;
         const updatedData: UsuarioInterface = {
@@ -127,7 +139,8 @@ export class EditUsuarioComponent implements OnInit {
           delete updatedData.contrasenaUsuario; // Eliminar la propiedad si el botón "Cambiar contraseña" no está activado
         }
 
-        this.api.putUsuario(updatedData).subscribe(data => {
+        const putUserSub = this.api.putUsuario(updatedData).subscribe(data => {
+          this.savedChanges = true;
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El usuario ha sido modificado exitosamente', 'Modificacion exitosa');
@@ -137,14 +150,24 @@ export class EditUsuarioComponent implements OnInit {
             this.loading = false;
           }
         });
+        this.subscriptions.add(putUserSub);
       } else {
         this.alerts.showInfo('El usuario no ha sido modificado', 'Modificacion cancelada');
       }
     });
+    this.subscriptions.add(dialogRefSub);
   }
 
   goBack() {
     this.loading = true;
     this.router.navigate(['usuario/list-usuarios']);
+  }
+
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  togglePasswordChange() {
+    this.showPasswordChange = !this.showPasswordChange;
   }
 }

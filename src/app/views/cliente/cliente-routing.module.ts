@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ListClientesComponent } from './list-clientes/list-clientes.component';
 import { NewClienteComponent } from './new-cliente/new-cliente.component';
 import { EditClienteComponent } from './edit-cliente/edit-cliente.component';
+import { unsavedChangesGuard } from 'src/app/auth/guards/unsaved-changes.guard';
 
 const routes: Routes = [
 
@@ -10,9 +11,9 @@ const routes: Routes = [
 
   { path: 'list-clientes', component: ListClientesComponent },
 
-  { path: 'new-cliente', component: NewClienteComponent },
+  { path: 'new-cliente', canDeactivate: [unsavedChangesGuard], component: NewClienteComponent },
 
-  { path: 'edit-cliente/:id', component: EditClienteComponent },
+  { path: 'edit-cliente/:id', canDeactivate: [unsavedChangesGuard], component: EditClienteComponent },
 
 ];
 

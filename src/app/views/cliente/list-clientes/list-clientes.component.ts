@@ -1,15 +1,16 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ClienteService } from '../../../services/api/cliente/cliente.service';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ClienteService } from '../../../services/api/cliente.service';
 import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from 'src/app/models/response.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/dialog-confirm/dialog-confirm.component';
+import { DialogConfirmComponent } from '../../../components/dialog-confirm/dialog-confirm.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Subscription, forkJoin } from 'rxjs';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { MatSort } from '@angular/material/sort';
   templateUrl: './list-clientes.component.html',
   styleUrls: ['./list-clientes.component.scss']
 })
-export class ListClientesComponent implements OnInit {
+export class ListClientesComponent implements OnInit, OnDestroy {
 
   constructor(
     private api: ClienteService,
@@ -25,6 +26,8 @@ export class ListClientesComponent implements OnInit {
     private alerts: AlertsService,
     private dialog: MatDialog,
   ) { }
+
+  private subscriptions: Subscription = new Subscription();
 
   clientes: ClienteInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
@@ -36,31 +39,33 @@ export class ListClientesComponent implements OnInit {
   @ViewChild('viewClienteDialog') viewClienteDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
   ngOnInit(): void {
+    this.loading = true;
 
-    this.api.getAllClientes().subscribe(data => {
-      this.clientes = data;
-
-      this.dataSource.data = this.clientes; // Actualizar el dataSource con los clientes obtenidos
-
+    const forkJoinSub = forkJoin([
+      this.api.getAllClientes(),
+      this.api.getTipoDocumento()
+    ]).subscribe(([clientes, tiposDocumento]) => {
+      this.clientes = clientes;
+      this.dataSource.data = this.clientes;
       if (this.dataSource.data.length < 1) {
         this.alerts.showInfo('No hay clientes registrados', 'Sin registros');
       }
-
+      this.tiposDocumento = tiposDocumento;
       this.loading = false;
     });
-
-
-
-    this.api.getTipoDocumento().subscribe(data => {
-      this.tiposDocumento = data;
-      this.loading = false;
-    });
+    this.subscriptions.add(forkJoinSub);
   }
 
   ngAfterViewInit() { //para la paginacion y el ordenamiento
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
+
+  ngOnDestroy(): void {
+    // Desuscribirse de todas las suscripciones
+    this.subscriptions.unsubscribe();
+  }
+
 
   viewCliente(usuario: ClienteInterface): void {
     this.dialog.open(this.viewClienteDialog, {

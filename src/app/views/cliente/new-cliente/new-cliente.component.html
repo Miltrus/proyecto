@@ -38,7 +38,7 @@
                 'is-valid': newForm.get('documentoCliente')?.valid && (newForm.get('documentoCliente')?.touched || newForm.get('documentoCliente')?.dirty)
               }">
               <div *ngIf="newForm.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
-                Campo inválido. Debe contener solo números, minimo 7 y maximo 10.
+                Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
               </div>
               <div *ngIf="newForm.get('documentoCliente')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -97,7 +97,7 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Dirección <b style="color: red;">*</b></label>
-              <input type="text" class="form-control" formControlName="direccionCliente" [ngClass]="{
+              <input type="text" class="form-control" formControlName="direccionCliente" #inputPlaces [ngClass]="{
                 'is-invalid': newForm.get('direccionCliente')?.invalid && (newForm.get('direccionCliente')?.touched || newForm.get('direccionCliente')?.dirty),
                 'is-valid': newForm.get('direccionCliente')?.valid && (newForm.get('direccionCliente')?.touched || newForm.get('direccionCliente')?.dirty)
               }">

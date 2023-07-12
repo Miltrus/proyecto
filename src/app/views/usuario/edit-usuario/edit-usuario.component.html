@@ -25,7 +25,7 @@
                             </mat-select>
                             <div *ngIf="editForm.get('idTipoDocumento')?.errors?.['required']" class="invalid-feedback">
                                 Este campo es obligatorio.
-                              </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col">
@@ -39,9 +39,10 @@
                             <div *ngIf="editForm.get('documentoUsuario')?.errors?.['pattern']" class="invalid-feedback">
                                 Campo no válido. Debe contener solo números, minimo 7 y maximo 10.
                             </div>
-                            <div *ngIf="editForm.get('documentoUsuario')?.errors?.['required']" class="invalid-feedback">
+                            <div *ngIf="editForm.get('documentoUsuario')?.errors?.['required']"
+                                class="invalid-feedback">
                                 Este campo es obligatorio.
-                              </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -56,7 +57,7 @@
                             }" />
                             <div *ngIf="editForm.get('nombreUsuario')?.errors?.['required']" class="invalid-feedback">
                                 Este campo es obligatorio.
-                              </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col">
@@ -68,7 +69,7 @@
                             }" />
                             <div *ngIf="editForm.get('apellidoUsuario')?.errors?.['required']" class="invalid-feedback">
                                 Este campo es obligatorio.
-                              </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -87,7 +88,7 @@
                             </div>
                             <div *ngIf="editForm.get('telefonoUsuario')?.errors?.['required']" class="invalid-feedback">
                                 Este campo es obligatorio.
-                              </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col">
@@ -103,7 +104,7 @@
                             </div>
                             <div *ngIf="editForm.get('correoUsuario')?.errors?.['required']" class="invalid-feedback">
                                 Este campo es obligatorio.
-                              </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,12 +155,17 @@
                             </div>
 
                             <div *ngIf="pwdForm.get('contrasenaUsuario')?.errors?.['pattern']" class="invalid-feedback">
-                                La contraseña debe contener mínimo 8 dígitos, una mayúscula, una minúscula, mínimo 3
-                                números y al menos un caracter especial.
+                                La contraseña debe contener mínimo: <br>
+                                - 8 caracteres.<br>
+                                - Una minúscula.<br>
+                                - Una mayúscula.<br>
+                                - 3 números.<br>
+                                - 1 caracter especial.<br>
                             </div>
-                            <div *ngIf="pwdForm.get('contrasenaUsuario')?.errors?.['required']" class="invalid-feedback">
+                            <div *ngIf="pwdForm.get('contrasenaUsuario')?.errors?.['required']"
+                                class="invalid-feedback">
                                 Este campo es obligatorio.
-                              </div>
+                            </div>
                         </div>
                     </div>
                 </form>

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ResponseInterface } from '../../../models/response.interface';
-import { RolInterface } from '../../../models/rol.interface';
-import { PermisoInterface } from '../../../models/permiso.interface';
-import { RolPermisoInterface } from '../../../models/rol-permiso.interface';
+import { ResponseInterface } from '../../models/response.interface';
+import { RolInterface } from '../../models/rol.interface';
+import { PermisoInterface } from '../../models/permiso.interface';
+import { RolPermisoInterface } from '../../models/rol-permiso.interface';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; // 

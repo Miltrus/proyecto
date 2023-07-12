@@ -17,32 +17,31 @@
     <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm.value)">
       <!-- Enviamos el valor del formulario a la función onLogin -->
       <div class="fadeIn second">
-        <p>
-          <mat-form-field appearance="outline">
-            <mat-label>Correo electrónico</mat-label>
-            <input id="login" formControlName="correoUsuario" matInput placeholder="Correo">
-            <mat-icon matSuffix color="primary">person</mat-icon>
-          </mat-form-field>
-        </p>
+        <mat-form-field appearance="outline">
+          <mat-label>Correo electrónico</mat-label>
+          <input id="login" formControlName="correoUsuario" matInput placeholder="Correo" [ngClass]="{
+              'is-invalid': loginForm.get('correoUsuario')?.invalid && (loginForm.get('correoUsuario')?.touched || loginForm.get('correoUsuario')?.dirty),
+              'is-valid': loginForm.get('correoUsuario')?.valid && (loginForm.get('correoUsuario')?.touched || loginForm.get('correoUsuario')?.dirty)
+            }">
+          <mat-icon matSuffix color="primary">person</mat-icon>
+        </mat-form-field>
       </div>
       <div class="fadeIn third">
         <p>
           <mat-form-field appearance="outline">
             <mat-label>Contraseña</mat-label>
-            <input id="password" formControlName="contrasenaUsuario" matInput placeholder="Contraseña"
-              [type]="showPassword ? 'text' : 'password'">
+            <input id="password" formControlName="contrasenaUsuario" matInput placeholder="Contraseña" [ngClass]="{
+              'is-invalid': loginForm.get('contrasenaUsuario')?.invalid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty),
+              'is-valid': loginForm.get('contrasenaUsuario')?.valid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty)
+            }" [type]="showPassword ? 'text' : 'password'">
             <mat-icon matSuffix (click)="togglePasswordVisibility()" [color]="showPassword ? 'warn' : 'primary'">
               {{ showPassword ? 'visibility_off' : 'visibility' }}
             </mat-icon>
           </mat-form-field>
         </p>
       </div>
-
-      <!-- <input type="text" id="login" class="fadeIn second" formControlName="correoUsuario" placeholder="Email">
-      <input type="password" id="password" class="fadeIn third" formControlName="contrasenaUsuario" placeholder="Contraseña"> -->
       <input type="submit" color="primary" class="fadeIn fourth" value="Iniciar sesión">
 
-      <!-- Botón Volver Atrás -->
       <div class="back-button">
         <button class="fadeIn fourth" type="button" (click)="goBack()">Volver atrás</button>
       </div>

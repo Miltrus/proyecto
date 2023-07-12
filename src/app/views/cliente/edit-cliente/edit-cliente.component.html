@@ -27,7 +27,7 @@
 
                             <div *ngIf="editForm.get('idTipoDocumento')?.errors?.['required']" class="invalid-feedback">
                                 Este campo es obligatorio.
-                              </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col">
@@ -38,12 +38,13 @@
                             'is-valid': editForm.get('documentoCliente')?.valid && (editForm.get('documentoCliente')?.touched || editForm.get('documentoCliente')?.dirty)
                           }">
                             <div *ngIf="editForm.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
-                                Campo inválido. Debe contener solo números, minimo 7 y maximo 10.
+                                Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
                             </div>
 
-                            <div *ngIf="editForm.get('documentoCliente')?.errors?.['required']" class="invalid-feedback">
+                            <div *ngIf="editForm.get('documentoCliente')?.errors?.['required']"
+                                class="invalid-feedback">
                                 Este campo es obligatorio.
-                              </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -56,9 +57,9 @@
                                 'is-invalid': editForm.get('nombreCliente')?.invalid && (editForm.get('nombreCliente')?.touched || editForm.get('nombreCliente')?.dirty),
                                 'is-valid': editForm.get('nombreCliente')?.valid && (editForm.get('nombreCliente')?.touched || editForm.get('nombreCliente')?.dirty)
                                 }">
-                                <div *ngIf="editForm.get('nombreCliente')?.errors?.['required']" class="invalid-feedback">
-                                    Este campo es obligatorio.
-                                </div>
+                            <div *ngIf="editForm.get('nombreCliente')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                            </div>
                         </div>
                     </div>
                     <div class="col">
@@ -96,20 +97,22 @@
 
                             <div *ngIf="editForm.get('correoCliente')?.errors?.['required']" class="invalid-feedback">
                                 Este campo es obligatorio.
-                              </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Dirección <b style="color: red;">*</b></label>
-                            <input type="text" class="form-control" formControlName="direccionCliente" [ngClass]="{
+                            <input type="text" class="form-control" formControlName="direccionCliente" #inputPlaces
+                                [ngClass]="{
                             'is-invalid': editForm.get('direccionCliente')?.invalid && (editForm.get('direccionCliente')?.touched || editForm.get('direccionCliente')?.dirty),
                             'is-valid': editForm.get('direccionCliente')?.valid && (editForm.get('direccionCliente')?.touched || editForm.get('direccionCliente')?.dirty)
                           }">
 
-                          <div *ngIf="editForm.get('direccionCliente')?.errors?.['required']" class="invalid-feedback">
-                            Este campo es obligatorio.
-                          </div>
+                            <div *ngIf="editForm.get('direccionCliente')?.errors?.['required']"
+                                class="invalid-feedback">
+                                Este campo es obligatorio.
+                            </div>
                         </div>
                     </div>
                 </div>

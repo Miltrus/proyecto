@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
-import { isLoggedInGuard } from './auth/guards/isLoggedIn/is-logged-in.guard';
-import { rolePermissionGuard } from './auth/guards/rolePermission/role-permission.guard';
+import { isLoggedInGuard } from './auth/guards/is-logged-in.guard';
+import { rolePermissionGuard } from './auth/guards/role-permission.guard';
 
 
 const routes: Routes = [

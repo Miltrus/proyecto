@@ -23,12 +23,12 @@
                         </mat-select>
                         <div *ngIf="editForm.get('idTipoDocumento')?.errors?.['required']" class="invalid-feedback">
                             Este campo es obligatorio.
-                          </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <label for="exampleFormControlInput1">Documento</label>
+                        <label for="exampleFormControlInput1">Documento <b style="color: red;">*</b></label>
                         <input type="text" class="form-control" formControlName="documentoUsuario" [ngClass]="{
                 'is-invalid': editForm.get('documentoUsuario')?.invalid && (editForm.get('documentoUsuario')?.touched || editForm.get('documentoUsuario')?.dirty),
                 'is-valid': editForm.get('documentoUsuario')?.valid && (editForm.get('documentoUsuario')?.touched || editForm.get('documentoUsuario')?.dirty)
@@ -38,7 +38,7 @@
                         </div>
                         <div *ngIf="editForm.get('documentoUsuario')?.errors?.['required']" class="invalid-feedback">
                             Este campo es obligatorio.
-                          </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -51,9 +51,9 @@
                 'is-invalid': editForm.get('nombreUsuario')?.invalid && (editForm.get('nombreUsuario')?.touched || editForm.get('nombreUsuario')?.dirty),
                 'is-valid': editForm.get('nombreUsuario')?.valid && (editForm.get('nombreUsuario')?.touched || editForm.get('nombreUsuario')?.dirty)
               }" />
-              <div *ngIf="editForm.get('nombreCliente')?.errors?.['required']" class="invalid-feedback">
-                Este campo es obligatorio.
-              </div>
+                        <div *ngIf="editForm.get('nombreUsuario')?.errors?.['required']" class="invalid-feedback">
+                            Este campo es obligatorio.
+                        </div>
                     </div>
                 </div>
                 <div class="col">
@@ -63,9 +63,9 @@
                 'is-invalid': editForm.get('apellidoUsuario')?.invalid && (editForm.get('apellidoUsuario')?.touched || editForm.get('apellidoUsuario')?.dirty),
                 'is-valid': editForm.get('apellidoUsuario')?.valid && (editForm.get('apellidoUsuario')?.touched || editForm.get('apellidoUsuario')?.dirty)
               }" />
-              <div *ngIf="editForm.get('apellidoUsuario')?.errors?.['required']" class="invalid-feedback">
-                Este campo es obligatorio.
-              </div>
+                        <div *ngIf="editForm.get('apellidoUsuario')?.errors?.['required']" class="invalid-feedback">
+                            Este campo es obligatorio.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                         </div>
                         <div *ngIf="editForm.get('telefonoUsuario')?.errors?.['required']" class="invalid-feedback">
                             Este campo es obligatorio.
-                          </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col">
@@ -98,7 +98,7 @@
                         </div>
                         <div *ngIf="editForm.get('correoUsuario')?.errors?.['required']" class="invalid-feedback">
                             Este campo es obligatorio.
-                          </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -141,10 +141,14 @@
                         </div>
                         <div *ngIf="pwdForm.get('contrasenaUsuario')?.errors?.['required']" class="invalid-feedback">
                             Este campo es obligatorio.
-                          </div>
+                        </div>
                         <div *ngIf="pwdForm.get('contrasenaUsuario')?.errors?.['pattern']" class="invalid-feedback">
-                            La contraseña debe contener mínimo 8 dígitos, una mayúscula, una minúscula, mínimo 3 números
-                            y al menos un caracter especial.
+                            La contraseña debe contener mínimo: <br>
+                            - 8 caracteres.<br>
+                            - Una minúscula.<br>
+                            - Una mayúscula.<br>
+                            - 3 números.<br>
+                            - 1 caracter especial.<br>
                         </div>
                     </div>
                 </div>

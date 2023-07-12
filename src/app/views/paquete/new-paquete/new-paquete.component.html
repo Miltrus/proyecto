@@ -37,7 +37,7 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">N° de Documento</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.documentoCliente" disabled />
+              <input type="text" class="form-control" [value]="selectedRemitente?.documentoCliente" />
             </div>
           </div>
         </div>
@@ -45,13 +45,13 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Correo</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.correoCliente" disabled />
+              <input type="text" class="form-control" [value]="selectedRemitente?.correoCliente" />
             </div>
           </div>
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Telefono</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.telefonoCliente" disabled />
+              <input type="text" class="form-control" [value]="selectedRemitente?.telefonoCliente" />
             </div>
           </div>
         </div><br>
@@ -78,7 +78,7 @@
                 'is-valid': newForm.get('documentoDestinatario')?.valid && newForm.get('documentoDestinatario')?.dirty
               }" />
               <div *ngIf="newForm.get('documentoDestinatario')?.errors?.['pattern']" class="invalid-feedback">
-                Campo inválido. Debe contener solo números, minimo 7 y maximo 10.
+                Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
               </div>
               <div *ngIf="newForm.get('documentoDestinatario')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -95,7 +95,7 @@
                 'is-valid': newForm.get('correoDestinatario')?.valid && newForm.get('correoDestinatario')?.dirty
               }" />
               <div *ngIf="newForm.get('correoDestinatario')?.errors?.['pattern']" class="invalid-feedback">
-                Campo inválido. Debe ser un correo.
+                Correo inválido.
               </div>
               <div *ngIf="newForm.get('correoDestinatario')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -110,7 +110,7 @@
                 'is-valid': newForm.get('telefonoDestinatario')?.valid && newForm.get('telefonoDestinatario')?.dirty
               }" />
               <div *ngIf="newForm.get('telefonoDestinatario')?.errors?.['pattern']" class="invalid-feedback">
-                Campo inválido. Debe contener 10 números.
+                Teléfono inválido, debe contener 10 dígitos numéricos.
               </div>
               <div *ngIf="newForm.get('telefonoDestinatario')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -122,7 +122,7 @@
           <div class="col">
             <div class="form-group">
               <label for="">Direccion<b style="color: red;">*</b></label>
-              <input type="text" class="form-control" formControlName="codigoQrPaquete" [ngClass]="{
+              <input type="text" class="form-control" formControlName="codigoQrPaquete" #inputPlaces [ngClass]="{
                 'is-invalid': newForm.get('codigoQrPaquete')?.invalid && (newForm.get('codigoQrPaquete')?.touched || newForm.get('codigoQrPaquete')?.dirty),
                 'is-valid': newForm.get('codigoQrPaquete')?.valid && newForm.get('codigoQrPaquete')?.dirty
               }" />

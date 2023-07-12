@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { google } from 'google-maps';
 import { AlertsService } from '../../../services/alerts/alerts.service';
-import { PaqueteService } from '../../../services/api/paquete/paquete.service';
+import { PaqueteService } from '../../../services/api/paquete.service';
 import { PaqueteInterface } from '../../../models/paquete.interface';
 import { ResponseInterface } from '../../../models/response.interface';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
@@ -14,6 +15,7 @@ import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog
 import { MatDialog } from '@angular/material/dialog';
 import { AddClienteComponent } from '../add-cliente/add-cliente.component';
 import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
+import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 
 
 @Component({
@@ -21,7 +23,13 @@ import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
   templateUrl: './new-paquete.component.html',
   styleUrls: ['./new-paquete.component.scss']
 })
-export class NewPaqueteComponent implements OnInit {
+export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
+
+  @ViewChild('inputPlaces') inputPlaces!: ElementRef;
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(e: BeforeUnloadEvent) {
+    return this.hasUnsavedChanges() === false;
+  }
 
   constructor(
     private router: Router,
@@ -29,10 +37,15 @@ export class NewPaqueteComponent implements OnInit {
     private alerts: AlertsService,
     private dialog: MatDialog,
     private paqueteService: PaqueteService,
+    private renderer: Renderer2,
   ) { }
 
-  
-  
+  savedChanges: boolean = false;
+
+  hasUnsavedChanges(): boolean {
+    this.loading = false;
+    return this.newForm.dirty && !this.savedChanges;
+  }
 
   newForm = new FormGroup({
     codigoQrPaquete: new FormControl('', Validators.required),
@@ -55,7 +68,7 @@ export class NewPaqueteComponent implements OnInit {
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
-  
+
     return `${year}-${month}-${day}`;
   }
 
@@ -102,28 +115,32 @@ export class NewPaqueteComponent implements OnInit {
     );
   }
 
+  ngAfterViewInit() {
+    this.mapInput();
+  }
+
 
   validateFechaPasada(control: FormControl): { [key: string]: boolean } | null {
     const fechaSeleccionada = control.value;
     const fechaActual = new Date();
-    
+
     // Establecer las horas, minutos, segundos y milisegundos de la fecha actual a 0
     fechaActual.setHours(0, 0, 0, 0);
-    
+
     // Crear una nueva instancia de la fecha seleccionada y establecer las horas, minutos, segundos y milisegundos a 0
     const fechaSeleccionadaSinHora = new Date(fechaSeleccionada);
     fechaSeleccionadaSinHora.setHours(0, 0, 0, 0);
-    
+
     // Sumar un día a la fecha seleccionada
     fechaSeleccionadaSinHora.setDate(fechaSeleccionadaSinHora.getDate() + 1);
-    
+
     if (fechaSeleccionadaSinHora < fechaActual) {
       return { fechaPasada: true };
     }
-    
+
     return null;
   }
-  
+
 
 
   postForm(form: PaqueteInterface) {
@@ -136,7 +153,7 @@ export class NewPaqueteComponent implements OnInit {
       if (result) {
         this.loading = true;
         this.api.postPaquete(form).subscribe(data => {
-
+          this.savedChanges = true;
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El paquete ha sido creado exitosamente', 'Paquete registrado');
@@ -221,5 +238,23 @@ export class NewPaqueteComponent implements OnInit {
   goBack() {
     this.loading = true;
     this.router.navigate(['paquete/list-paquetes']);
+  }
+
+  private mapInput() {
+    const autocomplete = new google.maps.places.Autocomplete(this.renderer.selectRootElement(this.inputPlaces.nativeElement), {
+      componentRestrictions: {
+        country: ["CO"]
+      },
+      fields: ["formatted_address", "geometry"],
+      types: ["address"] // Agrega el tipo "establishment" para lugares
+    });
+
+    google.maps.event.addListener(autocomplete, 'place_changed', () => {
+      const place: any = autocomplete.getPlace();
+      if (place) {
+        const selectedAddress = place.formatted_address || place.name; // Utiliza el nombre del lugar si no hay una dirección formateada
+        this.newForm.patchValue({ codigoQrPaquete: selectedAddress });
+      }
+    });
   }
 }

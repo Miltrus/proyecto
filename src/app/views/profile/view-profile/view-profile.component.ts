@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UsuarioInterface } from '../../../models/usuario.interface';
-import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
+import { UsuarioService } from 'src/app/services/api/usuario.service';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
-import { forkJoin } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { RolInterface } from 'src/app/models/rol.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { EditProfileComponent } from '../edit-profile/edit-profile.component';
@@ -12,7 +12,7 @@ import { EditProfileComponent } from '../edit-profile/edit-profile.component';
   templateUrl: './view-profile.component.html',
   styleUrls: ['./view-profile.component.scss']
 })
-export class ViewProfileComponent implements OnInit {
+export class ViewProfileComponent implements OnInit, OnDestroy {
 
   userData: UsuarioInterface | null = null;
   tiposDocumento: TipoDocumentoInterface[] = [];
@@ -21,6 +21,8 @@ export class ViewProfileComponent implements OnInit {
   rolMap: { [key: string]: string } = {};
 
   loading: boolean = true;
+
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private userService: UsuarioService,
@@ -31,13 +33,18 @@ export class ViewProfileComponent implements OnInit {
     this.getUserData();
   }
 
+  ngOnDestroy(): void {
+    // Desuscribirse de todas las suscripciones
+    this.subscriptions.unsubscribe();
+  }
+
 
   getUserData() {
     const token = localStorage.getItem('token');
     const decodedToken = JSON.parse(atob(token!.split('.')[1]));
     const uid = decodedToken.uid;
 
-    forkJoin([
+    const forkJoinSub = forkJoin([
       this.userService.getOneUsuario(uid),
       this.userService.getTipoDocumento(),
       this.userService.getRolUsuario()
@@ -54,6 +61,7 @@ export class ViewProfileComponent implements OnInit {
       });
       this.loading = false;
     });
+    this.subscriptions.add(forkJoinSub);
   }
 
   getTipoDocumento(idTipoDocumento: any): string {
