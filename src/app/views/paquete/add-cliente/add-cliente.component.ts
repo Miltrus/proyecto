@@ -86,7 +86,7 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.alerts.showSuccess('El cliente ha sido creado exitosamente.', 'Cliente creado');
-            this.dialogRef.close(window.location.reload());
+            this.dialogRef.close(form);
           }
           else {
             this.alerts.showError(respuesta.msj, 'Error al crear el cliente');

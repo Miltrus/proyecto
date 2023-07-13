@@ -62,18 +62,6 @@
           <h4>Destinatario</h4>
           <div class="col">
             <div class="form-group">
-              <label for="documentoDestinatario">Nombre<b style="color: red;">*</b></label>
-              <input list="destinatarios" class="form-control" formControlName="nombreDestinatario"
-                [ngClass]="{
-                'is-invalid': editForm.get('nombreDestinatario')?.invalid && (editForm.get('nombreDestinatario')?.touched || editForm.get('nombreDestinatario')?.dirty),
-                'is-valid': editForm.get('nombreDestinatario')?.valid && (editForm.get('nombreDestinatario')?.touched || editForm.get('nombreDestinatario')?.dirty)}">
-              <div *ngIf="editForm.get('nombreDestinatario')?.errors?.['required']" class="invalid-feedback">
-                Este campo es obligatorio.
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
               <label for="exampleFormControlInput1">N° de Documento<b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="documentoDestinatario" [ngClass]="{
                 'is-invalid': editForm.get('documentoDestinatario')?.invalid && (editForm.get('documentoDestinatario')?.touched || editForm.get('documentoDestinatario')?.dirty),
@@ -83,6 +71,18 @@
                 Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
               </div>
               <div *ngIf="editForm.get('documentoDestinatario')?.errors?.['required']" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="documentoDestinatario">Nombre<b style="color: red;">*</b></label>
+              <input list="destinatarios" class="form-control" formControlName="nombreDestinatario"
+                [ngClass]="{
+                'is-invalid': editForm.get('nombreDestinatario')?.invalid && (editForm.get('nombreDestinatario')?.touched || editForm.get('nombreDestinatario')?.dirty),
+                'is-valid': editForm.get('nombreDestinatario')?.valid && (editForm.get('nombreDestinatario')?.touched || editForm.get('nombreDestinatario')?.dirty)}">
+              <div *ngIf="editForm.get('nombreDestinatario')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
               </div>
             </div>
@@ -120,25 +120,18 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label for="">Direccion<b style="color: red;">*</b></label>
-              <input type="text" class="form-control" formControlName="codigoQrPaquete" #inputPlaces [ngClass]="{
+        <div class="col">
+          <div class="form-group">
+            <label for="">Direccion<b style="color: red;">*</b></label>
+            <input type="text" class="form-control" formControlName="codigoQrPaquete" #inputPlaces [ngClass]="{
                 'is-invalid': editForm.get('codigoQrPaquete')?.invalid && (editForm.get('codigoQrPaquete')?.touched || editForm.get('codigoQrPaquete')?.dirty),
                 'is-valid': editForm.get('codigoQrPaquete')?.valid && editForm.get('codigoQrPaquete')?.dirty
               }" />
-              <div *ngIf="editForm.get('documentoDestinatario')?.errors?.['required']" class="invalid-feedback">
-                Este campo es obligatorio.
-              </div>
+            <div *ngIf="editForm.get('documentoDestinatario')?.errors?.['required']" class="invalid-feedback">
+              Este campo es obligatorio.
             </div>
           </div>
-          <div class="col">
-
-          </div>
         </div><br>
-
-
 
         <div class="row">
           <h4>Paquete</h4>

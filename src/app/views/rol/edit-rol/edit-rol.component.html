@@ -19,9 +19,9 @@
                             'is-invalid': editForm.get('nombreRol')?.invalid && (editForm.get('nombreRol')?.touched || editForm.get('nombreRol')?.dirty),
                             'is-valid': editForm.get('nombreRol')?.valid && (editForm.get('nombreRol')?.touched || editForm.get('nombreRol')?.dirty)
                         }" />
-                        <div *ngIf="editForm.get('nombreRol')?.errors?.['required']" class="invalid-feedback">
-                            Este campo es obligatorio.
-                          </div>
+                            <div *ngIf="editForm.get('nombreRol')?.errors?.['required']" class="invalid-feedback">
+                                Este campo es obligatorio.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -49,6 +49,7 @@
 
                 <button type="button" mat-raised-button color='accent' (click)="goBack()">Atrás</button> |
                 <button type="submit" mat-raised-button color='primary' [disabled]="editForm.invalid">Guardar</button>
+                <br><br>
             </form>
         </div>
     </div>

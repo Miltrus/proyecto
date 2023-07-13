@@ -137,6 +137,20 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.getEstadoPaquete();
     this.getTamanoPaquete(); //:v
     this.getTipoPaquete();
+
+    this.editForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
+      this.api.getDataDestinatario(value).subscribe(data => {
+
+        if (data.direccion) {
+          this.editForm.patchValue({
+            codigoQrPaquete: data.direccion,
+            nombreDestinatario: data.nombre,
+            correoDestinatario: data.correo,
+            telefonoDestinatario: data.telefono,
+          });
+        }
+      });
+    });
   }
 
   ngAfterViewInit() {
@@ -232,6 +246,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     if (this.selectedDestinatario) {
       const direccionDestinatario = this.selectedDestinatario.direccionCliente || '';
       this.editForm.patchValue({ codigoQrPaquete: direccionDestinatario });
+      this.editForm.patchValue({ nombreDestinatario: this.selectedDestinatario.nombreCliente });
     } else {
       this.editForm.patchValue({ codigoQrPaquete: '' });
     }
@@ -246,6 +261,13 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       height: '70%'
     });
     dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // actualizamos la info de remitente y destinatario
+        this.api.getRemitenteAndDestinatario().subscribe(data => {
+          this.remitente = data;
+          this.destinatario = data;
+        })
+      }
     });
   }
 

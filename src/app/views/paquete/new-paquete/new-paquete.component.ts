@@ -103,16 +103,17 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.getTipoPaquete();
 
     this.newForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
-      this.paqueteService.getDireccionDestinatario(value).subscribe(data => {
-
+      this.paqueteService.getDataDestinatario(value).subscribe(data => {
         if (data.direccion) {
           this.newForm.patchValue({
-            codigoQrPaquete: data.direccion
+            codigoQrPaquete: data.direccion,
+            nombreDestinatario: data.nombre,
+            correoDestinatario: data.correo,
+            telefonoDestinatario: data.telefono,
           });
         }
       });
-    }
-    );
+    });
   }
 
   ngAfterViewInit() {
@@ -232,6 +233,13 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       height: '70%'
     });
     dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // actualizamos la info de remitente y destinatario
+        this.api.getRemitenteAndDestinatario().subscribe(data => {
+          this.remitente = data;
+          this.destinatario = data;
+        })
+      }
     });
   }
 
