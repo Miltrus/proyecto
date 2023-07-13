@@ -97,7 +97,7 @@
                 'is-valid': editForm.get('correoDestinatario')?.valid && editForm.get('correoDestinatario')?.dirty
               }" />
               <div *ngIf="editForm.get('correoDestinatario')?.errors?.['pattern']" class="invalid-feedback">
-                Campo inválido
+                Correo inválido
               </div>
               <div *ngIf="editForm.get('correoDestinatario')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -143,7 +143,7 @@
               'is-valid': editForm.get('pesoPaquete')?.valid && editForm.get('pesoPaquete')?.dirty
             }">
               <div *ngIf="editForm.get('pesoPaquete')?.errors?.['pattern']" class="invalid-feedback">
-                Campo inválido. Debe contener solo números, maximo 3 digitos y no más de 2 decimales.
+                Campo inválido, maximo 3 digitos numéricos y no más de 2 decimales.
               </div>
               <div *ngIf="editForm.get('pesoPaquete')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -158,7 +158,7 @@
               'is-valid': editForm.get('unidadesPaquete')?.valid && editForm.get('unidadesPaquete')?.dirty
             }">
               <div *ngIf="editForm.get('unidadesPaquete')?.errors?.['pattern']" class="invalid-feedback">
-                Campo inválido. Debe contener solo números con un maximo de 3 digitos.
+                Campo inválido, unicamente 3 digitos numéricos.
               </div>
               <div *ngIf="editForm.get('unidadesPaquete')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -222,7 +222,7 @@
                 Este campo es obligatorio.
               </div>
               <div *ngIf="editForm.get('fechaAproxEntrega')?.errors?.['fechaPasada']" class="invalid-feedback">
-                Fecha no válida.
+                Fecha inválida.
               </div>
             </div>
           </div>

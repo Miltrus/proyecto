@@ -40,7 +40,7 @@
                             }" />
 
                             <div *ngIf="newForm.get('documentoUsuario')?.errors?.['pattern']" class="invalid-feedback">
-                                Campo inválido. Debe contener solo números, minimo 7 y maximo 10.
+                                Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
                             </div>
                             <div *ngIf="newForm.get('documentoUsuario')?.errors?.['required']" class="invalid-feedback">
                                 Este campo es obligatorio.
@@ -132,12 +132,24 @@
 
                                 <div *ngIf="newForm.get('contrasenaUsuario')?.errors?.['pattern']"
                                     class="invalid-feedback">
-                                    La contraseña debe contener mínimo: <br>
-                                    - 8 caracteres.<br>
-                                    - Una minúscula.<br>
-                                    - Una mayúscula.<br>
-                                    - 3 números.<br>
-                                    - 1 caracter especial.<br>
+                                    La contraseña debe contener mínimo:
+                                    <ul>
+                                        <li>
+                                            8 caracteres.
+                                        </li>
+                                        <li>
+                                            Una minúscula.
+                                        </li>
+                                        <li>
+                                            Una mayúscula.
+                                        </li>
+                                        <li>
+                                            3 números.
+                                        </li>
+                                        <li>
+                                            1 caracter especial.
+                                        </li>
+                                    </ul>
                                 </div>
                                 <div *ngIf="newForm.get('contrasenaUsuario')?.errors?.['required']"
                                     class="invalid-feedback">

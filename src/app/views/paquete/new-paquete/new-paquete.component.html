@@ -141,7 +141,7 @@
               'is-valid': newForm.get('pesoPaquete')?.valid && newForm.get('pesoPaquete')?.dirty
             }">
               <div *ngIf="newForm.get('pesoPaquete')?.errors?.['pattern']" class="invalid-feedback">
-                Campo inválido. Debe contener solo números, maximo 3 digitos y no más de 2 decimales.
+                Campo inválido, maximo 3 digitos numéricos y no más de 2 decimales.
               </div>
               <div *ngIf="newForm.get('pesoPaquete')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -156,7 +156,7 @@
               'is-valid': newForm.get('unidadesPaquete')?.valid && newForm.get('unidadesPaquete')?.dirty
             }">
               <div *ngIf="newForm.get('unidadesPaquete')?.errors?.['pattern']" class="invalid-feedback">
-                Campo inválido. Debe contener solo números con un maximo de 3 digitos.
+                Campo inválido, unicamente 3 digitos numéricos.
               </div>
               <div *ngIf="newForm.get('unidadesPaquete')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -220,7 +220,7 @@
                 Este campo es obligatorio.
               </div>
               <div *ngIf="newForm.get('fechaAproxEntrega')?.errors?.['fechaPasada']" class="invalid-feedback">
-                Fecha no válida.
+                Fecha inválida.
               </div>
             </div>
           </div>

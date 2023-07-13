@@ -103,16 +103,16 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.getTipoPaquete();
 
     this.newForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
-      this.paqueteService.getDataDestinatario(value).subscribe(data => {
-        if (data.direccion) {
+      if (this.newForm.get('documentoDestinatario')?.valid) {
+        this.paqueteService.getDataDestinatario(value).subscribe(data => {
           this.newForm.patchValue({
             codigoQrPaquete: data.direccion,
             nombreDestinatario: data.nombre,
             correoDestinatario: data.correo,
             telefonoDestinatario: data.telefono,
           });
-        }
-      });
+        });
+      }
     });
   }
 

@@ -139,17 +139,16 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.getTipoPaquete();
 
     this.editForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
-      this.api.getDataDestinatario(value).subscribe(data => {
-
-        if (data.direccion) {
+      if (this.editForm.get('documentoDestinatario')?.valid) {
+        this.api.getDataDestinatario(value).subscribe(data => {
           this.editForm.patchValue({
             codigoQrPaquete: data.direccion,
             nombreDestinatario: data.nombre,
             correoDestinatario: data.correo,
             telefonoDestinatario: data.telefono,
           });
-        }
-      });
+        });
+      }
     });
   }
 
@@ -160,7 +159,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
   postForm(id: any) {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
       data: {
-        message: '¿Está seguro que deseas modificar este paquete?',
+        message: '¿Estás seguro que deseas modificar este paquete?',
       }
     });
     dialogRef.afterClosed().subscribe(result => {

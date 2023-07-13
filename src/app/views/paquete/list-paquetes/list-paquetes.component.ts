@@ -213,13 +213,12 @@ export class ListPaquetesComponent implements OnInit {
               body: [
                 ['Remitente', this.getRemitentePaquete(paquete.documentoRemitente).nombre],
                 ['Destinatario', paquete.nombreDestinatario],
-                ['Teléfono del destinatario', paquete.telefonoDestinatario],
-                ['Correo del destinatario', paquete.correoDestinatario],
-                ['Dirección del destinatario', paquete.codigoQrPaquete],
-                ['Peso del paquete', paquete.pesoPaquete + ' kg'],
-                ['Tamaño del paquete', this.getTamanoPaquete(paquete.idTamano)],
-                ['Contenido del paquete', paquete.contenidoPaquete],
-                ['Estado del paquete', this.getEstadoPaquete(paquete.idEstado)],
+                ['Teléfono destinatario', paquete.telefonoDestinatario],
+                ['Correo destinatario', paquete.correoDestinatario],
+                ['Dirección destinatario', paquete.codigoQrPaquete],
+                ['Peso paquete', paquete.pesoPaquete + ' kg'],
+                ['Tamaño paquete', this.getTamanoPaquete(paquete.idTamano)],
+                ['Contenido paquete', paquete.contenidoPaquete],
                 [
                   { text: 'Código QR', style: 'subheader' },
                   { image: paquete.qrCodeUrl.toString(), width: 100, height: 100, alignment: 'center' }
