@@ -136,13 +136,13 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
         country: ["CO"]
       },
       fields: ["formatted_address", "geometry"],
-      types: ["address"] // Agrega el tipo "establishment" para lugares
+      types: ["address"]
     });
 
     google.maps.event.addListener(autocomplete, 'place_changed', () => {
       const place: any = autocomplete.getPlace();
       if (place) {
-        const selectedAddress = place.formatted_address || place.name; // Utiliza el nombre del lugar si no hay una dirección formateada
+        const selectedAddress = place.formatted_address
         this.editForm.patchValue({ direccionCliente: selectedAddress });
       }
     });

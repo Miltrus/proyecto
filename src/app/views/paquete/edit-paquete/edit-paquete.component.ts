@@ -193,15 +193,15 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
   getRemitenteAndDestinatarioPaquete(): void {
     this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.remitente = data;
-      // Obtén el remitente seleccionado al cargar la página
+      // obtener el remitente seleccionado al cargar la página
       const remitenteSeleccionado = this.editForm.get('documentoRemitente')?.value;
-      // Busca el remitente seleccionado en la lista de remitentes
+      // buscar el remitente seleccionado en la lista de remitentes
       this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === remitenteSeleccionado);
 
       this.destinatario = data;
-      // Obtén el remitente seleccionado al cargar la página
+      // obtener el remitente seleccionado al cargar la página
       const destinatarioSeleccionado = this.editForm.get('documentoDestinatario')?.value;
-      // Busca el remitente seleccionado en la lista de remitentes
+      // buscar el remitente seleccionado en la lista de remitentes
       this.selectedDestinatario = this.destinatario.find(dest => dest.documentoCliente === destinatarioSeleccionado);
       this.loading = false;
     });
@@ -281,13 +281,13 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         country: ["CO"]
       },
       fields: ["formatted_address", "geometry"],
-      types: ["address"] // Agrega el tipo "establishment" para lugares
+      types: ["address"]
     });
 
     google.maps.event.addListener(autocomplete, 'place_changed', () => {
       const place: any = autocomplete.getPlace();
       if (place) {
-        const selectedAddress = place.formatted_address || place.name; // Utiliza el nombre del lugar si no hay una dirección formateada
+        const selectedAddress = place.formatted_address;
         this.editForm.patchValue({ codigoQrPaquete: selectedAddress });
       }
     });

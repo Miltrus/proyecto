@@ -113,7 +113,7 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
         country: ["CO"]
       },
       fields: ["formatted_address", "geometry"],
-      types: ["address"] // Agrega el tipo "establishment" para lugares
+      types: ["address"]
     });
 
     google.maps.event.addListener(autocomplete, 'place_changed', () => {
