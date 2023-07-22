@@ -43,11 +43,10 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
   dataCliente: ClienteInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
   loading: boolean = true;
-  savedChanges: boolean = false;
 
   hasUnsavedChanges(): boolean {
     this.loading = false;
-    return this.editForm.dirty && !this.savedChanges;
+    return this.editForm.dirty
   }
 
   editForm = new FormGroup({
@@ -107,9 +106,9 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
       if (result) {
         this.loading = true;
         const putCltSub = this.api.putCliente(id).subscribe((data) => {
-          this.savedChanges = true;
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
+            this.editForm.reset();
             this.alerts.showSuccess('El cliente ha sido modificado', 'Modificación exitosa');
             this.router.navigate(['cliente/list-clientes']);
           } else {

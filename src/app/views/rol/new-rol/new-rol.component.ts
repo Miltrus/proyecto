@@ -30,11 +30,12 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
     private dialog: MatDialog,
   ) { }
 
-  savedChanges: boolean = false;
+  permisos: PermisoInterface[] = [];
+  loading: boolean = true;
 
   hasUnsavedChanges(): boolean {
     this.loading = false;
-    return this.newForm.dirty && !this.savedChanges;
+    return this.newForm.dirty;
   }
 
   newForm = new FormGroup({
@@ -42,8 +43,6 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
     permisosSeleccionados: new FormArray(<any>[])
   });
 
-  permisos: PermisoInterface[] = [];
-  loading: boolean = true;
 
   updateAllCheckboxes(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -84,15 +83,15 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
       if (result) {
         const permisosSeleccionados = this.newForm.value.permisosSeleccionados;
         if (permisosSeleccionados.filter((permiso: boolean) => permiso).length < 1) {
-          this.alerts.showError('Debes seleccionar al menos un permiso', 'Error');
+          this.alerts.showError('Debes seleccionar al menos un permiso.', 'Error');
           return; // Detener la ejecución del método si no se selecciona ningún permiso
         }
         this.loading = true;
         this.api.postRol(form).subscribe(data => {
-          this.savedChanges = true;
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El rol ha sido creado exitosamente', 'Rol creado');
+            this.newForm.reset();
+            this.alerts.showSuccess('El rol ha sido creado exitosamente.', 'Rol creado');
             this.router.navigate(['rol/list-roles']);
 
             // Obtén el último ID de rol creado
@@ -122,7 +121,7 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
         });
 
       } else {
-        this.alerts.showInfo('El rol no ha sido creado', 'Rol no creado');
+        this.alerts.showInfo('El rol no ha sido creado.', 'Rol no creado');
       }
     });
   }

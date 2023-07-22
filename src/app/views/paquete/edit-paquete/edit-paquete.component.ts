@@ -41,18 +41,15 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     private renderer: Renderer2,
   ) { }
 
-  savedChanges: boolean = false;
-
   hasUnsavedChanges(): boolean {
     this.loading = false;
-    return this.editForm.dirty && !this.savedChanges;
+    return this.editForm.dirty;
   }
 
   editForm = new FormGroup({
     idPaquete: new FormControl(''),
     codigoQrPaquete: new FormControl('', Validators.required),
     pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^\\d{0,3}(\\.\\d{0,2})?$')]),
-    unidadesPaquete: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
     contenidoPaquete: new FormControl('', Validators.required),
     documentoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
     nombreDestinatario: new FormControl('', Validators.required),
@@ -117,7 +114,6 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         'idPaquete': this.dataPaquete[0]?.idPaquete || 'idPaquete',
         'codigoQrPaquete': this.dataPaquete[0]?.codigoQrPaquete || '', //si dataRol[0] es null, asignamos un string vacio, si no se hace esto da error
         'pesoPaquete': this.dataPaquete[0]?.pesoPaquete || '',
-        'unidadesPaquete': this.dataPaquete[0]?.unidadesPaquete || '',
         'contenidoPaquete': this.dataPaquete[0]?.contenidoPaquete || '',
         'documentoDestinatario': this.dataPaquete[0]?.documentoDestinatario || '',
         'nombreDestinatario': this.dataPaquete[0]?.nombreDestinatario || '',
@@ -166,9 +162,9 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       if (result) {
         this.loading = true;
         this.api.putPaquete(id).subscribe(data => {
-          this.savedChanges = true;
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
+            this.editForm.reset();
             this.alerts.showSuccess('El paquete ha sido modificado', 'Modificación exitosa');
             this.router.navigate(['paquete/list-paquetes']);
           }

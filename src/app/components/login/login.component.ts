@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LoginService } from '../../services/api/login.service';
 import { LoginInterface } from '../../models/login.interface';
-import { ResolveData, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AlertsService } from '../../services/alerts/alerts.service';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
 
@@ -11,7 +11,7 @@ import { UsuarioInterface } from 'src/app/models/usuario.interface';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
   loginForm = new FormGroup({
     correoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
@@ -24,12 +24,6 @@ export class LoginComponent implements OnInit {
   userData: UsuarioInterface | null = null;
   showPassword: boolean = false;
 
-
-  ngOnInit(): void {
-
-  }
-
-
   onLogin(form: LoginInterface) {
     this.loading = true;
     this.api.onLogin(form).subscribe(data => {
@@ -38,7 +32,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem("token", data.token);
         this.userData = data.user; // Almacenar los datos del usuario
         this.router.navigate(['dashboard']);
-        this.alerts.showSuccess('Inicio de sesión exitoso', 'Bienvenido');
+        this.alerts.showSuccess('Inicio de sesión exitoso.', 'Bienvenido');
         return true;
       } else {
         this.alerts.showError(data.msj, 'Error al iniciar sesión');

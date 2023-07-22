@@ -35,11 +35,10 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
 
   private subscriptions: Subscription = new Subscription();
 
-  savedChanges: boolean = false;
 
   hasUnsavedChanges(): boolean {
     this.loading = false;
-    return this.newForm.dirty && !this.savedChanges;
+    return this.newForm.dirty
   }
 
   newForm = new FormGroup({
@@ -82,9 +81,9 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
       if (result) {
         this.loading = true;
         const postCltSub = this.api.postCliente(form).subscribe(data => {
-          this.savedChanges = true;
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
+            this.newForm.reset();
             this.alerts.showSuccess('El cliente ha sido creado exitosamente.', 'Cliente creado');
             this.dialogRef.close(form);
           }

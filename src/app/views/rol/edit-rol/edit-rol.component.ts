@@ -32,17 +32,16 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
     private formBuilder: FormBuilder,
   ) { }
 
-  savedChanges: boolean = false;
-
-  hasUnsavedChanges(): boolean {
-    this.loading = false;
-    return this.editForm.dirty && !this.savedChanges;
-  }
-
   dataRol: RolInterface[] = [];
   permisos: PermisoInterface[] = []; // pa almacenar los permisos asociados al rol
   permisosSeleccionados: string[] = []; // pa almacenar los permisos seleccionados
   loading: boolean = true;
+
+  hasUnsavedChanges(): boolean {
+    this.loading = false;
+    return this.editForm.dirty;
+  }
+
 
   updateAllCheckboxes(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -132,9 +131,9 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
               .map((control, index) => control.value ? this.permisos[index].idPermiso : null)
               .filter(permiso => permiso !== null);
             this.api.putRolPermiso(id.idRol, nuevosPermisos).subscribe(data => {
-              this.savedChanges = true;
               let respuesta: ResponseInterface = data;
               if (respuesta.status == 'ok') {
+                this.editForm.reset();
                 this.alerts.showSuccess('El rol ha sido modificado', 'Modificación exitosa');
                 this.router.navigate(['rol/list-roles']);
               } else {

@@ -133,62 +133,60 @@
                     </div>
                 </div>
                 <br>
-                <button type="button" mat-raised-button color='warn' (click)="togglePasswordChange()">
-                    {{ showPasswordChange ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña' }}
-                </button>
+                <a href="#" (click)="togglePasswordChange($event)">
+                    <span *ngIf="!showPasswordChange">Cambiar contraseña</span>
+                    <span *ngIf="showPasswordChange">Cancelar cambio de contraseña</span>
+                </a>
                 <br><br>
-                <form [formGroup]="pwdForm">
-                    <div *ngIf="showPasswordChange">
-                        <label for="exampleFormControlInput1">Nueva contraseña <b style="color: red;">*</b></label>
-                        <div class="input-group">
-                            <input type="{{ showPassword ? 'text' : 'password' }}" class="form-control"
-                                formControlName="contrasenaUsuario" [ngClass]="{
+                <div *ngIf="showPasswordChange" [formGroup]="pwdForm">
+                    <label for="exampleFormControlInput1">Nueva contraseña <b style="color: red;">*</b></label>
+                    <div class="input-group">
+                        <input type="{{ showPassword ? 'text' : 'password' }}" class="form-control"
+                            formControlName="contrasenaUsuario" [ngClass]="{
                                 'is-invalid': pwdForm.get('contrasenaUsuario')?.invalid && (pwdForm.get('contrasenaUsuario')?.touched || pwdForm.get('contrasenaUsuario')?.dirty),
                                 'is-valid': pwdForm.get('contrasenaUsuario')?.valid && (pwdForm.get('contrasenaUsuario')?.touched || pwdForm.get('contrasenaUsuario')?.dirty)
                             }" />
 
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" style="margin-left: 5px;"
-                                    (click)="toggleShowPassword()">
-                                    {{ showPassword ? 'Ocultar' : 'Mostrar' }}
-                                </button>
-                            </div>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" style="margin-left: 5px;"
+                                (click)="buttonShowPassword()">
+                                {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+                            </button>
+                        </div>
 
-                            <div *ngIf="pwdForm.get('contrasenaUsuario')?.errors?.['pattern']" class="invalid-feedback">
-                                La contraseña debe contener mínimo:
-                                <ul>
-                                    <li>
-                                        8 caracteres.
-                                    </li>
-                                    <li>
-                                        Una minúscula.
-                                    </li>
-                                    <li>
-                                        Una mayúscula.
-                                    </li>
-                                    <li>
-                                        3 números.
-                                    </li>
-                                    <li>
-                                        1 caracter especial.
-                                    </li>
-                                </ul>
-                            </div>
-                            <div *ngIf="pwdForm.get('contrasenaUsuario')?.errors?.['required']"
-                                class="invalid-feedback">
-                                Este campo es obligatorio.
-                            </div>
+                        <div *ngIf="pwdForm.get('contrasenaUsuario')?.errors?.['pattern']" class="invalid-feedback">
+                            La contraseña debe contener mínimo:
+                            <ul>
+                                <li>
+                                    8 caracteres.
+                                </li>
+                                <li>
+                                    Una minúscula.
+                                </li>
+                                <li>
+                                    Una mayúscula.
+                                </li>
+                                <li>
+                                    3 números.
+                                </li>
+                                <li>
+                                    1 caracter especial.
+                                </li>
+                            </ul>
+                        </div>
+                        <div *ngIf="pwdForm.get('contrasenaUsuario')?.errors?.['required']" class="invalid-feedback">
+                            Este campo es obligatorio.
                         </div>
                     </div>
-                </form>
-
-                <br>
-
-                <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
-                <button type="submit" mat-raised-button color="primary"
-                    [disabled]="editForm.invalid || (showPasswordChange && pwdForm.invalid)">Editar</button>
-                <br><br>
+                </div>
             </form>
+
+            <br>
+
+            <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
+            <button type="submit" mat-raised-button color="primary"
+                [disabled]="editForm.invalid || (showPasswordChange && pwdForm.invalid)">Editar</button>
+            <br><br>
         </div>
     </div>
 </app-navigation>

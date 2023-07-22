@@ -36,12 +36,16 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
   ) { }
 
   private subscriptions: Subscription = new Subscription();
+  dataUsuario: UsuarioInterface[] = [];
+  tiposDocumento: TipoDocumentoInterface[] = []
+  estadosUsuario: EstadoUsuarioInterface[] = [];
 
-  savedChanges: boolean = false;
+  rolUsuario: RolInterface[] = [];
+  loading: boolean = true;
 
   hasUnsavedChanges(): boolean {
     this.loading = false;
-    return (this.editForm.dirty || this.pwdForm.dirty) && !this.savedChanges;
+    return this.editForm.dirty || (this.showPasswordChange && this.pwdForm.dirty);
   }
 
   editForm = new FormGroup({
@@ -58,18 +62,7 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
 
   pwdForm = new FormGroup({
     contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=?.:,"°~;_¿¡*/{}|<>()]).{8,}$/)]),
-  })
-
-  dataUsuario: UsuarioInterface[] = [];
-  tiposDocumento: TipoDocumentoInterface[] = []
-  estadosUsuario: EstadoUsuarioInterface[] = [];
-
-  rolUsuario: RolInterface[] = [];
-  loading: boolean = true;
-
-  showPasswordChange: boolean = false;
-  showPassword: boolean = false;
-
+  });
 
   ngOnInit(): void {
     let idUsuario = this.activatedRouter.snapshot.paramMap.get('id');
@@ -102,7 +95,7 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
         });
         this.pwdForm.setValue({
           'contrasenaUsuario': this.dataUsuario[0]?.contrasenaUsuario || '',
-        })
+        });
 
         this.loading = false;
       },
@@ -140,10 +133,10 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
         }
 
         const putUserSub = this.api.putUsuario(updatedData).subscribe(data => {
-          this.savedChanges = true;
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El usuario ha sido modificado exitosamente', 'Modificacion exitosa');
+            this.editForm.reset();
+            this.alerts.showSuccess('El usuario ha sido modificado exitosamente.', 'Modificacion exitosa');
             this.router.navigate(['usuario/list-usuarios']);
           } else {
             this.alerts.showError(respuesta.msj, 'Error al modificar el usuario');
@@ -163,11 +156,14 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
     this.router.navigate(['usuario/list-usuarios']);
   }
 
-  toggleShowPassword(): void {
+  showPassword: boolean = false;
+  buttonShowPassword(): void {
     this.showPassword = !this.showPassword;
   }
 
-  togglePasswordChange() {
+  showPasswordChange: boolean = false;
+  togglePasswordChange(event: Event) {
+    event.preventDefault();
     this.showPasswordChange = !this.showPasswordChange;
   }
 }

@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 import { NavigationComponent } from 'src/app/components/navigation/navigation.component';
+
+import { google } from 'google-maps';
 
 //material
 import { MatToolbarModule } from '@angular/material/toolbar';

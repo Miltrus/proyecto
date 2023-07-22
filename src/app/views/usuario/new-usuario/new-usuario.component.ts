@@ -34,12 +34,14 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
   ) { }
 
   private subscriptions: Subscription = new Subscription();
-
-  savedChanges: boolean = false;
+  tiposDocumento: TipoDocumentoInterface[] = []
+  estadosUsuario: EstadoUsuarioInterface[] = [];
+  rolUsuario: RolInterface[] = [];
+  loading: boolean = true;
 
   hasUnsavedChanges(): boolean {
     this.loading = false;
-    return this.newForm.dirty && !this.savedChanges;
+    return this.newForm.dirty;
   }
 
   newForm = new FormGroup({
@@ -54,14 +56,6 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
     idRol: new FormControl('', Validators.required),
     idEstado: new FormControl('1'),
   })
-
-  tiposDocumento: TipoDocumentoInterface[] = []
-  estadosUsuario: EstadoUsuarioInterface[] = [];
-  rolUsuario: RolInterface[] = [];
-  loading: boolean = true;
-
-
-  showPassword: boolean = false;
 
 
   ngOnInit(): void {
@@ -98,10 +92,10 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
       if (result) {
         this.loading = true;
         const postUserSub = this.api.postUsuario(form).subscribe(data => {
-          this.savedChanges = true;
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El usuario ha sido creado exitosamente', 'Usuario creado');
+            this.newForm.reset();
+            this.alerts.showSuccess('El usuario ha sido creado exitosamente.', 'Usuario creado');
             this.router.navigate(['usuario/list-usuarios']);
 
           } else {
@@ -122,6 +116,7 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
     this.loading = true;
   }
 
+  showPassword: boolean = false;
   toggleShowPassword(): void {
     this.showPassword = !this.showPassword;
   }

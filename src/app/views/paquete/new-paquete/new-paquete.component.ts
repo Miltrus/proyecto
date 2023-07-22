@@ -2,7 +2,6 @@ import { Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angu
 import { OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { google } from 'google-maps';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { PaqueteService } from '../../../services/api/paquete.service';
 import { PaqueteInterface } from '../../../models/paquete.interface';
@@ -40,17 +39,14 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     private renderer: Renderer2,
   ) { }
 
-  savedChanges: boolean = false;
-
   hasUnsavedChanges(): boolean {
     this.loading = false;
-    return this.newForm.dirty && !this.savedChanges;
+    return this.newForm.dirty;
   }
 
   newForm = new FormGroup({
     codigoQrPaquete: new FormControl('', Validators.required),
     pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^\\d{0,3}(\\.\\d{0,2})?$')]),
-    unidadesPaquete: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{0,3}$')]),
     contenidoPaquete: new FormControl('', Validators.required),
     documentoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
     nombreDestinatario: new FormControl('', Validators.required),
@@ -154,9 +150,9 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       if (result) {
         this.loading = true;
         this.api.postPaquete(form).subscribe(data => {
-          this.savedChanges = true;
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
+            this.newForm.reset();
             this.alerts.showSuccess('El paquete ha sido creado exitosamente', 'Paquete registrado');
             this.router.navigate(['paquete/list-paquetes']);
           }

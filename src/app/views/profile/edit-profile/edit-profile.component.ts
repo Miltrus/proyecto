@@ -39,11 +39,9 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
     private alerts: AlertsService,
   ) { }
 
-  savedChanges: boolean = false;
-
   hasUnsavedChanges(): boolean {
     this.loading = false;
-    return (this.editForm.dirty || this.pwdForm.dirty) && !this.savedChanges;
+    return this.editForm.dirty || (this.showPasswordChange && this.pwdForm.dirty);
   }
 
   ngOnInit(): void {
@@ -99,9 +97,8 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
         }
 
         this.userService.putUsuario(updatedData).subscribe(data => {
-          this.savedChanges = true;
           if (data.status == 'ok') {
-            this.alerts.showSuccess('Cambios guardados exitosamente', 'Usuario actualizado');
+            this.alerts.showSuccess('Cambios guardados exitosamente.', 'Usuario actualizado');
             this.dialogRef.close(updatedData);
           } else {
             this.alerts.showError(data.msj, 'Error');
@@ -119,7 +116,7 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
   }
 
   closeDialog(): void {
-    if (this.editForm.dirty) {
+    if (this.editForm.dirty || (this.showPasswordChange && this.pwdForm.dirty)) {
       const dialogRef = this.dialog.open(DialogConfirmComponent, {
         data: {
           title: 'Cambios sin guardar',
@@ -140,7 +137,8 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
     this.showPassword = !this.showPassword;
   }
 
-  togglePasswordChange() {
+  togglePasswordChange(event: Event) {
+    event.preventDefault();
     this.showPasswordChange = !this.showPasswordChange;
   }
 }
