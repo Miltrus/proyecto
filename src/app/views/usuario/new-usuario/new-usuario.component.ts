@@ -2,17 +2,15 @@ import { Component, HostListener, OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertsService } from '../../../services/alerts/alerts.service';
 import { UsuarioService } from '../../../services/api/usuario.service';
 import { UsuarioInterface } from '../../../models/usuario.interface';
 import { ResponseInterface } from '../../../models/response.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { EstadoUsuarioInterface } from 'src/app/models/estado-usuario.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 import { Subscription, forkJoin, tap } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-new-usuario',
@@ -23,14 +21,14 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
 
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(e: BeforeUnloadEvent) {
-    return this.hasUnsavedChanges() === false;
+    if (this.hasUnsavedChanges()) {
+      e.returnValue = '';
+    }
   }
 
   constructor(
     private router: Router,
     private api: UsuarioService,
-    private alerts: AlertsService,
-    private dialog: MatDialog,
   ) { }
 
   private subscriptions: Subscription = new Subscription();
@@ -83,33 +81,41 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
   }
 
   postForm(form: UsuarioInterface) {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Estás seguro que deseas crear este usuario?'
-      }
-    });
-    const dialogRefSub = dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Estás seguro que deseas crear este usuario?',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
         const postUserSub = this.api.postUsuario(form).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
-            this.newForm.reset();
-            this.alerts.showSuccess('El usuario ha sido creado exitosamente.', 'Usuario creado');
             this.router.navigate(['usuario/list-usuarios']);
-
+            this.newForm.reset();
+            Swal.fire({
+              icon: 'success',
+              title: 'Usuario creado',
+              text: 'El usuario ha sido creado exitosamente.',
+            }).then(() => {
+            });
           } else {
-            this.alerts.showError(respuesta.msj, 'Error al crear el usuario');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al crear',
+              text: respuesta.msj,
+            });
             this.loading = false;
           }
         });
         this.subscriptions.add(postUserSub);
-      } else {
-        this.alerts.showInfo('El usuario no ha sido creado', 'Usuario no creado');
       }
     });
-    this.subscriptions.add(dialogRefSub);
   }
+
 
   goBack() {
     this.router.navigate(['usuario/list-usuarios']);

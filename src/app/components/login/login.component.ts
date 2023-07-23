@@ -3,8 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LoginService } from '../../services/api/login.service';
 import { LoginInterface } from '../../models/login.interface';
 import { Router } from '@angular/router';
-import { AlertsService } from '../../services/alerts/alerts.service';
-import { UsuarioInterface } from 'src/app/models/usuario.interface';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -18,11 +17,14 @@ export class LoginComponent {
     contrasenaUsuario: new FormControl('', Validators.required)
   })
 
-  constructor(private api: LoginService, private router: Router, private alerts: AlertsService) { }
+  constructor(
+    private api: LoginService,
+    private router: Router,
+  ) { }
 
   loading = false;
-  userData: UsuarioInterface | null = null;
   showPassword: boolean = false;
+  dataUser: any = [];
 
   onLogin(form: LoginInterface) {
     this.loading = true;
@@ -30,12 +32,20 @@ export class LoginComponent {
       if (data.status == 'ok') {
         this.loading = true;
         localStorage.setItem("token", data.token);
-        this.userData = data.user; // Almacenar los datos del usuario
         this.router.navigate(['dashboard']);
-        this.alerts.showSuccess('Inicio de sesión exitoso.', 'Bienvenido');
+        this.dataUser = data.user;
+        Swal.fire({
+          icon: 'success',
+          title: 'Inicio de sesión exitoso',
+          text: "¡Bienvenido " + this.dataUser.nombreUsuario + "!",
+        })
         return true;
       } else {
-        this.alerts.showError(data.msj, 'Error al iniciar sesión');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: data.msj,
+        })
         this.loading = false;
         return false;
       }

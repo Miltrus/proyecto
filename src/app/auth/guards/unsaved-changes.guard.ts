@@ -1,23 +1,28 @@
-import { inject } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { CanDeactivateFn } from '@angular/router';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
+import Swal from 'sweetalert2';
 
 export interface HasUnsavedChanges {
   hasUnsavedChanges(): boolean;
 }
 
-export const unsavedChangesGuard: CanDeactivateFn<HasUnsavedChanges> = (component) => {
-  const dialog = inject(MatDialog);
+export const unsavedChangesGuard: CanDeactivateFn<HasUnsavedChanges> = async (component) => {
 
   if (component.hasUnsavedChanges()) {
-    const dialogRef = dialog.open(DialogConfirmComponent, {
-      data: {
-        title: 'Cambios sin guardar',
-        message: '¿Estás seguro que deseas salir?'
-      }
+    const result = await Swal.fire({
+      icon: 'warning',
+      title: 'Cambios sin guardar',
+      text: '¿Estás seguro que desea salir sin guardar los cambios?',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
     });
-    return dialogRef.afterClosed();
+
+    if (result.isConfirmed) {
+      return true;
+    } else {
+      return false;
+    }
   }
   return true;
 };

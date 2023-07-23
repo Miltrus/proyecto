@@ -5,7 +5,7 @@ import { TipoDocumentoInterface } from '../../models/tipo-documento.interface';
 import { EstadoUsuarioInterface } from '../../models/estado-usuario.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 
@@ -18,43 +18,60 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) { }
 
+  private getHeaders(): HttpHeaders {
+    // Aquí agregamos el token a las cabeceras
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Token': token || ''
+    });
+  }
+
   getAllUsuarios(): Observable<UsuarioInterface[]> {
-    let address = this.url + 'usuario';
-    return this.http.get<UsuarioInterface[]>(address);
+    const address = this.url + 'usuario';
+    const headers = this.getHeaders();
+    return this.http.get<UsuarioInterface[]>(address, { headers });
   }
 
   getOneUsuario(id: any): Observable<UsuarioInterface> {
-    let address = this.url + 'usuario/' + id;
-    return this.http.get<UsuarioInterface>(address);
+    const address = this.url + 'usuario/' + id;
+    const headers = this.getHeaders();
+    return this.http.get<UsuarioInterface>(address, { headers });
   }
 
   postUsuario(form: UsuarioInterface): Observable<ResponseInterface> {
-    let address = this.url + 'usuario';
-    return this.http.post<ResponseInterface>(address, form);
+    const address = this.url + 'usuario';
+    const headers = this.getHeaders();
+    return this.http.post<ResponseInterface>(address, form, { headers });
   }
 
   putUsuario(id: any): Observable<ResponseInterface> {
-    let address = this.url + 'usuario/' + id;
-    return this.http.put<ResponseInterface>(address, id);
+    const address = this.url + 'usuario/' + id;
+    const headers = this.getHeaders();
+    return this.http.put<ResponseInterface>(address, id, { headers });
   }
 
   deleteUsuario(id: any): Observable<ResponseInterface> {
-    let addres = this.url + 'usuario/' + id;
-    return this.http.delete<ResponseInterface>(addres);
+    const address = this.url + 'usuario/' + id;
+    const headers = this.getHeaders();
+    return this.http.delete<ResponseInterface>(address, { headers });
   }
 
   getTipoDocumento(): Observable<TipoDocumentoInterface[]> {
     const address = this.url + 'tipodocumentousuario';
-    return this.http.get<TipoDocumentoInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<TipoDocumentoInterface[]>(address, { headers });
   }
 
   getEstadoUsuario(): Observable<EstadoUsuarioInterface[]> {
     const address = this.url + 'estadoUsuario';
-    return this.http.get<EstadoUsuarioInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<EstadoUsuarioInterface[]>(address, { headers });
   }
 
   getRolUsuario(): Observable<RolInterface[]> {
     const address = this.url + 'rol';
-    return this.http.get<RolInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<RolInterface[]>(address, { headers });
   }
 }

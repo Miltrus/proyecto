@@ -17,55 +17,74 @@ export class RolService {
 
   constructor(private http: HttpClient) { }
 
+  private getHeaders(): HttpHeaders {
+    // Aquí agregamos el token a las cabeceras
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Token': token || ''
+    });
+  }
+
   getAllRoles(): Observable<RolInterface[]> {
     let address = this.url + 'rol';
-    return this.http.get<RolInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<RolInterface[]>(address, { headers });
   }
 
   getOneRol(id: any): Observable<RolInterface> {
     let address = this.url + 'rol/' + id;
-    return this.http.get<RolInterface>(address);
+    const headers = this.getHeaders();
+    return this.http.get<RolInterface>(address, { headers });
   }
 
   postRol(form: RolInterface): Observable<ResponseInterface> {
     let address = this.url + 'rol';
-    return this.http.post<ResponseInterface>(address, form);
+    const headers = this.getHeaders();
+    return this.http.post<ResponseInterface>(address, form, { headers });
   }
 
   putRol(id: any): Observable<RolInterface> {
     let address = this.url + 'rol/' + id;
-    return this.http.put<RolInterface>(address, id);
+    const headers = this.getHeaders();
+    return this.http.put<RolInterface>(address, id, { headers });
   }
 
   deleteRol(id: any): Observable<ResponseInterface> {
     let addres = this.url + 'rol/' + id;
-    return this.http.delete<ResponseInterface>(addres);
+    const headers = this.getHeaders();
+    return this.http.delete<ResponseInterface>(addres, { headers });
   }
 
   getAllPermisos(): Observable<PermisoInterface[]> {
     let address = this.url + 'permiso';
-    return this.http.get<PermisoInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<PermisoInterface[]>(address, { headers });
   }
 
   getLastRolId(): Observable<any> {
     let address = this.url + 'rol/lastId';
-    return this.http.get<any>(address);
+    const headers = this.getHeaders();
+    return this.http.get<any>(address, { headers });
   }
 
   guardarRolPermiso(rolPermiso: RolPermisoInterface): Observable<ResponseInterface> {
     let address = this.url + 'rolPermiso';
-    return this.http.post<ResponseInterface>(address, rolPermiso);
+    const headers = this.getHeaders();
+    return this.http.post<ResponseInterface>(address, rolPermiso, { headers });
   }
 
   getRolPermisos(idRol: any): Observable<RolPermisoResponseInterface> {
     let address = this.url + 'rolPermiso/' + idRol + '/permisos';
-    return this.http.get<RolPermisoResponseInterface>(address);
+    const headers = this.getHeaders();
+    return this.http.get<RolPermisoResponseInterface>(address, { headers });
   }
 
   putRolPermiso(idRol: any, idPermisos: any[]): Observable<ResponseInterface> {
     let address = this.url + 'rolPermiso/' + idRol;
+    const headers = this.getHeaders();
     let body = { idRol: idRol, idPermisos: idPermisos }; // Crear el objeto JSON con las propiedades correspondientes
-    return this.http.put<ResponseInterface>(address, body);
+    return this.http.put<ResponseInterface>(address, body, { headers });
   }
 
 

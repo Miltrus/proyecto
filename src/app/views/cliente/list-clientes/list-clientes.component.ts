@@ -1,16 +1,15 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ClienteService } from '../../../services/api/cliente.service';
 import { Router } from '@angular/router';
-import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from 'src/app/models/response.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent } from '../../../components/dialog-confirm/dialog-confirm.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Subscription, forkJoin } from 'rxjs';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -23,7 +22,6 @@ export class ListClientesComponent implements OnInit, OnDestroy {
   constructor(
     private api: ClienteService,
     private router: Router,
-    private alerts: AlertsService,
     private dialog: MatDialog,
   ) { }
 
@@ -48,7 +46,11 @@ export class ListClientesComponent implements OnInit, OnDestroy {
       this.clientes = clientes;
       this.dataSource.data = this.clientes;
       if (this.dataSource.data.length < 1) {
-        this.alerts.showInfo('No hay clientes registrados', 'Sin registros');
+        Swal.fire({
+          icon: 'info',
+          title: 'No hay clientes registrados',
+          text: 'No se encontraron clientes registrados en el sistema.',
+        });
       }
       this.tiposDocumento = tiposDocumento;
       this.loading = false;
@@ -70,7 +72,7 @@ export class ListClientesComponent implements OnInit, OnDestroy {
   viewCliente(usuario: ClienteInterface): void {
     this.dialog.open(this.viewClienteDialog, {
       data: usuario,
-      width: '400px', // Ajusta el ancho del cuadro emergente según tus necesidades
+      width: '400px',
     });
   }
 
@@ -85,29 +87,35 @@ export class ListClientesComponent implements OnInit, OnDestroy {
   }
 
   deleteCliente(id: any): void {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Estás seguro que deseas eliminar este cliente?'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Estás seguro que deseas eliminar este cliente?',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
         this.api.deleteCliente(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El cliente ha sido eliminado', 'Eliminación exitosa');
             this.clientes = this.clientes.filter(cliente => cliente.idCliente !== id);
             this.dataSource.data = this.clientes; // Actualizar el dataSource con los nuevos datos
+            Swal.fire({
+              icon: 'success',
+              title: 'Cliente eliminado',
+              text: 'El cliente ha sido eliminado exitosamente.',
+            });
           } else {
-            this.alerts.showError(respuesta.msj, 'Error en la eliminación');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al eliminar',
+              text: respuesta.msj,
+            });
           }
           this.loading = false;
         });
-      } else {
-        this.alerts.showInfo('No se ha realizado ninguna accion', 'Eliminacion cancelada');
-        this.loading = false;
       }
     });
   }

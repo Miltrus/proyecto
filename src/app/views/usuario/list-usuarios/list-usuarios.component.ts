@@ -1,18 +1,17 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { UsuarioService } from '../../../services/api/usuario.service';
 import { Router } from '@angular/router';
-import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from 'src/app/models/response.interface';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { EstadoUsuarioInterface } from 'src/app/models/estado-usuario.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/dialog-confirm/dialog-confirm.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Subscription, forkJoin } from 'rxjs';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -25,7 +24,6 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
   constructor(
     private api: UsuarioService,
     private router: Router,
-    private alerts: AlertsService,
     private dialog: MatDialog,
   ) { }
 
@@ -98,40 +96,50 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
   }
 
   deleteUsuario(id: any): void {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Estás seguro de que deseas eliminar este usuario?'
-      }
-    });
-
-    const dialogRefDelSub = dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Estás seguro de que deseas eliminar este usuario?',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
         if (id == this.uid) {
-          this.alerts.showError('No puedes eliminar tu propio usuario', 'Acceso denegado');
+          Swal.fire({
+            icon: 'error',
+            title: 'Acceso denegado',
+            text: 'No puedes eliminar tu propio usuario.',
+          });
           this.loading = false;
           return;
         }
-
         const delUserSUb = this.api.deleteUsuario(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
 
           if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El usuario ha sido eliminado exitosamente', 'Eliminación exitosa');
             this.usuarios = this.usuarios.filter(usuario => usuario.idUsuario !== id);
-            this.dataSource.data = this.usuarios; //actualizamos el datasource
+            this.dataSource.data = this.usuarios; // Actualizamos el dataSource con los nuevos datos
+            Swal.fire({
+              icon: 'success',
+              title: 'Usuario eliminado',
+              text: 'El usuario ha sido eliminado exitosamente.',
+            });
           } else {
-            this.alerts.showError(respuesta.msj, 'Error en la Eliminación');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al eliminar',
+              text: respuesta.msj,
+            });
           }
           this.loading = false;
         });
         this.subscriptions.add(delUserSUb);
-      } else {
-        this.alerts.showInfo('El usuario no ha sido eliminado', 'Eliminacion cancelada');
       }
     });
-    this.subscriptions.add(dialogRefDelSub);
   }
+
 
 
   toggleEstado(usuario: UsuarioInterface): void {
@@ -139,39 +147,57 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
     const { contrasenaUsuario, ...userWithOutPwd } = usuario;
     const updatedUsuario: UsuarioInterface = { ...userWithOutPwd, idEstado: nuevoEstado };
 
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: `¿Estás seguro que deseas cambiar el estado del usuario?`
-      }
-    });
-
-    const dialogRefToggSub = dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Estás seguro que deseas cambiar el estado del usuario?',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
         if (usuario.idUsuario == this.uid) {
-          this.alerts.showWarning('No puedes cambiar el estado de tu propio usuario', 'Acceso denegado');
+          Swal.fire({
+            icon: 'warning',
+            title: 'Acceso denegado',
+            text: 'No puedes cambiar el estado de tu propio usuario.',
+          });
           this.loading = false;
           return;
         }
+
         const putUserSub = this.api.putUsuario(updatedUsuario).subscribe(data => {
           let respuesta: ResponseInterface = data;
 
           if (respuesta.status === 'ok') {
-            this.alerts.showSuccess('El estado del usuario ha sido actualizado exitosamente', 'Actualización exitosa');
             this.usuarios = this.usuarios.map(u => (u.documentoUsuario === updatedUsuario.documentoUsuario ? updatedUsuario : u));
-            this.dataSource.data = this.usuarios; // actualizamos el datasource
+            this.dataSource.data = this.usuarios; // Actualizamos el dataSource con los nuevos datos
+            Swal.fire({
+              icon: 'success',
+              title: 'Usuario actualizado',
+              text: 'El estado del usuario ha sido actualizado exitosamente.',
+            });
           } else {
-            this.alerts.showError(respuesta.msj, 'Error en la actualización');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al actualizar',
+              text: respuesta.msj,
+            });
           }
           this.loading = false;
         });
         this.subscriptions.add(putUserSub);
       } else {
-        this.alerts.showInfo('No se ha realizado ningún cambio', 'Actualización cancelada');
+        Swal.fire({
+          icon: 'info',
+          title: 'Actualización cancelada',
+          text: 'No se ha realizado ningún cambio.',
+        });
       }
     });
-    this.subscriptions.add(dialogRefToggSub);
   }
+
 
 
   getTipoDocumento(idTipoDocumento: any): string {

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs'; // tap is used to debug observables
 })
 export class LoginService {
 
-  url: string = 'http://localhost:3030/';
+  url: string = 'http://localhost:3030/auth/';
 
   constructor(private http: HttpClient) { }
 
@@ -19,5 +19,4 @@ export class LoginService {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post<ResponseInterface>(address, form, { headers });
   }
-
 }

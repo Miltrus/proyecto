@@ -27,7 +27,9 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   @ViewChild('inputPlaces') inputPlaces!: ElementRef;
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(e: BeforeUnloadEvent) {
-    return this.hasUnsavedChanges() === false;
+    if (this.hasUnsavedChanges()) {
+      e.returnValue = '';
+    }
   }
 
   constructor(

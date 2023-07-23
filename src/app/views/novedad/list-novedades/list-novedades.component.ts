@@ -1,17 +1,15 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { NovedadService } from '../../../services/api/novedad.service';
 import { Router } from '@angular/router';
-import { AlertsService } from '../../../services/alerts/alerts.service';
-import { ResponseInterface } from 'src/app/models/response.interface';
 import { NovedadInterface } from 'src/app/models/novedad.interface';
 import { TipoNovedadInterface } from 'src/app/models/tipo-novedad.interface';
 import { EntregaInterface } from 'src/app/models/entrega.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/dialog-confirm/dialog-confirm.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Subscription, forkJoin } from 'rxjs';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -24,7 +22,6 @@ export class ListNovedadesComponent implements OnInit, OnDestroy {
   constructor(
     private api: NovedadService,
     private router: Router,
-    private alerts: AlertsService,
     private dialog: MatDialog,
   ) { }
 
@@ -51,7 +48,11 @@ export class ListNovedadesComponent implements OnInit, OnDestroy {
       this.novedades = novedades;
       this.dataSource.data = this.novedades;
       if (this.dataSource.data.length < 1) {
-        this.alerts.showInfo('No hay novedades registradas.', 'Sin registros');
+        Swal.fire({
+          icon: 'info',
+          title: 'No hay novedades registradas',
+          text: 'No se encontraron novedades registradas en el sistema.',
+        });
       }
       this.tiposNovedad = tiposNovedad;
       this.entrega = entrega;

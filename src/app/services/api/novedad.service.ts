@@ -17,28 +17,42 @@ export class NovedadService {
 
   constructor(private http: HttpClient) { }
 
+  private getHeaders(): HttpHeaders {
+    // Aquí agregamos el token a las cabeceras
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Token': token || ''
+    });
+  }
+
   getAllNovedades(): Observable<NovedadInterface[]> {
     let address = this.url + 'novedad';
-    return this.http.get<NovedadInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<NovedadInterface[]>(address, { headers });
   }
 
   getOneNovedad(id: any): Observable<NovedadInterface> {
     let address = this.url + 'novedad/' + id;
-    return this.http.get<NovedadInterface>(address);
+    const headers = this.getHeaders();
+    return this.http.get<NovedadInterface>(address, { headers });
   }
 
   postNovedad(form: NovedadInterface): Observable<ResponseInterface> {
     let address = this.url + 'novedad';
-    return this.http.post<ResponseInterface>(address, form);
+    const headers = this.getHeaders();
+    return this.http.post<ResponseInterface>(address, form, { headers });
   }
 
   getTipoNovedad(): Observable<TipoNovedadInterface[]> {
     const address = this.url + 'tipoNovedad';
-    return this.http.get<TipoNovedadInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<TipoNovedadInterface[]>(address, { headers });
   }
 
   getEntrega(): Observable<EntregaInterface[]> {
     const address = this.url + 'entrega';
-    return this.http.get<EntregaInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<EntregaInterface[]>(address, { headers });
   }
 }

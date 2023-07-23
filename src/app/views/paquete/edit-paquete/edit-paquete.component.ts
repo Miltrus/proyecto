@@ -29,7 +29,9 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(e: BeforeUnloadEvent) {
-    return this.hasUnsavedChanges() === false;
+    if (this.hasUnsavedChanges()) {
+      e.returnValue = '';
+    }
   }
 
   constructor(

@@ -9,6 +9,7 @@ import { DOCUMENT } from '@angular/common';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { RolService } from '../../services/api/rol.service';
 import { UsuarioService } from 'src/app/services/api/usuario.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-navigation',
@@ -86,22 +87,23 @@ export class NavigationComponent {
     );
 
   logout(): void {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        title: 'Cerrar sesión',
-        message: '¿Estás seguro de que deseas cerrar sesión?'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: 'Cerrar sesión',
+      text: '¿Estás seguro que deseas cerrar sesión?',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.router.navigate(['landing-page']);
         localStorage.removeItem('token');
-
         this.isDarkThemeActive = false;
       }
     });
   }
+
 
   toggleUserPanel(): void {
     if (this.userMenuTrigger) {
