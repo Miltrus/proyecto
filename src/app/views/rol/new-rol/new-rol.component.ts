@@ -94,8 +94,8 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
         this.api.postRol(form).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
-            this.router.navigate(['rol/list-roles']);
             this.newForm.reset();
+            this.router.navigate(['rol/list-roles']);
             Swal.fire({
               icon: 'success',
               title: 'Rol creado',

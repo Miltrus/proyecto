@@ -1,11 +1,10 @@
 import { Component, HostListener, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UsuarioInterface } from '../../../models/usuario.interface';
 import { UsuarioService } from 'src/app/services/api/usuario.service';
 import { RolInterface } from 'src/app/models/rol.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 import Swal from 'sweetalert2';
 
@@ -37,7 +36,6 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
     @Inject(MAT_DIALOG_DATA) public data: { userData: UsuarioInterface },
     private formBuilder: FormBuilder,
     private userService: UsuarioService,
-    private dialog: MatDialog,
   ) { }
 
   hasUnsavedChanges(): boolean {

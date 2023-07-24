@@ -94,8 +94,8 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
         const postUserSub = this.api.postUsuario(form).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
-            this.router.navigate(['usuario/list-usuarios']);
             this.newForm.reset();
+            this.router.navigate(['usuario/list-usuarios']);
             Swal.fire({
               icon: 'success',
               title: 'Usuario creado',

@@ -84,8 +84,8 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
         const postCltSub = this.api.postCliente(form).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
-            this.router.navigate(['cliente/list-clientes']);
             this.newForm.reset();
+            this.router.navigate(['cliente/list-clientes']);
             Swal.fire({
               icon: 'success',
               title: 'Cliente creado',

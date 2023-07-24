@@ -40,7 +40,6 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
 
   rolUsuario: RolInterface[] = [];
   loading: boolean = true;
-  savedChanges: boolean = false;
 
   hasUnsavedChanges(): boolean {
     this.loading = false;
@@ -136,9 +135,9 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
         const putUserSub = this.api.putUsuario(updatedData).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
-            this.router.navigate(['usuario/list-usuarios']);
             this.editForm.reset();
             this.pwdForm.reset();
+            this.router.navigate(['usuario/list-usuarios']);
             Swal.fire({
               icon: 'success',
               title: 'Modificacion exitosa',

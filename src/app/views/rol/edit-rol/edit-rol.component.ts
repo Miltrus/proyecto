@@ -134,8 +134,8 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
             this.api.putRolPermiso(id.idRol, nuevosPermisos).subscribe(data => {
               let respuesta: ResponseInterface = data;
               if (respuesta.status == 'ok') {
-                this.router.navigate(['rol/list-roles']);
                 this.editForm.reset();
+                this.router.navigate(['rol/list-roles']);
                 Swal.fire({
                   icon: 'success',
                   title: 'Rol modificado',
