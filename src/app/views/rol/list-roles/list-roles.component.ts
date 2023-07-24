@@ -116,7 +116,7 @@ export class ListRolesComponent implements OnInit, OnDestroy {
   deleteRol(id: any): void {
     Swal.fire({
       icon: 'question',
-      title: '¿Estás seguro que deseas eliminar este rol?',
+      title: '¿Estás seguro de que deseas eliminar este rol?',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',

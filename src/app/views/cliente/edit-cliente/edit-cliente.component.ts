@@ -99,7 +99,7 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
   postForm(id: any) {
     Swal.fire({
       icon: 'question',
-      title: '¿Está seguro que deseas modificar este cliente?',
+      title: '¿Está seguro de que deseas modificar este cliente?',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
@@ -111,12 +111,11 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
           this.savedChanges = true;
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
+            this.router.navigate(['cliente/list-clientes']);
             Swal.fire({
               icon: 'success',
               title: 'Cliente modificado',
               text: 'El cliente ha sido modificado exitosamente.',
-            }).then(() => {
-              this.router.navigate(['cliente/list-clientes']);
             });
           } else {
             Swal.fire({

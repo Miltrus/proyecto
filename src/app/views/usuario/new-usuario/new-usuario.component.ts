@@ -83,7 +83,7 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
   postForm(form: UsuarioInterface) {
     Swal.fire({
       icon: 'question',
-      title: '¿Estás seguro que deseas crear este usuario?',
+      title: '¿Estás seguro de que deseas crear este usuario?',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
@@ -100,7 +100,6 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
               icon: 'success',
               title: 'Usuario creado',
               text: 'El usuario ha sido creado exitosamente.',
-            }).then(() => {
             });
           } else {
             Swal.fire({

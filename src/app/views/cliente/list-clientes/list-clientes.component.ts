@@ -89,7 +89,7 @@ export class ListClientesComponent implements OnInit, OnDestroy {
   deleteCliente(id: any): void {
     Swal.fire({
       icon: 'question',
-      title: '¿Estás seguro que deseas eliminar este cliente?',
+      title: '¿Estás seguro de que deseas eliminar este cliente?',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',

@@ -74,7 +74,7 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
   postForm(form: RolInterface) {
     Swal.fire({
       icon: 'question',
-      title: '¿Estás seguro que deseas crear este rol?',
+      title: '¿Estás seguro de que deseas crear este rol?',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',

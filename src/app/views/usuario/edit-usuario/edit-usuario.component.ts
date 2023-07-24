@@ -114,7 +114,7 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
   postForm(id: any) {
     Swal.fire({
       icon: 'question',
-      title: '¿Estás seguro que deseas editar este usuario?',
+      title: '¿Estás seguro de que deseas editar este usuario?',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
@@ -142,7 +142,7 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
             Swal.fire({
               icon: 'success',
               title: 'Modificacion exitosa',
-              text: 'El usuario ha sido modificado exitosamente.',
+              text: data.msj,
             });
           } else {
             Swal.fire({

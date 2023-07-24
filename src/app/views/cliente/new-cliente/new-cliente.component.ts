@@ -73,7 +73,7 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
   postForm(form: ClienteInterface) {
     Swal.fire({
       icon: 'question',
-      title: '¿Estás seguro que deseas crear este cliente?',
+      title: '¿Estás seguro de que deseas crear este cliente?',
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Confirmar',
@@ -84,13 +84,12 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
         const postCltSub = this.api.postCliente(form).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
+            this.router.navigate(['cliente/list-clientes']);
             this.newForm.reset();
             Swal.fire({
               icon: 'success',
               title: 'Cliente creado',
               text: 'El cliente ha sido creado exitosamente.',
-            }).then(() => {
-              this.router.navigate(['cliente/list-clientes']);
             });
           } else {
             Swal.fire({

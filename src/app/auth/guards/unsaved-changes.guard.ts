@@ -11,7 +11,7 @@ export const unsavedChangesGuard: CanDeactivateFn<HasUnsavedChanges> = async (co
     const result = await Swal.fire({
       icon: 'warning',
       title: 'Cambios sin guardar',
-      text: '¿Estás seguro que desea salir sin guardar los cambios?',
+      text: '¿Estás seguro de que deseas salir sin guardar los cambios?',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',

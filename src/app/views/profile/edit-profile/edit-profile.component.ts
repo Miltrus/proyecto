@@ -80,7 +80,7 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
   saveChanges(): void {
     Swal.fire({
       icon: 'question',
-      title: '¿Está seguro que deseas guardar los cambios?',
+      title: '¿Está seguro de que deseas guardar los cambios?',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
@@ -104,7 +104,7 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
             this.dialogRef.close(updatedData);
             Swal.fire({
               icon: 'success',
-              title: 'Cambios guardados',
+              title: 'Modificación exitosa',
               text: data.msj,
             });
           } else {
@@ -132,7 +132,7 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
       Swal.fire({
         icon: 'warning',
         title: 'Cambios sin guardar',
-        text: '¿Estás seguro que deseas salir?',
+        text: '¿Estás seguro de que deseas salir?',
         showCancelButton: true,
         confirmButtonText: 'Confirmar',
         cancelButtonText: 'Cancelar',

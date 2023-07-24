@@ -90,7 +90,7 @@ export class NavigationComponent {
     Swal.fire({
       icon: 'question',
       title: 'Cerrar sesión',
-      text: '¿Estás seguro que deseas cerrar sesión?',
+      text: '¿Estás seguro de que deseas cerrar sesión?',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',

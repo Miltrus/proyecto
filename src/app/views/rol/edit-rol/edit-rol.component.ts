@@ -108,7 +108,7 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
   postForm(id: any) {
     Swal.fire({
       icon: 'question',
-      title: '¿Estás seguro que deseas modificar este rol?',
+      title: '¿Estás seguro de que deseas modificar este rol?',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',

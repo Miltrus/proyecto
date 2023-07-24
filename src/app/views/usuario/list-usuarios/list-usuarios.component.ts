@@ -149,7 +149,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
 
     Swal.fire({
       icon: 'question',
-      title: '¿Estás seguro que deseas cambiar el estado del usuario?',
+      title: '¿Estás seguro de que deseas cambiar el estado de este usuario?',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
