@@ -3,4 +3,5 @@ export interface ResponseInterface {
     msj: string;
     token: any;
     user: any;
+    error: any;
 }

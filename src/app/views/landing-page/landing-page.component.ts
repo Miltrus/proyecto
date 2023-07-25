@@ -32,6 +32,6 @@ export class LandingPageComponent {
   }
 
   login() {
-    this.router.navigate(['login']);
+    this.router.navigate(['auth/login']);
   }
 }

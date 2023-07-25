@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { LoginService } from '../../services/api/login.service';
+import { AuthService } from '../../services/api/auth.service';
 import { LoginInterface } from '../../models/login.interface';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
-import { ForgotPwdComponent } from './forgot-pwd/forgot-pwd.component';
+import { ForgotPwdComponent } from '../forgot-pwd/forgot-pwd.component';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +20,7 @@ export class LoginComponent {
   })
 
   constructor(
-    private api: LoginService,
+    private auth: AuthService,
     private router: Router,
     private dialog: MatDialog,
   ) { }
@@ -40,7 +40,7 @@ export class LoginComponent {
 
   onLogin(form: LoginInterface) {
     this.loading = true;
-    this.api.onLogin(form).subscribe(data => {
+    this.auth.onLogin(form).subscribe(data => {
       if (data.status == 'ok') {
         this.loading = true;
         localStorage.setItem("token", data.token);

@@ -11,7 +11,7 @@ const routes: Routes = [
 
   { path: 'landing-page', component: LandingPageComponent },
 
-  { path: 'login', loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule) },
+  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
 
   { path: 'dashboard', canMatch: [isLoggedInGuard], loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule) },
 

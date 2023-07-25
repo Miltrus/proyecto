@@ -6,7 +6,6 @@
 
 <div class="wrapper fadeInDown">
   <div id="formContent">
-    <!-- Tabs Titles -->
 
     <!-- Icon -->
     <div class="fadeIn first">
@@ -34,7 +33,7 @@
                 'is-invalid': loginForm.get('contrasenaUsuario')?.invalid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty),
                 'is-valid': loginForm.get('contrasenaUsuario')?.valid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty)
               }" [type]="showPassword ? 'text' : 'password'">
-            <mat-icon matSuffix (click)="togglePasswordVisibility()" [color]="showPassword ? 'warn' : 'primary'">
+            <mat-icon matSuffix (click)="togglePasswordVisibility()" [color]="'primary'">
               {{ showPassword ? 'visibility_off' : 'visibility' }}
             </mat-icon>
           </mat-form-field><br>

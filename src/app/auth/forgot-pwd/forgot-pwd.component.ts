@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { LoginService } from 'src/app/services/api/login.service';
+import { AuthService } from 'src/app/services/api/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 export class ForgotPwdComponent {
 
   constructor(
-    private auth: LoginService,
+    private auth: AuthService,
     public dialogRef: MatDialogRef<ForgotPwdComponent>
   ) { }
 

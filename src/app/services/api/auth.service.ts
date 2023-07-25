@@ -8,7 +8,7 @@ import { Observable } from 'rxjs'; // tap is used to debug observables
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class AuthService {
 
   url: string = 'http://localhost:3030/auth/';
 
@@ -22,6 +22,11 @@ export class LoginService {
 
   onForgotPassword(form: any): Observable<ResponseInterface> {
     let address = this.url + 'forgot-pwd';
+    return this.http.post<ResponseInterface>(address, form);
+  }
+
+  onNewPwd(form: any): Observable<ResponseInterface> {
+    let address = this.url + 'new-pwd';
     return this.http.post<ResponseInterface>(address, form);
   }
 }
