@@ -75,6 +75,8 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
       icon: 'question',
       title: '¿Estás seguro de que deseas crear este cliente?',
       showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Confirmar',
       reverseButtons: true,

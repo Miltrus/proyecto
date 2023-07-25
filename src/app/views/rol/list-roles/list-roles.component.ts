@@ -118,6 +118,8 @@ export class ListRolesComponent implements OnInit, OnDestroy {
       icon: 'question',
       title: '¿Estás seguro de que deseas eliminar este rol?',
       showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
       reverseButtons: true,

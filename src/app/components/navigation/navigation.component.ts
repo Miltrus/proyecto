@@ -3,8 +3,6 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent, ConfirmDialogData } from '../dialog-confirm/dialog-confirm.component';
 import { DOCUMENT } from '@angular/common';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { RolService } from '../../services/api/rol.service';
@@ -35,7 +33,6 @@ export class NavigationComponent {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private router: Router,
-    private dialog: MatDialog,
     private rolService: RolService,
     private userService: UsuarioService,
   ) {

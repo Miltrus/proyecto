@@ -91,6 +91,8 @@ export class ListClientesComponent implements OnInit, OnDestroy {
       icon: 'question',
       title: '¿Estás seguro de que deseas eliminar este cliente?',
       showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
       reverseButtons: true,

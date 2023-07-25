@@ -76,6 +76,8 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
       icon: 'question',
       title: '¿Estás seguro de que deseas crear este rol?',
       showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
       reverseButtons: true

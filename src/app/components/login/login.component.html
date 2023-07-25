@@ -31,22 +31,23 @@
           <mat-form-field appearance="outline">
             <mat-label>Contraseña</mat-label>
             <input id="password" formControlName="contrasenaUsuario" matInput placeholder="Contraseña" [ngClass]="{
-              'is-invalid': loginForm.get('contrasenaUsuario')?.invalid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty),
-              'is-valid': loginForm.get('contrasenaUsuario')?.valid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty)
-            }" [type]="showPassword ? 'text' : 'password'">
+                'is-invalid': loginForm.get('contrasenaUsuario')?.invalid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty),
+                'is-valid': loginForm.get('contrasenaUsuario')?.valid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty)
+              }" [type]="showPassword ? 'text' : 'password'">
             <mat-icon matSuffix (click)="togglePasswordVisibility()" [color]="showPassword ? 'warn' : 'primary'">
               {{ showPassword ? 'visibility_off' : 'visibility' }}
             </mat-icon>
-          </mat-form-field>
+          </mat-form-field><br>
+          <a href="#" (click)="openForgotPasswordDialog($event)">
+            <span>¿Olvidaste tu contraseña?</span>
+          </a>
         </p>
       </div>
+
       <input type="submit" color="primary" class="fadeIn fourth" value="Iniciar sesión">
 
       <div class="back-button">
         <button class="fadeIn fourth" type="button" (click)="goBack()">Volver atrás</button>
-      </div>
-      <div class="forgot-password-button">
-        <button mat-raised-button color="warn" type="button" (click)="openForgotPasswordDialog()">Recuperar contraseña</button>
       </div>
     </form>
   </div>

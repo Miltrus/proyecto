@@ -19,4 +19,9 @@ export class LoginService {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post<ResponseInterface>(address, form, { headers });
   }
+
+  onForgotPassword(form: any): Observable<ResponseInterface> {
+    let address = this.url + 'forgot-pwd';
+    return this.http.post<ResponseInterface>(address, form);
+  }
 }

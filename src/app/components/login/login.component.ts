@@ -4,7 +4,6 @@ import { LoginService } from '../../services/api/login.service';
 import { LoginInterface } from '../../models/login.interface';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -21,63 +20,53 @@ export class LoginComponent {
   constructor(
     private api: LoginService,
     private router: Router,
-    private http: HttpClient
   ) { }
 
   loading = false;
   showPassword: boolean = false;
   dataUser: any = [];
 
-  async openForgotPasswordDialog() {
-    const { value: formValues } = await Swal.fire({
+  async openForgotPasswordDialog(event: Event) {
+    event.preventDefault();
+    await Swal.fire({
       title: 'Recuperar contraseña',
-      html:
-        '<label for="swal-input1">Correo electrónico:</label>' +
-        '<input id="swal-input1" class="swal2-input" placeholder="Ingrese su correo electrónico">' +
-        '<label for="swal-input2">Documento de identidad:</label>' +
-        '<input id="swal-input2" class="swal2-input" placeholder="Ingrese su documento de identidad">',
-      customClass: {
-        input: 'swal2-input-lg',
-      },
-      showCancelButton: true,
-      cancelButtonText: 'Cancelar',
-      focusConfirm: false,
+      html: `
+        <label for="swal-input1">Documento de identidad</label>
+        <input id="swal-input1" class="swal2-input" placeholder="Ingrese su documento">
+        <label for="swal-input2">Correo electronico</label>
+        <input id="swal-input2" class="swal2-input" placeholder="Ingrese su email">
+      `,
+      showCloseButton: true,
+      allowOutsideClick: false,
+      confirmButtonText: 'Recuperar',
       preConfirm: () => {
-        return [
-          (document.getElementById('swal-input1') as HTMLInputElement).value,
-          (document.getElementById('swal-input2') as HTMLInputElement).value
-        ];
-      }
+        return {
+          documentoUsuario: (document.getElementById('swal-input1') as HTMLInputElement).value,
+          correoUsuario: (document.getElementById('swal-input2') as HTMLInputElement).value
+        };
+      },
+    }).then((result) => {
+      this.loading = true;
+      if (result.isConfirmed) {
+        try {
+          this.api.onForgotPassword(result.value).subscribe(data => {
+            Swal.fire({
+              icon: data.status == 'ok' ? 'success' : 'error',
+              title: data.status == 'ok' ? 'Recuperacion exitosa' : 'Error',
+              text: data.status == 'ok' ? data.msj : data.msj,
+            });
+            this.loading = false;
+          });
+        } catch (error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ha ocurrido un error al intentar recuperar la contraseña, por favor intente nuevamente.',
+          });
+          this.loading = false;
+        }
+      };
     });
-
-    if (formValues && formValues[0] !== '' && formValues[1] !== '') {
-      const email = formValues[0];
-      const documento = formValues[1];
-
-      try {
-        // Llama a la API para recuperar la contraseña
-        const response = await this.http.post<any>('http://localhost:3030/auth/forgot-pwd', {
-          correoUsuario: email,
-          documentoUsuario: documento
-        }).toPromise();
-
-        // Mostrar SweetAlert con el mensaje de la API
-        Swal.fire({
-          icon: response.status === 'ok' ? 'success' : 'error',
-          title: response.status === 'ok' ? 'Correo enviado exitosamente' : 'Error',
-          text: response.msj
-        });
-
-      } catch (error) {
-        console.log('Error en la llamada a la API:', error);
-        // Si ocurre algún error en la llamada a la API
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Error en la llamada a la API'
-        });
-      }
-    }
   }
 
   onLogin(form: LoginInterface) {

@@ -115,6 +115,8 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
       icon: 'question',
       title: '¿Estás seguro de que deseas editar este usuario?',
       showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
       reverseButtons: true,

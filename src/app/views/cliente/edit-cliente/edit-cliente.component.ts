@@ -99,6 +99,8 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
       icon: 'question',
       title: '¿Está seguro de que deseas modificar este cliente?',
       showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
       reverseButtons: true,

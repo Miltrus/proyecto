@@ -85,6 +85,8 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
       icon: 'question',
       title: '¿Estás seguro de que deseas crear este usuario?',
       showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
       reverseButtons: true,
