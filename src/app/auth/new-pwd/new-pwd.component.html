@@ -37,8 +37,7 @@
                         <mat-icon matSuffix (click)="togglePasswordVisibility()" [color]="'primary'">
                             {{ showPassword ? 'visibility_off' : 'visibility' }}
                         </mat-icon>
-                        <mat-error
-                            *ngIf="newPwd.get('repetirContrasena')?.dirty || newPwd.get('repetirContrasena')?.touched || newPwd.get('repetirContrasena')?.errors?.['passwordMismatch']">
+                        <mat-error *ngIf="newPwd.get('repetirContrasena')?.errors?.['passwordMismatch']">
                             Las contraseñas no coinciden.
                         </mat-error>
                     </mat-form-field><br>

@@ -12,8 +12,8 @@ import Swal from 'sweetalert2';
 export class NewPwdComponent {
 
   newPwd = new FormGroup({
-    contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=?.:,"°~;_¿¡*/{}|<>()]).{8,}$/)]),
-    repetirContrasena: new FormControl('', [Validators.required]),
+    contrasenaUsuario: new FormControl('', Validators.required),
+    repetirContrasena: new FormControl('', Validators.required),
   })
 
   constructor(
