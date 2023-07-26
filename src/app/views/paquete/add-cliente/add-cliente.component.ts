@@ -22,7 +22,9 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
 
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(e: BeforeUnloadEvent) {
-    return this.hasUnsavedChanges() === false;
+    if (this.hasUnsavedChanges()) {
+      e.returnValue = '';
+    }
   }
 
   constructor(

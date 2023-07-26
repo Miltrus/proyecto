@@ -1,15 +1,13 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertsService } from '../../../services/alerts/alerts.service';
 import { RolService } from '../../../services/api/rol.service';
 import { RolInterface } from '../../../models/rol.interface';
 import { ResponseInterface } from '../../../models/response.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-new-rol',
@@ -20,14 +18,14 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
 
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(e: BeforeUnloadEvent) {
-    return this.hasUnsavedChanges() === false;
+    if (this.hasUnsavedChanges()) {
+      e.returnValue = '';
+    }
   }
 
   constructor(
     private router: Router,
     private api: RolService,
-    private alerts: AlertsService,
-    private dialog: MatDialog,
   ) { }
 
   permisos: PermisoInterface[] = [];
@@ -74,16 +72,24 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
 
 
   postForm(form: RolInterface) {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Estás seguro que deseas crear este rol?'
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Estás seguro de que deseas crear este rol?',
+      showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
         const permisosSeleccionados = this.newForm.value.permisosSeleccionados;
         if (permisosSeleccionados.filter((permiso: boolean) => permiso).length < 1) {
-          this.alerts.showError('Debes seleccionar al menos un permiso.', 'Error');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Debes seleccionar al menos un permiso.',
+          });
           return; // Detener la ejecución del método si no se selecciona ningún permiso
         }
         this.loading = true;
@@ -91,8 +97,12 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.newForm.reset();
-            this.alerts.showSuccess('El rol ha sido creado exitosamente.', 'Rol creado');
             this.router.navigate(['rol/list-roles']);
+            Swal.fire({
+              icon: 'success',
+              title: 'Rol creado',
+              text: 'El rol ha sido creado exitosamente.',
+            });
 
             // Obtén el último ID de rol creado
             this.api.getLastRolId().subscribe(lastRolId => {
@@ -115,17 +125,18 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
             });
 
           } else {
-            this.alerts.showError(respuesta.msj, 'Error al crear el rol');
-            this.loading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al crear',
+              text: respuesta.msj,
+            });
           }
+          this.loading = false;
         });
 
-      } else {
-        this.alerts.showInfo('El rol no ha sido creado.', 'Rol no creado');
       }
     });
   }
-
 
   goBack() {
     this.loading = true;

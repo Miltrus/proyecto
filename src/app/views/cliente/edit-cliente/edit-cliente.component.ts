@@ -5,13 +5,11 @@ import { ClienteInterface } from '../../../models/cliente.interface';
 import { ClienteService } from '../../../services/api/cliente.service';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 
 import { Subscription, forkJoin } from 'rxjs';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-edit-cliente',
@@ -24,7 +22,9 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
 
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(e: BeforeUnloadEvent) {
-    return this.hasUnsavedChanges() === false;
+    if (this.hasUnsavedChanges()) {
+      e.returnValue = '';
+    }
   }
 
   private subscriptions: Subscription = new Subscription();
@@ -33,8 +33,6 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
     private router: Router,
     private activatedRouter: ActivatedRoute,
     private api: ClienteService,
-    private alerts: AlertsService,
-    private dialog: MatDialog,
     private renderer: Renderer2,
   ) { }
 
@@ -46,7 +44,7 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
 
   hasUnsavedChanges(): boolean {
     this.loading = false;
-    return this.editForm.dirty
+    return this.editForm.dirty;
   }
 
   editForm = new FormGroup({
@@ -97,31 +95,40 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
 
 
   postForm(id: any) {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Está seguro que deseas modificar este cliente?',
-      },
-    });
-    const dialogRefSub = dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Está seguro de que deseas modificar este cliente?',
+      showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
         const putCltSub = this.api.putCliente(id).subscribe((data) => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.editForm.reset();
-            this.alerts.showSuccess('El cliente ha sido modificado', 'Modificación exitosa');
             this.router.navigate(['cliente/list-clientes']);
+            Swal.fire({
+              icon: 'success',
+              title: 'Cliente modificado',
+              text: 'El cliente ha sido modificado exitosamente.',
+            });
           } else {
-            this.alerts.showError(respuesta.msj, 'Error en la modificación');
-            this.loading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al modificar',
+              text: respuesta.msj,
+            });
           }
+          this.loading = false;
         });
         this.subscriptions.add(putCltSub);
-      } else {
-        this.alerts.showInfo('No se ha modificado el cliente', 'Modificación cancelada');
       }
     });
-    this.subscriptions.add(dialogRefSub);
   }
 
   goBack() {
@@ -135,13 +142,13 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
         country: ["CO"]
       },
       fields: ["formatted_address", "geometry"],
-      types: ["address"]
+      types: ["address"] // Agrega el tipo "establishment" para lugares
     });
 
     google.maps.event.addListener(autocomplete, 'place_changed', () => {
       const place: any = autocomplete.getPlace();
       if (place) {
-        const selectedAddress = place.formatted_address
+        const selectedAddress = place.formatted_address || place.name; // Utiliza el nombre del lugar si no hay una dirección formateada
         this.editForm.patchValue({ direccionCliente: selectedAddress });
       }
     });

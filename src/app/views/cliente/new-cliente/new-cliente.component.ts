@@ -2,15 +2,13 @@ import { Component, ElementRef, HostListener, OnDestroy, Renderer2, ViewChild } 
 import { OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ClienteService } from '../../../services/api/cliente.service';
 import { ClienteInterface } from '../../../models/cliente.interface';
 import { ResponseInterface } from '../../../models/response.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
-import { MatDialog } from '@angular/material/dialog';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-new-cliente',
@@ -23,14 +21,14 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
 
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(e: BeforeUnloadEvent) {
-    return this.hasUnsavedChanges() === false;
+    if (this.hasUnsavedChanges()) {
+      e.returnValue = '';
+    }
   }
 
   constructor(
     private router: Router,
     private api: ClienteService,
-    private alerts: AlertsService,
-    private dialog: MatDialog,
     private renderer: Renderer2,
   ) { }
 
@@ -73,32 +71,41 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
   }
 
   postForm(form: ClienteInterface) {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Estás seguro que deseas crear este cliente?'
-      }
-    });
-    const dialogRefSub = dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Estás seguro de que deseas crear este cliente?',
+      showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Confirmar',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
         const postCltSub = this.api.postCliente(form).subscribe(data => {
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.newForm.reset();
-            this.alerts.showSuccess('El cliente ha sido creado exitosamente', 'Cliente creado');
             this.router.navigate(['cliente/list-clientes']);
+            Swal.fire({
+              icon: 'success',
+              title: 'Cliente creado',
+              text: 'El cliente ha sido creado exitosamente.',
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al crear',
+              text: respuesta.msj,
+            });
           }
-          else {
-            this.alerts.showError(respuesta.msj, 'Error al crear el cliente');
-            this.loading = false;
-          }
+          this.loading = false;
         });
+
         this.subscriptions.add(postCltSub);
-      } else {
-        this.alerts.showInfo('El cliente no ha sido creado', 'Cliente no creado');
       }
     });
-    this.subscriptions.add(dialogRefSub);
   }
 
   goBack() {

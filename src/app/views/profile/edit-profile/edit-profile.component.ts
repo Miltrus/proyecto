@@ -1,13 +1,12 @@
 import { Component, HostListener, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UsuarioInterface } from '../../../models/usuario.interface';
 import { UsuarioService } from 'src/app/services/api/usuario.service';
 import { RolInterface } from 'src/app/models/rol.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
-import { AlertsService } from 'src/app/services/alerts/alerts.service';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-edit-profile',
@@ -18,7 +17,9 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
 
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(e: BeforeUnloadEvent) {
-    return this.hasUnsavedChanges() === false;
+    if (this.hasUnsavedChanges()) {
+      e.returnValue = '';
+    }
   }
 
   editForm!: FormGroup; // el signo de exclamación "!" para indicar que será inicializada posteriormente
@@ -35,8 +36,6 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
     @Inject(MAT_DIALOG_DATA) public data: { userData: UsuarioInterface },
     private formBuilder: FormBuilder,
     private userService: UsuarioService,
-    private dialog: MatDialog,
-    private alerts: AlertsService,
   ) { }
 
   hasUnsavedChanges(): boolean {
@@ -77,13 +76,15 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
   }
 
   saveChanges(): void {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Está seguro que deseas guardar los cambios?',
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Está seguro de que deseas guardar los cambios?',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
         const updatedData: UsuarioInterface = {
           ...this.data.userData,
@@ -98,16 +99,25 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
 
         this.userService.putUsuario(updatedData).subscribe(data => {
           if (data.status == 'ok') {
-            this.alerts.showSuccess('Cambios guardados exitosamente.', 'Usuario actualizado');
             this.dialogRef.close(updatedData);
+            Swal.fire({
+              icon: 'success',
+              title: 'Modificación exitosa',
+              text: data.msj,
+            });
           } else {
-            this.alerts.showError(data.msj, 'Error');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al actualizar tus datos',
+              text: data.msj,
+            });
           }
           this.loading = false;
         });
       }
     });
   }
+
 
   getRolNombre(): string {
     const idRol = this.data.userData.idRol;
@@ -117,14 +127,16 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
 
   closeDialog(): void {
     if (this.editForm.dirty || (this.showPasswordChange && this.pwdForm.dirty)) {
-      const dialogRef = this.dialog.open(DialogConfirmComponent, {
-        data: {
-          title: 'Cambios sin guardar',
-          message: '¿Estás seguro que deseas salir?'
-        }
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Cambios sin guardar',
+        text: '¿Estás seguro de que deseas salir?',
+        showCancelButton: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
           this.dialogRef.close();
         }
       });
@@ -132,6 +144,7 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
       this.dialogRef.close();
     }
   }
+
 
   toggleShowPassword(): void {
     this.showPassword = !this.showPassword;

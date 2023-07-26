@@ -8,12 +8,10 @@ import { EstadoUsuarioInterface } from '../../../models/estado-usuario.interface
 import { RolInterface } from '../../../models/rol.interface';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { Subscription, forkJoin } from 'rxjs';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-edit-usuario',
@@ -24,15 +22,15 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
 
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(e: BeforeUnloadEvent) {
-    return this.hasUnsavedChanges() === false;
+    if (this.hasUnsavedChanges()) {
+      e.returnValue = '';
+    }
   }
 
   constructor(
     private router: Router,
     private activatedRouter: ActivatedRoute,
     private api: UsuarioService,
-    private alerts: AlertsService,
-    private dialog: MatDialog,
   ) { }
 
   private subscriptions: Subscription = new Subscription();
@@ -113,18 +111,22 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
   }
 
   postForm(id: any) {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Estás seguro que deseas editar este usuario?'
-      }
-    });
-    const dialogRefSub = dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Estás seguro de que deseas editar este usuario?',
+      showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
         const updatedData: UsuarioInterface = {
           ...this.dataUsuario[0],
           ...this.editForm.value,
-        }
+        };
 
         if (this.showPasswordChange) {
           updatedData.contrasenaUsuario = this.pwdForm.value.contrasenaUsuario;
@@ -136,20 +138,27 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
           let respuesta: ResponseInterface = data;
           if (respuesta.status == 'ok') {
             this.editForm.reset();
-            this.alerts.showSuccess('El usuario ha sido modificado exitosamente.', 'Modificacion exitosa');
+            this.pwdForm.reset();
             this.router.navigate(['usuario/list-usuarios']);
+            Swal.fire({
+              icon: 'success',
+              title: 'Modificacion exitosa',
+              text: data.msj,
+            });
           } else {
-            this.alerts.showError(respuesta.msj, 'Error al modificar el usuario');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al modificar',
+              text: respuesta.msj,
+            });
             this.loading = false;
           }
         });
         this.subscriptions.add(putUserSub);
-      } else {
-        this.alerts.showInfo('El usuario no ha sido modificado', 'Modificacion cancelada');
       }
     });
-    this.subscriptions.add(dialogRefSub);
   }
+
 
   goBack() {
     this.loading = true;

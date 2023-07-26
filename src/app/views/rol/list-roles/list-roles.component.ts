@@ -1,17 +1,16 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { RolService } from '../../../services/api/rol.service';
 import { Router } from '@angular/router';
-import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from 'src/app/models/response.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-list-roles',
@@ -23,7 +22,6 @@ export class ListRolesComponent implements OnInit, OnDestroy {
   constructor(
     private api: RolService,
     private router: Router,
-    private alerts: AlertsService,
     private dialog: MatDialog,
   ) { }
 
@@ -87,7 +85,11 @@ export class ListRolesComponent implements OnInit, OnDestroy {
       });
 
       if (this.roles.length < 1) {
-        this.alerts.showInfo('No hay roles registrados', 'Sin registros');
+        Swal.fire({
+          icon: 'info',
+          title: 'No hay roles registrados',
+          text: 'No se encontraron roles registrados en el sistema.',
+        });
         this.loading = false;
       }
     });
@@ -112,34 +114,39 @@ export class ListRolesComponent implements OnInit, OnDestroy {
   }
 
   deleteRol(id: any): void {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Estás seguro de que deseas eliminar este rol?'
-      }
-    });
-
-    const dialogRefSub = dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Estás seguro de que deseas eliminar este rol?',
+      showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
-        const deleteRolSub = this.api.deleteRol(id).subscribe(data => {
+        this.api.deleteRol(id).subscribe(data => {
           let respuesta: ResponseInterface = data;
-
           if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El rol ha sido eliminado', 'Eliminación exitosa');
             this.roles = this.roles.filter(rol => rol.idRol !== id);
             this.dataSource.data = this.roles;
+            Swal.fire({
+              icon: 'success',
+              title: 'Rol eliminado',
+              text: 'El rol ha sido eliminado exitosamente.',
+            });
           } else {
-            this.alerts.showError(respuesta.msj, 'Error en la eliminación');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al eliminar',
+              text: respuesta.msj,
+            });
           }
           this.loading = false;
         });
-        this.subscriptions.add(deleteRolSub);
-      } else {
-        this.alerts.showInfo('El rol no ha sido eliminado', 'Eliminación cancelada');
-        this.loading = false;
       }
     });
-    this.subscriptions.add(dialogRefSub);
   }
 
   goBack(): void {

@@ -19,54 +19,73 @@ export class PaqueteService {
 
   constructor(private http: HttpClient) { }
 
+  private getHeaders(): HttpHeaders {
+    // Aquí agregamos el token a las cabeceras
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Token': token || ''
+    });
+  }
+
   getAllPaquetes(): Observable<PaqueteInterface[]> {
     let address = this.url + 'paquete';
-    return this.http.get<PaqueteInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<PaqueteInterface[]>(address, { headers });
   }
 
   getOnePaquete(id: any): Observable<PaqueteInterface> {
     let address = this.url + 'paquete/' + id;
-    return this.http.get<PaqueteInterface>(address);
+    const headers = this.getHeaders();
+    return this.http.get<PaqueteInterface>(address, { headers });
   }
 
   postPaquete(form: PaqueteInterface): Observable<ResponseInterface> {
     let address = this.url + 'paquete';
-    return this.http.post<ResponseInterface>(address, form);
+    const headers = this.getHeaders();
+    return this.http.post<ResponseInterface>(address, form, { headers });
   }
 
   putPaquete(id: any): Observable<ResponseInterface> {
     let address = this.url + 'paquete/' + id;
-    return this.http.put<ResponseInterface>(address, id);
+    const headers = this.getHeaders();
+    return this.http.put<ResponseInterface>(address, id, { headers });
   }
 
   deletePaquete(id: any): Observable<ResponseInterface> {
     let addres = this.url + 'paquete/' + id;
-    return this.http.delete<ResponseInterface>(addres);
+    const headers = this.getHeaders();
+    return this.http.delete<ResponseInterface>(addres, { headers });
   }
 
   getUsuario(): Observable<UsuarioInterface[]> {
     const address = this.url + 'usuario';
-    return this.http.get<UsuarioInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<UsuarioInterface[]>(address, { headers });
   }
 
   getRemitenteAndDestinatario(): Observable<ClienteInterface[]> {
     const address = this.url + 'cliente';
-    return this.http.get<ClienteInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<ClienteInterface[]>(address, { headers });
   }
 
   getEstadoPaquete(): Observable<EstadoPaqueteInterface[]> {
     const address = this.url + 'estadoPaquete';
-    return this.http.get<EstadoPaqueteInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<EstadoPaqueteInterface[]>(address, { headers });
   }
 
   getTamanoPaquete(): Observable<TamanoPaqueteInterface[]> {
     const address = this.url + 'tamanoPaquete';
-    return this.http.get<TamanoPaqueteInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<TamanoPaqueteInterface[]>(address, { headers });
   }
 
   getTipoPaquete(): Observable<TipoPaqueteInterface[]> {
     const address = this.url + 'tipoPaquete';
-    return this.http.get<TipoPaqueteInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<TipoPaqueteInterface[]>(address, { headers });
   }
 
   getDataRemitente(idCliente: any): Observable<any> {
@@ -76,7 +95,8 @@ export class PaqueteService {
   
   getDataDestinatario(idCliente: any): Observable<any> {
     const address = this.url + 'paquete/' + idCliente + '/data';
-    return this.http.get<any>(address);
+    const headers = this.getHeaders();
+    return this.http.get<any>(address, { headers });
   }
 
 

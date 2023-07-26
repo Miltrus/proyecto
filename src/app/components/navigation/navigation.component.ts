@@ -3,12 +3,11 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent, ConfirmDialogData } from '../dialog-confirm/dialog-confirm.component';
 import { DOCUMENT } from '@angular/common';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { RolService } from '../../services/api/rol.service';
 import { UsuarioService } from 'src/app/services/api/usuario.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-navigation',
@@ -34,7 +33,6 @@ export class NavigationComponent {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private router: Router,
-    private dialog: MatDialog,
     private rolService: RolService,
     private userService: UsuarioService,
   ) {
@@ -86,22 +84,23 @@ export class NavigationComponent {
     );
 
   logout(): void {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        title: 'Cerrar sesión',
-        message: '¿Estás seguro de que deseas cerrar sesión?'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: 'Cerrar sesión',
+      text: '¿Estás seguro de que deseas cerrar sesión?',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.router.navigate(['landing-page']);
         localStorage.removeItem('token');
-
         this.isDarkThemeActive = false;
       }
     });
   }
+
 
   toggleUserPanel(): void {
     if (this.userMenuTrigger) {

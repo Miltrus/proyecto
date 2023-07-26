@@ -3,13 +3,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { RolInterface } from '../../../models/rol.interface';
 import { RolService } from '../../../services/api/rol.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
-import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ResponseInterface } from '../../../models/response.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-edit-rol',
@@ -20,15 +18,15 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
 
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(e: BeforeUnloadEvent) {
-    return this.hasUnsavedChanges() === false;
+    if (this.hasUnsavedChanges()) {
+      e.returnValue = '';
+    }
   }
 
   constructor(
     private router: Router,
     private activatedRouter: ActivatedRoute,
     private api: RolService,
-    private alerts: AlertsService,
-    private dialog: MatDialog,
     private formBuilder: FormBuilder,
   ) { }
 
@@ -108,25 +106,30 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
   }
 
   postForm(id: any) {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Estás seguro que deseas modificar este rol?',
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Estás seguro de que deseas modificar este rol?',
+      showCancelButton: true,
+      showCloseButton: true,
+      allowOutsideClick: false,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
 
         if (id.idRol === 1 || id.idRol === 2) {
-          this.alerts.showError('No se puede modificar este rol', 'Error en la modificación');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error en la modificación',
+            text: 'No se puede modificar este rol.',
+          });
           this.loading = false;
-        } else {
+          return;
+        }
+        else {
           this.api.putRol(id).subscribe(data => {
-            // Obtén los permisos seleccionados
-            if (data.idRol === 1 || data.idRol === 2) {
-              this.alerts.showError('No se puede modificar este rol', 'Error en la modificación');
-              return;
-            }
             const nuevosPermisos = this.permisosSeleccionadosFormArray.controls
               .map((control, index) => control.value ? this.permisos[index].idPermiso : null)
               .filter(permiso => permiso !== null);
@@ -134,23 +137,27 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
               let respuesta: ResponseInterface = data;
               if (respuesta.status == 'ok') {
                 this.editForm.reset();
-                this.alerts.showSuccess('El rol ha sido modificado', 'Modificación exitosa');
                 this.router.navigate(['rol/list-roles']);
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Rol modificado',
+                  text: 'El rol ha sido modificado exitosamente.',
+                });
               } else {
-                this.alerts.showError(respuesta.msj, "Error en la modificación");
-                this.loading = false;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error al modificar',
+                  text: respuesta.msj,
+                });
               }
+              this.loading = false;
             });
           });
 
         }
-
-      } else {
-        this.alerts.showInfo('No se ha modificado el rol', 'Modificación cancelada');
       }
     });
   }
-
 
 
   goBack() {

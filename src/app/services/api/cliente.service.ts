@@ -15,33 +15,48 @@ export class ClienteService {
 
   constructor(private http: HttpClient) { }
 
+  private getHeaders(): HttpHeaders {
+    // Aquí agregamos el token a las cabeceras
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Token': token || ''
+    });
+  }
+
   getAllClientes(): Observable<ClienteInterface[]> {
     let address = this.url + 'cliente';
-    return this.http.get<ClienteInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<ClienteInterface[]>(address, { headers });
   }
 
   getOneCliente(id: any): Observable<ClienteInterface> {
     let address = this.url + 'cliente/' + id;
-    return this.http.get<ClienteInterface>(address);
+    const headers = this.getHeaders();
+    return this.http.get<ClienteInterface>(address, { headers });
   }
 
   postCliente(form: ClienteInterface): Observable<ResponseInterface> {
     let address = this.url + 'cliente';
-    return this.http.post<ResponseInterface>(address, form);
+    const headers = this.getHeaders();
+    return this.http.post<ResponseInterface>(address, form, { headers });
   }
 
   putCliente(id: any): Observable<ResponseInterface> {
     let address = this.url + 'cliente/' + id;
-    return this.http.put<ResponseInterface>(address, id);
+    const headers = this.getHeaders();
+    return this.http.put<ResponseInterface>(address, id, { headers });
   }
 
   deleteCliente(id: any): Observable<ResponseInterface> {
     let addres = this.url + 'cliente/' + id;
-    return this.http.delete<ResponseInterface>(addres);
+    const headers = this.getHeaders();
+    return this.http.delete<ResponseInterface>(addres, { headers });
   }
 
   getTipoDocumento(): Observable<TipoDocumentoInterface[]> {
     const address = this.url + 'tipodocumentocliente';
-    return this.http.get<TipoDocumentoInterface[]>(address);
+    const headers = this.getHeaders();
+    return this.http.get<TipoDocumentoInterface[]>(address, { headers });
   }
 }

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { LoginService } from '../../services/api/login.service';
+import { AuthService } from '../../services/api/auth.service';
 import { LoginInterface } from '../../models/login.interface';
 import { Router } from '@angular/router';
-import { AlertsService } from '../../services/alerts/alerts.service';
-import { UsuarioInterface } from 'src/app/models/usuario.interface';
+import Swal from 'sweetalert2';
+import { MatDialog } from '@angular/material/dialog';
+import { ForgotPwdComponent } from '../forgot-pwd/forgot-pwd.component';
 
 @Component({
   selector: 'app-login',
@@ -18,24 +19,45 @@ export class LoginComponent {
     contrasenaUsuario: new FormControl('', Validators.required)
   })
 
-  constructor(private api: LoginService, private router: Router, private alerts: AlertsService) { }
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private dialog: MatDialog,
+  ) { }
 
   loading = false;
-  userData: UsuarioInterface | null = null;
   showPassword: boolean = false;
+  dataUser: any = [];
+  showForgotPwd: boolean = false;
+
+  async openForgotPasswordDialog(event: Event) {
+    event.preventDefault();
+    this.dialog.open(ForgotPwdComponent, {
+      width: '400px',
+      height: 'auto',
+    });
+  };
 
   onLogin(form: LoginInterface) {
     this.loading = true;
-    this.api.onLogin(form).subscribe(data => {
+    this.auth.onLogin(form).subscribe(data => {
       if (data.status == 'ok') {
         this.loading = true;
         localStorage.setItem("token", data.token);
-        this.userData = data.user; // Almacenar los datos del usuario
         this.router.navigate(['dashboard']);
-        this.alerts.showSuccess('Inicio de sesión exitoso.', 'Bienvenido');
+        this.dataUser = data.user;
+        Swal.fire({
+          icon: 'success',
+          title: 'Inicio de sesión exitoso',
+          text: "¡Bienvenido " + this.dataUser.nombreUsuario + "!",
+        })
         return true;
       } else {
-        this.alerts.showError(data.msj, 'Error al iniciar sesión');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: data.msj,
+        })
         this.loading = false;
         return false;
       }
