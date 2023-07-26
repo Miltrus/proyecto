@@ -9,7 +9,7 @@
     <h2>Editar paquete</h2>
     <br>
     <div class="container">
-      <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
+      <form [formGroup]="editRemitente">
         <div class="row">
           <h4>Remitente
             <button class="btn btn-circle" type="button" (click)="openAddClienteDialog()">
@@ -18,17 +18,17 @@
           </h4>
           <div class="col">
             <div class="form-group">
-              <label for="documentoRemitente">Nombre<b style="color: red;">*</b></label>
-              <mat-select class="form-control" formControlName="documentoRemitente" placeholder="---SELECCIONE---"
+              <label for="documentoCliente">Nombre<b style="color: red;">*</b></label>
+              <mat-select class="form-control" formControlName="documentoCliente" placeholder="---SELECCIONE---"
                 [ngClass]="{
-                'is-invalid': editForm.get('documentoRemitente')?.invalid && (editForm.get('documentoRemitente')?.touched || editForm.get('documentoRemitente')?.dirty),
-                'is-valid': editForm.get('documentoRemitente')?.valid && (editForm.get('documentoRemitente')?.touched || editForm.get('documentoRemitente')?.dirty)
+                'is-invalid': editRemitente.get('documentoCliente')?.invalid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty),
+                'is-valid': editRemitente.get('documentoCliente')?.valid && editRemitente.get('documentoCliente')?.dirty
               }" (selectionChange)="onRemitenteSelectionChange($event)">
                 <mat-option *ngFor="let remi of remitente" [value]="remi.documentoCliente">
                   {{ remi.nombreCliente }}
                 </mat-option>
               </mat-select>
-              <div *ngIf="editForm.get('documentoRemitente')?.errors?.['required']" class="invalid-feedback">
+              <div *ngIf="editRemitente.get('documentoCliente')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
               </div>
             </div>
@@ -36,28 +36,53 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">N° de Documento</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.documentoCliente"
-                [placeholder]="selectedRemitente?.documentoCliente" disabled />
+              <input type="text" class="form-control" [value]="selectedRemitente?.documentoCliente" disabled>
             </div>
           </div>
         </div>
+        <hr style="border-top: 1px solid #ccc; margin: 5px 0;">
         <div class="row">
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Correo</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.correoCliente" placeholder=""
-                disabled />
+              <input type="text" class="form-control" formControlName="correoCliente" [ngClass]="{
+                'is-invalid': editRemitente.get('correoCliente')?.invalid && (editRemitente.get('correoCliente')?.touched || editRemitente.get('correoCliente')?.dirty),
+                'is-valid': editRemitente.get('correoCliente')?.valid && editRemitente.get('correoCliente')?.dirty}" />
+              <div *ngIf="editRemitente.get('correoCliente')?.errors?.['pattern']" class="invalid-feedback">
+                Correo inválido.
+              </div>
+              <div *ngIf="editRemitente.get('correoCliente')?.errors?.['required']" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
             </div>
           </div>
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Telefono</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.telefonoCliente" placeholder=""
-                disabled />
+              <div class="input-container">
+                <input type="text" class="form-control" formControlName="telefonoCliente" [ngClass]="{
+                  'is-invalid': editRemitente.get('telefonoCliente')?.invalid && (editRemitente.get('telefonoCliente')?.touched || editRemitente.get('telefonoCliente')?.dirty),
+                  'is-valid': editRemitente.get('telefonoCliente')?.valid && editRemitente.get('telefonoCliente')?.dirty
+                }" />
+                <div class="btn-container">
+                  <button class="btn btn-circle btn-update" type="button" (click)="editRemi(editRemitente.value)">
+                    <span class="material-icons">cached</span>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['pattern']" class="invalid-feedback">
+                Teléfono inválido, debe contener 10 dígitos numéricos.
+              </div>
+              <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['required']" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
             </div>
           </div>
-        </div><br>
+        </div>
+        <hr style="border-top: 1px solid #ccc; margin: -5px 0;"><br><br>
+      </form>
 
+      <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
         <div class="row">
           <h4>Destinatario</h4>
           <div class="col">
@@ -78,10 +103,9 @@
           <div class="col">
             <div class="form-group">
               <label for="documentoDestinatario">Nombre<b style="color: red;">*</b></label>
-              <input list="destinatarios" class="form-control" formControlName="nombreDestinatario"
-                [ngClass]="{
+              <input list="destinatarios" class="form-control" formControlName="nombreDestinatario" [ngClass]="{
                 'is-invalid': editForm.get('nombreDestinatario')?.invalid && (editForm.get('nombreDestinatario')?.touched || editForm.get('nombreDestinatario')?.dirty),
-                'is-valid': editForm.get('nombreDestinatario')?.valid && (editForm.get('nombreDestinatario')?.touched || editForm.get('nombreDestinatario')?.dirty)}">
+                'is-valid': editForm.get('nombreDestinatario')?.valid && editForm.get('nombreDestinatario')?.dirty}">
               <div *ngIf="editForm.get('nombreDestinatario')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
               </div>
@@ -131,7 +155,8 @@
               Este campo es obligatorio.
             </div>
           </div>
-        </div><br>
+        </div>
+        <hr style="border-top: 1px solid #ccc; margin: -5px 0;"><br><br>
 
         <div class="row">
           <h4>Paquete</h4>
@@ -170,7 +195,7 @@
               <label for="">Tipo<b style="color: red;">*</b></label>
               <mat-select class="form-control" formControlName="idTipo" placeholder="---SELECCIONE---" [ngClass]="{
               'is-invalid': editForm.get('idTipo')?.invalid && (editForm.get('idTipo')?.touched || editForm.get('idTipo')?.dirty),
-              'is-valid': editForm.get('idTipo')?.valid && (editForm.get('idTipo')?.touched || editForm.get('idTipo')?.dirty)
+              'is-valid': editForm.get('idTipo')?.valid && editForm.get('idTipo')?.dirty
             }">
                 <mat-option *ngFor="let t of tipos" [value]="t.idTipo">
                   {{ t.tipoPaquete }}

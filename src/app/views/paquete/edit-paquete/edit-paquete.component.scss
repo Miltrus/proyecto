@@ -58,9 +58,27 @@
     border: 1px solid #ccc;
     background-color: transparent;
     cursor: pointer;
+
+    &.btn-update {
+      border-color: #ccc; /* Color naranja */
+      color: #007bff; /* Color naranja */
+    }
+  
+    &:hover {
+      background-color: #f0f0f0;
+    }
   }
   
   .btn-circle:hover {
     background-color: #f0f0f0;
+  }
+
+  .input-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .btn-container {
+    margin-left: 10px;
   }
   

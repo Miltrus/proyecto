@@ -69,9 +69,15 @@ export class PaqueteService {
     return this.http.get<TipoPaqueteInterface[]>(address);
   }
 
+  getDataRemitente(idCliente: any): Observable<any> {
+    const address = this.url + 'paquete/' + idCliente + '/data';
+    return this.http.get<any>(address);
+  }
+  
   getDataDestinatario(idCliente: any): Observable<any> {
     const address = this.url + 'paquete/' + idCliente + '/data';
     return this.http.get<any>(address);
   }
+
 
 }

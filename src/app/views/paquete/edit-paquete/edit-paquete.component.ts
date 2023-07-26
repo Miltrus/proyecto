@@ -16,6 +16,8 @@ import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog
 import { AddClienteComponent } from '../add-cliente/add-cliente.component';
 import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
+import { ClienteService } from 'src/app/services/api/cliente.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -32,11 +34,15 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     return this.hasUnsavedChanges() === false;
   }
 
+  private subscriptions: Subscription = new Subscription();
+
   constructor(
     private router: Router,
     private activatedRouter: ActivatedRoute,
     private api: PaqueteService,
     private alerts: AlertsService,
+    private paqueteService: PaqueteService,
+    private apiClient: ClienteService,
     private dialog: MatDialog,
     private renderer: Renderer2,
   ) { }
@@ -45,6 +51,16 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.loading = false;
     return this.editForm.dirty;
   }
+
+  editRemitente = new FormGroup({
+    idCliente: new FormControl(''),
+    documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
+    idTipoDocumento: new FormControl('', Validators.required),
+    nombreCliente: new FormControl('', Validators.required),
+    telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
+    correoCliente: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
+    direccionCliente: new FormControl('', Validators.required),
+  });
 
   editForm = new FormGroup({
     idPaquete: new FormControl(''),
@@ -125,7 +141,9 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         'idEstado': this.dataPaquete[0]?.idEstado || 'idEstado',
         'idTipo': this.dataPaquete[0]?.idTipo || 'idTipo'
       });
-
+      this.editRemitente.patchValue({
+        'documentoCliente': this.dataPaquete[0]?.documentoRemitente || ''
+      });
       this.loading = false;
     });
     this.getUsuarioPaquete();
@@ -134,8 +152,26 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.getTamanoPaquete(); //:v
     this.getTipoPaquete();
 
+    this.editRemitente.get('documentoCliente')?.valueChanges.subscribe(value => {
+      if (this.editRemitente.get('documentoCliente')?.valid) {
+        this.paqueteService.getDataRemitente(value).subscribe(data => {
+          this.editRemitente.patchValue({
+            idCliente: data.id,
+            idTipoDocumento: data.tipoDocumento,
+            nombreCliente: data.nombre,
+            correoCliente: data.correo,
+            telefonoCliente: data.telefono,
+            direccionCliente: data.direccion
+          });
+          this.editForm.patchValue({
+            documentoRemitente: data.documento
+          });
+        });
+      }
+    });
+
     this.editForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
-      if (this.editForm.get('documentoDestinatario')?.valid) {
+      if (this.editForm.get('documentoDestinatario')?.dirty && this.editForm.get('documentoDestinatario')?.valid) {
         this.api.getDataDestinatario(value).subscribe(data => {
           this.editForm.patchValue({
             codigoQrPaquete: data.direccion,
@@ -177,6 +213,40 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         this.alerts.showInfo('No se ha modificado el paquete', 'Modificación cancelada');
       }
     });
+  }
+
+  editRemi(id: any): void {
+    if (this.editRemitente.get('telefonoCliente')?.dirty || this.editRemitente.get('correoCliente')?.dirty) {
+      const dialogRef = this.dialog.open(DialogConfirmComponent, {
+        data: {
+          message: '¿Deseas modificar el correo y el teléfono este cliente?',
+        },
+      });
+      const dialogRefSub = dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.loading = false;
+          const putCltSub = this.apiClient.putCliente(id).subscribe((data) => {
+            let respuesta: ResponseInterface = data;
+            if (respuesta.status == 'ok') {
+              this.alerts.showSuccess('El cliente ha sido modificado', 'Modificación exitosa');
+            } else {
+              this.alerts.showError(respuesta.msj, 'Error en la modificación');
+              this.loading = false;
+            }
+          });
+          this.subscriptions.add(putCltSub);
+        } else {
+          this.alerts.showInfo('No se ha modificado el cliente', 'Modificación cancelada');
+        }
+      });
+      this.subscriptions.add(dialogRefSub);
+    } else {
+      if (!this.editRemitente.get('nombreCliente')?.value || !this.editRemitente.get('direccionCliente')?.value) {
+        this.alerts.showInfo('Uno o mas campos vacios', 'Modificación cancelada');
+      } else {
+        this.alerts.showInfo('No se ha modificadon los campos correo o teléfono', 'Modificación cancelada');
+      }
+    }
   }
 
   getUsuarioPaquete(): void {

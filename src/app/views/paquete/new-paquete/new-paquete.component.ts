@@ -15,6 +15,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddClienteComponent } from '../add-cliente/add-cliente.component';
 import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
+import { ClienteService } from 'src/app/services/api/cliente.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -30,9 +32,12 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     return this.hasUnsavedChanges() === false;
   }
 
+  private subscriptions: Subscription = new Subscription();
+
   constructor(
     private router: Router,
     private api: PaqueteService,
+    private apiClient: ClienteService,
     private alerts: AlertsService,
     private dialog: MatDialog,
     private paqueteService: PaqueteService,
@@ -44,6 +49,16 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     return this.newForm.dirty;
   }
 
+  editRemitente = new FormGroup({
+    idCliente: new FormControl(''),
+    documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
+    idTipoDocumento: new FormControl('', Validators.required),
+    nombreCliente: new FormControl('', Validators.required),
+    telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
+    correoCliente: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
+    direccionCliente: new FormControl('', Validators.required),
+  });
+
   newForm = new FormGroup({
     codigoQrPaquete: new FormControl('', Validators.required),
     pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^\\d{0,3}(\\.\\d{0,2})?$')]),
@@ -53,7 +68,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     correoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     telefonoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     fechaAproxEntrega: new FormControl('', [Validators.required, this.validateFechaPasada]),
-    documentoRemitente: new FormControl('', Validators.required),
+    documentoRemitente: new FormControl(''),
     idTamano: new FormControl(),
     idEstado: new FormControl('1'),
     idTipo: new FormControl('', Validators.required),
@@ -70,6 +85,8 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   usuario: UsuarioInterface[] = [];
   remitente: any[] = [];
+  remitentesFiltrados: any[] = [];
+  cliente: any[] = [];
   destinatario: any[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
@@ -81,12 +98,13 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   selectedRemitente: ClienteInterface | undefined;
   selectedDestinatario: ClienteInterface | undefined;
 
-
   ngOnInit(): void {
     this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.remitente = data;
       this.destinatario = data;
+      this.cliente = data.map(cliente => cliente.nombreCliente);
       this.loading = false;
+      console.log(this.cliente);
 
       if (data.length == 0) {
         this.alerts.showWarning('No hay ningun cliente registrado', 'No hay clientes');
@@ -97,6 +115,24 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.getEstadoPaquete();
     this.getTamanoPaquete();
     this.getTipoPaquete();
+
+    this.editRemitente.get('documentoCliente')?.valueChanges.subscribe(value => {
+      if (this.editRemitente.get('documentoCliente')?.valid) {
+        this.paqueteService.getDataRemitente(value).subscribe(data => {
+          this.editRemitente.patchValue({
+            idCliente: data.id,
+            idTipoDocumento: data.tipoDocumento,
+            nombreCliente: data.nombre,
+            correoCliente: data.correo,
+            telefonoCliente: data.telefono,
+            direccionCliente: data.direccion
+          });
+          this.newForm.patchValue({
+            documentoRemitente: data.documento
+          });
+        });
+      }
+    });
 
     this.newForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
       if (this.newForm.get('documentoDestinatario')?.valid) {
@@ -114,6 +150,29 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   ngAfterViewInit() {
     this.mapInput();
+  }
+
+  filtrarOpciones(event: Event) {
+    const valorInput = (event.target as HTMLInputElement).value;
+    // Filtrar las opciones según el valor ingresado en el input
+    // y actualizar el array de opcionesAutocompletado con las opciones filtradas
+    this.cliente = this.filtrarFrutas(valorInput);
+  }
+
+  filtrarFrutas(valor: string): string[] {
+    return this.cliente.filter(r =>
+      r.toLowerCase().includes(valor.toLowerCase())
+    );
+  }
+
+  filtrarRemitentes(event: Event) {
+    const valorInput = (event.target as HTMLInputElement).value;
+    this.remitentesFiltrados = this.filtrarPorNombre(valorInput);
+  }
+
+  filtrarPorNombre(valor: string): any[] {
+    const filtro = valor.toLowerCase();
+    return this.remitente.filter(remi => remi.nombreCliente.toLowerCase().includes(filtro));
   }
 
 
@@ -138,8 +197,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     return null;
   }
 
-
-
   postForm(form: PaqueteInterface) {
     const dialogRef = this.dialog.open(DialogConfirmComponent, {
       data: {
@@ -147,6 +204,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
       if (result) {
         this.loading = true;
         this.api.postPaquete(form).subscribe(data => {
@@ -167,6 +225,39 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     });
   }
 
+  editRemi(id: any): void {
+    if (this.editRemitente.get('telefonoCliente')?.dirty || this.editRemitente.get('correoCliente')?.dirty) {
+      const dialogRef = this.dialog.open(DialogConfirmComponent, {
+        data: {
+          message: '¿Deseas modificar el correo y el teléfono este cliente?',
+        },
+      });
+      const dialogRefSub = dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.loading = false;
+          const putCltSub = this.apiClient.putCliente(id).subscribe((data) => {
+            let respuesta: ResponseInterface = data;
+            if (respuesta.status == 'ok') {
+              this.alerts.showSuccess('El cliente ha sido modificado', 'Modificación exitosa');
+            } else {
+              this.alerts.showError(respuesta.msj, 'Error en la modificación');
+              this.loading = false;
+            }
+          });
+          this.subscriptions.add(putCltSub);
+        } else {
+          this.alerts.showInfo('No se ha modificado el cliente', 'Modificación cancelada');
+        }
+      });
+      this.subscriptions.add(dialogRefSub);
+    } else {
+      if ( !this.editRemitente.get('nombreCliente')?.value || !this.editRemitente.get('direccionCliente')?.value) {
+        this.alerts.showInfo('Uno o mas campos vacios', 'Modificación cancelada');
+      } else {
+        this.alerts.showInfo('No se ha modificadon los campos correo o teléfono', 'Modificación cancelada');
+      }
+    }
+  }
 
   getUsuarioPaquete(): void {
     this.api.getUsuario().subscribe(data => {
@@ -215,10 +306,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === documentoCliente);
   }
 
-  onDestinatarioSelectionChange(event: any) {
-    const documentoCliente = event.value;
-    this.selectedDestinatario = this.destinatario.find(desti => desti.documentoCliente === documentoCliente);
-  }
   mostrarCodigoQrPaquete() {
     this.hideCodigoQrPaquete = false;
   }

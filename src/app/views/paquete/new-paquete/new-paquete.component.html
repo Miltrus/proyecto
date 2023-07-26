@@ -9,7 +9,35 @@
     <h2>Registrar paquete</h2>
     <br>
     <div class="container">
-      <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value)">
+      <form [formGroup]="editRemitente">
+        <!-- PARA EL DATALIST, NO BORREN NADA HPS -->
+        <!-- <div class="row">
+          <div class="col">
+            <input type="text" list="frutas" (input)="filtrarOpciones($event)" class="form-control">
+            <datalist id="frutas">
+              <option *ngFor="let r of cliente" [value]="r"></option>
+            </datalist>
+          </div>
+  
+          <div class="col">
+            <div class="form-group">
+              <label for="nombreCliente">Nombre<b style="color: red;">*</b></label>
+              <input type="text" formControlName="documentoCliente" class="form-control"
+                placeholder="Ingrese el nombre del remitente" [ngClass]="{
+                  'is-invalid': editRemitente.get('documentoCliente')?.invalid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty),
+                  'is-valid': editRemitente.get('documentoCliente')?.valid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty)
+                }" (input)="filtrarRemitentes($event)">
+              <datalist id="remitentes-list">
+                <option *ngFor="let remi of remitentesFiltrados" [value]="remi.documentoCliente">
+                  {{ remi.nombreCliente }}
+                </option>
+              </datalist>
+              <div *ngIf="editRemitente.get('documentoCliente')?.errors?.['required']" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
+            </div>
+          </div>
+        </div> -->
 
         <div class="row">
           <h4>Remitente
@@ -19,17 +47,17 @@
           </h4>
           <div class="col">
             <div class="form-group">
-              <label for="documentoRemitente">Nombre<b style="color: red;">*</b></label>
-              <mat-select class="form-control" formControlName="documentoRemitente" placeholder="---SELECCIONE---"
+              <label for="documentoCliente">Nombre<b style="color: red;">*</b></label>
+              <mat-select class="form-control" formControlName="documentoCliente" placeholder="---SELECCIONE---"
                 [ngClass]="{
-              'is-invalid': newForm.get('documentoRemitente')?.invalid && (newForm.get('documentoRemitente')?.touched || newForm.get('documentoRemitente')?.dirty),
-              'is-valid': newForm.get('documentoRemitente')?.valid && (newForm.get('documentoRemitente')?.touched || newForm.get('documentoRemitente')?.dirty)
+                'is-invalid': editRemitente.get('documentoCliente')?.invalid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty),
+                'is-valid': editRemitente.get('documentoCliente')?.valid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty)
               }" (selectionChange)="onRemitenteSelectionChange($event)">
                 <mat-option *ngFor="let remi of remitente" [value]="remi.documentoCliente">
                   {{ remi.nombreCliente }}
                 </mat-option>
               </mat-select>
-              <div *ngIf="newForm.get('documentoRemitente')?.errors?.['required']" class="invalid-feedback">
+              <div *ngIf="editRemitente.get('documentoCliente')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
               </div>
             </div>
@@ -37,25 +65,55 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">N° de Documento</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.documentoCliente" />
+              <input type="text" class="form-control" [value]="selectedRemitente?.documentoCliente" disabled>
             </div>
           </div>
         </div>
+        <hr style="border-top: 1px solid #ccc; margin: 5px 0;">
         <div class="row">
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Correo</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.correoCliente" />
+              <input type="text" class="form-control" formControlName="correoCliente" [ngClass]="{
+                  'is-invalid': editRemitente.get('correoCliente')?.invalid && (editRemitente.get('correoCliente')?.touched || editRemitente.get('correoCliente')?.dirty),
+                  'is-valid': editRemitente.get('correoCliente')?.valid
+                }" />
+              <div *ngIf="editRemitente.get('correoCliente')?.errors?.['pattern']" class="invalid-feedback">
+                Correo inválido.
+              </div>
+              <div *ngIf="editRemitente.get('correoCliente')?.errors?.['required']" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
             </div>
+          </div>
+          
+          <div class="btn-container">
+            <button class="btn btn-circle btn-update" type="button" (click)="editRemi(editRemitente.value)">
+              <span class="material-icons">cached</span>
+            </button>
           </div>
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Telefono</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.telefonoCliente" />
+              <div class="input-container">
+                <input type="text" class="form-control" formControlName="telefonoCliente" [ngClass]="{
+                  'is-invalid': editRemitente.get('telefonoCliente')?.invalid && (editRemitente.get('telefonoCliente')?.touched || editRemitente.get('telefonoCliente')?.dirty),
+                  'is-valid': editRemitente.get('telefonoCliente')?.valid
+                }" />  
+              </div>
+              <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['pattern']" class="invalid-feedback">
+                Teléfono inválido, debe contener 10 dígitos numéricos.
+              </div>
+              <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['required']" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
             </div>
           </div>
-        </div><br>
+        </div>
+        <hr style="border-top: 1px solid #ccc; margin: -5px 0;"><br><br>
+      </form>
 
+      <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value); ">
         <div class="row">
           <h4>Destinatario</h4>
           <div class="col">
@@ -76,10 +134,9 @@
           <div class="col">
             <div class="form-group">
               <label for="documentoDestinatario">Nombre<b style="color: red;">*</b></label>
-              <input list="destinatarios" class="form-control" formControlName="nombreDestinatario"
-                [ngClass]="{
+              <input list="destinatarios" class="form-control" formControlName="nombreDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('nombreDestinatario')?.invalid && (newForm.get('nombreDestinatario')?.touched || newForm.get('nombreDestinatario')?.dirty),
-                'is-valid': newForm.get('nombreDestinatario')?.valid && (newForm.get('nombreDestinatario')?.touched || newForm.get('nombreDestinatario')?.dirty)}">
+                'is-valid': newForm.get('nombreDestinatario')?.valid}">
               <div *ngIf="newForm.get('nombreDestinatario')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
               </div>
@@ -92,7 +149,7 @@
               <label for="exampleFormControlInput1">Correo<b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="correoDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('correoDestinatario')?.invalid && (newForm.get('correoDestinatario')?.touched || newForm.get('correoDestinatario')?.dirty),
-                'is-valid': newForm.get('correoDestinatario')?.valid && newForm.get('correoDestinatario')?.dirty
+                'is-valid': newForm.get('correoDestinatario')?.valid 
               }" />
               <div *ngIf="newForm.get('correoDestinatario')?.errors?.['pattern']" class="invalid-feedback">
                 Correo inválido.
@@ -107,7 +164,7 @@
               <label for="exampleFormControlInput1">Telefono<b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="telefonoDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('telefonoDestinatario')?.invalid && (newForm.get('telefonoDestinatario')?.touched || newForm.get('telefonoDestinatario')?.dirty),
-                'is-valid': newForm.get('telefonoDestinatario')?.valid && newForm.get('telefonoDestinatario')?.dirty
+                'is-valid': newForm.get('telefonoDestinatario')?.valid
               }" />
               <div *ngIf="newForm.get('telefonoDestinatario')?.errors?.['pattern']" class="invalid-feedback">
                 Teléfono inválido, debe contener 10 dígitos numéricos.
@@ -123,13 +180,14 @@
             <label for="">Direccion<b style="color: red;">*</b></label>
             <input type="text" class="form-control" formControlName="codigoQrPaquete" #inputPlaces [ngClass]="{
                 'is-invalid': newForm.get('codigoQrPaquete')?.invalid && (newForm.get('codigoQrPaquete')?.touched || newForm.get('codigoQrPaquete')?.dirty),
-                'is-valid': newForm.get('codigoQrPaquete')?.valid && newForm.get('codigoQrPaquete')?.dirty
+                'is-valid': newForm.get('codigoQrPaquete')?.valid 
               }" />
             <div *ngIf="newForm.get('documentoDestinatario')?.errors?.['required']" class="invalid-feedback">
               Este campo es obligatorio.
             </div>
           </div>
-        </div><br>
+        </div>
+        <hr style="border-top: 1px solid #ccc; margin: -5px 0;"><br><br>
 
         <div class="row">
           <h4>Paquete</h4>
