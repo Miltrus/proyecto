@@ -12,9 +12,9 @@ export const unsavedChangesGuard: CanDeactivateFn<HasUnsavedChanges> = async (co
       icon: 'warning',
       title: 'Cambios sin guardar',
       text: '¿Estás seguro de que deseas salir sin guardar los cambios?',
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
+      showDenyButton: true,
+      confirmButtonText: 'Salir',
+      denyButtonText: 'Cancelar',
       reverseButtons: true,
     });
 

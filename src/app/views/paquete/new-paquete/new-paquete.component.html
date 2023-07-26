@@ -86,7 +86,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="btn-container">
             <button class="btn btn-circle btn-update" type="button" (click)="editRemi(editRemitente.value)">
               <span class="material-icons">cached</span>
@@ -99,7 +99,7 @@
                 <input type="text" class="form-control" formControlName="telefonoCliente" [ngClass]="{
                   'is-invalid': editRemitente.get('telefonoCliente')?.invalid && (editRemitente.get('telefonoCliente')?.touched || editRemitente.get('telefonoCliente')?.dirty),
                   'is-valid': editRemitente.get('telefonoCliente')?.valid
-                }" />  
+                }" />
               </div>
               <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['pattern']" class="invalid-feedback">
                 Teléfono inválido, debe contener 10 dígitos numéricos.

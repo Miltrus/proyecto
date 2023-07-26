@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { RolService } from '../../../services/api/rol.service';
 import { Router } from '@angular/router';
-import { ResponseInterface } from 'src/app/models/response.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
@@ -117,18 +116,17 @@ export class ListRolesComponent implements OnInit, OnDestroy {
     Swal.fire({
       icon: 'question',
       title: '¿Estás seguro de que deseas eliminar este rol?',
+      showDenyButton: true,
       showCancelButton: true,
-      showCloseButton: true,
-      allowOutsideClick: false,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
+      showConfirmButton: false,
       reverseButtons: true,
+      denyButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isDenied) {
         this.loading = true;
         this.api.deleteRol(id).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-          if (respuesta.status == 'ok') {
+          if (data.status == 'ok') {
             this.roles = this.roles.filter(rol => rol.idRol !== id);
             this.dataSource.data = this.roles;
             Swal.fire({
@@ -140,7 +138,7 @@ export class ListRolesComponent implements OnInit, OnDestroy {
             Swal.fire({
               icon: 'error',
               title: 'Error al eliminar',
-              text: respuesta.msj,
+              text: data.msj,
             });
           }
           this.loading = false;

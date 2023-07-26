@@ -1,8 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { PaqueteService } from '../../../services/api/paquete.service';
 import { Router } from '@angular/router';
-import { AlertsService } from '../../../services/alerts/alerts.service';
-import { ResponseInterface } from 'src/app/models/response.interface';
 import { PaqueteInterface } from 'src/app/models/paquete.interface';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
@@ -10,17 +8,17 @@ import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface'
 import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
 import { MatDialog } from '@angular/material/dialog';
 
-import { DialogConfirmComponent, ConfirmDialogData } from '../../../components/dialog-confirm/dialog-confirm.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 import * as QRCode from 'qrcode';
-import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { ContentImage, TDocumentDefinitions } from 'pdfmake/interfaces';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
+import Swal from 'sweetalert2';
 
 // Configurar las fuentes
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
@@ -37,7 +35,6 @@ export class ListPaquetesComponent implements OnInit {
   constructor(
     private api: PaqueteService,
     private router: Router,
-    private alerts: AlertsService,
     private dialog: MatDialog,
     private sanitizer: DomSanitizer
   ) { }
@@ -100,7 +97,7 @@ export class ListPaquetesComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit() { //para la paginacion
+  ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -108,7 +105,7 @@ export class ListPaquetesComponent implements OnInit {
   viewPaquete(usuario: PaqueteInterface): void {
     this.dialog.open(this.viewPaqueteDialog, {
       data: usuario,
-      width: '400px', // Ajusta el ancho del cuadro emergente según tus necesidades
+      width: '400px',
     });
   }
 
@@ -130,33 +127,40 @@ export class ListPaquetesComponent implements OnInit {
   }
 
   deletePaquete(id: any): void {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Estás seguro de que deseas eliminar este paquete?'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Estás seguro de que deseas eliminar este paquete?',
+      showDenyButton: true,
+      showCancelButton: true,
+      showConfirmButton: false,
+      reverseButtons: true,
+      denyButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isDenied) {
         this.loading = true;
         this.api.deletePaquete(id).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-
-          if (respuesta.status == 'ok') {
-            this.alerts.showSuccess('El paquete ha sido eliminado', 'Eliminación exitosa');
+          if (data.status == 'ok') {
             this.paquetes = this.paquetes.filter(paquete => paquete.idPaquete !== id);
             this.dataSource.data = this.paquetes; //actualizamos el datasource
+            Swal.fire({
+              icon: 'success',
+              title: 'Paquete eliminado',
+              text: 'El paquete ha sido eliminado exitosamente.',
+            });
           } else {
-            this.alerts.showError(respuesta.msj, 'Error en la eliminación');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error en la eliminación',
+              text: data.msj,
+            });
           }
           this.loading = false;
         });
-      } else {
-        this.alerts.showInfo('No se ha realizado ninguna accion', 'Eliminacion cancelada');
-        this.loading = false;
       }
     });
   }
+
 
   getUsuarioPaquete(documentoUsuario: any): { nombre: string, apellido: string } {
     const mensajero = this.usuario.find(documentoU => documentoU.documentoUsuario === documentoUsuario);

@@ -5,7 +5,6 @@ import { ClienteInterface } from '../../../models/cliente.interface';
 import { ClienteService } from '../../../services/api/cliente.service';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ResponseInterface } from '../../../models/response.interface';
 
 import { Subscription, forkJoin } from 'rxjs';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
@@ -108,8 +107,7 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
       if (result.isConfirmed) {
         this.loading = true;
         const putCltSub = this.api.putCliente(id).subscribe((data) => {
-          let respuesta: ResponseInterface = data;
-          if (respuesta.status == 'ok') {
+          if (data.status == 'ok') {
             this.editForm.reset();
             this.router.navigate(['cliente/list-clientes']);
             Swal.fire({
@@ -121,7 +119,7 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
             Swal.fire({
               icon: 'error',
               title: 'Error al modificar',
-              text: respuesta.msj,
+              text: data.msj,
             });
           }
           this.loading = false;

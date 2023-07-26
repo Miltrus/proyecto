@@ -3,7 +3,6 @@ import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RolService } from '../../../services/api/rol.service';
 import { RolInterface } from '../../../models/rol.interface';
-import { ResponseInterface } from '../../../models/response.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
@@ -94,8 +93,7 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
         }
         this.loading = true;
         this.api.postRol(form).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-          if (respuesta.status == 'ok') {
+          if (data.status == 'ok') {
             this.newForm.reset();
             this.router.navigate(['rol/list-roles']);
             Swal.fire({
@@ -128,7 +126,7 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
             Swal.fire({
               icon: 'error',
               title: 'Error al crear',
-              text: respuesta.msj,
+              text: data.msj,
             });
           }
           this.loading = false;

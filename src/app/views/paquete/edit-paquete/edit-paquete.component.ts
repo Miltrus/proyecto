@@ -10,14 +10,13 @@ import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface'
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertsService } from '../../../services/alerts/alerts.service';
-import { ResponseInterface } from '../../../models/response.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { AddClienteComponent } from '../add-cliente/add-cliente.component';
 import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 import { ClienteService } from 'src/app/services/api/cliente.service';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -151,15 +150,15 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.getUsuarioPaquete();
     this.getRemitenteAndDestinatarioPaquete();
     this.getEstadoPaquete();
-    this.getTamanoPaquete(); //:v
+    this.getTamanoPaquete();
     this.getTipoPaquete();
 
     this.editRemitente.get('documentoCliente')?.valueChanges.subscribe(value => {
       if (this.editRemitente.get('documentoCliente')?.valid) {
         this.paqueteService.getDataRemitente(value).subscribe(data => {
           this.editRemitente.patchValue({
-            idCliente: data.id,
-            idTipoDocumento: data.tipoDocumento,
+            idCliente: data.idCliente,
+            idTipoDocumento: data.idTipoDocumento,
             nombreCliente: data.nombre,
             correoCliente: data.correo,
             telefonoCliente: data.telefono,
@@ -191,60 +190,64 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
   }
 
   postForm(id: any) {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Estás seguro que deseas modificar este paquete?',
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Estás seguro de que deseas modificar este paquete?',
+      showCancelButton: true,
+      reverseButtons: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
         this.api.putPaquete(id).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-          if (respuesta.status == 'ok') {
+          if (data.status == 'ok') {
             this.editForm.reset();
-            this.alerts.showSuccess('El paquete ha sido modificado', 'Modificación exitosa');
             this.router.navigate(['paquete/list-paquetes']);
-          }
-          else {
-            this.alerts.showError(respuesta.msj, "Error en la modificación");
+            Swal.fire({
+              icon: 'success',
+              title: 'Paquete modificado',
+              text: 'El paquete ha sido modificado exitosamente.',
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al modificar',
+              text: data.msj,
+            });
             this.loading = false;
           }
         });
-      } else {
-        this.alerts.showInfo('No se ha modificado el paquete', 'Modificación cancelada');
       }
     });
   }
 
   editRemi(id: any): void {
     if (this.editRemitente.get('telefonoCliente')?.dirty || this.editRemitente.get('correoCliente')?.dirty) {
-      const dialogRef = this.dialog.open(DialogConfirmComponent, {
-        data: {
-          message: '¿Deseas modificar el correo y el teléfono este cliente?',
-        },
-      });
-      const dialogRefSub = dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.loading = false;
+      Swal.fire({
+        title: '¿Deseas modificar el correo y el teléfono de este cliente?',
+        icon: 'question',
+        showCancelButton: true,
+        reverseButtons: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.loading = true;
           const putCltSub = this.apiClient.putCliente(id).subscribe((data) => {
-            let respuesta: ResponseInterface = data;
-            if (respuesta.status == 'ok') {
-              this.alerts.showSuccess('El cliente ha sido modificado', 'Modificación exitosa');
-            } else {
-              this.alerts.showError(respuesta.msj, 'Error en la modificación');
-              this.loading = false;
-            }
+            Swal.fire({
+              icon: data.status == "ok" ? 'success' : 'error',
+              title: data.status == "ok" ? 'Cliente modificado' : 'Error al modificar el cliente',
+              text: data.msj,
+            });
+            this.loading = false;
           });
           this.subscriptions.add(putCltSub);
-        } else {
-          this.alerts.showInfo('No se ha modificado el cliente', 'Modificación cancelada');
         }
       });
-      this.subscriptions.add(dialogRefSub);
     } else {
       if (!this.editRemitente.get('nombreCliente')?.value || !this.editRemitente.get('direccionCliente')?.value) {
-        this.alerts.showInfo('Uno o mas campos vacios', 'Modificación cancelada');
+        this.alerts.showInfo('No se ha modificadon los campos correo o teléfono', 'Modificación cancelada');
       } else {
         this.alerts.showInfo('No se ha modificadon los campos correo o teléfono', 'Modificación cancelada');
       }

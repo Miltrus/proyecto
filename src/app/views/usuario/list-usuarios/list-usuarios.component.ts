@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { UsuarioService } from '../../../services/api/usuario.service';
 import { Router } from '@angular/router';
-import { ResponseInterface } from 'src/app/models/response.interface';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { EstadoUsuarioInterface } from 'src/app/models/estado-usuario.interface';
@@ -12,6 +11,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Subscription, forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
+import { AlertsService } from 'src/app/services/alerts/alerts.service';
 
 
 @Component({
@@ -25,6 +25,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
     private api: UsuarioService,
     private router: Router,
     private dialog: MatDialog,
+    private alerts: AlertsService,
   ) { }
 
   private subscriptions: Subscription = new Subscription();
@@ -99,14 +100,14 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
     Swal.fire({
       icon: 'question',
       title: '¿Estás seguro de que deseas eliminar este usuario?',
+      showDenyButton: true,
       showCancelButton: true,
-      showCloseButton: true,
-      allowOutsideClick: false,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
+      showConfirmButton: false,
       reverseButtons: true,
+      denyButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isDenied) {
         this.loading = true;
         if (id == this.uid) {
           Swal.fire({
@@ -118,9 +119,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
           return;
         }
         const delUserSUb = this.api.deleteUsuario(id).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-
-          if (respuesta.status == 'ok') {
+          if (data.status == 'ok') {
             this.usuarios = this.usuarios.filter(usuario => usuario.idUsuario !== id);
             this.dataSource.data = this.usuarios; // Actualizamos el dataSource con los nuevos datos
             Swal.fire({
@@ -132,7 +131,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
             Swal.fire({
               icon: 'error',
               title: 'Error al eliminar',
-              text: respuesta.msj,
+              text: data.msj,
             });
           }
           this.loading = false;
@@ -172,9 +171,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
         }
 
         const putUserSub = this.api.putUsuario(updatedUsuario).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-
-          if (respuesta.status === 'ok') {
+          if (data.status === 'ok') {
             this.usuarios = this.usuarios.map(u => (u.documentoUsuario === updatedUsuario.documentoUsuario ? updatedUsuario : u));
             this.dataSource.data = this.usuarios; // Actualizamos el dataSource con los nuevos datos
             Swal.fire({
@@ -186,18 +183,14 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
             Swal.fire({
               icon: 'error',
               title: 'Error al actualizar',
-              text: respuesta.msj,
+              text: data.msj,
             });
           }
           this.loading = false;
         });
         this.subscriptions.add(putUserSub);
       } else {
-        Swal.fire({
-          icon: 'info',
-          title: 'Actualización cancelada',
-          text: 'No se ha realizado ningún cambio.',
-        });
+        this.alerts.showInfo('No se realizaron cambios en el estado del usuario.', 'Operación cancelada');
       }
     });
   }

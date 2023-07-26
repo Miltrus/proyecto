@@ -90,14 +90,13 @@ export class PaqueteService {
 
   getDataRemitente(idCliente: any): Observable<any> {
     const address = this.url + 'paquete/' + idCliente + '/data';
-    return this.http.get<any>(address);
+    const headers = this.getHeaders();
+    return this.http.get<any>(address, { headers });
   }
-  
+
   getDataDestinatario(idCliente: any): Observable<any> {
     const address = this.url + 'paquete/' + idCliente + '/data';
     const headers = this.getHeaders();
     return this.http.get<any>(address, { headers });
   }
-
-
 }
