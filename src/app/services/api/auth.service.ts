@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { LoginInterface } from '../../models/login.interface';
 import { ResponseInterface } from '../../models/response.interface';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs'; // tap is used to debug observables
 
 @Injectable({
@@ -16,8 +16,7 @@ export class AuthService {
 
   onLogin(form: LoginInterface): Observable<ResponseInterface> {
     let address = this.url + 'login';
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post<ResponseInterface>(address, form, { headers });
+    return this.http.post<ResponseInterface>(address, form);
   }
 
   onForgotPassword(form: any): Observable<ResponseInterface> {
