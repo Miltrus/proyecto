@@ -5,7 +5,7 @@ import { PermisoInterface } from '../../models/permiso.interface';
 import { RolPermisoInterface } from '../../models/rol-permiso.interface';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs'; // 
+import { Observable } from 'rxjs';
 import { RolPermisoResponseInterface } from 'src/app/models/rol-permiso-response.interface';
 
 @Injectable({

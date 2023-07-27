@@ -3,7 +3,7 @@ import { LoginInterface } from '../../models/login.interface';
 import { ResponseInterface } from '../../models/response.interface';
 
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs'; // tap is used to debug observables
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

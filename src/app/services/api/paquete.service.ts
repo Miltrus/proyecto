@@ -7,7 +7,7 @@ import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface'
 import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs'; // 
+import { Observable } from 'rxjs';
 import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 
 @Injectable({
