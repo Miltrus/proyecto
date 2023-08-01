@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, Inject, ViewChild, inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent {
 
   @ViewChild('userMenuTrigger') userMenuTrigger!: MatMenuTrigger;
   private breakpointObserver = inject(BreakpointObserver);
@@ -37,13 +37,7 @@ export class NavigationComponent implements OnInit {
     private rolService: RolService,
     private userService: UsuarioService,
     private activatedRoute: ActivatedRoute,
-  ) { }
-
-  ngOnInit(): void {
-    this.loadModules();
-  }
-
-  loadModules(): void {
+  ) {
     const isDarkModeActive = this.document.body.classList.contains('dark-mode');
     const storedTheme = localStorage.getItem('isDarkThemeActive');
 
@@ -60,32 +54,21 @@ export class NavigationComponent implements OnInit {
 
     const token = localStorage.getItem('token');
 
-    if (token) {
-      const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
-      const uid = decodedToken.uid;
 
-      this.userService.getOneUsuario(uid).subscribe(data => {
-        const rol = data.idRol;
+    const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
+    const uid = decodedToken.uid;
 
-        // Obtener los permisos del rol y filtrar los módulos correspondientes
-        this.rolService.getRolPermisos(rol).subscribe(data => {
+    this.userService.getOneUsuario(uid).subscribe(data => {
+      const rol = data.idRol;
 
-          const permisos = data.idPermiso?.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
+      // Obtener los permisos del rol y filtrar los módulos correspondientes
+      this.rolService.getRolPermisos(rol).subscribe(data => {
 
-          this.modules = this.modules.filter((module) => permisos.includes(module.name));
-        });
+        const permisos = data.idPermiso?.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
+
+        this.modules = this.modules.filter((module) => permisos.includes(module.name));
       });
-    } else {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Su sesión ha expirado',
-        text: 'Por favor inicia sesion nuevamente.',
-      }).then(result => {
-        if (result.isConfirmed) {
-          this.router.navigate(['auth/login']);
-        }
-      })
-    }
+    });
   }
 
   onChange(newValue: boolean): void {

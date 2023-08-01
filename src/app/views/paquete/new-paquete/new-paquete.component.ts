@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { PaqueteService } from '../../../services/api/paquete.service';
 import { PaqueteInterface } from '../../../models/paquete.interface';
-import { ResponseInterface } from '../../../models/response.interface';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
@@ -95,7 +94,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   tipos: TipoPaqueteInterface[] = [];
   loading: boolean = true;
   hideCodigoQrPaquete: boolean = true;
-  respuesta: ResponseInterface | ClienteInterface[] | any = [];
 
   selectedRemitente: ClienteInterface | undefined;
   selectedDestinatario: ClienteInterface | undefined;
