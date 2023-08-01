@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChild, inject } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -7,6 +7,7 @@ import { DOCUMENT } from '@angular/common';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { RolService } from '../../services/api/rol.service';
 import { UsuarioService } from 'src/app/services/api/usuario.service';
+import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,13 +15,13 @@ import Swal from 'sweetalert2';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit {
 
   @ViewChild('userMenuTrigger') userMenuTrigger!: MatMenuTrigger;
   private breakpointObserver = inject(BreakpointObserver);
 
   isDarkThemeActive = false;
-  loading: boolean = true;
+  /* activeModule: string | null = null; */
 
   modules = [
     { name: 'Roles', route: '/rol' },
@@ -35,11 +36,21 @@ export class NavigationComponent {
     private router: Router,
     private rolService: RolService,
     private userService: UsuarioService,
-  ) {
+    private activatedRoute: ActivatedRoute,
+  ) { }
+
+  ngOnInit(): void {
+    this.loadModules();
+  }
+
+  loadModules(): void {
     const isDarkModeActive = this.document.body.classList.contains('dark-mode');
     const storedTheme = localStorage.getItem('isDarkThemeActive');
 
     this.isDarkThemeActive = storedTheme ? storedTheme === 'true' : isDarkModeActive;
+    /* this.activatedRoute.firstChild?.data.subscribe(data => {
+      this.activeModule = data['module'];
+    }); */
 
     if (this.isDarkThemeActive) {
       this.document.body.classList.add('dark-mode');
@@ -48,21 +59,33 @@ export class NavigationComponent {
     }
 
     const token = localStorage.getItem('token');
-    const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
-    const uid = decodedToken.uid;
 
-    this.userService.getOneUsuario(uid).subscribe(data => {
-      const rol = data.idRol;
+    if (token) {
+      const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
+      const uid = decodedToken.uid;
 
-      // Obtener los permisos del rol y filtrar los módulos correspondientes
-      this.rolService.getRolPermisos(rol).subscribe(data => {
+      this.userService.getOneUsuario(uid).subscribe(data => {
+        const rol = data.idRol;
 
-        const permisos = data.idPermiso?.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
+        // Obtener los permisos del rol y filtrar los módulos correspondientes
+        this.rolService.getRolPermisos(rol).subscribe(data => {
 
-        this.modules = this.modules.filter((module) => permisos.includes(module.name));
-        this.loading = false;
+          const permisos = data.idPermiso?.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
+
+          this.modules = this.modules.filter((module) => permisos.includes(module.name));
+        });
       });
-    });
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Su sesión ha expirado',
+        text: 'Por favor inicia sesion nuevamente.',
+      }).then(result => {
+        if (result.isConfirmed) {
+          this.router.navigate(['auth/login']);
+        }
+      })
+    }
   }
 
   onChange(newValue: boolean): void {
@@ -74,7 +97,6 @@ export class NavigationComponent {
     } else {
       this.document.body.classList.remove('dark-mode');
     }
-    this.loading = false;
   }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -82,6 +104,7 @@ export class NavigationComponent {
       map(result => result.matches),
       shareReplay()
     );
+
 
   logout(): void {
     Swal.fire({

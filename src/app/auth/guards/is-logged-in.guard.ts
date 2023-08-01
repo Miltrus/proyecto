@@ -17,7 +17,7 @@ export const isLoggedInGuard: CanMatchFn = () => {
         if (response.status === 'ok') {
           return true;
         } else {
-          router.navigate(['login']);
+          router.navigate(['auth/login']);
           localStorage.removeItem('token');
           Swal.fire({
             icon: 'warning',
@@ -28,12 +28,12 @@ export const isLoggedInGuard: CanMatchFn = () => {
         }
       }),
       catchError(error => {
-        // Manejar cualquier error que ocurra durante la verificación del token
+        router.navigate(['auth/login']);
         return of(false);
       })
     );
   } else {
-    router.navigate(['login']);
+    router.navigate(['auth/login']);
     Swal.fire({
       icon: 'warning',
       title: 'Su sesión ha expirado',
