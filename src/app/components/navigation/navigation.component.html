@@ -4,9 +4,10 @@
     <mat-toolbar id="header">
       <h1>Menú</h1>
     </mat-toolbar>
-    <ng-container *ngIf="!loading">
+    <ng-container>
       <mat-nav-list *ngFor="let module of modules">
         <a mat-list-item [routerLink]="module.route">
+          <!-- [ngClass]="{'active-module': activeModule === module.name}" -->
           {{ module.name }}
         </a>
       </mat-nav-list>

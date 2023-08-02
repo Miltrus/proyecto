@@ -4,7 +4,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ClienteService } from '../../../services/api/cliente.service';
 import { ClienteInterface } from '../../../models/cliente.interface';
-import { ResponseInterface } from '../../../models/response.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 import { Subscription } from 'rxjs';
@@ -84,8 +83,7 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
       if (result.isConfirmed) {
         this.loading = true;
         const postCltSub = this.api.postCliente(form).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-          if (respuesta.status == 'ok') {
+          if (data.status == 'ok') {
             this.newForm.reset();
             this.router.navigate(['cliente/list-clientes']);
             Swal.fire({
@@ -97,7 +95,7 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
             Swal.fire({
               icon: 'error',
               title: 'Error al crear',
-              text: respuesta.msj,
+              text: data.msj,
             });
           }
           this.loading = false;

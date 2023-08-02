@@ -5,7 +5,7 @@ import { TipoNovedadInterface } from '../../models/tipo-novedad.interface';
 import { EntregaInterface } from '../../models/entrega.interface';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs'; // 
+import { Observable } from 'rxjs';
 
 
 @Injectable({

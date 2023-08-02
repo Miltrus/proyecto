@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ClienteService } from '../../../services/api/cliente.service';
 import { Router } from '@angular/router';
-import { ResponseInterface } from 'src/app/models/response.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { MatDialog } from '@angular/material/dialog';
@@ -90,18 +89,17 @@ export class ListClientesComponent implements OnInit, OnDestroy {
     Swal.fire({
       icon: 'question',
       title: '¿Estás seguro de que deseas eliminar este cliente?',
+      showDenyButton: true,
       showCancelButton: true,
-      showCloseButton: true,
-      allowOutsideClick: false,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
+      showConfirmButton: false,
       reverseButtons: true,
+      denyButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isDenied) {
         this.loading = true;
         this.api.deleteCliente(id).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-          if (respuesta.status == 'ok') {
+          if (data.status == 'ok') {
             this.clientes = this.clientes.filter(cliente => cliente.idCliente !== id);
             this.dataSource.data = this.clientes; // Actualizar el dataSource con los nuevos datos
             Swal.fire({
@@ -113,7 +111,7 @@ export class ListClientesComponent implements OnInit, OnDestroy {
             Swal.fire({
               icon: 'error',
               title: 'Error al eliminar',
-              text: respuesta.msj,
+              text: data.msj,
             });
           }
           this.loading = false;

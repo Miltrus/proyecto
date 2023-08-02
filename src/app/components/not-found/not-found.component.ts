@@ -19,8 +19,4 @@ export class NotFoundComponent implements OnInit {
     const notFoundUrl = `/not-found${currentUrl}`;
     window.history.replaceState({}, '', notFoundUrl);
   }
-
-  goBack(): void { //HACER QUE VAYA AL LANDING-PAGE SI ANTES NO ESTABA EN LA APP, POR EJ EN FACEBOOK
-    this.location.back();
-  }
 }

@@ -3,7 +3,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { RolInterface } from '../../../models/rol.interface';
 import { RolService } from '../../../services/api/rol.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
-import { ResponseInterface } from '../../../models/response.interface';
 import { PermisoInterface } from 'src/app/models/permiso.interface';
 import { RolPermisoInterface } from 'src/app/models/rol-permiso.interface';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
@@ -134,8 +133,7 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
               .map((control, index) => control.value ? this.permisos[index].idPermiso : null)
               .filter(permiso => permiso !== null);
             this.api.putRolPermiso(id.idRol, nuevosPermisos).subscribe(data => {
-              let respuesta: ResponseInterface = data;
-              if (respuesta.status == 'ok') {
+              if (data.status == 'ok') {
                 this.editForm.reset();
                 this.router.navigate(['rol/list-roles']);
                 Swal.fire({
@@ -147,7 +145,7 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
                 Swal.fire({
                   icon: 'error',
                   title: 'Error al modificar',
-                  text: respuesta.msj,
+                  text: data.msj,
                 });
               }
               this.loading = false;

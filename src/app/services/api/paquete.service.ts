@@ -7,7 +7,7 @@ import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface'
 import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs'; // 
+import { Observable } from 'rxjs';
 import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 
 @Injectable({
@@ -93,12 +93,10 @@ export class PaqueteService {
     const headers = this.getHeaders();
     return this.http.get<any>(address, { headers });
   }
-  
+
   getDataDestinatario(idCliente: any): Observable<any> {
     const address = this.url + 'paquete/' + idCliente + '/data';
     const headers = this.getHeaders();
     return this.http.get<any>(address, { headers });
   }
-
-
 }

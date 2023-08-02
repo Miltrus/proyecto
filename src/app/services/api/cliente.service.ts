@@ -4,7 +4,7 @@ import { ClienteInterface } from '../../models/cliente.interface';
 import { TipoDocumentoInterface } from '../../models/tipo-documento.interface';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs'; // 
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

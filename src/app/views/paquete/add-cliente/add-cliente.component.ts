@@ -1,15 +1,13 @@
 import { Component, ElementRef, HostListener, OnDestroy, Renderer2, ViewChild } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AlertsService } from '../../../services/alerts/alerts.service';
 import { ClienteService } from '../../../services/api/cliente.service';
 import { ClienteInterface } from '../../../models/cliente.interface';
-import { ResponseInterface } from '../../../models/response.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-cliente',
@@ -30,8 +28,6 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
   constructor(
     private dialogRef: MatDialogRef<AddClienteComponent>,
     private api: ClienteService,
-    private alerts: AlertsService,
-    private dialog: MatDialog,
     private renderer: Renderer2,
   ) { }
 
@@ -74,50 +70,56 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
   }
 
   postForm(form: ClienteInterface) {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Estás seguro que deseas crear este cliente?'
-      }
-    });
-    const dialogPostRefSub = dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    Swal.fire({
+      title: '¿Estás seguro de que deseas crear este cliente?',
+      icon: 'question',
+      showCancelButton: true,
+      allowOutsideClick: false,
+      reverseButtons: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
         const postCltSub = this.api.postCliente(form).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-          if (respuesta.status == 'ok') {
+          if (data.status == 'ok') {
             this.newForm.reset();
-            this.alerts.showSuccess('El cliente ha sido creado exitosamente.', 'Cliente creado');
+            Swal.fire({
+              icon: 'success',
+              title: 'Cliente creado',
+              text: 'El cliente ha sido creado exitosamente.',
+            });
             this.dialogRef.close(form);
-          }
-          else {
-            this.alerts.showError(respuesta.msj, 'Error al crear el cliente');
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al crear el cliente',
+              text: data.msj,
+            });
             this.loading = false;
           }
         });
         this.subscriptions.add(postCltSub);
-      } else {
-        this.alerts.showInfo('El cliente no ha sido creado.', 'Cliente no creado');
-        this.loading = false;
       }
     });
-    this.subscriptions.add(dialogPostRefSub);
   }
 
 
   closeDialog() {
     if (this.newForm.dirty) {
-      const dialogRef = this.dialog.open(DialogConfirmComponent, {
-        data: {
-          title: 'Cambios sin guardar',
-          message: '¿Estás seguro que deseas salir?'
-        }
-      });
-      const dialogCloseRefSub = dialogRef.afterClosed().subscribe(result => {
-        if (result) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Cambios sin guardar',
+        text: '¿Estás seguro de que deseas salir?',
+        showDenyButton: true,
+        reverseButtons: true,
+        confirmButtonText: 'Salir',
+        denyButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
           this.dialogRef.close();
         }
       });
-      this.subscriptions.add(dialogCloseRefSub);
     } else {
       this.dialogRef.close();
     }

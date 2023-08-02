@@ -1,4 +1,4 @@
 export interface LoginInterface {
-    correoUsuario?: string | null;
-    contrasenaUsuario?: string | null;
+    correoUsuario?: any | null;
+    contrasenaUsuario?: any | null;
 }

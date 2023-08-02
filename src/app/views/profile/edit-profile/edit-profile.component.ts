@@ -131,9 +131,9 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
         icon: 'warning',
         title: 'Cambios sin guardar',
         text: '¿Estás seguro de que deseas salir?',
-        showCancelButton: true,
-        confirmButtonText: 'Confirmar',
-        cancelButtonText: 'Cancelar',
+        showDenyButton: true,
+        confirmButtonText: 'Salir',
+        denyButtonText: 'Cancelar',
         reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {

@@ -11,14 +11,15 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Documento <b style="color: red;">*</b></label>
-                        <input type="text" class="form-control" formControlName="documentoUsuario"
-                            placeholder="Ingrese su documento de identidad" [ngClass]="{
+                        <input type="text" class="form-control" formControlName="documentoUsuario" [ngClass]="{
                     'is-invalid': forgotForm.get('documentoUsuario')?.invalid && (forgotForm.get('documentoUsuario')?.touched || forgotForm.get('documentoUsuario')?.dirty),
                     'is-valid': forgotForm.get('documentoUsuario')?.valid && (forgotForm.get('documentoUsuario')?.touched || forgotForm.get('documentoUsuario')?.dirty)
                   }">
-                        <div *ngIf="forgotForm.get('documentoUsuario')?.errors?.['required']" class="invalid-feedback">
+                        <mat-error
+                            *ngIf="forgotForm.get('documentoUsuario')?.errors?.['required'] && (forgotForm.get('documentoUsuario')?.touched || forgotForm.get('documentoUsuario')?.dirty)"
+                            class="invalid-feedback">
                             Este campo es obligatorio.
-                        </div>
+                        </mat-error>
                     </div>
                 </div>
             </div>
@@ -27,14 +28,15 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
-                        <input type="text" class="form-control" formControlName="correoUsuario"
-                            placeholder="Ingrese su correo electronico" [ngClass]="{
+                        <input type="text" class="form-control" formControlName="correoUsuario" [ngClass]="{
                   'is-invalid': forgotForm.get('correoUsuario')?.invalid && (forgotForm.get('correoUsuario')?.touched || forgotForm.get('correoUsuario')?.dirty),
                   'is-valid': forgotForm.get('correoUsuario')?.valid && (forgotForm.get('correoUsuario')?.touched || forgotForm.get('correoUsuario')?.dirty)
                 }">
-                        <div *ngIf="forgotForm.get('correoUsuario')?.errors?.['required']" class="invalid-feedback">
+                        <mat-error
+                            *ngIf="forgotForm.get('correoUsuario')?.errors?.['required'] && (forgotForm.get('correoUsuario')?.touched || forgotForm.get('correoUsuario')?.dirty)"
+                            class="invalid-feedback">
                             Este campo es obligatorio.
-                        </div>
+                        </mat-error>
 
                     </div>
                 </div>

@@ -4,7 +4,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../../../services/api/usuario.service';
 import { UsuarioInterface } from '../../../models/usuario.interface';
-import { ResponseInterface } from '../../../models/response.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
 import { EstadoUsuarioInterface } from 'src/app/models/estado-usuario.interface';
 import { RolInterface } from 'src/app/models/rol.interface';
@@ -94,8 +93,7 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
       if (result.isConfirmed) {
         this.loading = true;
         const postUserSub = this.api.postUsuario(form).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-          if (respuesta.status == 'ok') {
+          if (data.status == 'ok') {
             this.newForm.reset();
             this.router.navigate(['usuario/list-usuarios']);
             Swal.fire({
@@ -107,7 +105,7 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
             Swal.fire({
               icon: 'error',
               title: 'Error al crear',
-              text: respuesta.msj,
+              text: data.msj,
             });
             this.loading = false;
           }

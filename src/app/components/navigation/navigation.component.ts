@@ -7,6 +7,7 @@ import { DOCUMENT } from '@angular/common';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { RolService } from '../../services/api/rol.service';
 import { UsuarioService } from 'src/app/services/api/usuario.service';
+import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,7 +21,7 @@ export class NavigationComponent {
   private breakpointObserver = inject(BreakpointObserver);
 
   isDarkThemeActive = false;
-  loading: boolean = true;
+  /* activeModule: string | null = null; */
 
   modules = [
     { name: 'Roles', route: '/rol' },
@@ -35,11 +36,15 @@ export class NavigationComponent {
     private router: Router,
     private rolService: RolService,
     private userService: UsuarioService,
+    private activatedRoute: ActivatedRoute,
   ) {
     const isDarkModeActive = this.document.body.classList.contains('dark-mode');
     const storedTheme = localStorage.getItem('isDarkThemeActive');
 
     this.isDarkThemeActive = storedTheme ? storedTheme === 'true' : isDarkModeActive;
+    /* this.activatedRoute.firstChild?.data.subscribe(data => {
+      this.activeModule = data['module'];
+    }); */
 
     if (this.isDarkThemeActive) {
       this.document.body.classList.add('dark-mode');
@@ -48,6 +53,8 @@ export class NavigationComponent {
     }
 
     const token = localStorage.getItem('token');
+
+
     const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
     const uid = decodedToken.uid;
 
@@ -60,7 +67,6 @@ export class NavigationComponent {
         const permisos = data.idPermiso?.map((rolPermiso) => rolPermiso.permiso?.nombrePermiso);
 
         this.modules = this.modules.filter((module) => permisos.includes(module.name));
-        this.loading = false;
       });
     });
   }
@@ -74,7 +80,6 @@ export class NavigationComponent {
     } else {
       this.document.body.classList.remove('dark-mode');
     }
-    this.loading = false;
   }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -82,6 +87,7 @@ export class NavigationComponent {
       map(result => result.matches),
       shareReplay()
     );
+
 
   logout(): void {
     Swal.fire({

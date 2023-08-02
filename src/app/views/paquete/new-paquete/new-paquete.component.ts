@@ -5,18 +5,17 @@ import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { PaqueteService } from '../../../services/api/paquete.service';
 import { PaqueteInterface } from '../../../models/paquete.interface';
-import { ResponseInterface } from '../../../models/response.interface';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
 import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
-import { DialogConfirmComponent } from 'src/app/components/dialog-confirm/dialog-confirm.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddClienteComponent } from '../add-cliente/add-cliente.component';
 import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 import { ClienteService } from 'src/app/services/api/cliente.service';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -95,7 +94,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   tipos: TipoPaqueteInterface[] = [];
   loading: boolean = true;
   hideCodigoQrPaquete: boolean = true;
-  respuesta: ResponseInterface | ClienteInterface[] | any = [];
 
   selectedRemitente: ClienteInterface | undefined;
   selectedDestinatario: ClienteInterface | undefined;
@@ -106,10 +104,13 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       this.destinatario = data;
       this.cliente = data.map(cliente => cliente.nombreCliente);
       this.loading = false;
-      console.log(this.cliente);
 
       if (data.length == 0) {
-        this.alerts.showWarning('No hay ningun cliente registrado', 'No hay clientes');
+        Swal.fire({
+          icon: 'info',
+          title: 'No hay clientes registrados',
+          text: 'No se encontraron clientes registrados en el sistema.',
+        });
         return;
       }
     });
@@ -122,8 +123,8 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       if (this.editRemitente.get('documentoCliente')?.valid) {
         this.paqueteService.getDataRemitente(value).subscribe(data => {
           this.editRemitente.patchValue({
-            idCliente: data.id,
-            idTipoDocumento: data.tipoDocumento,
+            idCliente: data.idCliente,
+            idTipoDocumento: data.idTipoDocumento,
             nombreCliente: data.nombre,
             correoCliente: data.correo,
             telefonoCliente: data.telefono,
@@ -200,66 +201,71 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   }
 
   postForm(form: PaqueteInterface) {
-    const dialogRef = this.dialog.open(DialogConfirmComponent, {
-      data: {
-        message: '¿Estás seguro que deseas registrar este paquete?'
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-      if (result) {
+    Swal.fire({
+      icon: 'question',
+      title: '¿Estás seguro de que deseas registrar este paquete?',
+      showCancelButton: true,
+      reverseButtons: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loading = true;
         this.api.postPaquete(form).subscribe(data => {
-          let respuesta: ResponseInterface = data;
-          if (respuesta.status == 'ok') {
+          if (data.status == 'ok') {
             this.newForm.reset();
-            this.alerts.showSuccess('El paquete ha sido creado exitosamente', 'Paquete registrado');
             this.router.navigate(['paquete/list-paquetes']);
-          }
-          else {
-            this.alerts.showError(respuesta.msj, 'Error al registrar el paquete');
+            Swal.fire({
+              icon: 'success',
+              title: 'Paquete registrado',
+              text: 'El paquete ha sido registrado exitosamente.',
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al registrar el paquete',
+              text: data.msj,
+            });
             this.loading = false;
           }
         });
-      } else {
-        this.alerts.showInfo('El paquete no ha sido creado', 'Paquete no creado');
       }
     });
   }
 
+
   editRemi(id: any): void {
     if (this.editRemitente.get('telefonoCliente')?.dirty || this.editRemitente.get('correoCliente')?.dirty) {
-      const dialogRef = this.dialog.open(DialogConfirmComponent, {
-        data: {
-          message: '¿Deseas modificar el correo y el teléfono este cliente?',
-        },
-      });
-      const dialogRefSub = dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.loading = false;
+      Swal.fire({
+        title: '¿Deseas modificar el correo y el teléfono de este cliente?',
+        icon: 'question',
+        showCancelButton: true,
+        reverseButtons: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.loading = true;
           const putCltSub = this.apiClient.putCliente(id).subscribe((data) => {
-            let respuesta: ResponseInterface = data;
-            if (respuesta.status == 'ok') {
-              this.alerts.showSuccess('El cliente ha sido modificado', 'Modificación exitosa');
-            } else {
-              this.alerts.showError(respuesta.msj, 'Error en la modificación');
-              this.loading = false;
-            }
+            Swal.fire({
+              icon: data.status == "ok" ? 'success' : 'error',
+              title: data.status == "ok" ? 'Cliente modificado' : 'Error al modificar el cliente',
+              text: data.msj,
+            });
+            this.loading = false;
           });
           this.subscriptions.add(putCltSub);
-        } else {
-          this.alerts.showInfo('No se ha modificado el cliente', 'Modificación cancelada');
         }
       });
-      this.subscriptions.add(dialogRefSub);
     } else {
-      if ( !this.editRemitente.get('nombreCliente')?.value || !this.editRemitente.get('direccionCliente')?.value) {
-        this.alerts.showInfo('Uno o mas campos vacios', 'Modificación cancelada');
+      if (!this.editRemitente.get('nombreCliente')?.value || !this.editRemitente.get('direccionCliente')?.value) {
+        this.alerts.showInfo('No se ha modificadon los campos correo o teléfono', 'Modificación cancelada');
       } else {
         this.alerts.showInfo('No se ha modificadon los campos correo o teléfono', 'Modificación cancelada');
       }
     }
   }
+
 
   getUsuarioPaquete(): void {
     this.api.getUsuario().subscribe(data => {
@@ -314,8 +320,10 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   openAddClienteDialog(): void {
     const dialogRef = this.dialog.open(AddClienteComponent, {
-      width: '70%',
-      height: '70%'
+      width: '65%',
+      height: '65%',
+      autoFocus: false,
+      disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
