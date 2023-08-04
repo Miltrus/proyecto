@@ -321,6 +321,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       this.editForm.patchValue({ codigoQrPaquete: '' });
     }
   }
+  
   mostrarCodigoQrPaquete() {
     this.hideCodigoQrPaquete = false;
   }
