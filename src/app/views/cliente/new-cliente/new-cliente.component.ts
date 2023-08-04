@@ -125,6 +125,10 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
       if (place) {
         const selectedAddress = place.formatted_address;
         this.newForm.patchValue({ direccionCliente: selectedAddress });
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        console.log("Latitud:", lat);
+        console.log("Longitud:", lng);
       }
     });
   }
