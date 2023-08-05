@@ -10,6 +10,7 @@
     <br>
     <div class="container">
       <form [formGroup]="editRemitente">
+        <!-- Campos que no se actualizarán -->
         <div class="row">
           <h4>Remitente
             <button class="btn btn-circle" type="button" (click)="openAddClienteDialog()">
@@ -41,13 +42,16 @@
           </div>
         </div>
         <hr style="border-top: 1px solid #ccc; margin: 5px 0;">
+      
+        <!-- Campos que se actualizarán -->
         <div class="row">
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Correo</label>
               <input type="text" class="form-control" formControlName="correoCliente" [ngClass]="{
                 'is-invalid': editRemitente.get('correoCliente')?.invalid && (editRemitente.get('correoCliente')?.touched || editRemitente.get('correoCliente')?.dirty),
-                'is-valid': editRemitente.get('correoCliente')?.valid && editRemitente.get('correoCliente')?.dirty}" />
+                'is-valid': editRemitente.get('correoCliente')?.valid && editRemitente.get('correoCliente')?.dirty
+              }" />
               <div *ngIf="editRemitente.get('correoCliente')?.errors?.['pattern']" class="invalid-feedback">
                 Correo inválido.
               </div>
@@ -57,30 +61,30 @@
             </div>
           </div>
           <div class="col">
-            <div class="form-group">
-              <label for="exampleFormControlInput1">Telefono</label>
-              <div class="input-container">
+            <!-- Campo de Teléfono y Botón de Edición -->
+            <div class="d-flex align-items-center">
+              <div class="form-group flex-grow-1">
+                <label for="exampleFormControlInput1">Telefono</label>
                 <input type="text" class="form-control" formControlName="telefonoCliente" [ngClass]="{
                   'is-invalid': editRemitente.get('telefonoCliente')?.invalid && (editRemitente.get('telefonoCliente')?.touched || editRemitente.get('telefonoCliente')?.dirty),
                   'is-valid': editRemitente.get('telefonoCliente')?.valid && editRemitente.get('telefonoCliente')?.dirty
                 }" />
-                <div class="btn-container">
-                  <button class="btn btn-circle btn-update" type="button" (click)="editRemi(editRemitente.value)">
-                    <span class="material-icons">cached</span>
-                  </button>
+                <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['pattern']" class="invalid-feedback">
+                  Teléfono inválido, debe contener 10 dígitos numéricos.
+                </div>
+                <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['required']" class="invalid-feedback">
+                  Este campo es obligatorio.
                 </div>
               </div>
-              <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['pattern']" class="invalid-feedback">
-                Teléfono inválido, debe contener 10 dígitos numéricos.
-              </div>
-              <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['required']" class="invalid-feedback">
-                Este campo es obligatorio.
-              </div>
+              <button class="btn btn-circle btn-update btn-margin" type="button" title="Actualizar correo y telefono" (click)="editRemi(editRemitente.value)">
+                <span class="material-icons">edit</span>
+              </button>
             </div>
           </div>
         </div>
         <hr style="border-top: 1px solid #ccc; margin: -5px 0;"><br><br>
       </form>
+      
 
       <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
         <div class="row">
