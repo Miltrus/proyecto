@@ -11,14 +11,14 @@
             <img src="assets/img/LogoSinFondo.png" id="icon" alt="Star Routing logo" />
         </div>
 
-        <form [formGroup]="newPwd" (ngSubmit)="onNewPwd()">
+        <form [formGroup]="newPwdForm" (ngSubmit)="onNewPwd()">
             <div class="fadeIn second">
                 <p>
                     <mat-form-field appearance="outline">
                         <mat-label>Nueva contraseña</mat-label>
                         <input id="password" formControlName="contrasenaUsuario" matInput [ngClass]="{
-                    'is-invalid': newPwd.get('contrasenaUsuario')?.invalid && (newPwd.get('contrasenaUsuario')?.touched || newPwd.get('contrasenaUsuario')?.dirty),
-                    'is-valid': newPwd.get('contrasenaUsuario')?.valid && (newPwd.get('contrasenaUsuario')?.touched || newPwd.get('contrasenaUsuario')?.dirty)
+                    'is-invalid': newPwdForm.get('contrasenaUsuario')?.invalid && (newPwdForm.get('contrasenaUsuario')?.touched || newPwdForm.get('contrasenaUsuario')?.dirty),
+                    'is-valid': newPwdForm.get('contrasenaUsuario')?.valid && (newPwdForm.get('contrasenaUsuario')?.touched || newPwdForm.get('contrasenaUsuario')?.dirty)
                   }" [type]="showPassword ? 'text' : 'password'">
                         <mat-icon matSuffix (click)="togglePasswordVisibility()" [color]="'primary'">
                             {{ showPassword ? 'visibility_off' : 'visibility' }}
@@ -31,20 +31,20 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Repite la contraseña</mat-label>
                         <input id="password" formControlName="repetirContrasena" matInput [ngClass]="{
-                    'is-invalid': newPwd.get('repetirContrasena')?.invalid && (newPwd.get('repetirContrasena')?.touched || newPwd.get('repetirContrasena')?.dirty),
-                    'is-valid': newPwd.get('repetirContrasena')?.valid && (newPwd.get('repetirContrasena')?.touched || newPwd.get('repetirContrasena')?.dirty)
+                    'is-invalid': newPwdForm.get('repetirContrasena')?.invalid && (newPwdForm.get('repetirContrasena')?.touched || newPwdForm.get('repetirContrasena')?.dirty),
+                    'is-valid': newPwdForm.get('repetirContrasena')?.valid && (newPwdForm.get('repetirContrasena')?.touched || newPwdForm.get('repetirContrasena')?.dirty)
                   }" [type]="showPassword ? 'text' : 'password'">
                         <mat-icon matSuffix (click)="togglePasswordVisibility()" [color]="'primary'">
                             {{ showPassword ? 'visibility_off' : 'visibility' }}
                         </mat-icon>
-                        <mat-error *ngIf="newPwd.get('repetirContrasena')?.errors?.['passwordMismatch']">
+                        <mat-error *ngIf="newPwdForm.get('repetirContrasena')?.errors?.['passwordMismatch']">
                             Las contraseñas no coinciden.
                         </mat-error>
                     </mat-form-field><br>
                 </p>
             </div>
             <button type="submit" color="primary" class="fadeIn fourth" mat-raised-button
-                [disabled]="newPwd.get('contrasenaUsuario')?.invalid || newPwd.get('repetirContrasena')?.invalid">Cambiar
+                [disabled]="newPwdForm.get('contrasenaUsuario')?.invalid || newPwdForm.get('repetirContrasena')?.invalid">Cambiar
                 contraseña</button><br><br>
         </form>
     </div>

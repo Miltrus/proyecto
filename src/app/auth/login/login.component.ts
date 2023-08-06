@@ -40,11 +40,11 @@ export class LoginComponent {
 
   onLogin(form: LoginInterface) {
     this.loading = true;
-    this.auth.onLogin(form).subscribe(data => {
+    this.auth.onLogin(form).subscribe(async (data) => {
       if (data.status == 'ok') {
         this.loading = true;
         localStorage.setItem("token", data.token);
-        this.router.navigate(['dashboard']);
+        await this.router.navigate(['dashboard']);
         this.dataUser = data.user;
         Swal.fire({
           icon: 'success',

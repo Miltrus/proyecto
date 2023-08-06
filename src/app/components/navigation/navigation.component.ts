@@ -54,6 +54,14 @@ export class NavigationComponent {
 
     const token = localStorage.getItem('token');
 
+    if (!token) {
+      this.router.navigate(['auth/login']);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Su sesión ha expirado',
+        text: 'Por favor inicie sesión nuevamente.',
+      });
+    };
 
     const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
     const uid = decodedToken.uid;

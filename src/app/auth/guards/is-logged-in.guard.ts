@@ -22,13 +22,19 @@ export const isLoggedInGuard: CanMatchFn = () => {
           Swal.fire({
             icon: 'warning',
             title: 'Su sesión ha expirado',
-            text: response.msj,
+            text: 'Por favor inicie sesión nuevamente.',
           })
           return false;
         }
       }),
       catchError(error => {
         router.navigate(['auth/login']);
+        localStorage.removeItem('token');
+        Swal.fire({
+          icon: 'warning',
+          title: 'Su sesión ha expirado',
+          text: 'Por favor inicie sesión nuevamente.',
+        })
         return of(false);
       })
     );

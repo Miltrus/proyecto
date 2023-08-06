@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 })
 export class NewPwdComponent {
 
-  newPwd = new FormGroup({
+  newPwdForm = new FormGroup({
     contrasenaUsuario: new FormControl('', Validators.required),
     repetirContrasena: new FormControl('', Validators.required),
   })
@@ -22,12 +22,12 @@ export class NewPwdComponent {
     private route: ActivatedRoute,
   ) {
     // Suscribirse a los cambios en el campo 'contrasenaUsuario'
-    this.newPwd.get('contrasenaUsuario')?.valueChanges.subscribe(() => {
+    this.newPwdForm.get('contrasenaUsuario')?.valueChanges.subscribe(() => {
       this.passwordMatchValidator();
     });
 
     // Suscribirse a los cambios en el campo 'repetirContrasena'
-    this.newPwd.get('repetirContrasena')?.valueChanges.subscribe(() => {
+    this.newPwdForm.get('repetirContrasena')?.valueChanges.subscribe(() => {
       this.passwordMatchValidator();
     });
   }
@@ -37,19 +37,19 @@ export class NewPwdComponent {
   showPassword: boolean = false;
 
   passwordMatchValidator() {
-    const newPassword = this.newPwd.get('contrasenaUsuario')?.value;
-    const confirmPassword = this.newPwd.get('repetirContrasena')?.value;
+    const newPassword = this.newPwdForm.get('contrasenaUsuario')?.value;
+    const confirmPassword = this.newPwdForm.get('repetirContrasena')?.value;
 
     if (newPassword === confirmPassword) {
-      this.newPwd.get('repetirContrasena')?.setErrors(null);
+      this.newPwdForm.get('repetirContrasena')?.setErrors(null);
     } else {
-      this.newPwd.get('repetirContrasena')?.setErrors({ passwordMismatch: true });
+      this.newPwdForm.get('repetirContrasena')?.setErrors({ passwordMismatch: true });
     }
   }
 
   onNewPwd() {
     this.loading = true;
-    const newPwd = this.newPwd.get('contrasenaUsuario')?.value;
+    const newPwd = this.newPwdForm.get('contrasenaUsuario')?.value;
     const token = this.route.snapshot.paramMap.get('token');
     this.auth.onNewPwd({ newPwd, token }).subscribe(data => {
       this.loading = false;
