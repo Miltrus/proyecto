@@ -9,13 +9,13 @@
     <mat-card class="card">
       <mat-card-header>
         <div mat-card-avatar class="user-avatar">
-          <mat-icon>account_circle</mat-icon>
+          <mat-icon>account_box</mat-icon>
         </div>
         <mat-card-title>Datos del usuario</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <p><strong>Tipo de documento:</strong> {{ getTipoDocumento(userData?.idTipoDocumento) }}</p>
         <p><strong>Documento:</strong> {{ userData?.documentoUsuario }}</p>
+        <p><strong>Tipo documento:</strong> {{ getTipoDocumento(userData?.idTipoDocumento) }}</p>
         <p><strong>Nombre:</strong> {{ userData?.nombreUsuario }}</p>
         <p><strong>Apellido:</strong> {{ userData?.apellidoUsuario }}</p>
         <p><strong>Teléfono:</strong> {{ userData?.telefonoUsuario }}</p>

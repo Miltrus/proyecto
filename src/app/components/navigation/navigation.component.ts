@@ -108,21 +108,15 @@ export class NavigationComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['landing-page']);
+        this.router.navigate(['auth/login']);
         localStorage.removeItem('token');
-        this.isDarkThemeActive = false;
       }
     });
   }
-
 
   toggleUserPanel(): void {
     if (this.userMenuTrigger) {
       this.userMenuTrigger.openMenu();
     }
-  }
-
-  goToProfile(): void {
-    this.router.navigate(['profile']);
   }
 }

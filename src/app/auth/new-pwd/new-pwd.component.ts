@@ -21,12 +21,12 @@ export class NewPwdComponent {
     private router: Router,
     private route: ActivatedRoute,
   ) {
-    // Suscribirse a los cambios en el campo 'contrasenaUsuario'
+    // suscribirse a los cambios en el campo 'contrasenaUsuario'
     this.newPwdForm.get('contrasenaUsuario')?.valueChanges.subscribe(() => {
       this.passwordMatchValidator();
     });
 
-    // Suscribirse a los cambios en el campo 'repetirContrasena'
+    // suscribirsea los cambios en el campo 'repetirContrasena'
     this.newPwdForm.get('repetirContrasena')?.valueChanges.subscribe(() => {
       this.passwordMatchValidator();
     });

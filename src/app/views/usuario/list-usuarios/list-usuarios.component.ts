@@ -112,7 +112,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
         if (id == this.uid) {
           Swal.fire({
             icon: 'error',
-            title: 'Acceso denegado',
+            title: 'Operacion cancelada',
             text: 'No puedes eliminar tu propio usuario.',
           });
           this.loading = false;
@@ -163,7 +163,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
         if (usuario.idUsuario == this.uid) {
           Swal.fire({
             icon: 'warning',
-            title: 'Acceso denegado',
+            title: 'Operacion cancelada',
             text: 'No puedes cambiar el estado de tu propio usuario.',
           });
           this.loading = false;
@@ -171,7 +171,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
         }
 
         const putUserSub = this.api.putUsuario(updatedUsuario).subscribe(data => {
-          if (data.status === 'ok') {
+          if (data.status == 'ok') {
             this.usuarios = this.usuarios.map(u => (u.documentoUsuario === updatedUsuario.documentoUsuario ? updatedUsuario : u));
             this.dataSource.data = this.usuarios; // Actualizamos el dataSource con los nuevos datos
             Swal.fire({
@@ -189,8 +189,6 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
           this.loading = false;
         });
         this.subscriptions.add(putUserSub);
-      } else {
-        this.alerts.showInfo('No se realizaron cambios en el estado del usuario.', 'Operación cancelada');
       }
     });
   }

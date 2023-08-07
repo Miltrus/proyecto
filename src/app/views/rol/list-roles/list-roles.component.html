@@ -17,7 +17,7 @@
             <mat-label>Búsqueda de roles</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Administrador" #input autocomplete="off">
             <button mat-button matSuffix disabled>
-              <mat-icon color="primary">search</mat-icon> <!-- Icono de lupa -->
+              <mat-icon color="primary">search</mat-icon>
             </button>
           </mat-form-field>
         </div>
@@ -51,7 +51,7 @@
                 <span>Ver</span>
               </button>
               <button mat-menu-item (click)="editRol(rol.idRol)" [disabled]="rol.idRol === 1 || rol.idRol === 2">
-                <mat-icon [ngStyle]="{'color': '#5E35B1'}">edit</mat-icon>
+                <mat-icon [ngStyle]="{'color': '#1A237E'}">edit</mat-icon>
                 <span>Editar</span>
               </button>
               <button mat-menu-item (click)="deleteRol(rol.idRol)" [disabled]="rol.idRol === 1 || rol.idRol === 2">
