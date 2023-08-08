@@ -9,6 +9,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Subscription, forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
+import { AlertsService } from 'src/app/services/alerts/alerts.service';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class ListClientesComponent implements OnInit, OnDestroy {
     private api: ClienteService,
     private router: Router,
     private dialog: MatDialog,
+    private alerts: AlertsService
   ) { }
 
   private subscriptions: Subscription = new Subscription();
@@ -45,11 +47,7 @@ export class ListClientesComponent implements OnInit, OnDestroy {
       this.clientes = clientes;
       this.dataSource.data = this.clientes;
       if (this.dataSource.data.length < 1) {
-        Swal.fire({
-          icon: 'info',
-          title: 'No hay clientes registrados',
-          text: 'No se encontraron clientes registrados en el sistema.',
-        });
+        this.alerts.showInfo('No se encontraron clientes en el sistema.', 'No hay clientes registrados');
       }
       this.tiposDocumento = tiposDocumento;
       this.loading = false;

@@ -10,6 +10,7 @@ import { MatSort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
+import { AlertsService } from 'src/app/services/alerts/alerts.service';
 
 @Component({
   selector: 'app-list-roles',
@@ -22,6 +23,7 @@ export class ListRolesComponent implements OnInit, OnDestroy {
     private api: RolService,
     private router: Router,
     private dialog: MatDialog,
+    private alerts: AlertsService
   ) { }
 
   private subscriptions: Subscription = new Subscription();
@@ -84,11 +86,7 @@ export class ListRolesComponent implements OnInit, OnDestroy {
       });
 
       if (this.roles.length < 1) {
-        Swal.fire({
-          icon: 'info',
-          title: 'No hay roles registrados',
-          text: 'No se encontraron roles registrados en el sistema.',
-        });
+        this.alerts.showInfo('No se encontraron roles en el sistema.', 'No hay roles registrados');
         this.loading = false;
       }
     });

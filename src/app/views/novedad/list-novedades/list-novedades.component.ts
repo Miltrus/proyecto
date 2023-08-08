@@ -10,6 +10,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Subscription, forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
+import { AlertsService } from 'src/app/services/alerts/alerts.service';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class ListNovedadesComponent implements OnInit, OnDestroy {
     private api: NovedadService,
     private router: Router,
     private dialog: MatDialog,
+    private alerts: AlertsService
   ) { }
 
   private subscriptions: Subscription = new Subscription();
@@ -48,11 +50,7 @@ export class ListNovedadesComponent implements OnInit, OnDestroy {
       this.novedades = novedades;
       this.dataSource.data = this.novedades;
       if (this.dataSource.data.length < 1) {
-        Swal.fire({
-          icon: 'info',
-          title: 'No hay novedades registradas',
-          text: 'No se encontraron novedades registradas en el sistema.',
-        });
+        this.alerts.showInfo('No se encontraron novedades en el sistema.', 'No hay novedades registradas');
       }
       this.tiposNovedad = tiposNovedad;
       this.entrega = entrega;

@@ -109,7 +109,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
         Swal.fire({
           icon: 'info',
           title: 'No hay clientes registrados',
-          text: 'No se encontraron clientes registrados en el sistema.',
+          text: 'No se encontraron clientes en el sistema.',
         });
         return;
       }
