@@ -83,7 +83,7 @@ export class RolService {
   putRolPermiso(idRol: any, idPermisos: any[]): Observable<ResponseInterface> {
     let address = this.url + 'rolPermiso/' + idRol;
     const headers = this.getHeaders();
-    let body = { idRol: idRol, idPermisos: idPermisos }; // Crear el objeto JSON con las propiedades correspondientes
+    let body = { idRol: idRol, idPermisos: idPermisos };
     return this.http.put<ResponseInterface>(address, body, { headers });
   }
 

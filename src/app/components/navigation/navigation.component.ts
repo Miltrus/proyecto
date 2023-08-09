@@ -7,7 +7,6 @@ import { DOCUMENT } from '@angular/common';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { RolService } from '../../services/api/rol.service';
 import { UsuarioService } from 'src/app/services/api/usuario.service';
-import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -36,7 +35,6 @@ export class NavigationComponent {
     private router: Router,
     private rolService: RolService,
     private userService: UsuarioService,
-    private activatedRoute: ActivatedRoute,
   ) {
     const isDarkModeActive = this.document.body.classList.contains('dark-mode');
     const storedTheme = localStorage.getItem('isDarkThemeActive');
