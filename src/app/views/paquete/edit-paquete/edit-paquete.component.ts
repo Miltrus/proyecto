@@ -247,9 +247,9 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       });
     } else {
       if (!this.editRemitente.get('nombreCliente')?.value || !this.editRemitente.get('direccionCliente')?.value) {
-        this.alerts.showInfo('No se ha modificadon los campos correo o teléfono', 'Modificación cancelada');
+        this.alerts.showInfo('No se han modificado los campos correo o teléfono.', 'Modificación cancelada');
       } else {
-        this.alerts.showInfo('No se ha modificadon los campos correo o teléfono', 'Modificación cancelada');
+        this.alerts.showInfo('No se han modificado los campos correo o teléfono.', 'Modificación cancelada');
       }
     }
   }
@@ -321,7 +321,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       this.editForm.patchValue({ codigoQrPaquete: '' });
     }
   }
-  
+
   mostrarCodigoQrPaquete() {
     this.hideCodigoQrPaquete = false;
   }
