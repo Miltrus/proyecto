@@ -70,48 +70,49 @@
           </div>
         </div>
         <hr style="border-top: 1px solid #ccc; margin: 5px 0;">
-          <div class="row">
-            <div class="col">
-              <!-- Campo de Correo -->
-              <div class="form-group">
-                <label for="exampleFormControlInput1">Correo</label>
-                <input type="text" class="form-control" formControlName="correoCliente" [ngClass]="{
+        <div class="row">
+          <div class="col">
+            <!-- Campo de Correo -->
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Correo</label>
+              <input type="text" class="form-control" formControlName="correoCliente" [ngClass]="{
                   'is-invalid': editRemitente.get('correoCliente')?.invalid && (editRemitente.get('correoCliente')?.touched || editRemitente.get('correoCliente')?.dirty),
                   'is-valid': editRemitente.get('correoCliente')?.valid
                 }" />
-                <div *ngIf="editRemitente.get('correoCliente')?.errors?.['pattern']" class="invalid-feedback">
-                  Correo inválido.
-                </div>
-                <div *ngIf="editRemitente.get('correoCliente')?.errors?.['required']" class="invalid-feedback">
-                  Este campo es obligatorio.
-                </div>
+              <div *ngIf="editRemitente.get('correoCliente')?.errors?.['pattern']" class="invalid-feedback">
+                Correo inválido.
               </div>
-            </div>
-          
-            <div class="col">
-              <!-- Campo de Teléfono y Botón de Edición -->
-              <div class="d-flex align-items-center">
-                <div class="form-group flex-grow-1">
-                  <label for="exampleFormControlInput1">Telefono</label>
-                  <input type="text" class="form-control" formControlName="telefonoCliente" [ngClass]="{
-                    'is-invalid': editRemitente.get('telefonoCliente')?.invalid && (editRemitente.get('telefonoCliente')?.touched || editRemitente.get('telefonoCliente')?.dirty),
-                    'is-valid': editRemitente.get('telefonoCliente')?.valid
-                  }" />
-                  <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['pattern']" class="invalid-feedback">
-                    Teléfono inválido, debe contener 10 dígitos numéricos.
-                  </div>
-                  <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['required']" class="invalid-feedback">
-                    Este campo es obligatorio.
-                  </div>
-                </div>
-                <button class="btn btn-circle btn-update btn-margin" type="button" title="Actualizar correo y telefono" (click)="editRemi(editRemitente.value)">
-                  <span class="material-icons">edit</span>
-                </button>
+              <div *ngIf="editRemitente.get('correoCliente')?.errors?.['required']" class="invalid-feedback">
+                Este campo es obligatorio.
               </div>
             </div>
           </div>
-          
-        <hr style="border-top: 1px solid #ccc; margin: -5px 0;"><br><br>
+
+          <div class="col">
+            <!-- Campo de Teléfono y Botón de Edición -->
+            <div class="d-flex align-items-center">
+              <div class="form-group flex-grow-1">
+                <label for="exampleFormControlInput1">Telefono</label>
+                <input type="text" class="form-control" formControlName="telefonoCliente" [ngClass]="{
+                    'is-invalid': editRemitente.get('telefonoCliente')?.invalid && (editRemitente.get('telefonoCliente')?.touched || editRemitente.get('telefonoCliente')?.dirty),
+                    'is-valid': editRemitente.get('telefonoCliente')?.valid
+                  }" />
+                <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['pattern']" class="invalid-feedback">
+                  Teléfono inválido, debe contener 10 dígitos numéricos.
+                </div>
+                <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['required']" class="invalid-feedback">
+                  Este campo es obligatorio.
+                </div>
+              </div>
+              <button class="btn btn-circle btn-update btn-margin" type="button" title="Actualizar correo y telefono"
+                (click)="editRemi(editRemitente.value)">
+                <span class="material-icons">edit</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <hr><br><br>
       </form>
 
       <form [formGroup]="newForm" (ngSubmit)="postForm(newForm.value); ">
@@ -176,19 +177,27 @@
             </div>
           </div>
         </div>
-        <div class="col">
-          <div class="form-group">
-            <label for="">Direccion<b style="color: red;">*</b></label>
-            <input type="text" class="form-control" formControlName="codigoQrPaquete" #inputPlaces [ngClass]="{
-                'is-invalid': newForm.get('codigoQrPaquete')?.invalid && (newForm.get('codigoQrPaquete')?.touched || newForm.get('codigoQrPaquete')?.dirty),
-                'is-valid': newForm.get('codigoQrPaquete')?.valid 
-              }" />
-            <div *ngIf="newForm.get('documentoDestinatario')?.errors?.['required']" class="invalid-feedback">
-              Este campo es obligatorio.
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="">Direccion<b style="color: red;">*</b></label>
+              <input type="text" class="form-control" formControlName="direccionPaquete" #inputPlaces [ngClass]="{
+                  'is-invalid': newForm.get('direccionPaquete')?.invalid && (newForm.get('direccionPaquete')?.touched || newForm.get('direccionPaquete')?.dirty),
+                  'is-valid': newForm.get('direccionPaquete')?.valid 
+                }" />
+              <div *ngIf="newForm.get('documentoDestinatario')?.errors?.['required']" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Detalle direccion</label>
+              <textarea class="form-control" formControlName="detalleDireccionPaquete"></textarea>
             </div>
           </div>
         </div>
-        <hr style="border-top: 1px solid #ccc; margin: -5px 0;"><br><br>
+        <hr><br><br>
 
         <div class="row">
           <h4>Paquete</h4>

@@ -61,11 +61,13 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     correoCliente: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     direccionCliente: new FormControl('', Validators.required),
+    detalleDireccionCliente: new FormControl(''),
   });
 
   editForm = new FormGroup({
     idPaquete: new FormControl(''),
-    codigoQrPaquete: new FormControl('', Validators.required),
+    direccionPaquete: new FormControl('', Validators.required),
+    detalleDireccionPaquete: new FormControl(''),
     pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^\\d{0,3}(\\.\\d{0,2})?$')]),
     contenidoPaquete: new FormControl('', Validators.required),
     documentoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
@@ -77,6 +79,8 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     idTamano: new FormControl(),
     idEstado: new FormControl('1'),
     idTipo: new FormControl('', Validators.required),
+    lat: new FormControl(),
+    lng: new FormControl(),
   })
 
   getFechAct() {
@@ -109,6 +113,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     return null;
   }
 
+  cords = false;
   dataPaquete: PaqueteInterface[] = [];
   usuario: UsuarioInterface[] = [];
   remitente: ClienteInterface[] = [];
@@ -117,7 +122,6 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
   tamanos: TamanoPaqueteInterface[] = [];
   tipos: TipoPaqueteInterface[] = [];
   loading: boolean = true;
-  hideCodigoQrPaquete: boolean = true;
 
   selectedRemitente: ClienteInterface | undefined;
   selectedDestinatario: ClienteInterface | undefined = undefined;
@@ -129,7 +133,8 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       this.dataPaquete = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
       this.editForm.setValue({
         'idPaquete': this.dataPaquete[0]?.idPaquete || 'idPaquete',
-        'codigoQrPaquete': this.dataPaquete[0]?.codigoQrPaquete || '', //si dataRol[0] es null, asignamos un string vacio, si no se hace esto da error
+        'direccionPaquete': this.dataPaquete[0]?.direccionPaquete || '', //si dataRol[0] es null, asignamos un string vacio, si no se hace esto da error
+        'detalleDireccionPaquete': this.dataPaquete[0]?.detalleDireccionPaquete || '',
         'pesoPaquete': this.dataPaquete[0]?.pesoPaquete || '',
         'contenidoPaquete': this.dataPaquete[0]?.contenidoPaquete || '',
         'documentoDestinatario': this.dataPaquete[0]?.documentoDestinatario || '',
@@ -140,7 +145,9 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         'documentoRemitente': this.dataPaquete[0]?.documentoRemitente || '',
         'idTamano': this.dataPaquete[0]?.idTamano,
         'idEstado': this.dataPaquete[0]?.idEstado || 'idEstado',
-        'idTipo': this.dataPaquete[0]?.idTipo || 'idTipo'
+        'idTipo': this.dataPaquete[0]?.idTipo || 'idTipo',
+        'lat': this.dataPaquete[0]?.lat || '',
+        'lng': this.dataPaquete[0]?.lng || ''
       });
       this.editRemitente.patchValue({
         'documentoCliente': this.dataPaquete[0]?.documentoRemitente || ''
@@ -162,7 +169,8 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
             nombreCliente: data.nombre,
             correoCliente: data.correo,
             telefonoCliente: data.telefono,
-            direccionCliente: data.direccion
+            direccionCliente: data.direccion,
+            detalleDireccionCliente: data.detalleDireccion
           });
           this.editForm.patchValue({
             documentoRemitente: data.documento
@@ -175,10 +183,13 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       if (this.editForm.get('documentoDestinatario')?.dirty && this.editForm.get('documentoDestinatario')?.valid) {
         this.api.getDataDestinatario(value).subscribe(data => {
           this.editForm.patchValue({
-            codigoQrPaquete: data.direccion,
+            direccionPaquete: data.direccion,
+            detalleDireccionPaquete: data.detalleDireccion,
             nombreDestinatario: data.nombre,
             correoDestinatario: data.correo,
             telefonoDestinatario: data.telefono,
+            lat: data.lat,
+            lng: data.lng
           });
         });
       }
@@ -267,26 +278,37 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     });
   }
 
-  getRemitenteAndDestinatarioPaquete(): void {
-    this.api.getRemitenteAndDestinatario().subscribe(data => {
-      this.remitente = data;
-      // obtener el remitente seleccionado al cargar la página
-      const remitenteSeleccionado = this.editForm.get('documentoRemitente')?.value;
-      // buscar el remitente seleccionado en la lista de remitentes
-      this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === remitenteSeleccionado);
+  async getRemitenteAndDestinatarioPaquete(): Promise<void> {
+    try {
+      this.loading = true;
 
-      this.destinatario = data;
-      // obtener el remitente seleccionado al cargar la página
-      const destinatarioSeleccionado = this.editForm.get('documentoDestinatario')?.value;
-      // buscar el remitente seleccionado en la lista de remitentes
-      this.selectedDestinatario = this.destinatario.find(dest => dest.documentoCliente === destinatarioSeleccionado);
+      const data = await this.api.getRemitenteAndDestinatario().toPromise();
+
+      this.remitente = [];
+      this.destinatario = [];
+
+      if (data) {
+        this.remitente = data;
+        const remitenteSeleccionado = this.editForm.get('documentoRemitente')?.value;
+        this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === remitenteSeleccionado);
+
+        this.destinatario = data;
+        const destinatarioSeleccionado = this.editForm.get('documentoDestinatario')?.value;
+        this.selectedDestinatario = this.destinatario.find(dest => dest.documentoCliente === destinatarioSeleccionado);
+      }
+
       this.loading = false;
-    });
+    } catch (error) {
+      console.error("Error en la obtención de datos:", error);
+      this.loading = false;
+    }
   }
+
+
 
   updateCodigoQr(): void {
     const direccionDestinatario = this.selectedDestinatario?.direccionCliente || '';
-    this.editForm.patchValue({ codigoQrPaquete: direccionDestinatario });
+    this.editForm.patchValue({ direccionPaquete: direccionDestinatario });
   }
 
   getEstadoPaquete(): void {
@@ -321,15 +343,11 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
 
     if (this.selectedDestinatario) {
       const direccionDestinatario = this.selectedDestinatario.direccionCliente || '';
-      this.editForm.patchValue({ codigoQrPaquete: direccionDestinatario });
+      this.editForm.patchValue({ direccionPaquete: direccionDestinatario });
       this.editForm.patchValue({ nombreDestinatario: this.selectedDestinatario.nombreCliente });
     } else {
-      this.editForm.patchValue({ codigoQrPaquete: '' });
+      this.editForm.patchValue({ direccionPaquete: '' });
     }
-  }
-
-  mostrarCodigoQrPaquete() {
-    this.hideCodigoQrPaquete = false;
   }
 
   openAddClienteDialog(): void {
@@ -366,7 +384,10 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       const place: any = autocomplete.getPlace();
       if (place) {
         const selectedAddress = place.formatted_address;
-        this.editForm.patchValue({ codigoQrPaquete: selectedAddress });
+        this.editForm.patchValue({ direccionPaquete: selectedAddress });
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        this.editForm.patchValue({ lat: lat, lng: lng });
       }
     });
   }

@@ -149,6 +149,12 @@ export class ListPaquetesComponent implements OnInit {
               icon: 'success',
               title: 'Paquete eliminado',
               text: 'El paquete ha sido eliminado exitosamente.',
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
           } else {
             Swal.fire({
@@ -181,12 +187,12 @@ export class ListPaquetesComponent implements OnInit {
   }
 
 
-  getDestinatarioPaquete(documentoDestinatario: any,): { nombre: string, telefono: string, correo: string, direccion: string } {
+  getDestinatarioPaquete(documentoDestinatario: any,): { nombre: string, telefono: string, correo: string, direccion: string, detalleDireccion: string } {
     const destinatario = this.destinatario.find(documentoD => documentoD.documentoCliente === documentoDestinatario);
-    if (destinatario && destinatario.nombreCliente && destinatario.telefonoCliente && destinatario.correoCliente && destinatario.direccionCliente) {
-      return { nombre: destinatario.nombreCliente, telefono: destinatario.telefonoCliente, correo: destinatario.correoCliente, direccion: destinatario.direccionCliente };
+    if (destinatario && destinatario.nombreCliente && destinatario.telefonoCliente && destinatario.correoCliente && destinatario.direccionCliente && destinatario.detalleDireccionCliente) {
+      return { nombre: destinatario.nombreCliente, telefono: destinatario.telefonoCliente, correo: destinatario.correoCliente, direccion: destinatario.direccionCliente, detalleDireccion: destinatario.detalleDireccionCliente };
     }
-    return { nombre: '', telefono: '', correo: '', direccion: '' };
+    return { nombre: '', telefono: '', correo: '', direccion: '', detalleDireccion: '' };
   }
 
   getEstadoPaquete(idEstado: any): string {
@@ -206,6 +212,7 @@ export class ListPaquetesComponent implements OnInit {
 
   generatePDF(idPaquete: string): void {
     const paquete = this.paquetes.find((paquete) => paquete.idPaquete === idPaquete);
+    console.log(paquete?.qrCodeUrl?.toString())
 
     if (paquete && paquete.qrCodeUrl) {
       const docDefinition: TDocumentDefinitions = {
@@ -221,7 +228,8 @@ export class ListPaquetesComponent implements OnInit {
                 ['Destinatario', paquete.nombreDestinatario],
                 ['Teléfono destinatario', paquete.telefonoDestinatario],
                 ['Correo destinatario', paquete.correoDestinatario],
-                ['Dirección destinatario', paquete.codigoQrPaquete],
+                ['Dirección destinatario', paquete.direccionPaquete],
+                ['Detalle dirección', paquete.detalleDireccionPaquete],
                 ['Peso paquete', paquete.pesoPaquete + ' kg'],
                 ['Tamaño paquete', this.getTamanoPaquete(paquete.idTamano)],
                 ['Contenido paquete', paquete.contenidoPaquete],

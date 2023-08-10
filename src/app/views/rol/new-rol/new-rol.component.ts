@@ -89,7 +89,7 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
             title: 'Error',
             text: 'Debes seleccionar al menos un permiso.',
           });
-          return; // Detener la ejecución del método si no se selecciona ningún permiso
+          return;
         }
         this.loading = true;
         this.api.postRol(form).subscribe(data => {
@@ -108,12 +108,9 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
               showCloseButton: true,
             });
 
-            // Obtén el último ID de rol creado
-            this.api.getLastRolId().subscribe(lastRolId => {
-              const idRol = lastRolId;
-              // Obtén los permisos seleccionados del formulario
-              const permisosSeleccionados = this.newForm.value.permisosSeleccionados;
-              // Itera sobre los permisos seleccionados y guárdalos en la tabla intermedia
+            this.api.getLastRolId().subscribe(data => {
+              const idRol = data;
+
               permisosSeleccionados.forEach((permisoSeleccionado: boolean, index: number) => {
                 if (permisoSeleccionado) {
                   const permisoId = this.permisos[index].idPermiso;
@@ -122,8 +119,7 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
                     idPermiso: permisoId
                   };
 
-                  // Llama al método de la API para guardar el registro en la tabla intermedia
-                  this.api.guardarRolPermiso(rolPermiso).subscribe(data => { });
+                  this.api.guardarRolPermiso(rolPermiso).subscribe();
                 }
               });
             });

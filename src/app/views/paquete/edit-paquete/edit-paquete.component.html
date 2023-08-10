@@ -41,8 +41,8 @@
             </div>
           </div>
         </div>
-        <hr style="border-top: 1px solid #ccc; margin: 5px 0;">
-      
+        <hr>
+
         <!-- Campos que se actualizarán -->
         <div class="row">
           <div class="col">
@@ -76,15 +76,16 @@
                   Este campo es obligatorio.
                 </div>
               </div>
-              <button class="btn btn-circle btn-update btn-margin" type="button" title="Actualizar correo y telefono" (click)="editRemi(editRemitente.value)">
+              <button class="btn btn-circle btn-update btn-margin" type="button" title="Actualizar correo y telefono"
+                (click)="editRemi(editRemitente.value)">
                 <span class="material-icons">edit</span>
               </button>
             </div>
           </div>
         </div>
-        <hr style="border-top: 1px solid #ccc; margin: -5px 0;"><br><br>
+        <hr><br><br>
       </form>
-      
+
 
       <form [formGroup]="editForm" (ngSubmit)="postForm(editForm.value)">
         <div class="row">
@@ -151,16 +152,22 @@
         <div class="col">
           <div class="form-group">
             <label for="">Direccion<b style="color: red;">*</b></label>
-            <input type="text" class="form-control" formControlName="codigoQrPaquete" #inputPlaces [ngClass]="{
-                'is-invalid': editForm.get('codigoQrPaquete')?.invalid && (editForm.get('codigoQrPaquete')?.touched || editForm.get('codigoQrPaquete')?.dirty),
-                'is-valid': editForm.get('codigoQrPaquete')?.valid && editForm.get('codigoQrPaquete')?.dirty
+            <input type="text" class="form-control" formControlName="direccionPaquete" #inputPlaces [ngClass]="{
+                'is-invalid': editForm.get('direccionPaquete')?.invalid && (editForm.get('direccionPaquete')?.touched || editForm.get('direccionPaquete')?.dirty),
+                'is-valid': editForm.get('direccionPaquete')?.valid && editForm.get('direccionPaquete')?.dirty
               }" />
             <div *ngIf="editForm.get('documentoDestinatario')?.errors?.['required']" class="invalid-feedback">
               Este campo es obligatorio.
             </div>
           </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Detalle direccion</label>
+              <textarea class="form-control" formControlName="detalleDireccionPaquete"></textarea>
+            </div>
+          </div>
         </div>
-        <hr style="border-top: 1px solid #ccc; margin: -5px 0;"><br><br>
+        <hr><br><br>
 
         <div class="row">
           <h4>Paquete</h4>
@@ -246,6 +253,21 @@
         <button type="button" mat-raised-button color='accent' (click)="goBack()">Atras</button> |
         <button type="submit" mat-raised-button color='primary' [disabled]="editForm.invalid">Editar</button>
         <br><br>
+
+        <div *ngIf="cords">
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">lat</label>
+              <input type="text" class="form-control" formControlName="lat">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">lng</label>
+              <input type="text" class="form-control" formControlName="lng">
+            </div>
+          </div>
+        </div>
       </form>
     </div>
   </div>

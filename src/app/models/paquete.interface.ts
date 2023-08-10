@@ -1,7 +1,8 @@
 import { SafeUrl } from '@angular/platform-browser';
 export interface PaqueteInterface {
     idPaquete?: string | null | undefined;
-    codigoQrPaquete?: string | null | undefined;
+    direccionPaquete?: string | null | undefined;
+    detalleDireccionPaquete?: any | null | undefined;
     qrCodeImage?: string | null | undefined;
     qrCodeUrl?: SafeUrl | null | undefined;
     pesoPaquete?: string | null | undefined;

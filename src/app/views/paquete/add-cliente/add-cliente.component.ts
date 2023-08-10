@@ -46,6 +46,9 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
     telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
     correoCliente: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     direccionCliente: new FormControl('', Validators.required),
+    detalleDireccionCliente: new FormControl(''),
+    lat: new FormControl(),
+    lng: new FormControl(),
   })
 
   tiposDocumento: TipoDocumentoInterface[] = []
@@ -145,6 +148,9 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
       if (place) {
         const selectedAddress = place.formatted_address;
         this.newForm.patchValue({ direccionCliente: selectedAddress });
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        this.newForm.patchValue({ lat: lat, lng: lng });
       }
     });
   }

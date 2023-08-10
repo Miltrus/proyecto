@@ -35,8 +35,7 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
     private renderer: Renderer2,
   ) { }
 
-
-
+  cords = false;
   dataCliente: ClienteInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
   loading: boolean = true;
@@ -54,6 +53,9 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
     telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     correoCliente: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     direccionCliente: new FormControl('', Validators.required),
+    detalleDireccionCliente: new FormControl(''),
+    lat: new FormControl(),
+    lng: new FormControl(),
   });
 
   ngOnInit(): void {
@@ -71,6 +73,9 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
           'telefonoCliente': this.dataCliente[0]?.telefonoCliente || '',
           'correoCliente': this.dataCliente[0]?.correoCliente || '',
           'direccionCliente': this.dataCliente[0]?.direccionCliente || '',
+          'detalleDireccionCliente': this.dataCliente[0]?.detalleDireccionCliente || '',
+          'lat': this.dataCliente[0]?.lat || '',
+          'lng': this.dataCliente[0]?.lng || '',
         });
         this.tiposDocumento = tiposDocumento;
         this.loading = false;
@@ -145,14 +150,17 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
         country: ["CO"]
       },
       fields: ["formatted_address", "geometry"],
-      types: ["address"] // Agrega el tipo "establishment" para lugares
+      types: ["address"]
     });
 
     google.maps.event.addListener(autocomplete, 'place_changed', () => {
       const place: any = autocomplete.getPlace();
       if (place) {
-        const selectedAddress = place.formatted_address || place.name; // Utiliza el nombre del lugar si no hay una dirección formateada
+        const selectedAddress = place.formatted_address || place.name;
         this.editForm.patchValue({ direccionCliente: selectedAddress });
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        this.editForm.patchValue({ lat: lat, lng: lng });
       }
     });
   }

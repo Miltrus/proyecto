@@ -50,8 +50,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     return this.newForm.dirty;
   }
 
-  lat!: any;
-  lng!: any;
 
   editRemitente = new FormGroup({
     idCliente: new FormControl(''),
@@ -61,10 +59,12 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     correoCliente: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     direccionCliente: new FormControl('', Validators.required),
+    detalleDireccionCliente: new FormControl(''),
   });
 
   newForm = new FormGroup({
-    codigoQrPaquete: new FormControl('', Validators.required),
+    direccionPaquete: new FormControl('', Validators.required),
+    detalleDireccionPaquete: new FormControl(''),
     pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^\\d{0,3}(\\.\\d{0,2})?$')]),
     contenidoPaquete: new FormControl('', Validators.required),
     documentoDestinatario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
@@ -76,8 +76,8 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     idTamano: new FormControl(),
     idEstado: new FormControl('1'),
     idTipo: new FormControl('', Validators.required),
-    lat: new FormControl(this.lat),
-    lng: new FormControl(this.lng),
+    lat: new FormControl(),
+    lng: new FormControl(),
   });
 
   getFechAct() {
@@ -98,7 +98,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   tamanos: TamanoPaqueteInterface[] = [];
   tipos: TipoPaqueteInterface[] = [];
   loading: boolean = true;
-  hideCodigoQrPaquete: boolean = true;
 
   selectedRemitente: ClienteInterface | undefined;
   selectedDestinatario: ClienteInterface | undefined;
@@ -133,7 +132,8 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
             nombreCliente: data.nombre,
             correoCliente: data.correo,
             telefonoCliente: data.telefono,
-            direccionCliente: data.direccion
+            direccionCliente: data.direccion,
+            detalleDireccionCliente: data.detalleDireccion
           });
           this.newForm.patchValue({
             documentoRemitente: data.documento
@@ -146,7 +146,8 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       if (this.newForm.get('documentoDestinatario')?.valid) {
         this.paqueteService.getDataDestinatario(value).subscribe(data => {
           this.newForm.patchValue({
-            codigoQrPaquete: data.direccion,
+            direccionPaquete: data.direccion,
+            detalleDireccionPaquete: data.detalleDireccion,
             nombreDestinatario: data.nombre,
             correoDestinatario: data.correo,
             telefonoDestinatario: data.telefono,
@@ -208,6 +209,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   }
 
   postForm(form: PaqueteInterface) {
+    console.log(form);
     Swal.fire({
       icon: 'question',
       title: '¿Estás seguro de que deseas registrar este paquete?',
@@ -217,7 +219,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(form);
         this.loading = true;
         this.api.postPaquete(form).subscribe(data => {
           if (data.status == 'ok') {
@@ -227,6 +228,12 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
               icon: 'success',
               title: 'Paquete registrado',
               text: 'El paquete ha sido registrado exitosamente.',
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
           } else {
             Swal.fire({
@@ -322,10 +329,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === documentoCliente);
   }
 
-  mostrarCodigoQrPaquete() {
-    this.hideCodigoQrPaquete = false;
-  }
-
   openAddClienteDialog(): void {
     const dialogRef = this.dialog.open(AddClienteComponent, {
       width: '65%',
@@ -363,12 +366,10 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       const place: any = autocomplete.getPlace();
       if (place) {
         const selectedAddress = place.formatted_address;
-        this.newForm.patchValue({ codigoQrPaquete: selectedAddress });
+        this.newForm.patchValue({ direccionPaquete: selectedAddress });
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
         this.newForm.patchValue({ lat: lat, lng: lng });
-        console.log("Latitud:", lat);
-        console.log("Longitud:", lng);
       }
     });
   }

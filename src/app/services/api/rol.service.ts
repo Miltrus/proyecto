@@ -86,6 +86,4 @@ export class RolService {
     let body = { idRol: idRol, idPermisos: idPermisos };
     return this.http.put<ResponseInterface>(address, body, { headers });
   }
-
-
 }
