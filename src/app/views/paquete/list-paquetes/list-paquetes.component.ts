@@ -48,6 +48,7 @@ export class ListPaquetesComponent implements OnInit {
   tipos: TipoPaqueteInterface[] = [];
   dataSource = new MatTableDataSource(this.paquetes); //pal filtro
   loading: boolean = true;
+  cords: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
@@ -61,9 +62,9 @@ export class ListPaquetesComponent implements OnInit {
         this.paquetes = data;
         this.dataSource.data = this.paquetes;
         this.paquetes.forEach(async (paquete) => {
-          const qrCodeBase64 = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
+          const qrData = [{ 'lat': paquete.lat, 'lng': paquete.lng }]
+          const qrCodeBase64 = await this.generateQRCode(qrData);
           paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
-          paquete.qrCodeUrl = await this.generateQRCode(paquete.codigoQrPaquete ?? '');
         });
       }
 
@@ -109,9 +110,10 @@ export class ListPaquetesComponent implements OnInit {
     });
   }
 
-  async generateQRCode(data: string): Promise<string> {
+  async generateQRCode(data: any): Promise<string> {
+    const jsonStr = JSON.stringify(data); // Convertir el objeto a una cadena JSON
     const canvas = document.createElement('canvas');
-    await QRCode.toCanvas(canvas, data);
+    await QRCode.toCanvas(canvas, jsonStr); // Pasar la cadena JSON en lugar del objeto directo
     const qrCodeBase64 = canvas.toDataURL('image/png');
     return qrCodeBase64;
   }

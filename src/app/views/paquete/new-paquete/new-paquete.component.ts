@@ -50,6 +50,9 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     return this.newForm.dirty;
   }
 
+  lat!: any;
+  lng!: any;
+
   editRemitente = new FormGroup({
     idCliente: new FormControl(''),
     documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
@@ -73,6 +76,8 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     idTamano: new FormControl(),
     idEstado: new FormControl('1'),
     idTipo: new FormControl('', Validators.required),
+    lat: new FormControl(this.lat),
+    lng: new FormControl(this.lng),
   });
 
   getFechAct() {
@@ -145,6 +150,8 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
             nombreDestinatario: data.nombre,
             correoDestinatario: data.correo,
             telefonoDestinatario: data.telefono,
+            lat: data.lat,
+            lng: data.lng
           });
         });
       }
@@ -210,6 +217,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
+        console.log(form);
         this.loading = true;
         this.api.postPaquete(form).subscribe(data => {
           if (data.status == 'ok') {
@@ -350,11 +358,17 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       types: ["address"]
     });
 
+
     google.maps.event.addListener(autocomplete, 'place_changed', () => {
       const place: any = autocomplete.getPlace();
       if (place) {
         const selectedAddress = place.formatted_address;
         this.newForm.patchValue({ codigoQrPaquete: selectedAddress });
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        this.newForm.patchValue({ lat: lat, lng: lng });
+        console.log("Latitud:", lat);
+        console.log("Longitud:", lng);
       }
     });
   }

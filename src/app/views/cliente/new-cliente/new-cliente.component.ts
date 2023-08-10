@@ -35,6 +35,9 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
 
   tiposDocumento: TipoDocumentoInterface[] = []
   loading: boolean = true;
+  cords: boolean = false;
+  lat!: any;
+  lng!: any;
 
   hasUnsavedChanges(): boolean {
     this.loading = false;
@@ -49,6 +52,8 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
     telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
     correoCliente: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     direccionCliente: new FormControl('', Validators.required),
+    lat: new FormControl(this.lat),
+    lng: new FormControl(this.lng),
   })
 
 
@@ -133,8 +138,7 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
         this.newForm.patchValue({ direccionCliente: selectedAddress });
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
-        console.log("Latitud:", lat);
-        console.log("Longitud:", lng);
+        this.newForm.patchValue({ lat: lat, lng: lng });
       }
     });
   }
