@@ -17,4 +17,6 @@ export interface PaqueteInterface {
     idEstado?: string | null | undefined;
     idTamano?: string | null | undefined;
     idTipo?: string | null | undefined;
+    lat?: any | null | undefined;
+    lng?: any | null | undefined;
 }

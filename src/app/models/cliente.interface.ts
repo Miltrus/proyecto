@@ -6,4 +6,6 @@ export interface ClienteInterface {
     telefonoCliente?: string | null | undefined;
     direccionCliente?: string | null | undefined;
     correoCliente?: string | null | undefined;
+    lat?: any | null | undefined;
+    lng?: any | null | undefined;
 }
