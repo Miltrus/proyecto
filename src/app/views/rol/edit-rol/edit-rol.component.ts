@@ -118,7 +118,7 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
       if (result.isConfirmed) {
         this.loading = true;
 
-        if (id.idRol === 1 || id.idRol === 2) {
+        if (id.idRol == 1 || id.idRol == 2) {
           Swal.fire({
             icon: 'error',
             title: 'Error en la modificación',
@@ -140,6 +140,12 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
                   icon: 'success',
                   title: 'Rol modificado',
                   text: 'El rol ha sido modificado exitosamente.',
+                  toast: true,
+                  showConfirmButton: false,
+                  timer: 5000,
+                  position: 'top-end',
+                  timerProgressBar: true,
+                  showCloseButton: true,
                 });
               } else {
                 Swal.fire({

@@ -9,7 +9,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Subscription, forkJoin } from 'rxjs';
-import Swal from 'sweetalert2';
 import { AlertsService } from 'src/app/services/alerts/alerts.service';
 
 

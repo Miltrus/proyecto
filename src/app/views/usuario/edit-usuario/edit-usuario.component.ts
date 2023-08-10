@@ -142,6 +142,12 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
               icon: 'success',
               title: 'Modificacion exitosa',
               text: data.msj,
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
           } else {
             Swal.fire({

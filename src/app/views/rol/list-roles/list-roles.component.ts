@@ -131,6 +131,12 @@ export class ListRolesComponent implements OnInit, OnDestroy {
               icon: 'success',
               title: 'Rol eliminado',
               text: 'El rol ha sido eliminado exitosamente.',
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
           } else {
             Swal.fire({

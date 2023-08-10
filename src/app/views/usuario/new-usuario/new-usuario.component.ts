@@ -100,6 +100,12 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
               icon: 'success',
               title: 'Usuario creado',
               text: 'El usuario ha sido creado exitosamente.',
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
           } else {
             Swal.fire({

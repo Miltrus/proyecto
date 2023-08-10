@@ -100,6 +100,12 @@ export class NewRolComponent implements OnInit, HasUnsavedChanges {
               icon: 'success',
               title: 'Rol creado',
               text: 'El rol ha sido creado exitosamente.',
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
 
             // Obtén el último ID de rol creado

@@ -114,6 +114,11 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
               icon: 'success',
               title: 'Cliente modificado',
               text: 'El cliente ha sido modificado exitosamente.',
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
             });
           } else {
             Swal.fire({

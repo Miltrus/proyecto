@@ -126,6 +126,12 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
               icon: 'success',
               title: 'Usuario eliminado',
               text: 'El usuario ha sido eliminado exitosamente.',
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
           } else {
             Swal.fire({
@@ -178,6 +184,12 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
               icon: 'success',
               title: 'Usuario actualizado',
               text: 'El estado del usuario ha sido actualizado exitosamente.',
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
           } else {
             Swal.fire({

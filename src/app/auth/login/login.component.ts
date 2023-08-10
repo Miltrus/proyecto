@@ -5,7 +5,6 @@ import { LoginInterface } from '../../models/login.interface';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ForgotPwdComponent } from '../forgot-pwd/forgot-pwd.component';
 
 @Component({
@@ -24,7 +23,6 @@ export class LoginComponent {
     private auth: AuthService,
     private router: Router,
     private dialog: MatDialog,
-    private _snackBar: MatSnackBar
   ) { }
 
   loading = false;
@@ -48,9 +46,17 @@ export class LoginComponent {
         localStorage.setItem("token", data.token);
         await this.router.navigate(['dashboard']);
         this.dataUser = data.user;
-        this._snackBar.open(`Bienvenido, ${this.dataUser.nombreUsuario}`, undefined, {
-          duration: 3500,
-        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Inicio de sesión exitoso',
+          text: 'Bienvenido, ' + this.dataUser.nombreUsuario,
+          toast: true,
+          showConfirmButton: false,
+          timer: 5000,
+          position: 'top-end',
+          timerProgressBar: true,
+          showCloseButton: true,
+        });
       } else {
         Swal.fire({
           icon: 'error',

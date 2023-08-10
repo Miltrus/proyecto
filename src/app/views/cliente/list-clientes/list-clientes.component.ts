@@ -104,6 +104,12 @@ export class ListClientesComponent implements OnInit, OnDestroy {
               icon: 'success',
               title: 'Cliente eliminado',
               text: 'El cliente ha sido eliminado exitosamente.',
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
           } else {
             Swal.fire({

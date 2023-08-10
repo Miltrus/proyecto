@@ -208,6 +208,12 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
               icon: 'success',
               title: 'Paquete modificado',
               text: 'El paquete ha sido modificado exitosamente.',
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
           } else {
             Swal.fire({

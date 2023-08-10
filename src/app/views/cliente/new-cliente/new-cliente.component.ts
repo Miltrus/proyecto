@@ -90,6 +90,12 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
               icon: 'success',
               title: 'Cliente creado',
               text: 'El cliente ha sido creado exitosamente.',
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
           } else {
             Swal.fire({

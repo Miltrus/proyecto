@@ -88,6 +88,12 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
               icon: 'success',
               title: 'Cliente creado',
               text: 'El cliente ha sido creado exitosamente.',
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
             this.dialogRef.close(form);
           } else {

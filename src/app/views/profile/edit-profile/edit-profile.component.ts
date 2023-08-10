@@ -104,6 +104,12 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
               icon: 'success',
               title: 'Modificación exitosa',
               text: data.msj,
+              toast: true,
+              showConfirmButton: false,
+              timer: 5000,
+              position: 'top-end',
+              timerProgressBar: true,
+              showCloseButton: true,
             });
           } else {
             Swal.fire({
