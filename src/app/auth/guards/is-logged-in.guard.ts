@@ -28,6 +28,11 @@ export const isLoggedInGuard: CanMatchFn = () => {
         }
       }),
       catchError(error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en el servidor',
+          text: 'Ha ocurrido un error al comunicarse con el servidor, por favor intente nuevamente.',
+        });
         return of(false);
       })
     );

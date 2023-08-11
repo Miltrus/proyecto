@@ -5,9 +5,7 @@ import { Router } from '@angular/router';
 import { AlertsService } from '../../../services/alerts/alerts.service';
 import { PaqueteService } from '../../../services/api/paquete.service';
 import { PaqueteInterface } from '../../../models/paquete.interface';
-import { UsuarioInterface } from 'src/app/models/usuario.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
-import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
 import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { AddClienteComponent } from '../add-cliente/add-cliente.component';
@@ -60,6 +58,8 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     correoCliente: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     direccionCliente: new FormControl('', Validators.required),
     detalleDireccionCliente: new FormControl(''),
+    lat: new FormControl(),
+    lng: new FormControl(),
   });
 
   newForm = new FormGroup({
@@ -90,18 +90,14 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     return `${year}-${month}-${day}`;
   }
 
-  usuario: UsuarioInterface[] = [];
   remitente: any[] = [];
-  remitentesFiltrados: any[] = [];
   cliente: any[] = [];
   destinatario: any[] = [];
-  estadosPaquete: EstadoPaqueteInterface[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
   tipos: TipoPaqueteInterface[] = [];
   loading: boolean = true;
 
   selectedRemitente: ClienteInterface | undefined;
-  selectedDestinatario: ClienteInterface | undefined;
 
   ngOnInit(): void {
     this.randomCode();
@@ -120,8 +116,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
         return;
       }
     });
-    this.getUsuarioPaquete();
-    this.getEstadoPaquete();
     this.getTamanoPaquete();
     this.getTipoPaquete();
 
@@ -135,7 +129,9 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
             correoCliente: data.correo,
             telefonoCliente: data.telefono,
             direccionCliente: data.direccion,
-            detalleDireccionCliente: data.detalleDireccion
+            detalleDireccionCliente: data.detalleDireccion,
+            lat: data.lat,
+            lng: data.lng
           });
           this.newForm.patchValue({
             documentoRemitente: data.documento
@@ -165,29 +161,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.mapInput();
   }
 
-  filtrarOpciones(event: Event) {
-    const valorInput = (event.target as HTMLInputElement).value;
-    // Filtrar las opciones según el valor ingresado en el input
-    // y actualizar el array de opcionesAutocompletado con las opciones filtradas
-    this.cliente = this.filtrarFrutas(valorInput);
-  }
-
-  filtrarFrutas(valor: string): string[] {
-    return this.cliente.filter(r =>
-      r.toLowerCase().includes(valor.toLowerCase())
-    );
-  }
-
-  filtrarRemitentes(event: Event) {
-    const valorInput = (event.target as HTMLInputElement).value;
-    this.remitentesFiltrados = this.filtrarPorNombre(valorInput);
-  }
-
-  filtrarPorNombre(valor: string): any[] {
-    const filtro = valor.toLowerCase();
-    return this.remitente.filter(remi => remi.nombreCliente.toLowerCase().includes(filtro));
-  }
-
 
   validateFechaPasada(control: FormControl): { [key: string]: boolean } | null {
     const fechaSeleccionada = control.value;
@@ -211,7 +184,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   }
 
   postForm(form: PaqueteInterface) {
-    console.log(form);
     Swal.fire({
       icon: 'question',
       title: '¿Estás seguro de que deseas registrar este paquete?',
@@ -284,21 +256,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   }
 
 
-  getUsuarioPaquete(): void {
-    this.api.getUsuario().subscribe(data => {
-      this.usuario = data;
-      this.loading = false;
-    });
-  }
-
-
-  getEstadoPaquete(): void {
-    this.api.getEstadoPaquete().subscribe(data => {
-      this.estadosPaquete = data;
-      this.loading = false;
-    });
-  }
-
   getTamanoPaquete(): void {
     this.api.getTamanoPaquete().subscribe(data => {
       this.tamanos = data;
@@ -318,17 +275,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       this.destinatario = data;
       this.loading = false;
     });
-  }
-
-  onDestinatarioInput(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    const value = inputElement.value;
-    this.selectedDestinatario = this.destinatario.find(dest => dest.nombreCliente === value);
-  }
-
-  onRemitenteSelectionChange(event: any) {
-    const documentoCliente = event.value;
-    this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === documentoCliente);
   }
 
   openAddClienteDialog(): void {

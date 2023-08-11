@@ -2,8 +2,6 @@ import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } fro
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { ClienteInterface } from '../../../models/cliente.interface';
-import { EstadoPaqueteInterface } from '../../../models/estado-paquete.interface';
-import { UsuarioInterface } from '../../../models/usuario.interface';
 import { PaqueteInterface } from '../../../models/paquete.interface';
 import { PaqueteService } from '../../../services/api/paquete.service';
 import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
@@ -62,10 +60,13 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     correoCliente: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     direccionCliente: new FormControl('', Validators.required),
     detalleDireccionCliente: new FormControl(''),
+    lat: new FormControl(),
+    lng: new FormControl(),
   });
 
   editForm = new FormGroup({
     idPaquete: new FormControl(''),
+    codigoPaquete: new FormControl(''),
     direccionPaquete: new FormControl('', Validators.required),
     detalleDireccionPaquete: new FormControl(''),
     pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^\\d{0,3}(\\.\\d{0,2})?$')]),
@@ -115,10 +116,8 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   cords = false;
   dataPaquete: PaqueteInterface[] = [];
-  usuario: UsuarioInterface[] = [];
   remitente: ClienteInterface[] = [];
   destinatario: ClienteInterface[] = [];
-  estadosPaquete: EstadoPaqueteInterface[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
   tipos: TipoPaqueteInterface[] = [];
   loading: boolean = true;
@@ -128,11 +127,11 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   ngOnInit(): void {
     let idPaquete = this.activatedRouter.snapshot.paramMap.get('id');
-    this.updateCodigoQr();
     this.api.getOnePaquete(idPaquete).subscribe(data => {
       this.dataPaquete = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
       this.editForm.setValue({
         'idPaquete': this.dataPaquete[0]?.idPaquete || 'idPaquete',
+        'codigoPaquete': this.dataPaquete[0]?.codigoPaquete || 'codigoPaquete',
         'direccionPaquete': this.dataPaquete[0]?.direccionPaquete || '', //si dataRol[0] es null, asignamos un string vacio, si no se hace esto da error
         'detalleDireccionPaquete': this.dataPaquete[0]?.detalleDireccionPaquete || '',
         'pesoPaquete': this.dataPaquete[0]?.pesoPaquete || '',
@@ -154,9 +153,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       });
       this.loading = false;
     });
-    this.getUsuarioPaquete();
     this.getRemitenteAndDestinatarioPaquete();
-    this.getEstadoPaquete();
     this.getTamanoPaquete();
     this.getTipoPaquete();
 
@@ -170,7 +167,9 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
             correoCliente: data.correo,
             telefonoCliente: data.telefono,
             direccionCliente: data.direccion,
-            detalleDireccionCliente: data.detalleDireccion
+            detalleDireccionCliente: data.detalleDireccion,
+            lat: data.lat,
+            lng: data.lng
           });
           this.editForm.patchValue({
             documentoRemitente: data.documento
@@ -182,15 +181,17 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.editForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
       if (this.editForm.get('documentoDestinatario')?.dirty && this.editForm.get('documentoDestinatario')?.valid) {
         this.api.getDataDestinatario(value).subscribe(data => {
-          this.editForm.patchValue({
-            direccionPaquete: data.direccion,
-            detalleDireccionPaquete: data.detalleDireccion,
-            nombreDestinatario: data.nombre,
-            correoDestinatario: data.correo,
-            telefonoDestinatario: data.telefono,
-            lat: data.lat,
-            lng: data.lng
-          });
+          if (data.documento == this.editForm.get('documentoDestinatario')?.value) {
+            this.editForm.patchValue({
+              direccionPaquete: data.direccion,
+              detalleDireccionPaquete: data.detalleDireccion,
+              nombreDestinatario: data.nombre,
+              correoDestinatario: data.correo,
+              telefonoDestinatario: data.telefono,
+              lat: data.lat,
+              lng: data.lng
+            });
+          }
         });
       }
     });
@@ -271,13 +272,6 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     }
   }
 
-  getUsuarioPaquete(): void {
-    this.api.getUsuario().subscribe(data => {
-      this.usuario = data;
-      this.loading = false;
-    });
-  }
-
   async getRemitenteAndDestinatarioPaquete(): Promise<void> {
     try {
       this.loading = true;
@@ -306,18 +300,6 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
 
 
 
-  updateCodigoQr(): void {
-    const direccionDestinatario = this.selectedDestinatario?.direccionCliente || '';
-    this.editForm.patchValue({ direccionPaquete: direccionDestinatario });
-  }
-
-  getEstadoPaquete(): void {
-    this.api.getEstadoPaquete().subscribe(data => {
-      this.estadosPaquete = data;
-      this.loading = false;
-    });
-  }
-
   getTamanoPaquete(): void {
     this.api.getTamanoPaquete().subscribe(data => {
       this.tamanos = data;
@@ -330,24 +312,6 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       this.tipos = data;
       this.loading = false;
     });
-  }
-
-  onRemitenteSelectionChange(event: any) {
-    const documentoCliente = event.value;
-    this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === documentoCliente);
-  }
-
-  onDestinatarioSelectionChange(event: any) {
-    const documentoCliente = event.value;
-    this.selectedDestinatario = this.destinatario.find(desti => desti.documentoCliente === documentoCliente);
-
-    if (this.selectedDestinatario) {
-      const direccionDestinatario = this.selectedDestinatario.direccionCliente || '';
-      this.editForm.patchValue({ direccionPaquete: direccionDestinatario });
-      this.editForm.patchValue({ nombreDestinatario: this.selectedDestinatario.nombreCliente });
-    } else {
-      this.editForm.patchValue({ direccionPaquete: '' });
-    }
   }
 
   openAddClienteDialog(): void {

@@ -10,34 +10,6 @@
     <br>
     <div class="container">
       <form [formGroup]="editRemitente">
-        <!-- PARA EL DATALIST, NO BORREN NADA HPS -->
-        <!-- <div class="row">
-          <div class="col">
-            <input type="text" list="frutas" (input)="filtrarOpciones($event)" class="form-control">
-            <datalist id="frutas">
-              <option *ngFor="let r of cliente" [value]="r"></option>
-            </datalist>
-          </div>
-  
-          <div class="col">
-            <div class="form-group">
-              <label for="nombreCliente">Nombre<b style="color: red;">*</b></label>
-              <input type="text" formControlName="documentoCliente" class="form-control"
-                placeholder="Ingrese el nombre del remitente" [ngClass]="{
-                  'is-invalid': editRemitente.get('documentoCliente')?.invalid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty),
-                  'is-valid': editRemitente.get('documentoCliente')?.valid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty)
-                }" (input)="filtrarRemitentes($event)">
-              <datalist id="remitentes-list">
-                <option *ngFor="let remi of remitentesFiltrados" [value]="remi.documentoCliente">
-                  {{ remi.nombreCliente }}
-                </option>
-              </datalist>
-              <div *ngIf="editRemitente.get('documentoCliente')?.errors?.['required']" class="invalid-feedback">
-                Este campo es obligatorio.
-              </div>
-            </div>
-          </div>
-        </div> -->
 
         <div class="row">
           <h4>Remitente
@@ -47,16 +19,14 @@
           </h4>
           <div class="col">
             <div class="form-group">
-              <label for="documentoCliente">Nombre<b style="color: red;">*</b></label>
-              <mat-select class="form-control" formControlName="documentoCliente" placeholder="---SELECCIONE---"
-                [ngClass]="{
+              <label for="documentoCliente">N° de Documento<b style="color: red;">*</b></label>
+              <input type="text" class="form-control" formControlName="documentoCliente" [ngClass]="{
                 'is-invalid': editRemitente.get('documentoCliente')?.invalid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty),
-                'is-valid': editRemitente.get('documentoCliente')?.valid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty)
-              }" (selectionChange)="onRemitenteSelectionChange($event)">
-                <mat-option *ngFor="let remi of remitente" [value]="remi.documentoCliente">
-                  {{ remi.nombreCliente }}
-                </mat-option>
-              </mat-select>
+                'is-valid': editRemitente.get('documentoCliente')?.valid && editRemitente.get('documentoCliente')?.dirty
+              }" />
+              <div *ngIf="editRemitente.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
+                Teléfono inválido, debe contener 10 dígitos numéricos.
+              </div>
               <div *ngIf="editRemitente.get('documentoCliente')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
               </div>
@@ -64,8 +34,8 @@
           </div>
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">N° de Documento</label>
-              <input type="text" class="form-control" [value]="selectedRemitente?.documentoCliente" disabled>
+              <label for="exampleFormControlInput1">Nombre</label>
+              <input type="text" class="form-control" formControlName="nombreCliente" readonly />
             </div>
           </div>
         </div>
