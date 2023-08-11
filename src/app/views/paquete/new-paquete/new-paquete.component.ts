@@ -63,6 +63,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   });
 
   newForm = new FormGroup({
+    codigoPaquete: new FormControl(''),
     direccionPaquete: new FormControl('', Validators.required),
     detalleDireccionPaquete: new FormControl(''),
     pesoPaquete: new FormControl('', [Validators.required, Validators.pattern('^\\d{0,3}(\\.\\d{0,2})?$')]),
@@ -103,6 +104,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   selectedDestinatario: ClienteInterface | undefined;
 
   ngOnInit(): void {
+    this.randomCode();
     this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.remitente = data;
       this.destinatario = data;
@@ -372,5 +374,16 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
         this.newForm.patchValue({ lat: lat, lng: lng });
       }
     });
+  }
+
+
+
+  randomCode() {
+    const long = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let random = "";
+    for (let i = 0; i < 6; i++) {
+      random += long.charAt(Math.floor(Math.random() * long.length));
+    }
+    this.newForm.patchValue({ codigoPaquete: random });
   }
 }
