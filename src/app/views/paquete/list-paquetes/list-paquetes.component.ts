@@ -111,11 +111,16 @@ export class ListPaquetesComponent implements OnInit {
   }
 
   async generateQRCode(data: any): Promise<string> {
-    const jsonStr = JSON.stringify(data); // Convertir el objeto a una cadena JSON
-    const canvas = document.createElement('canvas');
-    await QRCode.toCanvas(canvas, jsonStr); // Pasar la cadena JSON en lugar del objeto directo
-    const qrCodeBase64 = canvas.toDataURL('image/png');
-    return qrCodeBase64;
+    try {
+      const jsonStr = JSON.stringify(data);
+      const canvas = document.createElement('canvas');
+      await QRCode.toCanvas(canvas, jsonStr);
+      const qrCodeBase64 = canvas.toDataURL('image/png');
+      return qrCodeBase64;
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+      throw error;
+    }
   }
 
   editPaquete(id: any) {
@@ -210,65 +215,80 @@ export class ListPaquetesComponent implements OnInit {
     return tipoPaquete?.tipoPaquete || '';
   }
 
-  generatePDF(idPaquete: string): void {
+  async generatePDF(idPaquete: string): Promise<void> {
     const paquete = this.paquetes.find((paquete) => paquete.idPaquete === idPaquete);
     console.log(paquete?.qrCodeUrl?.toString())
 
     if (paquete && paquete.qrCodeUrl) {
-      const docDefinition: TDocumentDefinitions = {
-        content: [
-          { text: 'Registro de paquete', style: 'header' },
-          {
-            style: 'tableExample',
-            table: {
-              widths: ['50%', '50%'],
-              heights: (index) => (index === 9 ? 150 : 30),
-              body: [
-                ['Remitente', this.getRemitentePaquete(paquete.documentoRemitente).nombre],
-                ['Destinatario', paquete.nombreDestinatario],
-                ['Teléfono destinatario', paquete.telefonoDestinatario],
-                ['Correo destinatario', paquete.correoDestinatario],
-                ['Dirección destinatario', paquete.direccionPaquete],
-                ['Detalle dirección', paquete.detalleDireccionPaquete],
-                ['Peso paquete', paquete.pesoPaquete + ' kg'],
-                ['Tamaño paquete', this.getTamanoPaquete(paquete.idTamano)],
-                ['Contenido paquete', paquete.contenidoPaquete],
-                [
-                  { text: 'Código QR', style: 'subheader' },
-                  { image: paquete.qrCodeUrl.toString(), width: 100, height: 100, alignment: 'center' }
-                ]
-              ] as any[][]
-            }
-          }
-        ],
-        styles: {
-          header: {
-            fontSize: 18,
-            bold: true,
-            alignment: 'center',
-            margin: [0, 0, 0, 10]
-          },
-          subheader: {
-            fontSize: 14,
-            margin: [0, 10, 0, 5]
-          },
-          tableExample: {
-            margin: [0, 5, 0, 15]
-          }
-        },
-        pageOrientation: 'landscape',
-        pageBreakBefore: (currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) => {
-          return currentNode.headlineLevel === 1 && followingNodesOnPage.length === 0 && currentNode.startPosition.top >= 750;
-        }
-      };
+      try {
+        const qrCodeDataUrl = paquete.qrCodeUrl.toString();
 
-      const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-      pdfDocGenerator.getBlob((blob: Blob) => {
-        const pdfBlobUrl = URL.createObjectURL(blob);
-        window.open(pdfBlobUrl, '_blank');
-      });
+        // Generate all QR codes first
+        const qrCodePromises = this.paquetes.map(async (p) => {
+          if (p.lat !== undefined && p.lng !== undefined) {
+            const qrData = [{ 'lat': p.lat, 'lng': p.lng }];
+            p.qrCodeUrl = await this.generateQRCode(qrData);
+          }
+        });
+        await Promise.all(qrCodePromises);
+        const docDefinition: TDocumentDefinitions = {
+          content: [
+            { text: 'Registro de paquete', style: 'header' },
+            {
+              style: 'tableExample',
+              table: {
+                widths: ['50%', '50%'],
+                heights: (index) => (index === 9 ? 150 : 30),
+                body: [
+                  ['Remitente', this.getRemitentePaquete(paquete.documentoRemitente).nombre],
+                  ['Destinatario', paquete.nombreDestinatario],
+                  ['Teléfono destinatario', paquete.telefonoDestinatario],
+                  ['Correo destinatario', paquete.correoDestinatario],
+                  ['Dirección destinatario', paquete.direccionPaquete],
+                  ['Detalle dirección', paquete.detalleDireccionPaquete],
+                  ['Peso paquete', paquete.pesoPaquete + ' kg'],
+                  ['Tamaño paquete', this.getTamanoPaquete(paquete.idTamano)],
+                  ['Contenido paquete', paquete.contenidoPaquete],
+                  [
+                    { text: 'Código QR', style: 'subheader' },
+                    { image: paquete.qrCodeUrl.toString(), width: 100, height: 100, alignment: 'center' }
+                  ]
+                ] as any[][]
+              }
+            }
+          ],
+          styles: {
+            header: {
+              fontSize: 18,
+              bold: true,
+              alignment: 'center',
+              margin: [0, 0, 0, 10]
+            },
+            subheader: {
+              fontSize: 14,
+              margin: [0, 10, 0, 5]
+            },
+            tableExample: {
+              margin: [0, 5, 0, 15]
+            }
+          },
+          pageOrientation: 'landscape',
+          pageBreakBefore: (currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) => {
+            return currentNode.headlineLevel === 1 && followingNodesOnPage.length === 0 && currentNode.startPosition.top >= 750;
+          }
+        };
+
+        const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+        pdfDocGenerator.getBlob((blob: Blob) => {
+          const pdfBlobUrl = URL.createObjectURL(blob);
+          window.open(pdfBlobUrl, '_blank');
+        });
+      } catch (error) {
+        console.log('Error creando el pdf', error);
+      }
     }
   }
+
 
 
   goBack() {
