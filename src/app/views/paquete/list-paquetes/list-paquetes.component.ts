@@ -62,7 +62,7 @@ export class ListPaquetesComponent implements OnInit {
         this.paquetes = data;
         this.dataSource.data = this.paquetes;
         this.paquetes.forEach(async (paquete) => {
-          const qrData = [{ 'lat': paquete.lat, 'lng': paquete.lng }]
+          const qrData = [{ 'id': paquete.idPaquete, 'lat': paquete.lat, 'lng': paquete.lng }]
           const qrCodeBase64 = await this.generateQRCode(qrData);
           paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
         });
@@ -225,8 +225,8 @@ export class ListPaquetesComponent implements OnInit {
 
         // Generate all QR codes first
         const qrCodePromises = this.paquetes.map(async (p) => {
-          if (p.lat !== undefined && p.lng !== undefined) {
-            const qrData = [{ 'lat': p.lat, 'lng': p.lng }];
+          if (p.idPaquete !== undefined && p.lat !== undefined && p.lng !== undefined) {
+            const qrData = [{ 'id': p.idPaquete, 'lat': p.lat, 'lng': p.lng }];
             p.qrCodeUrl = await this.generateQRCode(qrData);
           }
         });
@@ -240,6 +240,7 @@ export class ListPaquetesComponent implements OnInit {
                 widths: ['50%', '50%'],
                 heights: (index) => (index === 9 ? 150 : 30),
                 body: [
+                  ['Código paquete', paquete.codigoPaquete],
                   ['Remitente', this.getRemitentePaquete(paquete.documentoRemitente).nombre],
                   ['Destinatario', paquete.nombreDestinatario],
                   ['Teléfono destinatario', paquete.telefonoDestinatario],
@@ -247,7 +248,6 @@ export class ListPaquetesComponent implements OnInit {
                   ['Dirección destinatario', paquete.direccionPaquete],
                   ['Detalle dirección', paquete.detalleDireccionPaquete],
                   ['Peso paquete', paquete.pesoPaquete + ' kg'],
-                  ['Tamaño paquete', this.getTamanoPaquete(paquete.idTamano)],
                   ['Contenido paquete', paquete.contenidoPaquete],
                   [
                     { text: 'Código QR', style: 'subheader' },
