@@ -323,7 +323,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   }
 
 
-
   randomCode() {
     const long = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let random = "";
