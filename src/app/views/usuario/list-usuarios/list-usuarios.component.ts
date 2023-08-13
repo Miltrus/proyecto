@@ -37,9 +37,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource(this.usuarios); //pal filtro
   loading: boolean = true;
 
-  token = localStorage.getItem('token');
-  decodedToken = JSON.parse(atob(this.token!.split('.')[1]));
-  uid = this.decodedToken.uid;
+  uid = localStorage.getItem('uid');
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento

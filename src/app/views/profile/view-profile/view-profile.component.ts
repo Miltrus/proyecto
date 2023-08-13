@@ -40,9 +40,7 @@ export class ViewProfileComponent implements OnInit, OnDestroy {
 
 
   getUserData() {
-    const token = localStorage.getItem('token');
-    const decodedToken = JSON.parse(atob(token!.split('.')[1]));
-    const uid = decodedToken.uid;
+    const uid = localStorage.getItem('uid');
 
     const forkJoinSub = forkJoin([
       this.userService.getOneUsuario(uid),

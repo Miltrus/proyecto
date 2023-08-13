@@ -44,6 +44,8 @@ export class LoginComponent {
       if (data.status == 'ok') {
         this.loading = true;
         localStorage.setItem("token", data.token);
+        const decodedToken = JSON.parse(atob(data.token!.split('.')[1]));
+        localStorage.setItem("uid", decodedToken.uid);
         await this.router.navigate(['dashboard']);
         this.dataUser = data.user;
         Swal.fire({

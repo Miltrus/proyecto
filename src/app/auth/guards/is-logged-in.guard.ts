@@ -19,6 +19,7 @@ export const isLoggedInGuard: CanMatchFn = () => {
         } else {
           router.navigate(['auth/login']);
           localStorage.removeItem('token');
+          localStorage.removeItem('uid');
           Swal.fire({
             icon: 'warning',
             title: 'Su sesión ha expirado',

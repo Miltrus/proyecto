@@ -13,9 +13,7 @@ export const rolePermissionGuard: CanMatchFn = (route) => {
 
   const permiso = route.data?.['permiso'];
 
-  const token = localStorage.getItem('token');
-  const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
-  const uid = decodedToken.uid;
+  const uid = localStorage.getItem('uid');
 
   return userService.getOneUsuario(uid).pipe(
     mergeMap((response) => {

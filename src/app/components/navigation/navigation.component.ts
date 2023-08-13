@@ -50,9 +50,9 @@ export class NavigationComponent {
       this.document.body.classList.remove('dark-mode');
     }
 
-    const token = localStorage.getItem('token');
+    const uid = localStorage.getItem('uid');
 
-    if (!token) {
+    if (!uid) {
       this.router.navigate(['auth/login']);
       Swal.fire({
         icon: 'warning',
@@ -60,9 +60,6 @@ export class NavigationComponent {
         text: 'Por favor inicie sesión nuevamente.',
       });
     };
-
-    const decodedToken = JSON.parse(atob(token?.split('.')[1] || ''));
-    const uid = decodedToken.uid;
 
     this.userService.getOneUsuario(uid).subscribe(data => {
       const rol = data.idRol;
@@ -108,6 +105,7 @@ export class NavigationComponent {
       if (result.isConfirmed) {
         this.router.navigate(['auth/login']);
         localStorage.removeItem('token');
+        localStorage.removeItem('uid');
       }
     });
   }
