@@ -25,7 +25,7 @@
                 'is-valid': editRemitente.get('documentoCliente')?.valid && editRemitente.get('documentoCliente')?.dirty
               }" />
               <div *ngIf="editRemitente.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
-                Teléfono inválido, debe contener 10 dígitos numéricos.
+                Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
               </div>
               <div *ngIf="editRemitente.get('documentoCliente')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -42,7 +42,6 @@
         <hr style="border-top: 1px solid #ccc; margin: 5px 0;">
         <div class="row">
           <div class="col">
-            <!-- Campo de Correo -->
             <div class="form-group">
               <label for="exampleFormControlInput1">Correo</label>
               <input type="text" class="form-control" formControlName="correoCliente" [ngClass]="{
@@ -59,7 +58,6 @@
           </div>
 
           <div class="col">
-            <!-- Campo de Teléfono y Botón de Edición -->
             <div class="d-flex align-items-center">
               <div class="form-group flex-grow-1">
                 <label for="exampleFormControlInput1">Telefono</label>
@@ -172,9 +170,15 @@
         <div class="row">
           <h4>Paquete</h4>
           <div class="col">
-            <div class="form-group">
-              <label for="exampleFormControlInput1">Codigo</label>
-              <input class="form-control" readonly formControlName="codigoPaquete">
+            <div class="d-flex align-items-center">
+              <div class="form-group flex-grow-1">
+                <label for="exampleFormControlInput1">Código</label>
+                <input class="form-control" readonly formControlName="codigoPaquete" />
+              </div>
+              <button class="btn btn-circle btn-update btn-margin" type="button" title="Generar nuevo código"
+                (click)="randomCode()">
+                <span class="material-icons">sync</span>
+              </button>
             </div>
           </div>
           <div class="col">
