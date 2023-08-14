@@ -104,7 +104,8 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.remitente = data;
       this.destinatario = data;
-      this.cliente = data.map(cliente => cliente.nombreCliente);
+      this.cliente = data.map(cliente => cliente);
+      console.log(this.cliente);
       this.loading = false;
 
       if (data.length == 0) {
@@ -290,6 +291,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
         this.api.getRemitenteAndDestinatario().subscribe(data => {
           this.remitente = data;
           this.destinatario = data;
+          this.cliente = data;
         })
       }
     });

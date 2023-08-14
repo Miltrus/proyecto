@@ -20,10 +20,13 @@
           <div class="col">
             <div class="form-group">
               <label for="documentoCliente">N° de Documento<b style="color: red;">*</b></label>
-              <input type="text" class="form-control" formControlName="documentoCliente" [ngClass]="{
+              <input type="text" list="remitentes" class="form-control" formControlName="documentoCliente" [ngClass]="{
                 'is-invalid': editRemitente.get('documentoCliente')?.invalid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty),
                 'is-valid': editRemitente.get('documentoCliente')?.valid && editRemitente.get('documentoCliente')?.dirty
               }" />
+              <datalist id="remitentes">
+                <option *ngFor="let c of cliente" [value]="c.documentoCliente" class="custom-datalist-option"></option>
+              </datalist>
               <div *ngIf="editRemitente.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
                 Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
               </div>
@@ -89,10 +92,13 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">N° de Documento <b style="color: red;">*</b></label>
-              <input type="text" class="form-control" formControlName="documentoDestinatario" [ngClass]="{
+              <input type="text" list="destinatarios" class="form-control" formControlName="documentoDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('documentoDestinatario')?.invalid && (newForm.get('documentoDestinatario')?.touched || newForm.get('documentoDestinatario')?.dirty),
                 'is-valid': newForm.get('documentoDestinatario')?.valid && newForm.get('documentoDestinatario')?.dirty
               }" />
+              <datalist id="destinatarios">
+                <option *ngFor="let c of cliente" [value]="c.documentoCliente" class="custom-datalist-option"></option>
+              </datalist>
               <div *ngIf="newForm.get('documentoDestinatario')?.errors?.['pattern']" class="invalid-feedback">
                 Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
               </div>
