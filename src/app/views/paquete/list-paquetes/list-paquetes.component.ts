@@ -52,7 +52,8 @@ export class ListPaquetesComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
-  @ViewChild('viewPaqueteDialog') viewPaqueteDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
+  @ViewChild('viewPaqueteDialog') viewPaqueteDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de paquete
+  @ViewChild('viewQR') viewQR!: TemplateRef<any>;
 
 
   ngOnInit(): void {
@@ -103,9 +104,15 @@ export class ListPaquetesComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  viewPaquete(usuario: PaqueteInterface): void {
+  openQrDialog(qrCodeUrl: string): void {
+    this.dialog.open(this.viewQR, {
+      data: { qrCodeUrl },
+    });
+  }
+
+  viewPaquete(paquete: PaqueteInterface): void {
     this.dialog.open(this.viewPaqueteDialog, {
-      data: usuario,
+      data: paquete,
       width: '400px',
     });
   }
