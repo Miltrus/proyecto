@@ -2,7 +2,6 @@ import { Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angu
 import { OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertsService } from '../../../services/alerts/alerts.service';
 import { PaqueteService } from '../../../services/api/paquete.service';
 import { PaqueteInterface } from '../../../models/paquete.interface';
 import { ClienteInterface } from 'src/app/models/cliente.interface';
@@ -37,7 +36,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     private router: Router,
     private api: PaqueteService,
     private apiClient: ClienteService,
-    private alerts: AlertsService,
     private dialog: MatDialog,
     private paqueteService: PaqueteService,
     private renderer: Renderer2,
@@ -227,7 +225,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   editRemi(id: any): void {
     if (this.editRemitente.get('telefonoCliente')?.dirty || this.editRemitente.get('correoCliente')?.dirty) {
       Swal.fire({
-        title: '¿Deseas modificar el correo y el teléfono de este cliente?',
+        title: '¿Deseas modificar el correo y/o el teléfono de este cliente?',
         icon: 'question',
         showCancelButton: true,
         reverseButtons: true,
@@ -249,9 +247,29 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       });
     } else {
       if (!this.editRemitente.get('nombreCliente')?.value || !this.editRemitente.get('direccionCliente')?.value) {
-        this.alerts.showInfo('No se han modificado los campos correo o teléfono.', 'Modificación cancelada');
+        Swal.fire({
+          icon: 'warning',
+          title: 'Modificacion cancelada',
+          text: 'No se han realizado cambios en los campos correo y/o telefono.',
+          toast: true,
+          timerProgressBar: true,
+          showConfirmButton: false,
+          showCloseButton: true,
+          timer: 5000,
+          position: 'top-end'
+        })
       } else {
-        this.alerts.showInfo('No se han modificado los campos correo o teléfono.', 'Modificación cancelada');
+        Swal.fire({
+          icon: 'warning',
+          title: 'Modificacion cancelada',
+          text: 'No se han realizado cambios en los campos correo y/o telefono.',
+          toast: true,
+          timerProgressBar: true,
+          showConfirmButton: false,
+          showCloseButton: true,
+          timer: 5000,
+          position: 'top-end'
+        })
       }
     }
   }
@@ -280,10 +298,10 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   openAddClienteDialog(): void {
     const dialogRef = this.dialog.open(AddClienteComponent, {
-      width: '65%',
-      height: '65%',
-      autoFocus: false,
+      width: '70%',
+      height: '70%',
       disableClose: true,
+      autoFocus: true,
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

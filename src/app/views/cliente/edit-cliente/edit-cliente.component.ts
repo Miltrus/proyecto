@@ -124,6 +124,7 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
               timer: 5000,
               position: 'top-end',
               timerProgressBar: true,
+              showCloseButton: true,
             });
           } else {
             Swal.fire({
