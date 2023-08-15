@@ -301,7 +301,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       width: '70%',
       height: '70%',
       disableClose: true,
-      autoFocus: true,
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
