@@ -337,6 +337,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       width: '70%',
       height: '70%',
       disableClose: true,
+      autoFocus: false,
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

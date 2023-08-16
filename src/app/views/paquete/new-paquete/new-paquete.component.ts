@@ -103,14 +103,18 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       this.remitente = data;
       this.destinatario = data;
       this.cliente = data.map(cliente => cliente);
-      console.log(this.cliente);
       this.loading = false;
 
       if (data.length == 0) {
         Swal.fire({
-          icon: 'info',
+          icon: 'warning',
           title: 'No hay clientes registrados',
-          text: 'No se encontraron clientes en el sistema.',
+          text: 'No se encontraron clientes en el sistema, Por favor, registra uno a continuación.',
+          confirmButtonText: 'Registrar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.openAddClienteDialog();
+          }
         });
         return;
       }
@@ -301,6 +305,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
       width: '70%',
       height: '70%',
       disableClose: true,
+      autoFocus: false,
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

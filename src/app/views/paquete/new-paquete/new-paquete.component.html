@@ -92,7 +92,8 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">N° de Documento <b style="color: red;">*</b></label>
-              <input type="text" list="destinatarios" class="form-control" formControlName="documentoDestinatario" [ngClass]="{
+              <input type="text" list="destinatarios" class="form-control" formControlName="documentoDestinatario"
+                [ngClass]="{
                 'is-invalid': newForm.get('documentoDestinatario')?.invalid && (newForm.get('documentoDestinatario')?.touched || newForm.get('documentoDestinatario')?.dirty),
                 'is-valid': newForm.get('documentoDestinatario')?.valid && newForm.get('documentoDestinatario')?.dirty
               }" />
