@@ -63,7 +63,7 @@ export class ListPaquetesComponent implements OnInit {
         this.paquetes = data;
         this.dataSource.data = this.paquetes;
         this.paquetes.forEach(async (paquete) => {
-          const qrData = [{ 'cod': paquete.codigoPaquete, 'lat': paquete.lat, 'lng': paquete.lng }]
+          const qrData = [{ 'id': paquete.idPaquete, 'cod': paquete.codigoPaquete, 'lat': paquete.lat, 'lng': paquete.lng }]
           const qrCodeBase64 = await this.generateQRCode(qrData);
           paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
         });
@@ -230,10 +230,9 @@ export class ListPaquetesComponent implements OnInit {
       try {
         const qrCodeDataUrl = paquete.qrCodeUrl.toString();
 
-        // Generate all QR codes first
         const qrCodePromises = this.paquetes.map(async (p) => {
-          if (p.idPaquete !== undefined && p.lat !== undefined && p.lng !== undefined) {
-            const qrData = [{ 'cod': p.codigoPaquete, 'lat': p.lat, 'lng': p.lng }];
+          if (p.idPaquete !== undefined && p.codigoPaquete !== undefined && p.lat !== undefined && p.lng !== undefined) {
+            const qrData = [{ 'id': p.idPaquete, 'cod': p.codigoPaquete, 'lat': p.lat, 'lng': p.lng }];
             p.qrCodeUrl = await this.generateQRCode(qrData);
           }
         });
@@ -295,7 +294,6 @@ export class ListPaquetesComponent implements OnInit {
       }
     }
   }
-
 
 
   goBack() {
