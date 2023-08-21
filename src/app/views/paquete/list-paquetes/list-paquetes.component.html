@@ -101,11 +101,12 @@
                 <span>Ver</span>
               </button>
               <button mat-menu-item (click)="editPaquete(paquete.idPaquete)"
-                [disabled]="paquete.idEstado === 2 || paquete.idEstado === 3 || paquete.idEstado === 4">
+                [disabled]="paquete.idEstado == 2 || paquete.idEstado == 3 || paquete.idEstado == 4">
                 <mat-icon [ngStyle]="{'color': '#1A237E'}">edit</mat-icon>
                 <span>Editar</span>
               </button>
-              <button mat-menu-item (click)="deletePaquete(paquete.idPaquete)">
+              <button mat-menu-item (click)="deletePaquete(paquete.idPaquete)"
+                [disabled]="paquete.idEstado == 2 || paquete.idEstado == 3 || paquete.idEstado == 4">
                 <mat-icon [ngStyle]="{'color': 'red'}">delete</mat-icon>
                 <span>Eliminar</span>
               </button>

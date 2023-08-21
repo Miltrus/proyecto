@@ -20,7 +20,6 @@ export class NavigationComponent {
   private breakpointObserver = inject(BreakpointObserver);
 
   isDarkThemeActive = false;
-  /* activeModule: string | null = null; */
 
   modules = [
     { name: 'Roles', route: '/rol' },
@@ -39,10 +38,7 @@ export class NavigationComponent {
     const isDarkModeActive = this.document.body.classList.contains('dark-mode');
     const storedTheme = localStorage.getItem('isDarkThemeActive');
 
-    this.isDarkThemeActive = storedTheme ? storedTheme === 'true' : isDarkModeActive;
-    /* this.activatedRoute.firstChild?.data.subscribe(data => {
-      this.activeModule = data['module'];
-    }); */
+    this.isDarkThemeActive = storedTheme ? storedTheme == 'true' : isDarkModeActive;
 
     if (this.isDarkThemeActive) {
       this.document.body.classList.add('dark-mode');
@@ -74,7 +70,7 @@ export class NavigationComponent {
     });
   }
 
-  onChange(newValue: boolean): void {
+  darkMode(newValue: boolean): void {
     this.isDarkThemeActive = newValue;
 
     localStorage.setItem('isDarkThemeActive', String(newValue));

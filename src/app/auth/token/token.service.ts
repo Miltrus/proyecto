@@ -11,21 +11,13 @@ export class TokenService {
 
   constructor(private http: HttpClient) { }
 
-  verifyToken(token: any): Observable<ResponseInterface> {
+  verifyToken(token: string): Observable<ResponseInterface> {
     const address = this.url + 'token';
 
-    // Crear un objeto de encabezados con el token
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Token': token // Agregamos el token en el encabezado
+      'Token': token
     });
 
-    // Configurar las opciones de la solicitud con los encabezados
-    const httpOptions = {
-      headers: headers
-    };
-
-    // Realizar la solicitud POST con las opciones de solicitud
-    return this.http.post<ResponseInterface>(address, {}, httpOptions);
+    return this.http.post<ResponseInterface>(address, null, { headers: headers });
   }
 }
