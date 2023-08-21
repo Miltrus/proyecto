@@ -75,6 +75,7 @@ export class ViewProfileComponent implements OnInit, OnDestroy {
       width: '75%',
       height: '75%',
       disableClose: true,
+      autoFocus: false,
       data: { userData: this.userData } // Pasamos los datos del usuario al cuadro emergente
     });
 
