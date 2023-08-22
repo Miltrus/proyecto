@@ -7,7 +7,6 @@
     <ng-container>
       <mat-nav-list *ngFor="let module of modules">
         <a mat-list-item [routerLink]="module.route">
-          <!-- [ngClass]="{'active-module': activeModule === module.name}" -->
           {{ module.name }}
         </a>
       </mat-nav-list>
@@ -18,10 +17,10 @@
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>Star <b>☆ </b>Routing</span>
+      <span routerLink="/dashboard">Star <b>☆ </b>Routing</span>
       <span class="spacer"></span>
 
-      <mat-slide-toggle mat-icon-slide (ngModelChange)="onChange($event)"
+      <mat-slide-toggle mat-icon-slide (ngModelChange)="darkMode($event)"
         [(ngModel)]="isDarkThemeActive"></mat-slide-toggle>
 
       <button mat-icon-button aria-label="Usuario" [matMenuTriggerFor]="userMenu">

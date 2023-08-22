@@ -98,15 +98,15 @@
     </div>
 
     <br>
-    <button mat-raised-button color="accent" (click)="goBack()">Volver a la lista</button>
+    <button mat-raised-button color="accent" (click)="goBack()">Ir al Dashboard</button>
     <br><br>
   </div>
 </app-navigation>
 <ng-template #viewClienteDialog let-dialogData>
   <div class="dialogData">
     <h2>Información de cliente</h2>
-    <p><strong>Tipo de documento:</strong> {{ getTipoDocumento(dialogData.idTipoDocumento) }}</p>
     <p><strong>Documento:</strong> {{ dialogData.documentoCliente }}</p>
+    <p><strong>Tipo documento:</strong> {{ getTipoDocumento(dialogData.idTipoDocumento) }}</p>
     <p><strong>Nombre:</strong> {{ dialogData.nombreCliente }}</p>
     <p><strong>Teléfono:</strong> {{ dialogData.telefonoCliente }}</p>
     <p><strong>Correo:</strong> {{ dialogData.correoCliente }}</p>

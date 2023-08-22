@@ -54,11 +54,11 @@ export class NewPwdComponent {
     this.auth.onNewPwd({ newPwd, token }).subscribe(data => {
       this.loading = false;
       Swal.fire({
-        icon: data.status === 'ok' ? 'success' : 'error',
-        title: data.status === 'ok' ? '¡Contraseña actualizada!' : 'Error',
+        icon: data.status == 'ok' ? 'success' : 'error',
+        title: data.status == 'ok' ? 'Contraseña actualizada' : 'Error',
         text: data.msj,
       }).then(() => {
-        if (data.status === 'ok') {
+        if (data.status == 'ok') {
           this.router.navigate(['auth/login']);
         }
       });

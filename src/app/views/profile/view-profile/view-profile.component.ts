@@ -74,8 +74,8 @@ export class ViewProfileComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(EditProfileComponent, {
       width: '75%',
       height: '75%',
-      autoFocus: false,
       disableClose: true,
+      autoFocus: false,
       data: { userData: this.userData } // Pasamos los datos del usuario al cuadro emergente
     });
 

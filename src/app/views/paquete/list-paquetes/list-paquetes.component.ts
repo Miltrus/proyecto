@@ -52,7 +52,8 @@ export class ListPaquetesComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
-  @ViewChild('viewPaqueteDialog') viewPaqueteDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
+  @ViewChild('viewPaqueteDialog') viewPaqueteDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de paquete
+  @ViewChild('viewQR') viewQR!: TemplateRef<any>;
 
 
   ngOnInit(): void {
@@ -62,7 +63,7 @@ export class ListPaquetesComponent implements OnInit {
         this.paquetes = data;
         this.dataSource.data = this.paquetes;
         this.paquetes.forEach(async (paquete) => {
-          const qrData = [{ 'cod': paquete.codigoPaquete, 'lat': paquete.lat, 'lng': paquete.lng }]
+          const qrData = [{ 'id': paquete.idPaquete, 'cod': paquete.codigoPaquete, 'lat': paquete.lat, 'lng': paquete.lng }]
           const qrCodeBase64 = await this.generateQRCode(qrData);
           paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
         });
@@ -103,9 +104,15 @@ export class ListPaquetesComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  viewPaquete(usuario: PaqueteInterface): void {
+  openQrDialog(qrCodeUrl: string): void {
+    this.dialog.open(this.viewQR, {
+      data: { qrCodeUrl },
+    });
+  }
+
+  viewPaquete(paquete: PaqueteInterface): void {
     this.dialog.open(this.viewPaqueteDialog, {
-      data: usuario,
+      data: paquete,
       width: '400px',
     });
   }
@@ -223,10 +230,9 @@ export class ListPaquetesComponent implements OnInit {
       try {
         const qrCodeDataUrl = paquete.qrCodeUrl.toString();
 
-        // Generate all QR codes first
         const qrCodePromises = this.paquetes.map(async (p) => {
-          if (p.idPaquete !== undefined && p.lat !== undefined && p.lng !== undefined) {
-            const qrData = [{ 'cod': p.codigoPaquete, 'lat': p.lat, 'lng': p.lng }];
+          if (p.idPaquete !== undefined && p.codigoPaquete !== undefined && p.lat !== undefined && p.lng !== undefined) {
+            const qrData = [{ 'id': p.idPaquete, 'cod': p.codigoPaquete, 'lat': p.lat, 'lng': p.lng }];
             p.qrCodeUrl = await this.generateQRCode(qrData);
           }
         });
@@ -288,7 +294,6 @@ export class ListPaquetesComponent implements OnInit {
       }
     }
   }
-
 
 
   goBack() {

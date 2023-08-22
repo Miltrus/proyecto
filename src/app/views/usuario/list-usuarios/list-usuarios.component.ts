@@ -11,7 +11,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Subscription, forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
-import { AlertsService } from 'src/app/services/alerts/alerts.service';
 
 
 @Component({
@@ -25,7 +24,6 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
     private api: UsuarioService,
     private router: Router,
     private dialog: MatDialog,
-    private alerts: AlertsService,
   ) { }
 
   private subscriptions: Subscription = new Subscription();

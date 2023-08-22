@@ -119,13 +119,15 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
       Swal.fire({
         icon: 'warning',
         title: 'Cambios sin guardar',
-        text: '¿Estás seguro de que deseas salir?',
+        text: '¿Estás seguro de que deseas salir sin guardar los cambios?',
         showDenyButton: true,
+        showCancelButton: true,
+        showConfirmButton: false,
         reverseButtons: true,
-        confirmButtonText: 'Salir',
-        denyButtonText: 'Cancelar',
+        cancelButtonText: 'Cancelar',
+        denyButtonText: 'Salir',
       }).then((result) => {
-        if (result.isConfirmed) {
+        if (result.isDenied) {
           this.dialogRef.close();
         }
       });

@@ -9,7 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Subscription, forkJoin } from 'rxjs';
-import { AlertsService } from 'src/app/services/alerts/alerts.service';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -23,7 +23,6 @@ export class ListNovedadesComponent implements OnInit, OnDestroy {
     private api: NovedadService,
     private router: Router,
     private dialog: MatDialog,
-    private alerts: AlertsService
   ) { }
 
   private subscriptions: Subscription = new Subscription();
@@ -49,7 +48,17 @@ export class ListNovedadesComponent implements OnInit, OnDestroy {
       this.novedades = novedades;
       this.dataSource.data = this.novedades;
       if (this.dataSource.data.length < 1) {
-        this.alerts.showInfo('No se encontraron novedades en el sistema.', 'No hay novedades registradas');
+        Swal.fire({
+          title: 'No hay novedades registradas',
+          text: 'No se encontraron novedades en el sistema.',
+          icon: 'info',
+          toast: true,
+          showConfirmButton: false,
+          timer: 5000,
+          position: 'top-end',
+          timerProgressBar: true,
+          showCloseButton: true,
+        })
       }
       this.tiposNovedad = tiposNovedad;
       this.entrega = entrega;

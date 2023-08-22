@@ -20,10 +20,14 @@
           <div class="col">
             <div class="form-group">
               <label for="documentoCliente">N° de Documento<b style="color: red;">*</b></label>
-              <input type="text" class="form-control" formControlName="documentoCliente" [ngClass]="{
+              <input type="text" list="remitentes" class="form-control" formControlName="documentoCliente" [ngClass]="{
                 'is-invalid': editRemitente.get('documentoCliente')?.invalid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty),
                 'is-valid': editRemitente.get('documentoCliente')?.valid && editRemitente.get('documentoCliente')?.dirty
               }" />
+              <datalist id="remitentes">
+                <option *ngFor="let c of remitente" [value]="c.documentoCliente" class="custom-datalist-option">
+                </option>
+              </datalist>
               <div *ngIf="editRemitente.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
                 Teléfono inválido, debe contener 10 dígitos numéricos.
               </div>
@@ -91,10 +95,15 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">N° de Documento<b style="color: red;">*</b></label>
-              <input type="text" class="form-control" formControlName="documentoDestinatario" [ngClass]="{
+              <input type="text" list="destinatarios" class="form-control" formControlName="documentoDestinatario"
+                [ngClass]="{
                 'is-invalid': editForm.get('documentoDestinatario')?.invalid && (editForm.get('documentoDestinatario')?.touched || editForm.get('documentoDestinatario')?.dirty),
                 'is-valid': editForm.get('documentoDestinatario')?.valid && editForm.get('documentoDestinatario')?.dirty
               }" />
+              <datalist id="destinatarios">
+                <option *ngFor="let c of destinatario" [value]="c.documentoCliente" class="custom-datalist-option">
+                </option>
+              </datalist>
               <div *ngIf="editForm.get('documentoDestinatario')?.errors?.['pattern']" class="invalid-feedback">
                 Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
               </div>
@@ -147,15 +156,17 @@
             </div>
           </div>
         </div>
-        <div class="col">
-          <div class="form-group">
-            <label for="">Direccion<b style="color: red;">*</b></label>
-            <input type="text" class="form-control" formControlName="direccionPaquete" #inputPlaces [ngClass]="{
-                'is-invalid': editForm.get('direccionPaquete')?.invalid && (editForm.get('direccionPaquete')?.touched || editForm.get('direccionPaquete')?.dirty),
-                'is-valid': editForm.get('direccionPaquete')?.valid && editForm.get('direccionPaquete')?.dirty
-              }" />
-            <div *ngIf="editForm.get('documentoDestinatario')?.errors?.['required']" class="invalid-feedback">
-              Este campo es obligatorio.
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="">Direccion<b style="color: red;">*</b></label>
+              <input type="text" class="form-control" formControlName="direccionPaquete" #inputPlaces [ngClass]="{
+                  'is-invalid': editForm.get('direccionPaquete')?.invalid && (editForm.get('direccionPaquete')?.touched || editForm.get('direccionPaquete')?.dirty),
+                  'is-valid': editForm.get('direccionPaquete')?.valid && editForm.get('direccionPaquete')?.dirty
+                }" />
+              <div *ngIf="editForm.get('documentoDestinatario')?.errors?.['required']" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
             </div>
           </div>
           <div class="col">
