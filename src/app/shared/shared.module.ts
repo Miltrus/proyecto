@@ -25,6 +25,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { MatSelectModule } from '@angular/material/select';
     CommonModule,
     RouterModule,
     MatToolbarModule,
+    MatAutocompleteModule,
     MatButtonModule,
     MatSidenavModule,
     MatListModule,
@@ -61,6 +63,7 @@ import { MatSelectModule } from '@angular/material/select';
     RouterModule,
     MatToolbarModule,
     MatButtonModule,
+    MatAutocompleteModule,
     MatSidenavModule,
     MatListModule,
     MatGridListModule,
