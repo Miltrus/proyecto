@@ -98,12 +98,12 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">N° de Documento <b style="color: red;">*</b></label>
-              <input matInput type="text" [matAutocomplete]="auto" class="form-control"
+              <input matInput type="text" [matAutocomplete]="auto2" class="form-control"
                 formControlName="documentoDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('documentoDestinatario')?.invalid && (newForm.get('documentoDestinatario')?.touched || newForm.get('documentoDestinatario')?.dirty),
                 'is-valid': newForm.get('documentoDestinatario')?.valid && newForm.get('documentoDestinatario')?.dirty
               }" />
-              <mat-autocomplete #auto="matAutocomplete">
+              <mat-autocomplete #auto2="matAutocomplete">
                 <mat-option *ngFor="let option of filtrarDestinatario | async" [value]="option.documentoCliente">
                   {{option.documentoCliente}}
                 </mat-option>

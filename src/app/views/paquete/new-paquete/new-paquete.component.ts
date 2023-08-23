@@ -90,7 +90,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   }
 
   remitente: any[] = [];
-  cliente: any[] = [];
   destinatario: any[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
   tipos: TipoPaqueteInterface[] = [];
@@ -104,7 +103,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.remitente = data;
       this.destinatario = data;
-      this.cliente = data.map(cliente => cliente);
+      console.log("REMITENTE: ", this.remitente,"\n","DESTINATARIO: ", this.destinatario);
       this.loading = false;
 
       if (data.length == 0) {
@@ -176,32 +175,23 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.mapInput();
   }
 
-  private _filterCliente(value: string) {
-    const filterValue = value.toLowerCase();
+  private _filterCliente(value: any) {
+    const filterValue = value;
 
-    return this.cliente.filter(option => {
+    return this.remitente.filter(option => {
       let documentoCliente = BigInt(option.documentoCliente);
       return documentoCliente.toString().includes(filterValue);
     });
   }
 
-  private _filterDestinatario(value: string) {
-    const filterValue2 = value.toLowerCase();
+  private _filterDestinatario(value: any) {
+    const filterValue2 = value;
 
     return this.destinatario.filter(option => {
       let documentoDestinatario = BigInt(option.documentoCliente);
       return documentoDestinatario.toString().includes(filterValue2);
     });
   }
-
-  /* filterRemitente(value: string) {
-    let filterValue = value.toLowerCase();
-    
-    return this.cliente.filter(cliente => {
-      let documentoCliente = BigInt(cliente.documentoCliente);
-      return documentoCliente.toString().includes(filterValue);
-    });
-  } */
 
   validateFechaPasada(control: FormControl): { [key: string]: boolean } | null {
     const fechaSeleccionada = control.value;
@@ -351,7 +341,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
         this.api.getRemitenteAndDestinatario().subscribe(data => {
           this.remitente = data;
           this.destinatario = data;
-          this.cliente = data;
         })
       }
     });
