@@ -18,7 +18,7 @@ ul {
 }
 
 #estrella {
-    color: #1A237E;
+    color: #19237E;
 }
 
 .container {
@@ -81,7 +81,7 @@ ul {
     color: #5d5d5d;
     font-style: italic;
     text-transform: uppercase;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 @media (max-width: 767px) {
@@ -120,11 +120,11 @@ ul {
     border-radius: 20px;
     padding: 10px 20px;
     color: #FFF;
-    background-color: #1A237E;
+    background-color: #19237E;
 }
 
 .landing-page header .links li:not(:last-child):hover {
-    color: #1A237E;
+    color: #19237E;
 }
 
 .landing-page .content .container {
@@ -152,15 +152,15 @@ ul {
 }
 
 .landing-page .content .info h1 {
-    color: #1A237E;
+    color: #19237E;
     line-height: 1;
-    font-size: 46px;
+    font-size: 45px;
 }
 
 .landing-page .content .info p {
     margin: 0;
     line-height: 1.6;
-    font-size: 16px;
+    font-size: 20px;
     color: #5d5d5d;
 }
 
@@ -171,7 +171,7 @@ ul {
     margin-top: 30px;
     cursor: pointer;
     color: #FFF;
-    background-color: #1A237E;
+    background-color: #19237E;
 }
 
 .landing-page .content .image img {
@@ -179,21 +179,21 @@ ul {
 }
 
 #sobreNosotros h1 {
-    font-size: 28px;
-    color: #1A237E;
+    font-size: 35px;
+    color: #19237E;
 }
 
 #sobreNosotros p {
     margin-bottom: 15px;
     line-height: 1.6;
-    font-size: 15px;
+    font-size: 18px;
     color: #5d5d5d;
 }
 
 #contactenos h1 {
     text-align: center;
-    font-size: 28px;
-    color: #1A237E;
+    font-size: 35px;
+    color: #19237E;
 }
 
 form {
@@ -213,17 +213,17 @@ form {
         resize: none;
 
         &:focus {
-            box-shadow: 0 0 0 2px rgba($color: #1A237E, $alpha: 1) !important;
+            box-shadow: 0 0 0 2px rgba($color: #19237E, $alpha: 1) !important;
         }
 
         #input-sumbit {
             color: white;
-            background: #1A237E;
+            background: #19237E;
             cursor: pointer;
         }
 
         &:hover {
-            box-shadow: (0 1px 1px 1px rgba($color: #1A237E, $alpha: 0.6));
+            box-shadow: (0 1px 1px 1px rgba($color: #19237E, $alpha: 0.6));
         }
 
         textarea {
@@ -267,7 +267,7 @@ form {
 .site-footer {
     background-color: #26272b;
     padding: 45px 0 20px;
-    font-size: 15px;
+    font-size: 12px;
     line-height: 24px;
     color: #737373;
 }
@@ -277,7 +277,7 @@ form {
 }
 
 .site-footer a:hover {
-    color: #1A237E;
+    color: #19237E;
     text-decoration: none;
 }
 
