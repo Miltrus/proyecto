@@ -182,8 +182,8 @@ export class ListPaquetesComponent implements OnInit {
   }
 
 
-  getUsuarioPaquete(documentoUsuario: any): { nombre: string, apellido: string } {
-    const mensajero = this.usuario.find(documentoU => documentoU.documentoUsuario === documentoUsuario);
+  getUsuarioPaquete(idUsuario: any): { nombre: string, apellido: string } {
+    const mensajero = this.usuario.find(documentoU => documentoU.idUsuario == idUsuario);
     if (mensajero && mensajero.nombreUsuario && mensajero.apellidoUsuario) {
       return { nombre: mensajero.nombreUsuario, apellido: mensajero.apellidoUsuario };
     }
@@ -228,7 +228,6 @@ export class ListPaquetesComponent implements OnInit {
 
     if (paquete && paquete.qrCodeUrl) {
       try {
-        const qrCodeDataUrl = paquete.qrCodeUrl.toString();
 
         const qrCodePromises = this.paquetes.map(async (p) => {
           if (p.idPaquete !== undefined && p.codigoPaquete !== undefined && p.lat !== undefined && p.lng !== undefined) {
