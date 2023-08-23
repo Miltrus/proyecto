@@ -11,7 +11,8 @@ import { AddClienteComponent } from '../add-cliente/add-cliente.component';
 import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 import { ClienteService } from 'src/app/services/api/cliente.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
 
@@ -31,7 +32,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   }
 
   private subscriptions: Subscription = new Subscription();
-
+  
   constructor(
     private router: Router,
     private api: PaqueteService,
@@ -39,14 +40,14 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     private dialog: MatDialog,
     private paqueteService: PaqueteService,
     private renderer: Renderer2,
-  ) { }
-
+    ) { }
+    
   hasUnsavedChanges(): boolean {
     this.loading = false;
     return this.newForm.dirty;
   }
-
-
+  
+  
   editRemitente = new FormGroup({
     idCliente: new FormControl(''),
     documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
@@ -59,7 +60,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     lat: new FormControl(),
     lng: new FormControl(),
   });
-
+  myControl = new FormControl('');
   newForm = new FormGroup({
     codigoPaquete: new FormControl(''),
     direccionPaquete: new FormControl('', Validators.required),
@@ -78,31 +79,31 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     lat: new FormControl(),
     lng: new FormControl(),
   });
-
+  
   getFechAct() {
     const date = new Date();
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
-
+    
     return `${year}-${month}-${day}`;
   }
 
   remitente: any[] = [];
-  cliente: any[] = [];
   destinatario: any[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
   tipos: TipoPaqueteInterface[] = [];
   loading: boolean = true;
-
   selectedRemitente: ClienteInterface | undefined;
-
+  filtrarCliente: Observable<any[]> = new Observable<any[]>();
+  filtrarDestinatario: Observable<any[]> = new Observable<any[]>();
+  
   ngOnInit(): void {
     this.randomCode();
     this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.remitente = data;
       this.destinatario = data;
-      this.cliente = data.map(cliente => cliente);
+      console.log("REMITENTE: ", this.remitente,"\n","DESTINATARIO: ", this.destinatario);
       this.loading = false;
 
       if (data.length == 0) {
@@ -158,12 +159,39 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
         });
       }
     });
+
+    this.filtrarCliente = this.editRemitente.get('documentoCliente')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterCliente(value || ''))
+    );
+
+    this.filtrarDestinatario = this.newForm.get('documentoDestinatario')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterDestinatario(value || ''))
+    );
   }
 
   ngAfterViewInit() {
     this.mapInput();
   }
 
+  private _filterCliente(value: any) {
+    const filterValue = value;
+
+    return this.remitente.filter(option => {
+      let documentoCliente = BigInt(option.documentoCliente);
+      return documentoCliente.toString().includes(filterValue);
+    });
+  }
+
+  private _filterDestinatario(value: any) {
+    const filterValue2 = value;
+
+    return this.destinatario.filter(option => {
+      let documentoDestinatario = BigInt(option.documentoCliente);
+      return documentoDestinatario.toString().includes(filterValue2);
+    });
+  }
 
   validateFechaPasada(control: FormControl): { [key: string]: boolean } | null {
     const fechaSeleccionada = control.value;
@@ -313,7 +341,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
         this.api.getRemitenteAndDestinatario().subscribe(data => {
           this.remitente = data;
           this.destinatario = data;
-          this.cliente = data;
         })
       }
     });
