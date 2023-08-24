@@ -54,14 +54,6 @@ const routes: Routes = [
   },
 
 
-  {
-    path: 'novedad',
-    canMatch: [isLoggedInGuard, rolePermissionGuard],
-    data: { permiso: 'Novedades' },
-    loadChildren: () => import('./views/novedad/novedad.module').then(m => m.NovedadModule)
-  },
-
-
   { path: '**', loadChildren: () => import('./components/not-found/not-found.module').then(m => m.NotFoundModule) },
 ];
 
