@@ -51,18 +51,28 @@ export class NewPwdComponent {
     this.loading = true;
     const newPwd = this.newPwdForm.get('contrasenaUsuario')?.value;
     const token = this.route.snapshot.paramMap.get('token');
-    this.auth.onNewPwd({ newPwd, token }).subscribe(data => {
-      this.loading = false;
-      Swal.fire({
-        icon: data.status == 'ok' ? 'success' : 'error',
-        title: data.status == 'ok' ? 'Contraseña actualizada' : 'Error',
-        text: data.msj,
-      }).then(() => {
-        if (data.status == 'ok') {
-          this.router.navigate(['auth/login']);
-        }
-      });
-    });
+    this.auth.onNewPwd({ newPwd, token }).subscribe(
+      data => {
+        this.loading = false;
+        Swal.fire({
+          icon: data.status == 'ok' ? 'success' : 'error',
+          title: data.status == 'ok' ? 'Contraseña actualizada' : 'Error',
+          text: data.msj,
+        }).then(() => {
+          if (data.status == 'ok') {
+            this.router.navigate(['auth/login']);
+          }
+        });
+      },
+      error => {
+        this.loading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
+        });
+      }
+    );
   }
 
   togglePasswordVisibility() {

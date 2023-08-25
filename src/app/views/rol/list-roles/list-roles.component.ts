@@ -139,7 +139,15 @@ export class ListRolesComponent implements OnInit, OnDestroy {
             });
           }
           this.loading = false;
-        });
+        },
+          (error) => {
+            this.loading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error en el servidor',
+              text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
+            });
+          });
       }
     });
   }

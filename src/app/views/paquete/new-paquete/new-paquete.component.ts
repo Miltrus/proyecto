@@ -32,7 +32,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   }
 
   private subscriptions: Subscription = new Subscription();
-  
+
   constructor(
     private router: Router,
     private api: PaqueteService,
@@ -40,14 +40,14 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     private dialog: MatDialog,
     private paqueteService: PaqueteService,
     private renderer: Renderer2,
-    ) { }
-    
+  ) { }
+
   hasUnsavedChanges(): boolean {
     this.loading = false;
     return this.newForm.dirty;
   }
-  
-  
+
+
   editRemitente = new FormGroup({
     idCliente: new FormControl(''),
     documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
@@ -79,13 +79,13 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     lat: new FormControl(),
     lng: new FormControl(),
   });
-  
+
   getFechAct() {
     const date = new Date();
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
-    
+
     return `${year}-${month}-${day}`;
   }
 
@@ -97,13 +97,13 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   selectedRemitente: ClienteInterface | undefined;
   filtrarCliente: Observable<any[]> = new Observable<any[]>();
   filtrarDestinatario: Observable<any[]> = new Observable<any[]>();
-  
+
   ngOnInit(): void {
     this.randomCode();
     this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.remitente = data;
       this.destinatario = data;
-      console.log("REMITENTE: ", this.remitente,"\n","DESTINATARIO: ", this.destinatario);
+      console.log("REMITENTE: ", this.remitente, "\n", "DESTINATARIO: ", this.destinatario);
       this.loading = false;
 
       if (data.length == 0) {
@@ -119,7 +119,15 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
         });
         return;
       }
-    });
+    },
+      (error) => {
+        this.loading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en el servidor',
+          text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente.',
+        });
+      });
     this.getTamanoPaquete();
     this.getTipoPaquete();
 

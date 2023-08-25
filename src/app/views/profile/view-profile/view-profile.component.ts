@@ -6,6 +6,7 @@ import { Subscription, forkJoin } from 'rxjs';
 import { RolInterface } from 'src/app/models/rol.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { EditProfileComponent } from '../edit-profile/edit-profile.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-view-profile',
@@ -58,7 +59,15 @@ export class ViewProfileComponent implements OnInit, OnDestroy {
         this.rolMap[rol.idRol!] = rol.nombreRol!;
       });
       this.loading = false;
-    });
+    },
+      (error) => {
+        this.loading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en el servidor',
+          text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
+        });
+      });
     this.subscriptions.add(forkJoinSub);
   }
 

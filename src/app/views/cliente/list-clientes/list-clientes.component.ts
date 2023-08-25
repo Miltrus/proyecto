@@ -59,7 +59,15 @@ export class ListClientesComponent implements OnInit, OnDestroy {
       }
       this.tiposDocumento = tiposDocumento;
       this.loading = false;
-    });
+    },
+      error => {
+        this.loading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en el servidor',
+          text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente.',
+        });
+      });
     this.subscriptions.add(forkJoinSub);
   }
 
@@ -104,30 +112,39 @@ export class ListClientesComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.isDenied) {
         this.loading = true;
-        this.api.deleteCliente(id).subscribe(data => {
-          if (data.status == 'ok') {
-            this.clientes = this.clientes.filter(cliente => cliente.idCliente !== id);
-            this.dataSource.data = this.clientes; // Actualizar el dataSource con los nuevos datos
-            Swal.fire({
-              icon: 'success',
-              title: 'Cliente eliminado',
-              text: 'El cliente ha sido eliminado exitosamente.',
-              toast: true,
-              showConfirmButton: false,
-              timer: 5000,
-              position: 'top-end',
-              timerProgressBar: true,
-              showCloseButton: true,
-            });
-          } else {
+        this.api.deleteCliente(id).subscribe(
+          data => {
+            if (data.status == 'ok') {
+              this.clientes = this.clientes.filter(cliente => cliente.idCliente !== id);
+              this.dataSource.data = this.clientes; // Actualizar el dataSource con los nuevos datos
+              Swal.fire({
+                icon: 'success',
+                title: 'Cliente eliminado',
+                text: 'El cliente ha sido eliminado exitosamente.',
+                toast: true,
+                showConfirmButton: false,
+                timer: 5000,
+                position: 'top-end',
+                timerProgressBar: true,
+                showCloseButton: true,
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error al eliminar',
+                text: data.msj,
+              });
+            }
+            this.loading = false;
+          },
+          error => {
+            this.loading = false;
             Swal.fire({
               icon: 'error',
-              title: 'Error al eliminar',
-              text: data.msj,
+              title: 'Error en el servidor',
+              text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente.',
             });
-          }
-          this.loading = false;
-        });
+          });
       }
     });
   }

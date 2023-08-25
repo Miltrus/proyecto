@@ -163,7 +163,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.getEstadoPaquete();
     this.getTamanoPaquete();
     this.getTipoPaquete();
-    
+
     this.editRemitente.get('documentoCliente')?.valueChanges.subscribe(value => {
       if (this.editRemitente.get('documentoCliente')?.valid) {
         this.paqueteService.getDataRemitente(value).subscribe(data => {
@@ -184,7 +184,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         });
       }
     });
-    
+
     this.editForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
       if (this.editForm.get('documentoDestinatario')?.dirty && this.editForm.get('documentoDestinatario')?.valid) {
         this.api.getDataDestinatario(value).subscribe(data => {
@@ -205,7 +205,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
   }
 
   ngAfterViewInit() {
-    this.mapInput(); 
+    this.mapInput();
   }
 
   postForm(id: any) {
@@ -242,7 +242,15 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
             });
             this.loading = false;
           }
-        });
+        },
+          (error) => {
+            this.loading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error en el servidor',
+              text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
+            });
+          });
       }
     });
   }
@@ -266,7 +274,15 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
               text: data.msj,
             });
             this.loading = false;
-          });
+          },
+            (error) => {
+              this.loading = false;
+              Swal.fire({
+                icon: 'error',
+                title: 'Error en el servidor',
+                text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
+              });
+            });
           this.subscriptions.add(putCltSub);
         }
       });
@@ -321,6 +337,11 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       this.loading = false;
     } catch (error) {
       this.loading = false;
+      Swal.fire({
+        icon: 'error',
+        title: 'Error en el servidor',
+        text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
+      });
     }
   }
 
