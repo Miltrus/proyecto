@@ -12,6 +12,12 @@ import { MatSort } from '@angular/material/sort';
 import { Subscription, forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
 
+import * as XLSX from 'xlsx';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
+(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
+
 
 @Component({
   selector: 'app-list-usuarios',
@@ -34,6 +40,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
   rolUsuario: RolInterface[] = [];
   dataSource = new MatTableDataSource(this.usuarios); //pal filtro
   loading: boolean = true;
+  dataToExport: any[] = [];
 
   uid = localStorage.getItem('uid');
 
@@ -216,6 +223,91 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
   getRolUsuario(idRol: any): string {
     const rolUsuario = this.rolUsuario.find(rol => rol.idRol === idRol);
     return rolUsuario?.nombreRol || '';
+  }
+
+  generateExcel(): void {
+    const dataToExport = this.usuarios.map(usuario => ({
+      'ID': usuario.idUsuario,
+      'Tipo de documento': this.getTipoDocumento(usuario.idTipoDocumento),
+      'Documento': usuario.documentoUsuario,
+      'Nombre': usuario.nombreUsuario,
+      'Apellido': usuario.apellidoUsuario,
+      'Correo': usuario.correoUsuario,
+      'Telefono': usuario.telefonoUsuario,
+      'Rol': this.getRolUsuario(usuario.idRol),
+      'Estado': this.getEstadoUsuario(usuario.idEstado)
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Usuarios');
+
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const excelFileURL = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = excelFileURL;
+    link.download = 'usuarios.xlsx';
+    link.click();
+  }
+
+  generatePDF(): void {
+    // Asegúrate de llenar dataToExport con los datos adecuados antes de llamar a generatePDF
+    this.dataToExport = this.usuarios.map(usuario => ({
+      'ID': usuario.idUsuario,
+      'Tipo de documento': this.getTipoDocumento(usuario.idTipoDocumento),
+      'Documento': usuario.documentoUsuario,
+      'Nombre': usuario.nombreUsuario,
+      'Apellido': usuario.apellidoUsuario,
+      'Correo': usuario.correoUsuario,
+      'Telefono': usuario.telefonoUsuario,
+      'Rol': this.getRolUsuario(usuario.idRol),
+      'Estado': this.getEstadoUsuario(usuario.idEstado)
+    }));
+  
+    const docDefinition: TDocumentDefinitions = {
+      content: [
+        { text: 'Lista de Usuarios', style: 'header' },
+        {
+          style: 'tableExample',
+          table: {
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              ['ID', 'Tipo de documento', 'Documento', 'Nombre', 'Apellido', 'Correo', 'Telefono', 'Rol', 'Estado'],
+              ...this.dataToExport.map(usuario => [
+                usuario['ID'],
+                usuario['Tipo de documento'],
+                usuario['Documento'],
+                usuario['Nombre'],
+                usuario['Apellido'],
+                usuario['Correo'],
+                usuario['Telefono'],
+                usuario['Rol'],
+                usuario['Estado'],
+              ])
+            ]
+          }
+        }
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 0, 0, 10]
+        },
+        tableExample: {
+          margin: [0, 5, 0, 15]
+        }
+      },
+      pageOrientation: 'landscape'
+    };
+  
+    const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+    pdfDocGenerator.getBlob((blob: Blob) => {
+      const pdfBlobUrl = URL.createObjectURL(blob);
+      window.open(pdfBlobUrl, '_blank');
+    });
   }
 
   goBack() {

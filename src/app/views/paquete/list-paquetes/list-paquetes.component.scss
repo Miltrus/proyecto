@@ -110,3 +110,22 @@ app-navigation {
   align-items: center;
   height: 100px;
 }
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button-container button {
+  flex: 1;
+}
+
+.align-center {
+  display: flex;
+  align-items: center;
+}
+
+.icon-text {
+  margin-left: 5px;
+}

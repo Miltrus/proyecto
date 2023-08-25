@@ -20,6 +20,8 @@ import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 import Swal from 'sweetalert2';
 
+import * as XLSX from 'xlsx';
+
 // Configurar las fuentes
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
@@ -291,6 +293,31 @@ export class ListPaquetesComponent implements OnInit {
     }
   }
 
+  generateExcel(): void {
+    const dataToExport = this.paquetes.map(paquete => ({
+      'Código paquete': paquete.codigoPaquete,
+      'Remitente': this.getRemitentePaquete(paquete.documentoRemitente).nombre,
+      'Destinatario': paquete.nombreDestinatario,
+      'Teléfono destinatario': paquete.telefonoDestinatario,
+      'Correo destinatario': paquete.correoDestinatario,
+      'Dirección destinatario': paquete.direccionPaquete,
+      'Detalle dirección': paquete.detalleDireccionPaquete,
+      'Peso paquete': paquete.pesoPaquete + ' kg',
+      'Contenido paquete': paquete.contenidoPaquete,
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Paquetes');
+
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const excelFileURL = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = excelFileURL;
+    link.download = 'paquetes.xlsx';
+    link.click();
+  }
 
   goBack() {
     this.loading = true;

@@ -11,6 +11,12 @@ import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
 
+import * as XLSX from 'xlsx';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
+(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
+
 @Component({
   selector: 'app-list-roles',
   templateUrl: './list-roles.component.html',
@@ -30,6 +36,7 @@ export class ListRolesComponent implements OnInit, OnDestroy {
   dataSource: MatTableDataSource<RolInterface> = new MatTableDataSource();
   loading: boolean = true;
   totalPermisosCargados = 0;
+  dataToExport: any[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
@@ -141,6 +148,73 @@ export class ListRolesComponent implements OnInit, OnDestroy {
           this.loading = false;
         });
       }
+    });
+  }
+
+  generateExcel(): void {
+    const dataToExport = this.roles.map(rol => ({
+      'ID': rol.idRol,
+      'Nombre': rol.nombreRol,
+      'Permisos': rol.permisos?.map(permiso => permiso.nombrePermiso).join(', ') || '',
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Roles');
+
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const excelFileURL = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = excelFileURL;
+    link.download = 'roles.xlsx';
+    link.click();
+  }
+
+  generatePDF(): void {
+    // Asegúrate de llenar dataToExport con los datos adecuados antes de llamar a generatePDF
+    this.dataToExport = this.roles.map(rol => ({
+      'ID': rol.idRol,
+      'Nombre': rol.nombreRol,
+      'Permisos': rol.permisos?.map(permiso => permiso.nombrePermiso).join(', ') || '',
+    }));
+  
+    const docDefinition: TDocumentDefinitions = {
+      content: [
+        { text: 'Lista de Roles', style: 'header' },
+        {
+          style: 'tableExample',
+          table: {
+            widths: ['auto', 'auto', 'auto'],
+            body: [
+              ['ID', 'Nombre del rol', 'Permisos'],
+              ...this.dataToExport.map(rol => [
+                rol['ID'],
+                rol['Nombre'],
+                rol['Permisos'],
+              ])
+            ]
+          }
+        }
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 0, 0, 10]
+        },
+        tableExample: {
+          margin: [0, 5, 0, 15]
+        }
+      },
+      pageOrientation: 'landscape'
+    };
+  
+    const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+    pdfDocGenerator.getBlob((blob: Blob) => {
+      const pdfBlobUrl = URL.createObjectURL(blob);
+      window.open(pdfBlobUrl, '_blank');
     });
   }
 

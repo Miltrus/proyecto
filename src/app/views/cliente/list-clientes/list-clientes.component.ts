@@ -10,6 +10,12 @@ import { MatSort } from '@angular/material/sort';
 import { Subscription, forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
 
+import * as XLSX from 'xlsx';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
+(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
+
 
 @Component({
   selector: 'app-list-clientes',
@@ -30,6 +36,9 @@ export class ListClientesComponent implements OnInit, OnDestroy {
   tiposDocumento: TipoDocumentoInterface[] = [];
   dataSource = new MatTableDataSource(this.clientes); //pal filtro
   loading: boolean = true;
+  dataToExport: any[] = [];
+
+  
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
@@ -137,6 +146,96 @@ export class ListClientesComponent implements OnInit, OnDestroy {
     return tipoDocumento?.nombreTipo || '';
   }
 
+  generateExcel(): void {
+    const dataToExport = this.clientes.map(cliente => ({
+      'ID': cliente.idCliente || 'N/A',
+      'Nombre': cliente.nombreCliente,
+      'Tipo de documento': this.getTipoDocumento(cliente.idTipoDocumento),
+      'Número de documento': cliente.documentoCliente,
+      'Teléfono': cliente.telefonoCliente,
+      'Correo electrónico': cliente.correoCliente,
+      'Dirección': cliente.direccionCliente,
+      'Detalle de dirección': cliente.detalleDireccionCliente,
+      'latitud': cliente.lat,
+      'longitud': cliente.lng,
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Clientes');
+
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const excelFileURL = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = excelFileURL;
+    link.download = 'clientes.xlsx';
+    link.click();
+  }
+
+  
+
+  generatePDF(): void {
+    // Asegúrate de llenar dataToExport con los datos adecuados antes de llamar a generatePDF
+    this.dataToExport = this.clientes.map(cliente => ({
+      'ID': cliente.idCliente || 'N/A',
+      'Nombre': cliente.nombreCliente,
+      'Tipo de documento': this.getTipoDocumento(cliente.idTipoDocumento),
+      'Número de documento': cliente.documentoCliente,
+      'Teléfono': cliente.telefonoCliente,
+      'Correo electrónico': cliente.correoCliente,
+      'Dirección': cliente.direccionCliente,
+      'Detalle de dirección': cliente.detalleDireccionCliente,
+      'latitud': cliente.lat,
+      'longitud': cliente.lng,
+    }));
+  
+    const docDefinition: TDocumentDefinitions = {
+      content: [
+        { text: 'Lista de Clientes', style: 'header' },
+        {
+          style: 'tableExample',
+          table: {
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              ['ID', 'Nombre', 'Tipo de documento', 'Número de documento', 'Teléfono', 'Correo electrónico', 'Dirección', 'Detalle de dirección', 'Latitud', 'Longitud'],
+              ...this.dataToExport.map(cliente => [
+                cliente['ID'],
+                cliente['Nombre'],
+                cliente['Tipo de documento'],
+                cliente['Número de documento'],
+                cliente['Teléfono'],
+                cliente['Correo electrónico'],
+                cliente['Dirección'],
+                cliente['Detalle de dirección'],
+                cliente['latitud'],
+                cliente['longitud']
+              ])
+            ]
+          }
+        }
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 0, 0, 10]
+        },
+        tableExample: {
+          margin: [0, 5, 0, 15]
+        }
+      },
+      pageOrientation: 'landscape'
+    };
+  
+    const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+    pdfDocGenerator.getBlob((blob: Blob) => {
+      const pdfBlobUrl = URL.createObjectURL(blob);
+      window.open(pdfBlobUrl, '_blank');
+    });
+  }
+  
   goBack() {
     this.loading = true;
     this.router.navigate(['dashboard']);

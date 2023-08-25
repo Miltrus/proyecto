@@ -87,3 +87,28 @@ app-navigation {
   align-items: center;
   height: 100px;
 }
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button-container button {
+  flex: 1;
+}
+
+.align-center {
+  display: flex;
+  align-items: center;
+}
+
+.icon-text {
+  margin-left: 5px;
+}
+
+.pdf-button, .excel-button {
+  white-space: nowrap;
+  font-size: 14px;
+  min-width: 120px; /* Ajusta el valor del ancho mínimo según tus necesidades */
+}

@@ -12,7 +12,8 @@
 
       <div class="row">
         <div class="col-md-6 col-12">
-          <button mat-raised-button color="primary" (click)="newPaquete()" style="margin-top: 20px;">Registrar paquete</button>
+          <button mat-raised-button color="primary" (click)="newPaquete()" style="margin-top: 20px;">Registrar
+            paquete</button>
         </div>
         <div class="col-md-6 col-12">
           <div class="d-flex justify-content-end">
@@ -25,7 +26,7 @@
             </mat-form-field>
           </div>
         </div>
-      </div>      
+      </div>
     </div>
 
     <div class="mat-elevation-z8 table-container">
@@ -130,8 +131,19 @@
     <div *ngIf="dataSource.filteredData.length === 0" class="no-results-message" style="text-align: center;">
       <strong>NO SE HAN ENCONTRARON RESULTADOS.</strong>
     </div>
-    <br>
-    <button mat-raised-button color='accent' (click)="goBack()">Ir al Dashboard</button><br>
+    
+    <div class="button-container">
+      <div class="align-center">
+        <button mat-raised-button color='accent' (click)="goBack()">Ir al Dashboard</button>
+      </div>
+      <div class="align-center">
+        <button mat-menu-item (click)="generateExcel()" class="icon-text">
+          <mat-icon [ngStyle]="{'color': '#AED581'}">table_chart</mat-icon>
+          <span class="icon-text">Excel</span>
+        </button>
+      </div>
+    </div>
+    
   </div>
 </app-navigation>
 <ng-template #viewPaqueteDialog let-dialogData>
