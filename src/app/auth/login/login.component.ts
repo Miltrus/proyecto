@@ -40,34 +40,44 @@ export class LoginComponent {
 
   onLogin(form: LoginInterface) {
     this.loading = true;
-    this.auth.onLogin(form).subscribe(async (data) => {
-      if (data.status == 'ok') {
-        this.loading = true;
-        localStorage.setItem("token", data.token);
-        const decodedToken = JSON.parse(atob(data.token!.split('.')[1]));
-        localStorage.setItem("uid", decodedToken.uid);
-        await this.router.navigate(['dashboard']);
-        this.dataUser = data.user;
-        Swal.fire({
-          icon: 'success',
-          title: 'Inicio de sesión exitoso',
-          text: 'Bienvenido, ' + this.dataUser.nombreUsuario,
-          toast: true,
-          showConfirmButton: false,
-          timer: 5000,
-          position: 'top-end',
-          timerProgressBar: true,
-          showCloseButton: true,
-        });
-      } else {
+    this.auth.onLogin(form).subscribe(
+      async (data) => {
+        if (data.status == 'ok') {
+          this.loading = true;
+          localStorage.setItem("token", data.token);
+          const decodedToken = JSON.parse(atob(data.token!.split('.')[1]));
+          localStorage.setItem("uid", decodedToken.uid);
+          await this.router.navigate(['dashboard']);
+          this.dataUser = data.user;
+          Swal.fire({
+            icon: 'success',
+            title: 'Inicio de sesión exitoso',
+            text: 'Bienvenido, ' + this.dataUser.nombreUsuario,
+            toast: true,
+            showConfirmButton: false,
+            timer: 5000,
+            position: 'top-end',
+            timerProgressBar: true,
+            showCloseButton: true,
+          });
+        } else {
+          this.loading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: data.msj,
+          })
+        }
+      },
+      async (error) => {
+        this.loading = false;
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: data.msj,
+          text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
         })
-        this.loading = false;
       }
-    });
+    );
   }
 
   togglePasswordVisibility() {

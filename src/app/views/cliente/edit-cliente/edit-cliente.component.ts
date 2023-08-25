@@ -81,8 +81,12 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
         this.loading = false;
       },
       (error) => {
-        console.error('Error:', error);
         this.loading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en el servidor',
+          text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
+        });
       }
     );
     this.subscriptions.add(forkJoinSub);
@@ -111,30 +115,39 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
     }).then((result) => {
       if (result.isConfirmed) {
         this.loading = true;
-        const putCltSub = this.api.putCliente(id).subscribe((data) => {
-          if (data.status == 'ok') {
-            this.editForm.reset();
-            this.router.navigate(['cliente/list-clientes']);
-            Swal.fire({
-              icon: 'success',
-              title: 'Cliente modificado',
-              text: 'El cliente ha sido modificado exitosamente.',
-              toast: true,
-              showConfirmButton: false,
-              timer: 5000,
-              position: 'top-end',
-              timerProgressBar: true,
-              showCloseButton: true,
-            });
-          } else {
+        const putCltSub = this.api.putCliente(id).subscribe(
+          (data) => {
+            if (data.status == 'ok') {
+              this.editForm.reset();
+              this.router.navigate(['cliente/list-clientes']);
+              Swal.fire({
+                icon: 'success',
+                title: 'Cliente modificado',
+                text: 'El cliente ha sido modificado exitosamente.',
+                toast: true,
+                showConfirmButton: false,
+                timer: 5000,
+                position: 'top-end',
+                timerProgressBar: true,
+                showCloseButton: true,
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error al modificar',
+                text: data.msj,
+              });
+            }
+            this.loading = false;
+          },
+          (error) => {
+            this.loading = false;
             Swal.fire({
               icon: 'error',
-              title: 'Error al modificar',
-              text: data.msj,
+              title: 'Error en el servidor',
+              text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
             });
-          }
-          this.loading = false;
-        });
+          });
         this.subscriptions.add(putCltSub);
       }
     });

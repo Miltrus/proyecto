@@ -97,8 +97,12 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
         this.loading = false;
       },
       (error) => {
-        console.error('Error:', error);
         this.loading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en el servidor',
+          text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
+        });
       }
     );
     this.subscriptions.add(forkJoinSub);
@@ -157,7 +161,15 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
             });
             this.loading = false;
           }
-        });
+        },
+          (error) => {
+            this.loading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error en el servidor',
+              text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
+            });
+          });
         this.subscriptions.add(putUserSub);
       }
     });

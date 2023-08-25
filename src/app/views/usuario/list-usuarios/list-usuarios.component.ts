@@ -144,7 +144,15 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
             });
           }
           this.loading = false;
-        });
+        },
+          (error) => {
+            this.loading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error en el servidor',
+              text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
+            });
+          });
         this.subscriptions.add(delUserSUb);
       }
     });
@@ -202,7 +210,15 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
             });
           }
           this.loading = false;
-        });
+        },
+          (error) => {
+            this.loading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error en el servidor',
+              text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
+            });
+          });
         this.subscriptions.add(putUserSub);
       }
     });

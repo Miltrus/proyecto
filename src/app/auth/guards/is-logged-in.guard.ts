@@ -32,7 +32,7 @@ export const isLoggedInGuard: CanMatchFn = () => {
         Swal.fire({
           icon: 'error',
           title: 'Error en el servidor',
-          text: 'Ha ocurrido un error al comunicarse con el servidor, por favor intente nuevamente.',
+          text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente',
         });
         return of(false);
       })
