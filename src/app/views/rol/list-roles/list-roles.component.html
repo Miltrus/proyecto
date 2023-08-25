@@ -7,12 +7,12 @@
   <div class="container">
     <br>
     <h1>Roles</h1>
-    <div class="create-button-container">
-      <div class="row">
-        <div class="col">
-          <button mat-raised-button color="primary" (click)="newRol()">Crear nuevo rol</button>
-        </div>
-        <div class="col">
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <button mat-raised-button color="primary" (click)="newRol()" style="margin-top: 20px;">Crear nuevo rol</button>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="d-flex justify-content-end">
           <mat-form-field appearance="outline">
             <mat-label>Búsqueda de roles</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Administrador" #input autocomplete="off">
@@ -23,6 +23,7 @@
         </div>
       </div>
     </div>
+
     <div class="mat-elevation-z8 table-container">
       <table mat-table [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="num">

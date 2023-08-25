@@ -250,13 +250,41 @@
               </div>
             </div>
           </div>
-          <div class="col">
+          <div class="col" *ngIf="!divEstado">
             <div class="form-group">
               <label for="exampleFormControlInput1">Contenido del paquete<b style="color: red;">*</b></label>
               <textarea class="form-control" formControlName="contenidoPaquete" [ngClass]="{
                   'is-invalid': editForm.get('contenidoPaquete')?.invalid && (editForm.get('contenidoPaquete')?.touched || editForm.get('contenidoPaquete')?.dirty),
                   'is-valid': editForm.get('contenidoPaquete')?.valid && editForm.get('contenidoPaquete')?.dirty
                 }"></textarea>
+              <div *ngIf="editForm.get('contenidoPaquete')?.errors?.['required']" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
+            </div>
+          </div>
+          <div class="col" *ngIf="divEstado">
+            <label for="">Estado<b style="color: red;">*</b></label>
+            <mat-select class="form-control" formControlName="idEstado" placeholder="---SELECCIONE---" [ngClass]="{
+              'is-invalid': editForm.get('idEstado')?.invalid && (editForm.get('idEstado')?.touched || editForm.get('idEstado')?.dirty),
+              'is-valid': editForm.get('idEstado')?.valid && (editForm.get('idEstado')?.touched || editForm.get('idEstado')?.dirty)
+            }">
+              <mat-option *ngFor="let e of estadosPaquete" [value]="e.idEstado">
+                {{ e.estadoPaquete }}
+              </mat-option>
+            </mat-select>
+            <div *ngIf="editForm.get('idEstado')?.errors?.['required']" class="invalid-feedback">
+              Este campo es obligatorio.
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" *ngIf="divEstado">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Contenido del paquete<b style="color: red;">*</b></label>
+              <textarea class="form-control" formControlName="contenidoPaquete" [ngClass]="{
+                    'is-invalid': editForm.get('contenidoPaquete')?.invalid && (editForm.get('contenidoPaquete')?.touched || editForm.get('contenidoPaquete')?.dirty),
+                    'is-valid': editForm.get('contenidoPaquete')?.valid && editForm.get('contenidoPaquete')?.dirty
+                  }"></textarea>
               <div *ngIf="editForm.get('contenidoPaquete')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
               </div>

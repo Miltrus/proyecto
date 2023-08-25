@@ -8,13 +8,12 @@
   <div class="container">
     <br>
     <h1>Usuarios</h1>
-
-    <div class="create-button-container">
-      <div class="row">
-        <div class="col">
-          <button mat-raised-button color="primary" (click)="newUsuario()">Crear nuevo usuario</button>
-        </div>
-        <div class="col">
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <button mat-raised-button color="primary" (click)="newUsuario()" style="margin-top: 20px;">Crear nuevo usuario</button>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="d-flex justify-content-end">
           <mat-form-field appearance="outline">
             <mat-label>Búsqueda de usuarios</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Juan" #input autocomplete="off">
@@ -24,7 +23,6 @@
           </mat-form-field>
         </div>
       </div>
-
     </div>
 
     <div class="mat-elevation-z8 table-container">

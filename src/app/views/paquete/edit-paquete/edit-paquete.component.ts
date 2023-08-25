@@ -14,6 +14,7 @@ import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 import { ClienteService } from 'src/app/services/api/cliente.service';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
+import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
 
 
 @Component({
@@ -76,7 +77,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     fechaAproxEntrega: new FormControl('', [Validators.required, this.validateFechaPasada]),
     documentoRemitente: new FormControl('', Validators.required),
     idTamano: new FormControl(),
-    idEstado: new FormControl('1'),
+    idEstado: new FormControl('', Validators.required),
     idTipo: new FormControl('', Validators.required),
     lat: new FormControl(),
     lng: new FormControl(),
@@ -117,8 +118,11 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
   remitente: ClienteInterface[] = [];
   destinatario: ClienteInterface[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
+  estadosPaquete: EstadoPaqueteInterface[] = [];
   tipos: TipoPaqueteInterface[] = [];
   loading: boolean = true;
+  divEstado: boolean = false;
+  estadito: any;
 
   selectedRemitente: ClienteInterface | undefined;
   selectedDestinatario: ClienteInterface | undefined = undefined;
@@ -146,15 +150,20 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         'lat': this.dataPaquete[0]?.lat || '',
         'lng': this.dataPaquete[0]?.lng || ''
       });
+      this.estadito = this.dataPaquete[0]?.idEstado;
+      if (this.estadito == 4) {
+        this.divEstado = true;
+      }
       this.editRemitente.patchValue({
         'documentoCliente': this.dataPaquete[0]?.documentoRemitente || ''
       });
       this.loading = false;
     });
     this.getRemitenteAndDestinatarioPaquete();
+    this.getEstadoPaquete();
     this.getTamanoPaquete();
     this.getTipoPaquete();
-
+    
     this.editRemitente.get('documentoCliente')?.valueChanges.subscribe(value => {
       if (this.editRemitente.get('documentoCliente')?.valid) {
         this.paqueteService.getDataRemitente(value).subscribe(data => {
@@ -175,7 +184,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         });
       }
     });
-
+    
     this.editForm.get('documentoDestinatario')?.valueChanges.subscribe(value => {
       if (this.editForm.get('documentoDestinatario')?.dirty && this.editForm.get('documentoDestinatario')?.valid) {
         this.api.getDataDestinatario(value).subscribe(data => {
@@ -196,7 +205,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
   }
 
   ngAfterViewInit() {
-    this.mapInput();
+    this.mapInput(); 
   }
 
   postForm(id: any) {
@@ -311,12 +320,16 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
 
       this.loading = false;
     } catch (error) {
-      console.error("Error en la obtención de datos:", error);
       this.loading = false;
     }
   }
 
-
+  getEstadoPaquete(): void {
+    this.api.getEstadoPaquete().subscribe(data => {
+      this.estadosPaquete = data;
+      this.loading = false;
+    });
+  }
 
   getTamanoPaquete(): void {
     this.api.getTamanoPaquete().subscribe(data => {

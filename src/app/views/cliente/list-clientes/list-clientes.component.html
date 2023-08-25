@@ -7,12 +7,12 @@
   <div class="container">
     <br>
     <h1>Clientes</h1>
-    <div class="create-button-container">
-      <div class="row">
-        <div class="col">
-          <button mat-raised-button color="primary" (click)="newCliente()">Crear nuevo cliente</button>
-        </div>
-        <div class="col">
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <button mat-raised-button color="primary" (click)="newCliente()" style="margin-top: 20px;">Crear nuevo cliente</button>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="d-flex justify-content-end">
           <mat-form-field appearance="outline">
             <mat-label>Búsqueda de clientes</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Juan" #input autocomplete="off">

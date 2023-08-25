@@ -134,7 +134,6 @@ export class ListClientesComponent implements OnInit, OnDestroy {
 
   getTipoDocumento(idTipoDocumento: any): string {
     const tipoDocumento = this.tiposDocumento.find(tipo => tipo.idTipoDocumento === idTipoDocumento);
-    console.log(tipoDocumento?.nombreTipo);
     return tipoDocumento?.nombreTipo || '';
   }
 

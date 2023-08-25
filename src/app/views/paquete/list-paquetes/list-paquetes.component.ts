@@ -125,7 +125,6 @@ export class ListPaquetesComponent implements OnInit {
       const qrCodeBase64 = canvas.toDataURL('image/png');
       return qrCodeBase64;
     } catch (error) {
-      console.error('Error generating QR code:', error);
       throw error;
     }
   }
@@ -224,7 +223,6 @@ export class ListPaquetesComponent implements OnInit {
 
   async generatePDF(idPaquete: string): Promise<void> {
     const paquete = this.paquetes.find((paquete) => paquete.idPaquete === idPaquete);
-    console.log(paquete?.qrCodeUrl?.toString())
 
     if (paquete && paquete.qrCodeUrl) {
       try {
@@ -289,7 +287,6 @@ export class ListPaquetesComponent implements OnInit {
           window.open(pdfBlobUrl, '_blank');
         });
       } catch (error) {
-        console.log('Error creando el pdf', error);
       }
     }
   }

@@ -6,26 +6,27 @@
 <app-navigation>
 
   <div class="container">
+    <br>
     <h1>Paquetes</h1>
     <div class="create-button-container">
 
       <div class="row">
-        <div class="col">
-          <button mat-raised-button color="primary" (click)="newPaquete()">Registrar paquete</button>
+        <div class="col-md-6 col-12">
+          <button mat-raised-button color="primary" (click)="newPaquete()" style="margin-top: 20px;">Registrar paquete</button>
         </div>
-        <div class="col">
-          <mat-form-field appearance="outline">
-            <mat-label>Busqueda de paquetes</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Ej: C3FH1P" #input autocomplete="off">
-            <button mat-button matSuffix disabled>
-              <mat-icon color="primary">search</mat-icon>
-            </button>
-          </mat-form-field>
+        <div class="col-md-6 col-12">
+          <div class="d-flex justify-content-end">
+            <mat-form-field appearance="outline">
+              <mat-label>Búsqueda de paquetes</mat-label>
+              <input matInput (keyup)="applyFilter($event)" placeholder="Ej: C3FH1P" #input autocomplete="off">
+              <button mat-button matSuffix disabled>
+                <mat-icon color="primary">search</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
         </div>
-      </div>
-
+      </div>      
     </div>
-    <br>
 
     <div class="mat-elevation-z8 table-container">
       <table mat-table [dataSource]="dataSource" matSort>
@@ -103,7 +104,7 @@
                 <span>Ver</span>
               </button>
               <button mat-menu-item (click)="editPaquete(paquete.idPaquete)"
-                [disabled]="paquete.idEstado == 2 || paquete.idEstado == 3 || paquete.idEstado == 4">
+                [disabled]="paquete.idEstado == 2 || paquete.idEstado == 3">
                 <mat-icon [ngStyle]="{'color': '#1A237E'}">edit</mat-icon>
                 <span>Editar</span>
               </button>
