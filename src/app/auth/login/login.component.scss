@@ -15,15 +15,13 @@ h2 {
   color: #cccccc;
 }
 
-/* STRUCTURE */
-
 .wrapper {
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  min-height: 50%;
+  min-height: 100%;
   padding: 5px;
 }
 
@@ -34,25 +32,13 @@ h2 {
   padding: 30px;
   width: 90%;
   max-width: 450px;
-  position: relative;
+  position: center;
   padding: 0px;
   -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
   box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
   text-align: center;
 }
 
-#formFooter {
-  background-color: #f6f6f6;
-  border-top: 1px solid #dce8f1;
-  padding: 25px;
-  text-align: center;
-  -webkit-border-radius: 0 0 10px 10px;
-  border-radius: 0 0 10px 10px;
-}
-
-
-
-/* TABS */
 
 h2.inactive {
   color: #cccccc;
@@ -63,14 +49,6 @@ h2.active {
   border-bottom: 2px solid #5fbae9;
 }
 
-
-.spinner {
-  margin: auto;
-}
-
-
-
-/* FORM TYPOGRAPHY*/
 
 input[type=button],
 input[type=submit],
