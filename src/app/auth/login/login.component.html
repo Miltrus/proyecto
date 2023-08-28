@@ -6,7 +6,9 @@
 
 <div class="wrapper fadeInDown">
   <div id="formContent">
-
+    <a href="#" class="back-link" (click)="goBack()">
+      <mat-icon class="flecha-atras">arrow_back</mat-icon>
+    </a>
     <div class="fadeIn first">
       <img src="assets/img/LogoSinFondo.png" id="icon" alt="Star Routing logo" />
     </div>
@@ -34,7 +36,7 @@
               {{ showPassword ? 'visibility_off' : 'visibility' }}
             </mat-icon>
           </mat-form-field><br>
-          <a href="#" (click)="openForgotPasswordDialog($event)">
+          <a href="javascript:void(0);" (click)="openForgotPasswordDialog($event)">
             <span>¿Olvidaste tu contraseña?</span>
           </a>
         </p>
@@ -44,9 +46,9 @@
         <button type="submit" class="fadeIn fourth">Iniciar sesión</button>
       </div>
 
-      <div class="back-button">
+      <!-- <div class="back-button">
         <button class="fadeIn fourth" type="button" (click)="goBack()">Volver atrás</button>
-      </div>
+      </div> -->
     </form>
   </div>
 </div>
