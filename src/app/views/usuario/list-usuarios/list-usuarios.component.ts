@@ -243,13 +243,12 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
 
   generateExcel(): void {
     const dataToExport = this.usuarios.map(usuario => ({
-      'ID': usuario.idUsuario,
-      'Tipo de documento': this.getTipoDocumento(usuario.idTipoDocumento),
       'Documento': usuario.documentoUsuario,
+      'Tipo documento': this.getTipoDocumento(usuario.idTipoDocumento),
       'Nombre': usuario.nombreUsuario,
       'Apellido': usuario.apellidoUsuario,
-      'Correo': usuario.correoUsuario,
-      'Telefono': usuario.telefonoUsuario,
+      'Email': usuario.correoUsuario,
+      'Teléfono': usuario.telefonoUsuario,
       'Rol': this.getRolUsuario(usuario.idRol),
       'Estado': this.getEstadoUsuario(usuario.idEstado)
     }));
@@ -268,36 +267,33 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
   }
 
   generatePDF(): void {
-    // Asegúrate de llenar dataToExport con los datos adecuados antes de llamar a generatePDF
     this.dataToExport = this.usuarios.map(usuario => ({
-      'ID': usuario.idUsuario,
-      'Tipo de documento': this.getTipoDocumento(usuario.idTipoDocumento),
       'Documento': usuario.documentoUsuario,
+      'Tipo documento': this.getTipoDocumento(usuario.idTipoDocumento),
       'Nombre': usuario.nombreUsuario,
       'Apellido': usuario.apellidoUsuario,
-      'Correo': usuario.correoUsuario,
-      'Telefono': usuario.telefonoUsuario,
+      'Email': usuario.correoUsuario,
+      'Teléfono': usuario.telefonoUsuario,
       'Rol': this.getRolUsuario(usuario.idRol),
       'Estado': this.getEstadoUsuario(usuario.idEstado)
     }));
-  
+
     const docDefinition: TDocumentDefinitions = {
       content: [
         { text: 'Lista de Usuarios', style: 'header' },
         {
           style: 'tableExample',
           table: {
-            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
             body: [
-              ['ID', 'Tipo de documento', 'Documento', 'Nombre', 'Apellido', 'Correo', 'Telefono', 'Rol', 'Estado'],
+              ['Documento', 'Tipo documento', 'Nombre', 'Apellido', 'Email', 'Teléfono', 'Rol', 'Estado'],
               ...this.dataToExport.map(usuario => [
-                usuario['ID'],
-                usuario['Tipo de documento'],
                 usuario['Documento'],
+                usuario['Tipo documento'],
                 usuario['Nombre'],
                 usuario['Apellido'],
-                usuario['Correo'],
-                usuario['Telefono'],
+                usuario['Email'],
+                usuario['Teléfono'],
                 usuario['Rol'],
                 usuario['Estado'],
               ])
@@ -318,7 +314,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
       },
       pageOrientation: 'landscape'
     };
-  
+
     const pdfDocGenerator = pdfMake.createPdf(docDefinition);
     pdfDocGenerator.getBlob((blob: Blob) => {
       const pdfBlobUrl = URL.createObjectURL(blob);

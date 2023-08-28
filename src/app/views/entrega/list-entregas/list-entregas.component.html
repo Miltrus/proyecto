@@ -44,7 +44,7 @@
           <th mat-header-cell *matHeaderCellDef>Firma</th>
           <td mat-cell *matCellDef="let entrega">
             <button mat-icon-button (click)="openImageViewer(entrega.firmaDestinatario)">
-              <mat-icon>attachment</mat-icon>
+              <mat-icon>draw</mat-icon>
             </button>
           </td>
         </ng-container>
@@ -98,7 +98,7 @@
   <div class="dialogData">
     <h2>Información de la entrega</h2>
     <p><strong>Código del paquete:</strong> {{ getRastreo (dialogData.idRastreo) }}</p>
-    <p><strong>Fecha:</strong> {{ dialogData.fechaEntrega }}</p>
+    <p><strong>Fecha entrega:</strong> {{ dialogData.fechaEntrega }}</p>
   </div>
 </ng-template>
 

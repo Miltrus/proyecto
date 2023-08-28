@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 
 import { SharedModule } from 'src/app/shared/shared.module';
-import { CommonModule } from '@angular/common';
 import { ViewProfileComponent } from './view-profile/view-profile.component';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
