@@ -53,6 +53,20 @@ const routes: Routes = [
     loadChildren: () => import('./views/paquete/paquete.module').then(m => m.PaqueteModule)
   },
 
+  {
+    path: 'novedad',
+    canMatch: [isLoggedInGuard, rolePermissionGuard],
+    data: { permiso: 'Novedades' },
+    loadChildren: () => import('./views/novedad/novedad.module').then(m => m.NovedadModule)
+  },
+
+  {
+    path: 'entrega',
+    canMatch: [isLoggedInGuard, rolePermissionGuard],
+    data: { permiso: 'Entregas' },
+    loadChildren: () => import('./views/entrega/entrega.module').then(m => m.EntregaModule)
+  },
+
 
   { path: '**', loadChildren: () => import('./components/not-found/not-found.module').then(m => m.NotFoundModule) },
 ];

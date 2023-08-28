@@ -27,6 +27,7 @@ export class NavigationComponent {
     { name: 'Clientes', route: '/cliente' },
     { name: 'Paquetes', route: '/paquete' },
     { name: 'Novedades', route: '/novedad' },
+    { name: 'Entregas', route: '/entrega'}
   ];
 
   constructor(

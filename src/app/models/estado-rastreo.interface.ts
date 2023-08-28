@@ -1,4 +1,4 @@
 export interface EstadoRastreoInterface {
-    idRastreo?: string | null | undefined;
+    idEstado?: string | null | undefined;
     nombreEstado?: string | null | undefined;
 }
