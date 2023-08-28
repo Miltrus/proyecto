@@ -7,14 +7,11 @@
 <div class="wrapper fadeInDown">
   <div id="formContent">
 
-    <!-- Icon -->
     <div class="fadeIn first">
       <img src="assets/img/LogoSinFondo.png" id="icon" alt="Star Routing logo" />
     </div>
 
-    <!-- Login Form -->
     <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm.value)">
-      <!-- Enviamos el valor del formulario a la función onLogin -->
       <div class="fadeIn second">
         <mat-form-field appearance="outline">
           <mat-label>Correo electrónico</mat-label>
@@ -27,7 +24,7 @@
       </div>
       <div class="fadeIn third">
         <p>
-          <mat-form-field appearance="outline"> 
+          <mat-form-field appearance="outline">
             <mat-label>Contraseña</mat-label>
             <input id="password" formControlName="contrasenaUsuario" matInput placeholder="Contraseña" [ngClass]="{
                 'is-invalid': loginForm.get('contrasenaUsuario')?.invalid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty),
@@ -46,8 +43,6 @@
       <div class="login-button">
         <button type="submit" class="fadeIn fourth">Iniciar sesión</button>
       </div>
-
-      <!-- <input type="submit" color="primary" class="fadeIn fourth" value="Iniciar sesión"> -->
 
       <div class="back-button">
         <button class="fadeIn fourth" type="button" (click)="goBack()">Volver atrás</button>
