@@ -1,10 +1,6 @@
 export interface EntregaInterface {
     idEntrega?: string | null | undefined;
-    firmaDestinatario: {
-        data: number[];
-        type: string;
-        url?: string; // Agregamos la propiedad url como opcional
-      };
+    firmaDestinatario: any | null | undefined
     fechaEntrega?: string | null | undefined;
     idRastreo?: string | null | undefined;
 }

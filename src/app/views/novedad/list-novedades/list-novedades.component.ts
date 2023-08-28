@@ -108,9 +108,4 @@ export class ListNovedadesComponent implements OnInit {
     const estado = this.estados.find(tipo => tipo.idEstado === idEstado);
     return estado?.nombreEstado || '';
   }
-
-  goBack() {
-    this.loading = true;
-    this.router.navigate(['dashboard']);
-  }
 }

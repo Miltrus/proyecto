@@ -251,12 +251,7 @@ export class ListClientesComponent implements OnInit, OnDestroy {
       const pdfBlobUrl = URL.createObjectURL(blob);
       window.open(pdfBlobUrl, '_blank');
     });
-  }
-  
-  goBack() {
-    this.loading = true;
-    this.router.navigate(['dashboard']);
-  }
+  } 
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

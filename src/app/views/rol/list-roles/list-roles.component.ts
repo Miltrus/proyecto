@@ -226,11 +226,6 @@ export class ListRolesComponent implements OnInit, OnDestroy {
     });
   }
 
-  goBack(): void {
-    this.loading = true;
-    this.router.navigate(['dashboard']);
-  }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

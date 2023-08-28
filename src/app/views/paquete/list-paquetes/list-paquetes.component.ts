@@ -327,11 +327,6 @@ export class ListPaquetesComponent implements OnInit {
     link.click();
   }
 
-  goBack() {
-    this.loading = true;
-    this.router.navigate(['dashboard']);
-  }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

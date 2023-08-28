@@ -21,7 +21,7 @@ import { RastreoService } from 'src/app/services/api/rastreo.service';
 export class ListEntregasComponent implements OnInit {
   constructor(
     private api: EntregaService,
-    private apiNovedad: RastreoService,
+    private apiRastreo: RastreoService,
     private apiPaquete: PaqueteService,
     private router: Router,
     private dialog: MatDialog,
@@ -29,7 +29,7 @@ export class ListEntregasComponent implements OnInit {
 
   private subscriptions: Subscription = new Subscription();
 
-  entregas: EntregaInterface[] = [];
+  entregas: any[] = [];
   novedades: RastreoInterface[] = [];
   paquetes: PaqueteInterface [] = [];
   dataSource = new MatTableDataSource(this.entregas); //pal filtro
@@ -40,16 +40,17 @@ export class ListEntregasComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
   @ViewChild('viewEntregaDialog') viewEntregaDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
-  @ViewChild('viewQR') viewQR!: TemplateRef<any>;
+  @ViewChild('viewFirma') viewFirma!: TemplateRef<any>;
 
   ngOnInit(): void {
+    
     this.loading = true;
 
     const forkJoinSub = forkJoin([
       this.api.getAllEntregas(),
-      this.apiNovedad.getAllRastreos(),
+      this.apiRastreo .getAllRastreos(),
       this.apiPaquete.getAllPaquetes()
-    ]).subscribe(([entrega, novedad, paquete]) => {
+    ]).subscribe(([entrega, rastreo, paquete]) => {
       this.entregas = entrega;
       this.dataSource.data = this.entregas; 
       if (this.dataSource.data.length < 1) {
@@ -65,7 +66,7 @@ export class ListEntregasComponent implements OnInit {
           showCloseButton: true
         })
       }
-      this.novedades = novedad;
+      this.novedades = rastreo;
       this.paquetes = paquete;
       this.loading = false;
     },
@@ -86,9 +87,9 @@ export class ListEntregasComponent implements OnInit {
     this.subscriptions.add(forkJoinSub);
   }
 
-  openImageViewer(imageUrl: string): void {
-    this.dialog.open(this.viewQR, {
-      data: { imageUrl },
+  openImageViewer(imgData: any): void {
+    this.dialog.open(this.viewFirma, {
+      data: { imgData },
     });
   }
 
@@ -101,7 +102,7 @@ export class ListEntregasComponent implements OnInit {
     this.subscriptions.unsubscribe();
   }
   
-  viewEntrega(entrega: RastreoInterface): void {
+  viewEntrega(entrega: EntregaInterface): void {
     this.dialog.open(this.viewEntregaDialog, {
       data: entrega,
       width: '400px',
@@ -118,8 +119,9 @@ export class ListEntregasComponent implements OnInit {
     return paquete?.codigoPaquete || '';
   }
 
-  goBack(): void {
-    this.router.navigate(['/dashboard']);
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }
