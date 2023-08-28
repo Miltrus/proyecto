@@ -96,6 +96,25 @@ app-navigation {
   color: white;
 }
 
+.btn-custom {
+  /* Estilos comunes para el botón */
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  /* Agrega bordes redondeados */
+}
+
+.btn-active {
+  background-color: green;
+  color: white;
+}
+
+.btn-inactive {
+  background-color: red;
+  color: white;
+}
+
 .button-container {
   display: flex;
   justify-content: space-between;
@@ -115,8 +134,10 @@ app-navigation {
   margin-left: 5px;
 }
 
-.pdf-button, .excel-button {
+.pdf-button,
+.excel-button {
   white-space: nowrap;
   font-size: 14px;
-  min-width: 120px; /* Ajusta el valor del ancho mínimo según tus necesidades */
+  min-width: 120px;
+  /* Ajusta el valor del ancho mínimo según tus necesidades */
 }

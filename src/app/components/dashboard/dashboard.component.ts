@@ -11,7 +11,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
   }
