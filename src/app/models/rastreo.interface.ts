@@ -1,6 +1,7 @@
 export interface RastreoInterface {
-    idRastreo?: string | null | undefined;
-    motivoNoEntrega?: string | null | undefined;
+    idRastreo?: any | null | undefined;
+    motivoNoEntrega?: any | null | undefined;
+    fechaNoEntrega?: any | null | undefined;
     idPaquete?: any | null | undefined;
-    idEstado?: number | null | undefined;
+    idEstado?: any | null | undefined;
 }
