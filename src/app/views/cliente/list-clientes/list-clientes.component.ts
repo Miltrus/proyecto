@@ -38,7 +38,7 @@ export class ListClientesComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   dataToExport: any[] = [];
 
-  
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
@@ -165,16 +165,13 @@ export class ListClientesComponent implements OnInit, OnDestroy {
 
   generateExcel(): void {
     const dataToExport = this.clientes.map(cliente => ({
-      'ID': cliente.idCliente || 'N/A',
       'Nombre': cliente.nombreCliente,
-      'Tipo de documento': this.getTipoDocumento(cliente.idTipoDocumento),
-      'Número de documento': cliente.documentoCliente,
+      'Documento': cliente.documentoCliente,
+      'Tipo documento': this.getTipoDocumento(cliente.idTipoDocumento),
       'Teléfono': cliente.telefonoCliente,
       'Correo electrónico': cliente.correoCliente,
       'Dirección': cliente.direccionCliente,
-      'Detalle de dirección': cliente.detalleDireccionCliente,
-      'latitud': cliente.lat,
-      'longitud': cliente.lng,
+      'Detalle dirección': cliente.detalleDireccionCliente,
     }));
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
@@ -190,43 +187,36 @@ export class ListClientesComponent implements OnInit, OnDestroy {
     link.click();
   }
 
-  
+
 
   generatePDF(): void {
-    // Asegúrate de llenar dataToExport con los datos adecuados antes de llamar a generatePDF
     this.dataToExport = this.clientes.map(cliente => ({
-      'ID': cliente.idCliente || 'N/A',
       'Nombre': cliente.nombreCliente,
-      'Tipo de documento': this.getTipoDocumento(cliente.idTipoDocumento),
-      'Número de documento': cliente.documentoCliente,
+      'Documento': cliente.documentoCliente,
+      'Tipo documento': this.getTipoDocumento(cliente.idTipoDocumento),
       'Teléfono': cliente.telefonoCliente,
-      'Correo electrónico': cliente.correoCliente,
+      'Email': cliente.correoCliente,
       'Dirección': cliente.direccionCliente,
-      'Detalle de dirección': cliente.detalleDireccionCliente,
-      'latitud': cliente.lat,
-      'longitud': cliente.lng,
+      'Detalle dirección': cliente.detalleDireccionCliente,
     }));
-  
+
     const docDefinition: TDocumentDefinitions = {
       content: [
         { text: 'Lista de Clientes', style: 'header' },
         {
           style: 'tableExample',
           table: {
-            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
             body: [
-              ['ID', 'Nombre', 'Tipo de documento', 'Número de documento', 'Teléfono', 'Correo electrónico', 'Dirección', 'Detalle de dirección', 'Latitud', 'Longitud'],
+              ['Nombre', 'Documento', 'Tipo documento', 'Teléfono', 'Email', 'Dirección', 'Detalle dirección'],
               ...this.dataToExport.map(cliente => [
-                cliente['ID'],
                 cliente['Nombre'],
-                cliente['Tipo de documento'],
-                cliente['Número de documento'],
+                cliente['Documento'],
+                cliente['Tipo documento'],
                 cliente['Teléfono'],
-                cliente['Correo electrónico'],
+                cliente['Email'],
                 cliente['Dirección'],
-                cliente['Detalle de dirección'],
-                cliente['latitud'],
-                cliente['longitud']
+                cliente['Detalle dirección']
               ])
             ]
           }
@@ -245,13 +235,13 @@ export class ListClientesComponent implements OnInit, OnDestroy {
       },
       pageOrientation: 'landscape'
     };
-  
+
     const pdfDocGenerator = pdfMake.createPdf(docDefinition);
     pdfDocGenerator.getBlob((blob: Blob) => {
       const pdfBlobUrl = URL.createObjectURL(blob);
       window.open(pdfBlobUrl, '_blank');
     });
-  } 
+  }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

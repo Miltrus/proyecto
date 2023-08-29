@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { NovedadRoutingModule } from './novedad-routing.module';
 import { ListNovedadesComponent } from './list-novedades/list-novedades.component';

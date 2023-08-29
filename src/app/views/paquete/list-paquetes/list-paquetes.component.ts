@@ -286,7 +286,7 @@ export class ListPaquetesComponent implements OnInit {
             }
           },
           pageOrientation: 'landscape',
-          pageBreakBefore: (currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) => {
+          pageBreakBefore: (currentNode, followingNodesOnPage) => {
             return currentNode.headlineLevel === 1 && followingNodesOnPage.length === 0 && currentNode.startPosition.top >= 750;
           }
         };
@@ -304,6 +304,7 @@ export class ListPaquetesComponent implements OnInit {
   generateExcel(): void {
     const dataToExport = this.paquetes.map(paquete => ({
       'Código paquete': paquete.codigoPaquete,
+      'Mensajero': paquete.idUsuario ? this.getUsuarioPaquete(paquete.idUsuario).nombre + ' ' + this.getUsuarioPaquete(paquete.idUsuario).apellido : 'SIN ASIGNAR',
       'Remitente': this.getRemitentePaquete(paquete.documentoRemitente).nombre,
       'Destinatario': paquete.nombreDestinatario,
       'Teléfono destinatario': paquete.telefonoDestinatario,

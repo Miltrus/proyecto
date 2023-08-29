@@ -161,7 +161,6 @@ export class ListRolesComponent implements OnInit, OnDestroy {
 
   generateExcel(): void {
     const dataToExport = this.roles.map(rol => ({
-      'ID': rol.idRol,
       'Nombre': rol.nombreRol,
       'Permisos': rol.permisos?.map(permiso => permiso.nombrePermiso).join(', ') || '',
     }));
@@ -180,24 +179,21 @@ export class ListRolesComponent implements OnInit, OnDestroy {
   }
 
   generatePDF(): void {
-    // Asegúrate de llenar dataToExport con los datos adecuados antes de llamar a generatePDF
     this.dataToExport = this.roles.map(rol => ({
-      'ID': rol.idRol,
       'Nombre': rol.nombreRol,
       'Permisos': rol.permisos?.map(permiso => permiso.nombrePermiso).join(', ') || '',
     }));
-  
+
     const docDefinition: TDocumentDefinitions = {
       content: [
         { text: 'Lista de Roles', style: 'header' },
         {
           style: 'tableExample',
           table: {
-            widths: ['auto', 'auto', 'auto'],
+            widths: ['auto', 'auto'],
             body: [
-              ['ID', 'Nombre del rol', 'Permisos'],
+              ['Nombre', 'Permisos'],
               ...this.dataToExport.map(rol => [
-                rol['ID'],
                 rol['Nombre'],
                 rol['Permisos'],
               ])
@@ -218,7 +214,7 @@ export class ListRolesComponent implements OnInit, OnDestroy {
       },
       pageOrientation: 'landscape'
     };
-  
+
     const pdfDocGenerator = pdfMake.createPdf(docDefinition);
     pdfDocGenerator.getBlob((blob: Blob) => {
       const pdfBlobUrl = URL.createObjectURL(blob);

@@ -9,12 +9,14 @@
     <h1>Roles</h1>
     <div class="row">
       <div class="col-12 col-md-6">
-        <button mat-raised-button color="primary" (click)="newRol()" style="margin-top: 20px;">Crear nuevo rol</button>
+        <button mat-raised-button color="primary" (click)="newRol()" style="margin-top: 20px;">
+          <mat-icon>add</mat-icon> Nuevo
+        </button>
       </div>
       <div class="col-12 col-md-6">
         <div class="d-flex justify-content-end">
           <mat-form-field appearance="outline">
-            <mat-label>Búsqueda de roles</mat-label>
+            <mat-label>Búsqueda</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Administrador" #input autocomplete="off">
             <button mat-button matSuffix disabled>
               <mat-icon color="primary">search</mat-icon>
@@ -76,12 +78,12 @@
       <div></div>
       <div class="align-center">
         <button mat-menu-item class="icon-text pdf-button" (click)="generatePDF()">
-          <mat-icon [ngStyle]="{'color': '#1A237E'}">picture_as_pdf</mat-icon>
+          <mat-icon [ngStyle]="{'color': '#FF0000'}">picture_as_pdf</mat-icon>
           <span class="icon-text">PDF</span>
         </button>
-        
+
         <button mat-menu-item class="icon-text excel-button" (click)="generateExcel()">
-          <mat-icon [ngStyle]="{'color': '#AED581'}">table_chart</mat-icon>
+          <mat-icon [ngStyle]="{'color': '#37D12B'}">description</mat-icon>
           <span class="icon-text">EXCEL</span>
         </button>
       </div>

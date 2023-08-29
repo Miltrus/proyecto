@@ -21,15 +21,12 @@
 .mat-cell {
   flex: 1;
   white-space: nowrap;
-  /* Evita que el contenido de la celda se rompa en varias líneas */
   overflow: hidden;
   text-overflow: ellipsis;
-  /* Agrega puntos suspensivos (...) si el contenido desborda el ancho de la celda */
 }
 
 .max-width-cell {
   max-width: 116px;
-  /* Establece el ancho máximo deseado */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -96,6 +93,23 @@ app-navigation {
   color: white;
 }
 
+.btn-custom {
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.btn-active {
+  background-color: green;
+  color: white;
+}
+
+.btn-inactive {
+  background-color: red;
+  color: white;
+}
+
 .button-container {
   display: flex;
   justify-content: space-between;
@@ -115,8 +129,9 @@ app-navigation {
   margin-left: 5px;
 }
 
-.pdf-button, .excel-button {
+.pdf-button,
+.excel-button {
   white-space: nowrap;
   font-size: 14px;
-  min-width: 120px; /* Ajusta el valor del ancho mínimo según tus necesidades */
+  min-width: 120px;
 }
