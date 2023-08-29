@@ -43,13 +43,12 @@
           <td mat-cell *matCellDef="let novedad" class="max-width-cell">{{ novedad.fechaNoEntrega}}</td>
         </ng-container>
 
-        <ng-container matColumnDef="mensajero">
+        <!-- <ng-container matColumnDef="mensajero">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Mensajero</th>
-          <td mat-cell *matCellDef="let paquete" class="max-width-cell">
-            {{ paquete.idPaquete ? getUsuarioPaquete(paquete.idPaquete).nombre + ' ' +
-            getUsuarioPaquete(paquete.idPaquete).apellido : 'SIN ASIGNAR' }}
+          <td mat-cell *matCellDef="let paq" class="max-width-cell">
+            {{ getMensajero(paq.idUsuario).nombre }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="idEstado">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>

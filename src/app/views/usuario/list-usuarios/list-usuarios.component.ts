@@ -52,7 +52,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
   @ViewChild('viewUsuarioDialog') viewUsuarioDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
 
     const getAllUsuarios$ = this.api.getAllUsuarios();
     const getTipoDocumento$ = this.api.getTipoDocumento();
@@ -233,7 +233,22 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
     });
   }
 
-  async getContPaquete(idUsuario: any) {
+  async getContPaquetePDFyExcel(idUsuario: any): Promise<number> {  //esta funcion nos sirve para hacer el contador correctamente de páquetes entregados para pdf y excel
+    try {
+      const data = await this.api.getPaqueteUsuario(idUsuario).toPromise();
+      if (typeof data === 'number' && data >= 0) {
+        return data;
+      } else {
+        console.log('Respuesta de API inválida:', data);
+        return 0; // Valor predeterminado en caso de respuesta inválida
+      }
+    } catch (error) {
+      console.error('Error al obtener el contador de paquetes:', error);
+      return 0; // Valor predeterminado en caso de error
+    }
+  }
+
+  async getContPaquete(idUsuario: any) {   //Esta funcion nos sirve para hacer el contador correctamente de páquetes entregados para el modal pero esta usa una logica basada en la api que no fui capaz de replicar en la funcion de arriba por eso son dos distintas
     this.cont = 0;
     try {
       const data = await this.api.getPaqueteUsuario(idUsuario).toPromise();
@@ -247,7 +262,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
       console.error("Error al obtener el contador de paquetes:", error);
     }
   }
-  
+
 
 
   getTipoDocumento(idTipoDocumento: any): string {
@@ -265,17 +280,30 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
     return rolUsuario?.nombreRol || '';
   }
 
-  generateExcel(): void {
-    const dataToExport = this.usuarios.map(usuario => ({
-      'Documento': usuario.documentoUsuario,
-      'Tipo documento': this.getTipoDocumento(usuario.idTipoDocumento),
-      'Nombre': usuario.nombreUsuario,
-      'Apellido': usuario.apellidoUsuario,
-      'Email': usuario.correoUsuario,
-      'Teléfono': usuario.telefonoUsuario,
-      'Rol': this.getRolUsuario(usuario.idRol),
-      'Estado': this.getEstadoUsuario(usuario.idEstado)
-    }));
+  async generateExcel(): Promise<void> {
+    const dataToExport: any[] = [];
+
+    for (const usuario of this.usuarios) {
+      try {
+        const contadorPaquetes = await this.getContPaquetePDFyExcel(usuario.idUsuario);
+
+        const userData = {
+          'Documento': usuario.documentoUsuario,
+          'Tipo documento': this.getTipoDocumento(usuario.idTipoDocumento),
+          'Nombre': usuario.nombreUsuario,
+          'Apellido': usuario.apellidoUsuario,
+          'Email': usuario.correoUsuario,
+          'Teléfono': usuario.telefonoUsuario,
+          'Rol': this.getRolUsuario(usuario.idRol),
+          'Estado': this.getEstadoUsuario(usuario.idEstado),
+          'Paquetes Entregados': contadorPaquetes
+        };
+
+        dataToExport.push(userData);
+      } catch (error) {
+        console.error('Error al obtener el contador de paquetes:', error);
+      }
+    }
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook: XLSX.WorkBook = XLSX.utils.book_new();
@@ -291,58 +319,76 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
   }
 
   generatePDF(): void {
-    this.dataToExport = this.usuarios.map(usuario => ({
-      'Documento': usuario.documentoUsuario,
-      'Tipo documento': this.getTipoDocumento(usuario.idTipoDocumento),
-      'Nombre': usuario.nombreUsuario,
-      'Apellido': usuario.apellidoUsuario,
-      'Email': usuario.correoUsuario,
-      'Teléfono': usuario.telefonoUsuario,
-      'Rol': this.getRolUsuario(usuario.idRol),
-      'Estado': this.getEstadoUsuario(usuario.idEstado)
-    }));
+    const dataToExport: any[] = [];
 
-    const docDefinition: TDocumentDefinitions = {
-      content: [
-        { text: 'Lista de Usuarios', style: 'header' },
-        {
-          style: 'tableExample',
-          table: {
-            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-            body: [
-              ['Documento', 'Tipo documento', 'Nombre', 'Apellido', 'Email', 'Teléfono', 'Rol', 'Estado'],
-              ...this.dataToExport.map(usuario => [
-                usuario['Documento'],
-                usuario['Tipo documento'],
-                usuario['Nombre'],
-                usuario['Apellido'],
-                usuario['Email'],
-                usuario['Teléfono'],
-                usuario['Rol'],
-                usuario['Estado'],
-              ])
-            ]
+    // Crear un array de promesas para obtener los datos de paquetes
+    const promiseArray: Promise<void>[] = this.usuarios.map(async usuario => {
+      try {
+        const contadorPaquetes = await this.getContPaquetePDFyExcel(usuario.idUsuario);
+
+        const userData = {
+          'Documento': usuario.documentoUsuario,
+          'Tipo documento': this.getTipoDocumento(usuario.idTipoDocumento),
+          'Nombre': usuario.nombreUsuario,
+          'Apellido': usuario.apellidoUsuario,
+          'Email': usuario.correoUsuario,
+          'Teléfono': usuario.telefonoUsuario,
+          'Rol': this.getRolUsuario(usuario.idRol),
+          'Estado': this.getEstadoUsuario(usuario.idEstado),
+          'Paquetes Entregados': contadorPaquetes
+        };
+
+        dataToExport.push(userData);
+      } catch (error) {
+        console.error('Error al obtener el contador de paquetes:', error);
+      }
+    });
+
+    // Esperar a que se resuelvan todas las promesas antes de continuar
+    Promise.all(promiseArray).then(() => {
+      const docDefinition: TDocumentDefinitions = {
+        content: [
+          { text: 'Lista de Usuarios', style: 'header' },
+          {
+            style: 'tableExample',
+            table: {
+              widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+              body: [
+                ['Documento', 'Tipo documento', 'Nombre', 'Apellido', 'Email', 'Teléfono', 'Rol', 'Estado', 'Paquetes Entregados'],
+                ...dataToExport.map(usuario => [
+                  usuario['Documento'],
+                  usuario['Tipo documento'],
+                  usuario['Nombre'],
+                  usuario['Apellido'],
+                  usuario['Email'],
+                  usuario['Teléfono'],
+                  usuario['Rol'],
+                  usuario['Estado'],
+                  usuario['Paquetes Entregados']
+                ])
+              ]
+            }
           }
-        }
-      ],
-      styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          alignment: 'center',
-          margin: [0, 0, 0, 10]
+        ],
+        styles: {
+          header: {
+            fontSize: 18,
+            bold: true,
+            alignment: 'center',
+            margin: [0, 0, 0, 10]
+          },
+          tableExample: {
+            margin: [0, 5, 0, 15]
+          }
         },
-        tableExample: {
-          margin: [0, 5, 0, 15]
-        }
-      },
-      pageOrientation: 'landscape'
-    };
+        pageOrientation: 'landscape'
+      };
 
-    const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-    pdfDocGenerator.getBlob((blob: Blob) => {
-      const pdfBlobUrl = URL.createObjectURL(blob);
-      window.open(pdfBlobUrl, '_blank');
+      const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+      pdfDocGenerator.getBlob((blob: Blob) => {
+        const pdfBlobUrl = URL.createObjectURL(blob);
+        window.open(pdfBlobUrl, '_blank');
+      });
     });
   }
 

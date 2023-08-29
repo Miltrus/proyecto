@@ -11,6 +11,7 @@ import { Subscription, forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
 import { PaqueteService } from 'src/app/services/api/paquete.service';
 import { PaqueteInterface } from 'src/app/models/paquete.interface';
+import { UsuarioInterface } from 'src/app/models/usuario.interface';
 
 @Component({
   selector: 'app-list-novedades',
@@ -31,6 +32,7 @@ export class ListNovedadesComponent implements OnInit {
   novedades: RastreoInterface[] = [];
   estados: EstadoRastreoInterface[] = [];
   paquetes: PaqueteInterface[] = [];
+  usuario: UsuarioInterface[] = [];
 
   // DataSource para la tabla y otras propiedades
   dataSource = new MatTableDataSource(this.novedades); // Para el filtro
@@ -53,6 +55,8 @@ export class ListNovedadesComponent implements OnInit {
       // Filtrar novedades por estado y actualizar datos en la tabla
       this.novedades = novedad.filter(item => item.idEstado == 2);
       this.dataSource.data = this.novedades;
+
+      console.log(this.dataSource.data)
 
       // Mostrar mensaje si no hay novedades
       if (this.dataSource.data.length < 1) {
@@ -124,24 +128,31 @@ export class ListNovedadesComponent implements OnInit {
 
   getUsuarioPaquete(idUsuario: any): any {
     const paquete = this.paquetes.find(msj => msj.idUsuario === idUsuario);
+
     return paquete || '';
   }
 
-  // Obtener el nombre de un estado por su ID
+  getMensajero(idUsuario: any): { nombre: string, apellido: string } {
+    const mensajero = this.usuario.find(documentoU => documentoU.idUsuario == idUsuario);
+    console.log('Mensajero:', mensajero); // Agregar este console.log
+    if (mensajero && mensajero.nombreUsuario && mensajero.apellidoUsuario) {
+      return { nombre: mensajero.nombreUsuario, apellido: mensajero.apellidoUsuario };
+    }
+    return { nombre: '', apellido: '' };
+  }
+
+
   getEstado(idEstado: any): string {
     const estado = this.estados.find(tipo => tipo.idEstado === idEstado);
     return estado?.nombreEstado || '';
   }
 
-  // Aplicar filtro a los datos de la tabla
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
 
     if (filterValue === '') {
-      // Restaurar todos los datos si el filtro está vacío
       this.dataSource.data = this.novedades;
     } else {
-      // Aplicar filtro a los datos por código de paquete, fecha y estado
       this.dataSource.data = this.novedades.filter(novedad =>
         this.getPaquete(novedad.idPaquete).codigoPaquete.toLowerCase().includes(filterValue) ||
         novedad.fechaNoEntrega.toLowerCase().includes(filterValue) ||
