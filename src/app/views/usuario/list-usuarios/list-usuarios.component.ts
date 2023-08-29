@@ -16,6 +16,7 @@ import * as XLSX from 'xlsx';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { PaqueteService } from 'src/app/services/api/paquete.service';
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
 
@@ -28,16 +29,19 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
 
   constructor(
     private api: UsuarioService,
+    private apiPaquete: PaqueteService,
     private router: Router,
     private dialog: MatDialog,
   ) { }
 
   private subscriptions: Subscription = new Subscription();
 
-  usuarios: UsuarioInterface[] = [];
+  cont: any;
+  usuarios: any[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
   estadosUsuario: EstadoUsuarioInterface[] = [];
   rolUsuario: RolInterface[] = [];
+  paquetes: any[] = [];
   dataSource = new MatTableDataSource(this.usuarios); //pal filtro
   loading: boolean = true;
   dataToExport: any[] = [];
@@ -48,18 +52,21 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
   @ViewChild('viewUsuarioDialog') viewUsuarioDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
-  ngOnInit(): void {
+  ngOnInit(): void {  
+
     const getAllUsuarios$ = this.api.getAllUsuarios();
     const getTipoDocumento$ = this.api.getTipoDocumento();
     const getEstadoUsuario$ = this.api.getEstadoUsuario();
     const getRolUsuario$ = this.api.getRolUsuario();
+    const getPaquetes$ = this.apiPaquete.getAllPaquetes();
 
-    const forkJoinSub = forkJoin([getAllUsuarios$, getTipoDocumento$, getEstadoUsuario$, getRolUsuario$]).subscribe(
-      ([usuarios, tiposDocumento, estadosUsuario, rolUsuario]) => {
+    const forkJoinSub = forkJoin([getAllUsuarios$, getTipoDocumento$, getEstadoUsuario$, getRolUsuario$, getPaquetes$]).subscribe(
+      ([usuarios, tiposDocumento, estadosUsuario, rolUsuario, paquete]) => {
         this.usuarios = usuarios;
         this.tiposDocumento = tiposDocumento;
         this.estadosUsuario = estadosUsuario;
         this.rolUsuario = rolUsuario;
+        this.paquetes = paquete;
         this.dataSource.data = this.usuarios;
         this.loading = false;
       },
@@ -81,9 +88,11 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  viewUsuario(usuario: UsuarioInterface): void {
+  async viewUsuario(usuario: UsuarioInterface) {
+    await this.getContPaquete(usuario.idUsuario);
+    const cont = this.cont;
     this.dialog.open(this.viewUsuarioDialog, {
-      data: usuario,
+      data: { usuario, conta: cont },
       width: '400px',
     });
   }
@@ -224,6 +233,21 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
     });
   }
 
+  async getContPaquete(idUsuario: any) {
+    this.cont = 0;
+    try {
+      const data = await this.api.getPaqueteUsuario(idUsuario).toPromise();
+      if (data?.status == 'error') {
+        console.log(data.msj);
+      } else {
+        this.cont = data;
+        console.log("CONTADORR", this.cont);
+      }
+    } catch (error) {
+      console.error("Error al obtener el contador de paquetes:", error);
+    }
+  }
+  
 
 
   getTipoDocumento(idTipoDocumento: any): string {

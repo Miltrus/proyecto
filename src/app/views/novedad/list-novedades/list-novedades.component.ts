@@ -1,3 +1,4 @@
+// Importaciones de módulos y clases necesarias
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -26,27 +27,34 @@ export class ListNovedadesComponent implements OnInit {
 
   private subscriptions: Subscription = new Subscription();
 
+  // Arreglos para almacenar datos
   novedades: RastreoInterface[] = [];
   estados: EstadoRastreoInterface[] = [];
   paquetes: PaqueteInterface[] = [];
-  dataSource = new MatTableDataSource(this.novedades); //pal filtro
+
+  // DataSource para la tabla y otras propiedades
+  dataSource = new MatTableDataSource(this.novedades); // Para el filtro
   loading: boolean = true;
   dataToExport: any[] = [];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
-  @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
+  @ViewChild(MatPaginator) paginator!: MatPaginator; // Para la paginación, y los '!' indican que no será nulo
+  @ViewChild(MatSort) sort!: MatSort; // Para el ordenamiento
   @ViewChild('viewNovedadDialog') viewNovedadDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
   ngOnInit(): void {
     this.loading = true;
 
+    // Realizar múltiples llamadas a servicios y combinar resultados con forkJoin
     const forkJoinSub = forkJoin([
       this.api.getRastreosByNovedad(),
       this.api.getEstadoRastreo(),
       this.apiPaquete.getAllPaquetes()
     ]).subscribe(([novedad, estado, paquete]) => {
-      this.novedades = novedad.filter(item => item.idEstado == 2); // Filtrar por idEstado igual a 2
+      // Filtrar novedades por estado y actualizar datos en la tabla
+      this.novedades = novedad.filter(item => item.idEstado == 2);
       this.dataSource.data = this.novedades;
+
+      // Mostrar mensaje si no hay novedades
       if (this.dataSource.data.length < 1) {
         Swal.fire({
           title: 'No hay novedades registradas',
@@ -60,12 +68,17 @@ export class ListNovedadesComponent implements OnInit {
           showCloseButton: true
         })
       }
+
+      // Asignar datos de estados y paquetes
       this.estados = estado;
       this.paquetes = paquete;
+
+      // Finalizar carga
       this.loading = false;
       console.log(this.paquetes)
     },
       error => {
+        // Mostrar mensaje en caso de error
         console.log(error);
         Swal.fire({
           title: 'Error',
@@ -79,18 +92,23 @@ export class ListNovedadesComponent implements OnInit {
           showCloseButton: true
         })
       });
+
+    // Agregar la suscripción al arreglo de suscripciones
     this.subscriptions.add(forkJoinSub);
   }
 
+  // Configurar paginación y ordenamiento después de que la vista se haya inicializado
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
+  // Cancelar suscripciones al destruir el componente
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
+  // Abrir diálogo para ver detalles de una novedad
   viewNovedad(novedad: RastreoInterface): void {
     this.dialog.open(this.viewNovedadDialog, {
       data: novedad,
@@ -98,6 +116,7 @@ export class ListNovedadesComponent implements OnInit {
     });
   }
 
+  // Obtener detalles de un paquete por su ID
   getPaquete(idPaquete: any): any {
     const paquete = this.paquetes.find(tipo => tipo.idPaquete === idPaquete);
     return paquete || '';
@@ -108,8 +127,26 @@ export class ListNovedadesComponent implements OnInit {
     return paquete || '';
   }
 
+  // Obtener el nombre de un estado por su ID
   getEstado(idEstado: any): string {
     const estado = this.estados.find(tipo => tipo.idEstado === idEstado);
     return estado?.nombreEstado || '';
+  }
+
+  // Aplicar filtro a los datos de la tabla
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+
+    if (filterValue === '') {
+      // Restaurar todos los datos si el filtro está vacío
+      this.dataSource.data = this.novedades;
+    } else {
+      // Aplicar filtro a los datos por código de paquete, fecha y estado
+      this.dataSource.data = this.novedades.filter(novedad =>
+        this.getPaquete(novedad.idPaquete).codigoPaquete.toLowerCase().includes(filterValue) ||
+        novedad.fechaNoEntrega.toLowerCase().includes(filterValue) ||
+        this.getEstado(novedad.idEstado).toLowerCase().includes(filterValue)
+      );
+    }
   }
 }
