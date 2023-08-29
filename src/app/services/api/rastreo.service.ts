@@ -41,6 +41,18 @@ export class RastreoService {
     return this.http.get<RastreoInterface>(address, { headers });
   }
 
+  getRastreosByNovedad(): Observable<RastreoInterface[]> {
+    let address = this.url + 'rastreo/novedad/novs';
+    const headers = this.getHeaders();
+    return this.http.get<RastreoInterface[]>(address, { headers });
+  }
+
+  getRastreosByEntregado(): Observable<RastreoInterface[]> {
+    let address = this.url + 'rastreo/entregas/entregado';
+    const headers = this.getHeaders();
+    return this.http.get<RastreoInterface[]>(address, { headers });
+  }
+
   postRastreo(form: RastreoInterface): Observable<ResponseInterface> {
     let address = this.url + 'rastreo';
     const headers = this.getHeaders();

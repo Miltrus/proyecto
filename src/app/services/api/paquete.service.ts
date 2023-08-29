@@ -40,6 +40,18 @@ export class PaqueteService {
     return this.http.get<PaqueteInterface>(address, { headers });
   }
 
+  getPaquetesByNovedad(): Observable<PaqueteInterface[]> {
+    let address = this.url + 'paquete/novedad/paqs';
+    const headers = this.getHeaders();
+    return this.http.get<PaqueteInterface[]>(address, { headers });
+  }
+
+  getPaquetesByEntregado(): Observable<PaqueteInterface[]> {
+    let address = this.url + 'paquete/entregas/entregado';
+    const headers = this.getHeaders();
+    return this.http.get<PaqueteInterface[]>(address, { headers });
+  }
+
   postPaquete(form: PaqueteInterface): Observable<ResponseInterface> {
     let address = this.url + 'paquete';
     const headers = this.getHeaders();

@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
 import { EntregaInterface } from 'src/app/models/entrega.interface';
 import { RastreoInterface } from 'src/app/models/rastreo.interface';
 import { EntregaService } from 'src/app/services/api/entrega.service';
@@ -23,15 +22,14 @@ export class ListEntregasComponent implements OnInit {
     private api: EntregaService,
     private apiRastreo: RastreoService,
     private apiPaquete: PaqueteService,
-    private router: Router,
     private dialog: MatDialog,
   ) { }
 
   private subscriptions: Subscription = new Subscription();
 
   entregas: any[] = [];
-  novedades: RastreoInterface[] = [];
-  paquetes: PaqueteInterface [] = [];
+  rastreos: RastreoInterface[] = [];
+  paquetes: PaqueteInterface[] = [];
   dataSource = new MatTableDataSource(this.entregas); //pal filtro
   loading: boolean = true;
   dataToExport: any[] = [];
@@ -43,16 +41,16 @@ export class ListEntregasComponent implements OnInit {
   @ViewChild('viewFirma') viewFirma!: TemplateRef<any>;
 
   ngOnInit(): void {
-    
+
     this.loading = true;
 
     const forkJoinSub = forkJoin([
       this.api.getAllEntregas(),
-      this.apiRastreo .getAllRastreos(),
-      this.apiPaquete.getAllPaquetes()
+      this.apiRastreo.getRastreosByEntregado(),
+      this.apiPaquete.getPaquetesByEntregado()
     ]).subscribe(([entrega, rastreo, paquete]) => {
       this.entregas = entrega;
-      this.dataSource.data = this.entregas; 
+      this.dataSource.data = this.entregas;
       if (this.dataSource.data.length < 1) {
         Swal.fire({
           title: 'No hay entregas registradas',
@@ -66,7 +64,7 @@ export class ListEntregasComponent implements OnInit {
           showCloseButton: true
         })
       }
-      this.novedades = rastreo;
+      this.rastreos = rastreo;
       this.paquetes = paquete;
       this.loading = false;
     },
@@ -101,7 +99,7 @@ export class ListEntregasComponent implements OnInit {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
-  
+
   viewEntrega(entrega: EntregaInterface): void {
     this.dialog.open(this.viewEntregaDialog, {
       data: entrega,
@@ -110,7 +108,7 @@ export class ListEntregasComponent implements OnInit {
   }
 
   getRastreo(idRastreo: any): any {
-    const rastreo = this.novedades.find(tipo => tipo.idRastreo === idRastreo);
+    const rastreo = this.rastreos.find(tipo => tipo.idRastreo === idRastreo);
     return this.getPaquete(rastreo?.idPaquete);
   }
 

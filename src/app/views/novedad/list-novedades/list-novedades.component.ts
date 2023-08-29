@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
 import { RastreoInterface } from 'src/app/models/rastreo.interface';
 import { RastreoService } from 'src/app/services/api/rastreo.service';
 import { EstadoRastreoInterface } from 'src/app/models/estado-rastreo.interface';
@@ -22,7 +21,6 @@ export class ListNovedadesComponent implements OnInit {
   constructor(
     private api: RastreoService,
     private apiPaquete: PaqueteService,
-    private router: Router,
     private dialog: MatDialog,
   ) { }
 
@@ -43,7 +41,7 @@ export class ListNovedadesComponent implements OnInit {
     this.loading = true;
 
     const forkJoinSub = forkJoin([
-      this.api.getAllRastreos(),
+      this.api.getRastreosByNovedad(),
       this.api.getEstadoRastreo(),
       this.apiPaquete.getAllPaquetes()
     ]).subscribe(([novedad, estado, paquete]) => {
@@ -65,6 +63,7 @@ export class ListNovedadesComponent implements OnInit {
       this.estados = estado;
       this.paquetes = paquete;
       this.loading = false;
+      console.log(this.paquetes)
     },
       error => {
         console.log(error);
@@ -101,6 +100,11 @@ export class ListNovedadesComponent implements OnInit {
 
   getPaquete(idPaquete: any): any {
     const paquete = this.paquetes.find(tipo => tipo.idPaquete === idPaquete);
+    return paquete || '';
+  }
+
+  getUsuarioPaquete(idUsuario: any): any {
+    const paquete = this.paquetes.find(msj => msj.idUsuario === idUsuario);
     return paquete || '';
   }
 
