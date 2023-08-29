@@ -69,6 +69,10 @@
               (click)="toggleEstado(usuario)">
               {{ usuario.idEstado == 1 ? 'Activo' : 'Inactivo' }}
             </button>
+            <button mat-menu-item class="icon-text excel-button" (click)="getContPaquete(usuario.idUsuario)">
+              <mat-icon [ngStyle]="{'color': '#37D12B'}">description</mat-icon>
+              <span class="icon-text">HOLAAA</span>
+            </button>
           </td>
         </ng-container>
 
@@ -130,13 +134,14 @@
 <ng-template #viewUsuarioDialog let-dialogData>
   <div class="dialogData">
     <h2>Información de usuario</h2>
-    <p><strong>Documento:</strong> {{ dialogData.documentoUsuario }}</p>
-    <p><strong>Tipo documento:</strong> {{ getTipoDocumento(dialogData.idTipoDocumento) }}</p>
-    <p><strong>Nombre:</strong> {{ dialogData.nombreUsuario }}</p>
-    <p><strong>Apellido:</strong> {{ dialogData.apellidoUsuario }}</p>
-    <p><strong>Teléfono:</strong> {{ dialogData.telefonoUsuario }}</p>
-    <p><strong>Correo:</strong> {{ dialogData.correoUsuario }}</p>
-    <p><strong>Rol:</strong> {{ getRolUsuario(dialogData.idRol) }}</p>
-    <p><strong>Estado:</strong> {{ getEstadoUsuario(dialogData.idEstado) }}</p>
+    <p><strong>Documento:</strong> {{ dialogData.usuario.documentoUsuario }}</p>
+    <p><strong>Tipo documento:</strong> {{ getTipoDocumento(dialogData.usuario.idTipoDocumento) }}</p>
+    <p><strong>Nombre:</strong> {{ dialogData.usuario.nombreUsuario }}</p>
+    <p><strong>Apellido:</strong> {{ dialogData.usuario.apellidoUsuario }}</p>
+    <p><strong>Teléfono:</strong> {{ dialogData.usuario.telefonoUsuario }}</p>
+    <p><strong>Correo:</strong> {{ dialogData.usuario.correoUsuario }}</p>
+    <p><strong>Rol:</strong> {{ getRolUsuario(dialogData.usuario.idRol) }}</p>
+    <p><strong>Estado:</strong> {{ getEstadoUsuario(dialogData.usuario.idEstado) }}</p><br>
+    <p><strong>Paquetes entregados: </strong>{{ dialogData.conta }}</p>
   </div>
 </ng-template>

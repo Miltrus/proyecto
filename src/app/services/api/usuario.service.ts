@@ -39,6 +39,12 @@ export class UsuarioService {
     return this.http.get<UsuarioInterface>(address, { headers });
   }
 
+  getPaqueteUsuario(id: any): Observable<ResponseInterface> {
+    const address = this.url + 'usuario/paquete/cont/'+ id;
+    const headers = this.getHeaders();
+    return this.http.get<ResponseInterface>(address, { headers });
+  }
+
   postUsuario(form: UsuarioInterface): Observable<ResponseInterface> {
     const address = this.url + 'usuario';
     const headers = this.getHeaders();
