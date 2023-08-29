@@ -109,14 +109,14 @@ export class ListEntregasComponent implements OnInit {
     });
   }
 
-  getRastreo(idRastreo: any): void {
+  getRastreo(idRastreo: any): any {
     const rastreo = this.novedades.find(tipo => tipo.idRastreo === idRastreo);
     return this.getPaquete(rastreo?.idPaquete);
   }
 
-  getPaquete(idPaquete: any): void {
+  getPaquete(idPaquete: any): any {
     const paquete = this.paquetes.find(tipo => tipo.idPaquete === idPaquete);
-    return paquete?.codigoPaquete || '';
+    return paquete;
   }
 
   applyFilter(event: Event) {

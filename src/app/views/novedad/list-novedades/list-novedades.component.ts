@@ -99,9 +99,9 @@ export class ListNovedadesComponent implements OnInit {
     });
   }
 
-  getPaquete(idPaquete: any): string {
+  getPaquete(idPaquete: any): any {
     const paquete = this.paquetes.find(tipo => tipo.idPaquete === idPaquete);
-    return paquete?.codigoPaquete || '';
+    return paquete || '';
   }
 
   getEstado(idEstado: any): string {
