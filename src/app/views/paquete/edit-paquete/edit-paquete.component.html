@@ -20,14 +20,19 @@
           <div class="col">
             <div class="form-group">
               <label for="documentoCliente">N° de Documento<b style="color: red;">*</b></label>
-              <input type="text" list="remitentes" class="form-control" formControlName="documentoCliente" [ngClass]="{
+              <input matInput type="text" [matAutocomplete]="auto" list="remitentes" class="form-control" formControlName="documentoCliente" [ngClass]="{
                 'is-invalid': editRemitente.get('documentoCliente')?.invalid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty),
                 'is-valid': editRemitente.get('documentoCliente')?.valid && editRemitente.get('documentoCliente')?.dirty
               }" />
-              <datalist id="remitentes">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filtrarCliente | async" [value]="option.documentoCliente">
+                  {{option.documentoCliente}}
+                </mat-option>
+              </mat-autocomplete>
+              <!-- <datalist id="remitentes">
                 <option *ngFor="let c of remitente" [value]="c.documentoCliente" class="custom-datalist-option">
                 </option>
-              </datalist>
+              </datalist> -->
               <div *ngIf="editRemitente.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
                 Teléfono inválido, debe contener 10 dígitos numéricos.
               </div>
@@ -95,15 +100,20 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">N° de Documento<b style="color: red;">*</b></label>
-              <input type="text" list="destinatarios" class="form-control" formControlName="documentoDestinatario"
+              <input matInput type="text" [matAutocomplete]="auto2" list="destinatarios" class="form-control" formControlName="documentoDestinatario"
                 [ngClass]="{
                 'is-invalid': editForm.get('documentoDestinatario')?.invalid && (editForm.get('documentoDestinatario')?.touched || editForm.get('documentoDestinatario')?.dirty),
                 'is-valid': editForm.get('documentoDestinatario')?.valid && editForm.get('documentoDestinatario')?.dirty
               }" />
-              <datalist id="destinatarios">
-                <option *ngFor="let c of destinatario" [value]="c.documentoCliente" class="custom-datalist-option">
+              <mat-autocomplete #auto2="matAutocomplete">
+                <mat-option *ngFor="let option of filtrarDestinatario | async" [value]="option.documentoCliente">
+                  {{option.documentoCliente}}
+                </mat-option>
+              </mat-autocomplete>
+              <!-- <datalist id="destinatarios">
+                <option *ngFor="let c of remitente" [value]="c.documentoCliente" class="custom-datalist-option">
                 </option>
-              </datalist>
+              </datalist> -->
               <div *ngIf="editForm.get('documentoDestinatario')?.errors?.['pattern']" class="invalid-feedback">
                 Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
               </div>

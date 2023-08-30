@@ -44,7 +44,6 @@ export class ListPaquetesComponent implements OnInit {
   paquetes: PaqueteInterface[] = [];
   usuario: UsuarioInterface[] = [];
   remitente: ClienteInterface[] = [];
-  destinatario: ClienteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
   tamano: TamanoPaqueteInterface[] = [];
   tipos: TipoPaqueteInterface[] = [];
@@ -80,7 +79,6 @@ export class ListPaquetesComponent implements OnInit {
     });
 
     this.api.getRemitenteAndDestinatario().subscribe(data => {
-      this.destinatario = data;
       this.remitente = data;
       this.loading = false;
     });
@@ -205,15 +203,6 @@ export class ListPaquetesComponent implements OnInit {
       return { nombre: remitente.nombreCliente, telefono: remitente.telefonoCliente, correo: remitente.correoCliente };
     }
     return { nombre: '', telefono: '', correo: '' };
-  }
-
-
-  getDestinatarioPaquete(documentoDestinatario: any,): { nombre: string, telefono: string, correo: string, direccion: string, detalleDireccion: string } {
-    const destinatario = this.destinatario.find(documentoD => documentoD.documentoCliente === documentoDestinatario);
-    if (destinatario && destinatario.nombreCliente && destinatario.telefonoCliente && destinatario.correoCliente && destinatario.direccionCliente && destinatario.detalleDireccionCliente) {
-      return { nombre: destinatario.nombreCliente, telefono: destinatario.telefonoCliente, correo: destinatario.correoCliente, direccion: destinatario.direccionCliente, detalleDireccion: destinatario.detalleDireccionCliente };
-    }
-    return { nombre: '', telefono: '', correo: '', direccion: '', detalleDireccion: '' };
   }
 
   getEstadoPaquete(idEstado: any): string {

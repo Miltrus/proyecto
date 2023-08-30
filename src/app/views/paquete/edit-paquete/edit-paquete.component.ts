@@ -12,7 +12,7 @@ import { AddClienteComponent } from '../add-cliente/add-cliente.component';
 import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 import { ClienteService } from 'src/app/services/api/cliente.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, map, startWith } from 'rxjs';
 import Swal from 'sweetalert2';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
 
@@ -113,19 +113,19 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     return null;
   }
 
-  cords = false;
+  cords: boolean = false;
   dataPaquete: PaqueteInterface[] = [];
-  remitente: ClienteInterface[] = [];
-  destinatario: ClienteInterface[] = [];
+  remitente: any[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
   tipos: TipoPaqueteInterface[] = [];
   loading: boolean = true;
+  filtrarCliente: Observable<any[]> = new Observable<any[]>();
+  filtrarDestinatario: Observable<any[]> = new Observable<any[]>();
   divEstado: boolean = false;
   estadito: any;
 
   selectedRemitente: ClienteInterface | undefined;
-  selectedDestinatario: ClienteInterface | undefined = undefined;
 
   ngOnInit(): void {
     let idPaquete = this.activatedRouter.snapshot.paramMap.get('id');
@@ -201,6 +201,34 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
           }
         });
       }
+    });
+
+    this.filtrarCliente = this.editRemitente.get('documentoCliente')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterCliente(value || ''))
+    );
+
+    this.filtrarDestinatario = this.editForm.get('documentoDestinatario')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterDestinatario(value || ''))
+    );
+  }
+
+  private _filterCliente(value: any) {
+    const filterValue = value;
+
+    return this.remitente.filter(option => {
+      let documentoCliente = BigInt(option.documentoCliente);
+      return documentoCliente.toString().includes(filterValue);
+    });
+  }
+
+  private _filterDestinatario(value: any) {
+    const filterValue2 = value;
+
+    return this.remitente.filter(option => {
+      let documentoDestinatario = BigInt(option.documentoCliente);
+      return documentoDestinatario.toString().includes(filterValue2);
     });
   }
 
@@ -322,16 +350,13 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       const data = await this.api.getRemitenteAndDestinatario().toPromise();
 
       this.remitente = [];
-      this.destinatario = [];
 
       if (data) {
         this.remitente = data;
         const remitenteSeleccionado = this.editForm.get('documentoRemitente')?.value;
         this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === remitenteSeleccionado);
 
-        this.destinatario = data;
         const destinatarioSeleccionado = this.editForm.get('documentoDestinatario')?.value;
-        this.selectedDestinatario = this.destinatario.find(dest => dest.documentoCliente === destinatarioSeleccionado);
       }
 
       this.loading = false;
@@ -378,7 +403,6 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         // actualizamos la info de remitente y destinatario
         this.api.getRemitenteAndDestinatario().subscribe(data => {
           this.remitente = data;
-          this.destinatario = data;
         })
       }
     });

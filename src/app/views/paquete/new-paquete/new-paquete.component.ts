@@ -94,7 +94,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   tamanos: TamanoPaqueteInterface[] = [];
   tipos: TipoPaqueteInterface[] = [];
   loading: boolean = true;
-  selectedRemitente: ClienteInterface | undefined;
   filtrarCliente: Observable<any[]> = new Observable<any[]>();
   filtrarDestinatario: Observable<any[]> = new Observable<any[]>();
 
@@ -195,7 +194,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   private _filterDestinatario(value: any) {
     const filterValue2 = value;
 
-    return this.destinatario.filter(option => {
+    return this.remitente.filter(option => {
       let documentoDestinatario = BigInt(option.documentoCliente);
       return documentoDestinatario.toString().includes(filterValue2);
     });
