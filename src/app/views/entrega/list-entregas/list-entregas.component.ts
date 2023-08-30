@@ -12,6 +12,12 @@ import { PaqueteInterface } from 'src/app/models/paquete.interface';
 import { PaqueteService } from 'src/app/services/api/paquete.service';
 import { RastreoService } from 'src/app/services/api/rastreo.service';
 
+import * as XLSX from 'xlsx';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
+(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
+
 @Component({
   selector: 'app-list-entregas',
   templateUrl: './list-entregas.component.html',
@@ -47,7 +53,7 @@ export class ListEntregasComponent implements OnInit {
     const forkJoinSub = forkJoin([
       this.api.getAllEntregas(),
       this.apiRastreo.getRastreosByEntregado(),
-      this.apiPaquete.getPaquetesByEntregado()
+      this.apiPaquete.getAllPaquetes()
     ]).subscribe(([entrega, rastreo, paquete]) => {
       this.entregas = entrega;
       this.dataSource.data = this.entregas;
@@ -115,6 +121,32 @@ export class ListEntregasComponent implements OnInit {
   getPaquete(idPaquete: any): any {
     const paquete = this.paquetes.find(tipo => tipo.idPaquete === idPaquete);
     return paquete;
+  }
+
+  generateExcel(): void {
+    const dataToExport = this.entregas.map(entrega => ({
+      'Codigo': entrega.idEntrega,
+      'Fecha de entrega': entrega.fechaEntrega,
+      'Nombre del destinatario': entrega.nombreDestinatario,
+      'Documento del destinatario': entrega.cedulaDestinatario,
+      'Direccion': entrega.direccion,
+      'Telefono': entrega.telefono,
+      'Codigo paquete': this.getRastreo(entrega.idRastreo).codigo,
+      'Peso': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).peso,
+      'Contenido': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).contenido,
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Novedades');
+
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const excelFileURL = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = excelFileURL;
+    link.download = 'clientes.xlsx';
+    link.click();
   }
 
   applyFilter(event: Event) {

@@ -12,6 +12,13 @@ import Swal from 'sweetalert2';
 import { PaqueteService } from 'src/app/services/api/paquete.service';
 import { PaqueteInterface } from 'src/app/models/paquete.interface';
 import { UsuarioInterface } from 'src/app/models/usuario.interface';
+import { UsuarioService } from 'src/app/services/api/usuario.service';
+
+import * as XLSX from 'xlsx';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
+(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-list-novedades',
@@ -23,6 +30,7 @@ export class ListNovedadesComponent implements OnInit {
   constructor(
     private api: RastreoService,
     private apiPaquete: PaqueteService,
+    private apiUsuario: UsuarioService,
     private dialog: MatDialog,
   ) { }
 
@@ -32,7 +40,7 @@ export class ListNovedadesComponent implements OnInit {
   novedades: RastreoInterface[] = [];
   estados: EstadoRastreoInterface[] = [];
   paquetes: PaqueteInterface[] = [];
-  usuario: UsuarioInterface[] = [];
+  usuarios: UsuarioInterface[] = [];
 
   // DataSource para la tabla y otras propiedades
   dataSource = new MatTableDataSource(this.novedades); // Para el filtro
@@ -50,13 +58,12 @@ export class ListNovedadesComponent implements OnInit {
     const forkJoinSub = forkJoin([
       this.api.getRastreosByNovedad(),
       this.api.getEstadoRastreo(),
-      this.apiPaquete.getAllPaquetes()
-    ]).subscribe(([novedad, estado, paquete]) => {
+      this.apiPaquete.getAllPaquetes(),
+      this.apiUsuario.getAllUsuarios()
+    ]).subscribe(([novedad, estado, paquete, usuario]) => {
       // Filtrar novedades por estado y actualizar datos en la tabla
       this.novedades = novedad.filter(item => item.idEstado == 2);
       this.dataSource.data = this.novedades;
-
-      console.log(this.dataSource.data)
 
       // Mostrar mensaje si no hay novedades
       if (this.dataSource.data.length < 1) {
@@ -76,10 +83,10 @@ export class ListNovedadesComponent implements OnInit {
       // Asignar datos de estados y paquetes
       this.estados = estado;
       this.paquetes = paquete;
+      this.usuarios = usuario;
 
       // Finalizar carga
       this.loading = false;
-      console.log(this.paquetes)
     },
       error => {
         // Mostrar mensaje en caso de error
@@ -126,25 +133,98 @@ export class ListNovedadesComponent implements OnInit {
     return paquete || '';
   }
 
-  getUsuarioPaquete(idUsuario: any): any {
-    const paquete = this.paquetes.find(msj => msj.idUsuario === idUsuario);
+  getMensajero(idPaquete: any): any {
+    const paquete = this.getPaquete(idPaquete);
 
-    return paquete || '';
-  }
+    if (paquete.idUsuario) {
+      const mensajero = this.usuarios.find(documentoU => documentoU.idUsuario == paquete.idUsuario);
+      if (mensajero && mensajero.nombreUsuario && mensajero.apellidoUsuario) {
+        return mensajero || '';
+      }
 
-  getMensajero(idUsuario: any): { nombre: string, apellido: string } {
-    const mensajero = this.usuario.find(documentoU => documentoU.idUsuario == idUsuario);
-    console.log('Mensajero:', mensajero); // Agregar este console.log
-    if (mensajero && mensajero.nombreUsuario && mensajero.apellidoUsuario) {
-      return { nombre: mensajero.nombreUsuario, apellido: mensajero.apellidoUsuario };
     }
-    return { nombre: '', apellido: '' };
+    return 'WEVA';
   }
 
 
   getEstado(idEstado: any): string {
     const estado = this.estados.find(tipo => tipo.idEstado === idEstado);
     return estado?.nombreEstado || '';
+  }
+
+  generateExcel(): void {
+    const dataToExport = this.novedades.map(novedad => ({
+      'Código de paquete': this.getPaquete(novedad.idPaquete).codigoPaquete,
+      'Fecha de no entrega': novedad.fechaNoEntrega,
+      'Estado': this.getEstado(novedad.idEstado),
+      'Motivo': novedad.motivoNoEntrega,
+      'Mensajero': this.getMensajero(novedad.idPaquete).nombreUsuario + ' ' + this.getMensajero(novedad.idPaquete).apellidoUsuario,
+      'Doc Mensajero': this.getMensajero(novedad.idPaquete).documentoUsuario,
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Novedades');
+
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const excelFileURL = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = excelFileURL;
+    link.download = 'clientes.xlsx';
+    link.click();
+  }
+
+  generatePDF(): void {
+    this.dataToExport = this.novedades.map(novedad => ({
+      'Código de paquete': this.getPaquete(novedad.idPaquete).codigoPaquete,
+      'Fecha de no entrega': novedad.fechaNoEntrega,
+      'Estado': this.getEstado(novedad.idEstado),
+      'Motivo': novedad.motivoNoEntrega,
+      'Mensajero': this.getMensajero(novedad.idPaquete).nombreUsuario + ' ' + this.getMensajero(novedad.idPaquete).apellidoUsuario,
+      'Doc Mensajero': this.getMensajero(novedad.idPaquete).documentoUsuario,
+    }));
+
+    const docDefinition: TDocumentDefinitions = {
+      content: [
+        { text: 'Lista de Clientes', style: 'header' },
+        {
+          style: 'tableExample',
+          table: {
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              ['Codigo de paquete', 'Fecha de no entrega', 'Estado', 'Motivo', 'Mensajero', 'Doc Mensajero'],
+              ...this.dataToExport.map(novedad => [
+                novedad['Código de paquete'],
+                novedad['Fecha de no entrega'],
+                novedad['Estado'],
+                novedad['Motivo'],
+                novedad['Mensajero'],
+                novedad['Doc Mensajero'],
+              ])
+            ]
+          }
+        }
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 0, 0, 10]
+        },
+        tableExample: {
+          margin: [0, 5, 0, 15]
+        }
+      },
+      pageOrientation: 'landscape'
+    };
+
+    const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+    pdfDocGenerator.getBlob((blob: Blob) => {
+      const pdfBlobUrl = URL.createObjectURL(blob);
+      window.open(pdfBlobUrl, '_blank');
+    });
   }
 
   applyFilter(event: Event) {
