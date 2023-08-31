@@ -36,18 +36,16 @@ export class ListNovedadesComponent implements OnInit {
 
   private subscriptions: Subscription = new Subscription();
 
-  // Arreglos para almacenar datos
   novedades: RastreoInterface[] = [];
   estados: EstadoRastreoInterface[] = [];
   paquetes: PaqueteInterface[] = [];
   usuarios: UsuarioInterface[] = [];
 
-  // DataSource para la tabla y otras propiedades
   dataSource = new MatTableDataSource(this.novedades); // Para el filtro
   loading: boolean = true;
   dataToExport: any[] = [];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator; // Para la paginación, y los '!' indican que no será nulo
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort; // Para el ordenamiento
   @ViewChild('viewNovedadDialog') viewNovedadDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
@@ -65,7 +63,6 @@ export class ListNovedadesComponent implements OnInit {
       this.novedades = novedad.filter(item => item.idEstado == 2);
       this.dataSource.data = this.novedades;
 
-      // Mostrar mensaje si no hay novedades
       if (this.dataSource.data.length < 1) {
         Swal.fire({
           title: 'No hay novedades registradas',
@@ -85,22 +82,14 @@ export class ListNovedadesComponent implements OnInit {
       this.paquetes = paquete;
       this.usuarios = usuario;
 
-      // Finalizar carga
       this.loading = false;
     },
       error => {
-        // Mostrar mensaje en caso de error
         console.log(error);
         Swal.fire({
-          title: 'Error',
-          text: 'No se pudo obtener la información de las novedades.',
+          title: 'Error en el servidor',
+          text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente.',
           icon: 'error',
-          toast: true,
-          showConfirmButton: false,
-          timer: 5000,
-          position: 'top-end',
-          timerProgressBar: true,
-          showCloseButton: true
         })
       });
 
@@ -119,7 +108,6 @@ export class ListNovedadesComponent implements OnInit {
     this.subscriptions.unsubscribe();
   }
 
-  // Abrir diálogo para ver detalles de una novedad
   viewNovedad(novedad: RastreoInterface): void {
     this.dialog.open(this.viewNovedadDialog, {
       data: novedad,
@@ -127,7 +115,6 @@ export class ListNovedadesComponent implements OnInit {
     });
   }
 
-  // Obtener detalles de un paquete por su ID
   getPaquete(idPaquete: any): any {
     const paquete = this.paquetes.find(tipo => tipo.idPaquete === idPaquete);
     return paquete || '';

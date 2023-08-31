@@ -77,15 +77,9 @@ export class ListEntregasComponent implements OnInit {
       error => {
         console.log(error);
         Swal.fire({
-          title: 'Error',
-          text: 'No se pudo obtener la información de las entregas.',
           icon: 'error',
-          toast: true,
-          showConfirmButton: false,
-          timer: 5000,
-          position: 'top-end',
-          timerProgressBar: true,
-          showCloseButton: true
+          title: 'Error en el servidor',
+          text: 'Ha ocurrido un error al comunicarse con el servidor. Por favor, revisa tu conexión a internet o inténtalo nuevamente.',
         })
       });
     this.subscriptions.add(forkJoinSub);

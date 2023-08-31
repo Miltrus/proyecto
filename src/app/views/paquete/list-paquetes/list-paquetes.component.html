@@ -40,7 +40,6 @@
         <ng-container matColumnDef="documentoUsuario">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Mensajero</th>
           <td mat-cell *matCellDef="let paquete" class="max-width-cell">
-            <!--que me imprima el nombre y el apellido del usuario-->
             {{ paquete.idUsuario ? getUsuarioPaquete(paquete.idUsuario).nombre + ' ' +
             getUsuarioPaquete(paquete.idUsuario).apellido : 'SIN ASIGNAR' }}
           </td>
@@ -68,7 +67,7 @@
         <ng-container matColumnDef="codigoQrPaquete">
           <th mat-header-cell *matHeaderCellDef>Código QR</th>
           <td mat-cell *matCellDef="let paquete">
-            <button mat-icon-button (click)="openQrDialog(paquete.qrCodeUrl)">
+            <button mat-icon-button title="Ver código QR" (click)="openQrDialog(paquete.qrCodeUrl)">
               <mat-icon>qr_code_2</mat-icon>
             </button>
           </td>
