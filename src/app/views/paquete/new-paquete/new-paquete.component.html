@@ -6,6 +6,7 @@
 
 <app-navigation>
   <div class="container">
+    <br>
     <h2>Registrar paquete</h2>
     <br>
     <div class="container">
@@ -13,13 +14,13 @@
 
         <div class="row">
           <h4>Remitente
-            <button class="btn btn-circle" type="button" (click)="openAddClienteDialog()">
+            <button class="btn btn-circle" type="button" title="Crear remitente" (click)="openAddClienteDialog()">
               <span class="material-icons" style="color: green;">add</span>
             </button>
           </h4>
           <div class="col">
             <div class="form-group">
-              <label for="documentoCliente">N° de Documento<b style="color: red;">*</b></label>
+              <label for="documentoCliente">N° de Documento <b style="color: red;">*</b></label>
               <input matInput type="text" [matAutocomplete]="auto" class="form-control"
                 formControlName="documentoCliente" [ngClass]="{
                   'is-invalid': editRemitente.get('documentoCliente')?.invalid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty),
@@ -69,7 +70,7 @@
           <div class="col">
             <div class="d-flex align-items-center">
               <div class="form-group flex-grow-1">
-                <label for="exampleFormControlInput1">Telefono</label>
+                <label for="exampleFormControlInput1">Teléfono</label>
                 <input type="text" class="form-control" formControlName="telefonoCliente" [ngClass]="{
                     'is-invalid': editRemitente.get('telefonoCliente')?.invalid && (editRemitente.get('telefonoCliente')?.touched || editRemitente.get('telefonoCliente')?.dirty),
                     'is-valid': editRemitente.get('telefonoCliente')?.valid
@@ -81,8 +82,7 @@
                   Este campo es obligatorio.
                 </div>
               </div>
-              <button class="btn btn-circle btn-update btn-margin" type="button" title="Actualizar correo y telefono"
-                (click)="editRemi(editRemitente.value)">
+              <button class="btn btn-circle btn-update btn-margin" type="button" title="Actualizar correo y teléfono" (click)="editRemi(editRemitente.value)">
                 <span class="material-icons">edit</span>
               </button>
             </div>
@@ -121,7 +121,7 @@
           </div>
           <div class="col">
             <div class="form-group">
-              <label for="documentoDestinatario">Nombre<b style="color: red;">*</b></label>
+              <label for="documentoDestinatario">Nombre <b style="color: red;">*</b></label>
               <input list="destinatarios" class="form-control" formControlName="nombreDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('nombreDestinatario')?.invalid && (newForm.get('nombreDestinatario')?.touched || newForm.get('nombreDestinatario')?.dirty),
                 'is-valid': newForm.get('nombreDestinatario')?.valid}">
@@ -134,7 +134,7 @@
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">Correo<b style="color: red;">*</b></label>
+              <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="correoDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('correoDestinatario')?.invalid && (newForm.get('correoDestinatario')?.touched || newForm.get('correoDestinatario')?.dirty),
                 'is-valid': newForm.get('correoDestinatario')?.valid 
@@ -149,7 +149,7 @@
           </div>
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">Telefono<b style="color: red;">*</b></label>
+              <label for="exampleFormControlInput1">Teléfono <b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="telefonoDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('telefonoDestinatario')?.invalid && (newForm.get('telefonoDestinatario')?.touched || newForm.get('telefonoDestinatario')?.dirty),
                 'is-valid': newForm.get('telefonoDestinatario')?.valid
@@ -166,7 +166,7 @@
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label for="">Direccion<b style="color: red;">*</b></label>
+              <label for="">Dirección <b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="direccionPaquete" #inputPlaces [ngClass]="{
                   'is-invalid': newForm.get('direccionPaquete')?.invalid && (newForm.get('direccionPaquete')?.touched || newForm.get('direccionPaquete')?.dirty),
                   'is-valid': newForm.get('direccionPaquete')?.valid 
@@ -178,7 +178,7 @@
           </div>
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">Detalle direccion</label>
+              <label for="exampleFormControlInput1">Detalle dirección</label>
               <textarea class="form-control" formControlName="detalleDireccionPaquete"></textarea>
             </div>
           </div>
@@ -201,13 +201,13 @@
           </div>
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">Peso en KG<b style="color: red;">*</b></label>
+              <label for="exampleFormControlInput1">Peso en KG <b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="pesoPaquete" [ngClass]="{
                 'is-invalid': newForm.get('pesoPaquete')?.invalid && (newForm.get('pesoPaquete')?.touched || newForm.get('pesoPaquete')?.dirty),
                 'is-valid': newForm.get('pesoPaquete')?.valid && newForm.get('pesoPaquete')?.dirty
               }">
               <div *ngIf="newForm.get('pesoPaquete')?.errors?.['pattern']" class="invalid-feedback">
-                Campo inválido, maximo 3 digitos numéricos y no más de 2 decimales.
+                Campo inválido, máximo 3 dígitos numéricos y no más de 2 decimales.
               </div>
               <div *ngIf="newForm.get('pesoPaquete')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -231,7 +231,7 @@
           </div>
           <div class="col">
             <div class="form-group">
-              <label for="">Tipo<b style="color: red;">*</b></label>
+              <label for="">Tipo <b style="color: red;">*</b></label>
               <mat-select class="form-control" formControlName="idTipo" placeholder="---SELECCIONE---" [ngClass]="{
               'is-invalid': newForm.get('idTipo')?.invalid && (newForm.get('idTipo')?.touched || newForm.get('idTipo')?.dirty),
               'is-valid': newForm.get('idTipo')?.valid && (newForm.get('idTipo')?.touched || newForm.get('idTipo')?.dirty)
@@ -249,7 +249,7 @@
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">Fecha aproximada de entrega<b style="color: red;">*</b></label>
+              <label for="exampleFormControlInput1">Fecha aproximada de entrega <b style="color: red;">*</b></label>
               <input type="date" class="form-control" [min]="getFechAct()" formControlName="fechaAproxEntrega"
                 [ngClass]="{
                 'is-invalid': newForm.get('fechaAproxEntrega')?.invalid && (newForm.get('fechaAproxEntrega')?.touched || newForm.get('fechaAproxEntrega')?.dirty),
@@ -265,7 +265,7 @@
           </div>
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">Contenido del paquete<b style="color: red;">*</b></label>
+              <label for="exampleFormControlInput1">Contenido del paquete <b style="color: red;">*</b></label>
               <textarea class="form-control" formControlName="contenidoPaquete" [ngClass]="{
                   'is-invalid': newForm.get('contenidoPaquete')?.invalid && (newForm.get('contenidoPaquete')?.touched || newForm.get('contenidoPaquete')?.dirty),
                   'is-valid': newForm.get('contenidoPaquete')?.valid && newForm.get('contenidoPaquete')?.dirty
