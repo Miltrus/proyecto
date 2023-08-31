@@ -107,17 +107,16 @@
             </div>
           </div>
         </div>
-        
+
         <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label for="exampleFormControlInput1">Detalle direccion</label>
+          <div class="form-group">
+            <div class="col">
+              <label for="exampleFormControlInput1">Detalle dirección</label>
               <textarea class="form-control" formControlName="detalleDireccionCliente"></textarea>
             </div>
           </div>
-          <div class="col"></div>
         </div>
-        <br><br />
+        <br>
 
         <button type="button" mat-raised-button color="accent" (click)="goBack()">Atrás</button> |
         <button type="submit" mat-raised-button color="primary" [disabled]="newForm.invalid">Guardar</button>

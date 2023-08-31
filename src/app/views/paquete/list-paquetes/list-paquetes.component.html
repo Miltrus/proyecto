@@ -130,7 +130,7 @@
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
       aria-label="Select page of periodic elements"></mat-paginator><br>
     <div *ngIf="dataSource.filteredData.length === 0" class="no-results-message" style="text-align: center;">
-      <strong>NO SE HAN ENCONTRARON RESULTADOS.</strong>
+      <strong>NO SE ENCONTRARON RESULTADOS.</strong>
     </div>
 
     <div class="button-container">
@@ -145,26 +145,27 @@
 
   </div>
 </app-navigation>
+
 <ng-template #viewPaqueteDialog let-dialogData>
   <div class="dialogData">
     <h2>Información del paquete</h2><br>
     <h4>Remitente:</h4>
     <p><strong>Documento:</strong> {{ dialogData.documentoRemitente }}</p>
     <p><strong>Nombre:</strong> {{ getRemitentePaquete(dialogData.documentoRemitente).nombre }}</p>
-    <p><strong>Telefono:</strong> {{ getRemitentePaquete(dialogData.documentoRemitente).telefono }}</p>
+    <p><strong>Teléfono:</strong> {{ getRemitentePaquete(dialogData.documentoRemitente).telefono }}</p>
     <p><strong>Correo:</strong> {{ getRemitentePaquete(dialogData.documentoRemitente).correo }}</p><br>
     <h4>Destinatario:</h4>
     <p><strong>Documento:</strong> {{ dialogData.documentoDestinatario }}</p>
     <p><strong>Nombre:</strong> {{ dialogData.nombreDestinatario }}</p>
-    <p><strong>Telefono:</strong> {{ dialogData.telefonoDestinatario }}</p>
+    <p><strong>Teléfono:</strong> {{ dialogData.telefonoDestinatario }}</p>
     <p><strong>Correo:</strong> {{ dialogData.correoDestinatario }}</p>
     <p><strong>Dirección:</strong> {{ dialogData.direccionPaquete }}</p>
-    <p><strong>Detalle dirección:</strong> {{ dialogData.detalleDireccionPaquete }}</p><br>
+    <p><strong>Detalle de dirección:</strong> {{ dialogData.detalleDireccionPaquete }}</p><br>
     <h4>Paquete:</h4>
-    <p><strong>Peso:</strong> {{ dialogData.pesoPaquete }} Kg</p>
+    <p><strong>Peso:</strong> {{ dialogData.pesoPaquete }} kg</p>
     <p><strong>Tamaño:</strong> {{ getTamanoPaquete(dialogData.idTamano) }}</p>
     <p><strong>Tipo:</strong> {{ getTipoPaquete(dialogData.idTipo) }}</p>
-    <p><strong>Fecha Aprox Entrega:</strong> {{ dialogData.fechaAproxEntrega }}</p>
+    <p><strong>Fecha Aproximada de Entrega:</strong> {{ dialogData.fechaAproxEntrega }}</p>
     <p><strong>Contenido:</strong> {{ dialogData.contenidoPaquete }}</p>
   </div>
 </ng-template>

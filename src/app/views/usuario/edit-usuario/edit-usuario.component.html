@@ -151,7 +151,9 @@
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" style="margin-left: 5px;"
                                     (click)="buttonShowPassword()">
-                                    {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+                                    <mat-icon>
+                                        {{ showPassword ? 'visibility_off' : 'visibility' }}
+                                    </mat-icon>
                                 </button>
                             </div>
 
