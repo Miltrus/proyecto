@@ -38,8 +38,6 @@ export class ListClientesComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   dataToExport: any[] = [];
 
-
-
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
   @ViewChild('viewClienteDialog') viewClienteDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario

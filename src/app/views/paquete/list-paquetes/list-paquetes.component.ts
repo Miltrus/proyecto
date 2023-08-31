@@ -22,7 +22,6 @@ import Swal from 'sweetalert2';
 
 import * as XLSX from 'xlsx';
 
-// Configurar las fuentes
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
 

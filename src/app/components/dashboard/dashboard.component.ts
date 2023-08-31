@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,9 +7,7 @@ import { map } from 'rxjs/operators';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(
-    private breakpointObserver: BreakpointObserver,
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

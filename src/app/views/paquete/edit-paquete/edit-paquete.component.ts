@@ -47,7 +47,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   hasUnsavedChanges(): boolean {
     this.loading = false;
-    return this.editForm.dirty;
+    return this.editForm.dirty || this.editRemitente.dirty;
   }
 
   editRemitente = new FormGroup({
@@ -96,14 +96,11 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     const fechaSeleccionada = control.value;
     const fechaActual = new Date();
 
-    // Establecer las horas, minutos, segundos y milisegundos de la fecha actual a 0
     fechaActual.setHours(0, 0, 0, 0);
 
-    // Crear una nueva instancia de la fecha seleccionada y establecer las horas, minutos, segundos y milisegundos a 0
     const fechaSeleccionadaSinHora = new Date(fechaSeleccionada);
     fechaSeleccionadaSinHora.setHours(0, 0, 0, 0);
 
-    // Sumar un día a la fecha seleccionada
     fechaSeleccionadaSinHora.setDate(fechaSeleccionadaSinHora.getDate() + 1);
 
     if (fechaSeleccionadaSinHora < fechaActual) {
@@ -400,7 +397,6 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // actualizamos la info de remitente y destinatario
         this.api.getRemitenteAndDestinatario().subscribe(data => {
           this.remitente = data;
         })

@@ -81,8 +81,8 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
       this.loading = false;
     });
 
-    // Obtener los permisos asociados al rol y marcar los checkboxes correspondientes
-    this.api.getRolPermisos(idRol).subscribe(data => {
+
+    this.api.getRolPermisos(idRol).subscribe(data => {  // Obtener los permisos asociados al rol y marcar los checkboxes correspondientes
       this.loading = true;
       const permisos: PermisoInterface[] = data.idPermiso
         ? data.idPermiso.filter((rolPermiso: RolPermisoInterface | null | undefined) => rolPermiso !== null && rolPermiso !== undefined)
@@ -169,7 +169,6 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
       }
     });
   }
-
 
   goBack() {
     this.loading = true;

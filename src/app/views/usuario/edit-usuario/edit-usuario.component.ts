@@ -51,7 +51,7 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
     idTipoDocumento: new FormControl('', Validators.required),
     nombreUsuario: new FormControl('', Validators.required),
     apellidoUsuario: new FormControl('', Validators.required),
-    telefonoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
+    telefonoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     correoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     idRol: new FormControl('', Validators.required),
     idEstado: new FormControl(''),
@@ -109,7 +109,6 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
   }
 
   ngOnDestroy(): void {
-    // Desuscribirse de todas las suscripciones
     this.subscriptions.unsubscribe();
   }
 
@@ -134,7 +133,7 @@ export class EditUsuarioComponent implements OnInit, HasUnsavedChanges, OnDestro
         if (this.showPasswordChange) {
           updatedData.contrasenaUsuario = this.pwdForm.value.contrasenaUsuario;
         } else {
-          delete updatedData.contrasenaUsuario; // Eliminar la propiedad si el botón "Cambiar contraseña" no está activado
+          delete updatedData.contrasenaUsuario;
         }
 
         const putUserSub = this.api.putUsuario(updatedData).subscribe(data => {

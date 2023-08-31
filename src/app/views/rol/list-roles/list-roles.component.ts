@@ -64,11 +64,9 @@ export class ListRolesComponent implements OnInit, OnDestroy {
           .map((rolPermiso: RolPermisoInterface) => rolPermiso.permiso!)
         : [];
 
-      // Encuentra el rol correspondiente en el arreglo 'roles'
-      const rol = this.roles.find((r: RolInterface) => r.idRol === idRol);
+      const rol = this.roles.find((r: RolInterface) => r.idRol === idRol);  // Encuentra el rol correspondiente en el arreglo 'roles'
 
-      // Asigna los permisos al rol encontrado
-      if (rol) {
+      if (rol) {  // Asigna los permisos al rol encontrado
         rol.permisos = permisos;
         this.totalPermisosCargados++;
 
@@ -85,8 +83,7 @@ export class ListRolesComponent implements OnInit, OnDestroy {
       this.roles = data;
       this.dataSource.data = this.roles;
 
-      // Obtener los permisos por cada rol
-      data.forEach((rol: RolInterface) => {
+      data.forEach((rol: RolInterface) => {   // Obtener los permisos por cada rol
         this.loadPermisosPorRol(rol.idRol);
       });
     });

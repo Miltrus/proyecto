@@ -4,7 +4,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PaqueteService } from '../../../services/api/paquete.service';
 import { PaqueteInterface } from '../../../models/paquete.interface';
-import { ClienteInterface } from 'src/app/models/cliente.interface';
 import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { AddClienteComponent } from '../add-cliente/add-cliente.component';
@@ -44,7 +43,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   hasUnsavedChanges(): boolean {
     this.loading = false;
-    return this.newForm.dirty;
+    return this.newForm.dirty || this.editRemitente.dirty;
   }
 
 
@@ -60,7 +59,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     lat: new FormControl(),
     lng: new FormControl(),
   });
-  myControl = new FormControl('');
+
   newForm = new FormGroup({
     codigoPaquete: new FormControl(''),
     direccionPaquete: new FormControl('', Validators.required),

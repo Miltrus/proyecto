@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ResponseInterface } from '../../models/response.interface';
 import { EntregaInterface } from '../../models/entrega.interface';
 import { RastreoInterface } from 'src/app/models/rastreo.interface';
 
@@ -13,7 +12,7 @@ export class EntregaService {
 
   url: string = 'http://localhost:3030/';
 
-  constructor( private http : HttpClient ) { }
+  constructor(private http: HttpClient) { }
 
   private getHeaders(): HttpHeaders {
     // Aquí agregamos el token a las cabeceras

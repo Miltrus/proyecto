@@ -31,9 +31,6 @@
                   {{option.documentoCliente}}
                 </mat-option>
               </mat-autocomplete>
-              <!-- <datalist id="remitentes">
-                <option *ngFor="let c of cliente" [value]="c.documentoCliente" class="custom-datalist-option"></option>
-              </datalist> -->
               <div *ngIf="editRemitente.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
                 Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
               </div>
@@ -82,7 +79,8 @@
                   Este campo es obligatorio.
                 </div>
               </div>
-              <button class="btn btn-circle btn-update btn-margin" type="button" title="Actualizar correo y teléfono" (click)="editRemi(editRemitente.value)">
+              <button class="btn btn-circle btn-update btn-margin" type="button" title="Actualizar correo y teléfono"
+                (click)="editRemi(editRemitente.value)">
                 <span class="material-icons">edit</span>
               </button>
             </div>
@@ -108,9 +106,6 @@
                   {{option.documentoCliente}}
                 </mat-option>
               </mat-autocomplete>
-              <!-- <datalist id="destinatarios">
-                <option *ngFor="let c of cliente" [value]="c.documentoCliente" class="custom-datalist-option"></option>
-              </datalist> -->
               <div *ngIf="newForm.get('documentoDestinatario')?.errors?.['pattern']" class="invalid-feedback">
                 Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
               </div>

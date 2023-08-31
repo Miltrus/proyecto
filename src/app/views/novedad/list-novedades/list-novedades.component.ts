@@ -158,7 +158,7 @@ export class ListNovedadesComponent implements OnInit {
     const excelFileURL = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = excelFileURL;
-    link.download = 'clientes.xlsx';
+    link.download = 'novedades.xlsx';
     link.click();
   }
 
@@ -174,7 +174,7 @@ export class ListNovedadesComponent implements OnInit {
 
     const docDefinition: TDocumentDefinitions = {
       content: [
-        { text: 'Lista de Clientes', style: 'header' },
+        { text: 'Lista de Novedades', style: 'header' },
         {
           style: 'tableExample',
           table: {

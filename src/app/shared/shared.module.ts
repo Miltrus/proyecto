@@ -10,7 +10,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { MatGridListModule } from '@angular/material/grid-list'; // esto se está usando en el dashboard
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
@@ -40,7 +39,6 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatButtonModule,
     MatSidenavModule,
     MatListModule,
-    MatGridListModule,
     MatCardModule,
     MatMenuModule,
     MatTableModule,
@@ -67,7 +65,6 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatAutocompleteModule,
     MatSidenavModule,
     MatListModule,
-    MatGridListModule,
     MatCardModule,
     MatMenuModule,
     MatTableModule,
