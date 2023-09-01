@@ -18,7 +18,7 @@
         </div>
 
         <div class="col-12 col-md-3">
-            <div [formGroup]="palFiltro">
+          <div [formGroup]="palFiltro">
             <label for="">Filtrar por estados</label>
             <mat-select class="form-control" formControlName="filtroDeEstados" placeholder="---SELECCIONE---">
               <mat-option *ngFor="let estado of estadosFiltro" [value]="estado.value">
@@ -176,7 +176,7 @@
     <p><strong>Peso:</strong> {{ dialogData.pesoPaquete }} kg</p>
     <p><strong>Tamaño:</strong> {{ getTamanoPaquete(dialogData.idTamano) }}</p>
     <p><strong>Tipo:</strong> {{ getTipoPaquete(dialogData.idTipo) }}</p>
-    <p><strong>Fecha Aproximada de Entrega:</strong> {{ dialogData.fechaAproxEntrega }}</p>
+    <p><strong>Fecha aprox de entrega:</strong> {{ dialogData.fechaAproxEntrega }}</p>
     <p><strong>Contenido:</strong> {{ dialogData.contenidoPaquete }}</p>
   </div>
 </ng-template>

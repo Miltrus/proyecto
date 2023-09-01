@@ -240,7 +240,7 @@
               <label for="exampleFormControlInput1">Fecha aproximada de entrega <b style="color: red;">*</b></label>
               <input type="date" class="form-control" [min]="getFechAct()" formControlName="fechaAproxEntrega"
                 [ngClass]="{
-                'is-invalid': editForm.get('fechaAproxEntrega')?.invalid && (editForm.get('fechaAproxEntrega')?.touched || editForm.get('fechaAproxEntrega')?.dirty),
+                'is-invalid': editForm.get('fechaAproxEntrega')?.invalid,
                 'is-valid': editForm.get('fechaAproxEntrega')?.valid && editForm.get('fechaAproxEntrega')?.dirty
               }">
               <div *ngIf="editForm.get('fechaAproxEntrega')?.errors?.['required']" class="invalid-feedback">

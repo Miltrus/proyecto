@@ -58,9 +58,9 @@ export class ListPaquetesComponent implements OnInit {
     { value: 5, label: 'No entregado' }
   ];
   palFiltro = new FormGroup({
-    filtroDeEstados : new FormControl(1)
-  }); 
-    
+    filtroDeEstados: new FormControl(1)
+  });
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
@@ -82,34 +82,34 @@ export class ListPaquetesComponent implements OnInit {
       }
       this.loading = false;
     });
-    
+
     this.api.getUsuario().subscribe(data => {
       this.usuario = data;
       this.loading = false;
     });
-    
+
     this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.remitente = data;
       this.loading = false;
     });
-    
+
     this.api.getEstadoPaquete().subscribe(data => {
       this.estadosPaquete = data;
       this.loading = false;
     });
-    
+
     this.api.getTamanoPaquete().subscribe(data => {
       this.tamano = data;
       this.loading = false;
     });
-    
+
     this.api.getTipoPaquete().subscribe(data => {
       this.tipos = data;
       this.loading = false;
     });
 
     this.palFiltro.get('filtroDeEstados')?.valueChanges.subscribe((value) => {
-    
+
       switch (value) {
         case 1:
           this.dataSource.data = this.paquetes;
@@ -132,9 +132,9 @@ export class ListPaquetesComponent implements OnInit {
           break;
       }
     });
-    
+
   }
-  
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -327,7 +327,7 @@ export class ListPaquetesComponent implements OnInit {
   }
 
   generateExcel(): void {
-    const dataToExport = this.paquetes.map(paquete => ({
+    const dataToExport = this.dataSource.data.map(paquete => ({
       'Código paquete': paquete.codigoPaquete,
       'Mensajero': paquete.idUsuario ? this.getUsuarioPaquete(paquete.idUsuario).nombre + ' ' + this.getUsuarioPaquete(paquete.idUsuario).apellido : 'SIN ASIGNAR',
       'Remitente': this.getRemitentePaquete(paquete.documentoRemitente).nombre,
@@ -355,16 +355,16 @@ export class ListPaquetesComponent implements OnInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();  
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     if (filterValue === '') {
       this.dataSource.data = this.paquetes;
     } else {
-      this.dataSource.data =  this.paquetes.filter(paquete =>
+      this.dataSource.data = this.paquetes.filter(paquete =>
         paquete.codigoPaquete.toLowerCase().includes(filterValue) ||
-        this.getUsuarioPaquete(paquete.idUsuario).nombre.toLowerCase().includes(filterValue) || 
+        this.getUsuarioPaquete(paquete.idUsuario).nombre.toLowerCase().includes(filterValue) ||
         this.getUsuarioPaquete(paquete.idUsuario).apellido.toLowerCase().includes(filterValue) ||
         this.getTipoPaquete(paquete.idTipo).toLowerCase().includes(filterValue) || //QUITAR TILDES
-        this.getRemitentePaquete(paquete.documentoRemitente).nombre.toLowerCase().includes(filterValue)         
+        this.getRemitentePaquete(paquete.documentoRemitente).nombre.toLowerCase().includes(filterValue)
       )
     }
   }

@@ -1,4 +1,3 @@
-// Importaciones de módulos y clases necesarias
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -52,7 +51,6 @@ export class ListNovedadesComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
 
-    // Realizar múltiples llamadas a servicios y combinar resultados con forkJoin
     const forkJoinSub = forkJoin([
       this.api.getRastreosByNovedad(),
       this.api.getEstadoRastreo(),
@@ -77,7 +75,6 @@ export class ListNovedadesComponent implements OnInit {
         })
       }
 
-      // Asignar datos de estados y paquetes
       this.estados = estado;
       this.paquetes = paquete;
       this.usuarios = usuario;
@@ -93,11 +90,9 @@ export class ListNovedadesComponent implements OnInit {
         })
       });
 
-    // Agregar la suscripción al arreglo de suscripciones
     this.subscriptions.add(forkJoinSub);
   }
 
-  // Configurar paginación y ordenamiento después de que la vista se haya inicializado
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -141,9 +136,8 @@ export class ListNovedadesComponent implements OnInit {
 
   generateExcel(): void {
     const dataToExport = this.novedades.map(novedad => ({
-      'Código de paquete': this.getPaquete(novedad.idPaquete).codigoPaquete,
-      'Fecha de no entrega': novedad.fechaNoEntrega,
-      'Estado': this.getEstado(novedad.idEstado),
+      'Código paquete': this.getPaquete(novedad.idPaquete).codigoPaquete,
+      'Fecha': novedad.fechaNoEntrega,
       'Motivo': novedad.motivoNoEntrega,
       'Mensajero': this.getMensajero(novedad.idPaquete).nombreUsuario + ' ' + this.getMensajero(novedad.idPaquete).apellidoUsuario,
       'Doc Mensajero': this.getMensajero(novedad.idPaquete).documentoUsuario,
@@ -164,9 +158,8 @@ export class ListNovedadesComponent implements OnInit {
 
   generatePDF(): void {
     this.dataToExport = this.novedades.map(novedad => ({
-      'Código de paquete': this.getPaquete(novedad.idPaquete).codigoPaquete,
-      'Fecha de no entrega': novedad.fechaNoEntrega,
-      'Estado': this.getEstado(novedad.idEstado),
+      'Código paquete': this.getPaquete(novedad.idPaquete).codigoPaquete,
+      'Fecha': novedad.fechaNoEntrega,
       'Motivo': novedad.motivoNoEntrega,
       'Mensajero': this.getMensajero(novedad.idPaquete).nombreUsuario + ' ' + this.getMensajero(novedad.idPaquete).apellidoUsuario,
       'Doc Mensajero': this.getMensajero(novedad.idPaquete).documentoUsuario,
@@ -178,13 +171,12 @@ export class ListNovedadesComponent implements OnInit {
         {
           style: 'tableExample',
           table: {
-            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
             body: [
-              ['Codigo de paquete', 'Fecha de no entrega', 'Estado', 'Motivo', 'Mensajero', 'Doc Mensajero'],
+              ['Codigo paquete', 'Fecha', 'Motivo', 'Mensajero', 'Doc Mensajero'],
               ...this.dataToExport.map(novedad => [
-                novedad['Código de paquete'],
-                novedad['Fecha de no entrega'],
-                novedad['Estado'],
+                novedad['Código paquete'],
+                novedad['Fecha'],
                 novedad['Motivo'],
                 novedad['Mensajero'],
                 novedad['Doc Mensajero'],

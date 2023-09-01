@@ -49,9 +49,9 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="idEstado">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
-          <td mat-cell *matCellDef="let novedad" class="max-width-cell">{{ getEstado (novedad.idEstado) }}</td>
+        <ng-container matColumnDef="motivoNoEntrega">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Motivo</th>
+          <td mat-cell *matCellDef="let novedad" class="max-width-cell">{{ novedad.motivoNoEntrega }}</td>
         </ng-container>
 
         <ng-container matColumnDef="acciones">
@@ -69,10 +69,11 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="['num', 'codigo', 'mensajero', 'fechaNoEntrega', 'idEstado', 'acciones']">
+        <tr mat-header-row
+          *matHeaderRowDef="['num', 'codigo', 'mensajero', 'fechaNoEntrega', 'motivoNoEntrega', 'acciones']">
         </tr>
         <tr mat-row
-          *matRowDef="let row; columns: ['num', 'codigo', 'mensajero', 'fechaNoEntrega', 'idEstado', 'acciones']">
+          *matRowDef="let row; columns: ['num', 'codigo', 'mensajero', 'fechaNoEntrega', 'motivoNoEntrega', 'acciones']">
         </tr>
       </table>
     </div>
@@ -104,12 +105,11 @@
 <ng-template #viewNovedadDialog let-dialogData>
   <div class="dialogData">
     <h2>Información de la novedad</h2>
-    <p><strong>Código del paquete:</strong> {{ getPaquete (dialogData.idPaquete).codigoPaquete}}</p>
+    <p><strong>Código paquete:</strong> {{ getPaquete (dialogData.idPaquete).codigoPaquete}}</p>
     <p><strong>Fecha:</strong> {{ dialogData.fechaNoEntrega }}</p>
-    <p><strong>Estado:</strong> {{ getEstado (dialogData.idEstado) }}</p>
     <p><strong>Motivo:</strong> {{ dialogData.motivoNoEntrega }}</p>
     <p><strong>Mensajero:</strong> {{ getMensajero(dialogData.idPaquete).nombreUsuario + ' ' +
       getMensajero(dialogData.idPaquete).apellidoUsuario }}</p>
-    <p><strong></strong></p>
+    <p><strong>Estado:</strong> {{ getEstado (dialogData.idEstado) }}</p>
   </div>
 </ng-template>

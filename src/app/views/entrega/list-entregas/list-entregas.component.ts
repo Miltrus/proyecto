@@ -36,7 +36,7 @@ export class ListEntregasComponent implements OnInit {
 
   private subscriptions: Subscription = new Subscription();
 
-  entregas: any[] = [];
+  entregas: EntregaInterface[] = [];
   rastreos: RastreoInterface[] = [];
   paquetes: PaqueteInterface[] = [];
   usuarios: UsuarioInterface[] = [];
@@ -151,15 +151,15 @@ export class ListEntregasComponent implements OnInit {
   }
 
   generateExcel(): void {
-    const dataToExport = this.entregas.map(entrega => ({
+    const dataToExport = this.dataSource.data.map(entrega => ({
+      'Código paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).codigoPaquete,
       'Nombre destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).nombreDestinatario,
       'Documento destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).documentoDestinatario,
-      'Dirección destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).direccionPaquete,
-      'Telefono destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).telefonoDestinatario,
-      'Codigo paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).codigoPaquete,
-      'Peso paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).pesoPaquete,
+      'Dirección destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).direccionPaquete + ' - ' + this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).detalleDireccionPaquete,
+      'Teléfono destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).telefonoDestinatario,
+      'Correo destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).correoDestinatario,
       'Contenido paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).contenidoPaquete,
-      'Fecha de entrega': entrega.fechaEntrega,
+      'Fecha': entrega.fechaEntrega,
       'Mensajero': this.getMensajero(entrega.idEntrega).nombreUsuario + ' ' + this.getMensajero(entrega.idEntrega).apellidoUsuario,
     }));
 
@@ -177,15 +177,15 @@ export class ListEntregasComponent implements OnInit {
   }
 
   generatePDF(): void {
-    this.dataToExport = this.entregas.map(entrega => ({
+    this.dataToExport = this.dataSource.data.map(entrega => ({
+      'Código paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).codigoPaquete,
       'Nombre destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).nombreDestinatario,
       'Documento destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).documentoDestinatario,
-      'Dirección destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).direccionPaquete,
-      'Telefono destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).telefonoDestinatario,
-      'Codigo paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).codigoPaquete,
-      'Peso paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).pesoPaquete,
+      'Dirección destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).direccionPaquete + ' - ' + this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).detalleDireccionPaquete,
+      'Teléfono destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).telefonoDestinatario,
+      'Correo destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).correoDestinatario,
       'Contenido paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).contenidoPaquete,
-      'Fecha de entrega': entrega.fechaEntrega,
+      'Fecha': entrega.fechaEntrega,
       'Mensajero': this.getMensajero(entrega.idEntrega).nombreUsuario + ' ' + this.getMensajero(entrega.idEntrega).apellidoUsuario,
     }));
 
@@ -197,16 +197,16 @@ export class ListEntregasComponent implements OnInit {
           table: {
             widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
             body: [
-              ['Nombre destinatario', 'Documento destinatario', 'Dirección destinatario', 'Telefono destinatario', 'Codigo paquete', 'Peso paquete', 'Contenido paquete', 'Fecha de entrega', 'Mensajero'],
+              ['Código paquete', 'Nombre destinatario', 'Documento destinatario', 'Dirección destinatario', 'Telefono destinatario', 'Correo destinatario', 'Contenido paquete', 'Fecha', 'Mensajero'],
               ...this.dataToExport.map(entrega => [
+                entrega['Código paquete'],
                 entrega['Nombre destinatario'],
                 entrega['Documento destinatario'],
                 entrega['Dirección destinatario'],
-                entrega['Telefono destinatario'],
-                entrega['Codigo paquete'],
-                entrega['Peso paquete'],
+                entrega['Teléfono destinatario'],
+                entrega['Correo destinatario'],
                 entrega['Contenido paquete'],
-                entrega['Fecha de entrega'],
+                entrega['Fecha'],
                 entrega['Mensajero'],
               ])
             ]
