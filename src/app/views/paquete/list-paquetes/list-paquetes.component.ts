@@ -21,6 +21,7 @@ import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 import Swal from 'sweetalert2';
 
 import * as XLSX from 'xlsx';
+import { Form, FormControl, FormGroup } from '@angular/forms';
 
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
@@ -49,6 +50,17 @@ export class ListPaquetesComponent implements OnInit {
   dataSource = new MatTableDataSource(this.paquetes); //pal filtro
   loading: boolean = true;
   cords: boolean = false;
+  estadosFiltro = [
+    { value: 1, label: 'Todos' },
+    { value: 2, label: 'En bodega' },
+    { value: 3, label: 'En ruta' },
+    { value: 4, label: 'Entregado' },
+    { value: 5, label: 'No entregado' }
+  ];
+  palFiltro = new FormGroup({
+    filtroDeEstados : new FormControl(1)
+  }); 
+    
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
@@ -68,36 +80,61 @@ export class ListPaquetesComponent implements OnInit {
           paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
         });
       }
-
       this.loading = false;
     });
-
+    
     this.api.getUsuario().subscribe(data => {
       this.usuario = data;
       this.loading = false;
     });
-
+    
     this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.remitente = data;
       this.loading = false;
     });
-
+    
     this.api.getEstadoPaquete().subscribe(data => {
       this.estadosPaquete = data;
       this.loading = false;
     });
-
+    
     this.api.getTamanoPaquete().subscribe(data => {
       this.tamano = data;
       this.loading = false;
     });
-
+    
     this.api.getTipoPaquete().subscribe(data => {
       this.tipos = data;
       this.loading = false;
     });
-  }
 
+    this.palFiltro.get('filtroDeEstados')?.valueChanges.subscribe((value) => {
+    
+      switch (value) {
+        case 1:
+          this.dataSource.data = this.paquetes;
+          break;
+        case 2:
+          this.dataSource.data = this.paquetes;
+          this.dataSource.data = this.dataSource.data.filter(filtro => filtro.idEstado == 1);
+          break;
+        case 3:
+          this.dataSource.data = this.paquetes;
+          this.dataSource.data = this.dataSource.data.filter(filtro => filtro.idEstado == 2);
+          break;
+        case 4:
+          this.dataSource.data = this.paquetes;
+          this.dataSource.data = this.dataSource.data.filter(filtro => filtro.idEstado == 3);
+          break;
+        case 5:
+          this.dataSource.data = this.paquetes;
+          this.dataSource.data = this.dataSource.data.filter(filtro => filtro.idEstado == 4);
+          break;
+      }
+    });
+    
+  }
+  
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -318,7 +355,17 @@ export class ListPaquetesComponent implements OnInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();  
+    if (filterValue === '') {
+      this.dataSource.data = this.paquetes;
+    } else {
+      this.dataSource.data =  this.paquetes.filter(paquete =>
+        paquete.codigoPaquete.toLowerCase().includes(filterValue) ||
+        this.getUsuarioPaquete(paquete.idUsuario).nombre.toLowerCase().includes(filterValue) || 
+        this.getUsuarioPaquete(paquete.idUsuario).apellido.toLowerCase().includes(filterValue) ||
+        this.getTipoPaquete(paquete.idTipo).toLowerCase().includes(filterValue) || //QUITAR TILDES
+        this.getRemitentePaquete(paquete.documentoRemitente).nombre.toLowerCase().includes(filterValue)         
+      )
+    }
   }
 }

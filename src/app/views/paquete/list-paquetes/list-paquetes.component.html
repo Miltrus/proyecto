@@ -11,13 +11,24 @@
     <div class="create-button-container">
 
       <div class="row">
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-5">
           <button mat-raised-button color="primary" (click)="newPaquete()" style="margin-top: 20px;">
             <mat-icon>add</mat-icon> Nuevo
           </button>
         </div>
 
-        <div class="col-md-6 col-12">
+        <div class="col-12 col-md-3">
+            <div [formGroup]="palFiltro">
+            <label for="">Filtrar por estados</label>
+            <mat-select class="form-control" formControlName="filtroDeEstados" placeholder="---SELECCIONE---">
+              <mat-option *ngFor="let estado of estadosFiltro" [value]="estado.value">
+                {{estado.label}}
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4">
           <div class="d-flex justify-content-end">
             <mat-form-field appearance="outline">
               <mat-label>Búsqueda</mat-label>
