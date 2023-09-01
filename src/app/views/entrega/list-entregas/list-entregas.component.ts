@@ -16,6 +16,8 @@ import * as XLSX from 'xlsx';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { UsuarioInterface } from 'src/app/models/usuario.interface';
+import { UsuarioService } from 'src/app/services/api/usuario.service';
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -28,6 +30,7 @@ export class ListEntregasComponent implements OnInit {
     private api: EntregaService,
     private apiRastreo: RastreoService,
     private apiPaquete: PaqueteService,
+    private apiUsuario: UsuarioService,
     private dialog: MatDialog,
   ) { }
 
@@ -36,6 +39,7 @@ export class ListEntregasComponent implements OnInit {
   entregas: any[] = [];
   rastreos: RastreoInterface[] = [];
   paquetes: PaqueteInterface[] = [];
+  usuarios: UsuarioInterface[] = [];
   dataSource = new MatTableDataSource(this.entregas); //pal filtro
   loading: boolean = true;
   dataToExport: any[] = [];
@@ -53,9 +57,11 @@ export class ListEntregasComponent implements OnInit {
     const forkJoinSub = forkJoin([
       this.api.getAllEntregas(),
       this.apiRastreo.getRastreosByEntregado(),
-      this.apiPaquete.getAllPaquetes()
-    ]).subscribe(([entrega, rastreo, paquete]) => {
+      this.apiPaquete.getAllPaquetes(),
+      this.apiUsuario.getAllUsuarios()
+    ]).subscribe(([entrega, rastreo, paquete, usuario]) => {
       this.entregas = entrega;
+      this.usuarios = usuario;
       this.dataSource.data = this.entregas;
       if (this.dataSource.data.length < 1) {
         Swal.fire({
@@ -107,6 +113,11 @@ export class ListEntregasComponent implements OnInit {
     });
   }
 
+  getEntrega(idEntrega: any): any {
+    const entrega = this.entregas.find(tipo => tipo.idEntrega === idEntrega);
+    return entrega || '';
+  }
+
   getRastreo(idRastreo: any): any {
     const rastreo = this.rastreos.find(tipo => tipo.idRastreo === idRastreo);
     return this.getPaquete(rastreo?.idPaquete);
@@ -114,33 +125,113 @@ export class ListEntregasComponent implements OnInit {
 
   getPaquete(idPaquete: any): any {
     const paquete = this.paquetes.find(tipo => tipo.idPaquete === idPaquete);
-    return paquete;
+    return paquete || '';
+  }
+
+
+  getMensajero(idEntrega: any): any {
+    const entrega = this.getEntrega(idEntrega);
+
+    if (entrega.idRastreo) {
+      const novedad = this.rastreos.find(idR => idR.idRastreo == entrega.idRastreo);
+
+      if (novedad?.idPaquete) {
+        const paquete = this.paquetes.find(idP => idP.idPaquete == novedad.idPaquete);
+
+        if (paquete?.idUsuario) {
+          const mensajero = this.usuarios.find(documentoU => documentoU.idUsuario == paquete.idUsuario);
+
+          if (mensajero && mensajero.nombreUsuario && mensajero.apellidoUsuario) {
+            return mensajero || '';
+          }
+        }
+      }
+      return 'No hay mensajero';
+    }
   }
 
   generateExcel(): void {
     const dataToExport = this.entregas.map(entrega => ({
-      'Codigo': entrega.idEntrega,
+      'Nombre destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).nombreDestinatario,
+      'Documento destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).documentoDestinatario,
+      'Dirección destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).direccionPaquete,
+      'Telefono destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).telefonoDestinatario,
+      'Codigo paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).codigoPaquete,
+      'Peso paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).pesoPaquete,
+      'Contenido paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).contenidoPaquete,
       'Fecha de entrega': entrega.fechaEntrega,
-      'Nombre del destinatario': entrega.nombreDestinatario,
-      'Documento del destinatario': entrega.cedulaDestinatario,
-      'Direccion': entrega.direccion,
-      'Telefono': entrega.telefono,
-      'Codigo paquete': this.getRastreo(entrega.idRastreo).codigo,
-      'Peso': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).peso,
-      'Contenido': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).contenido,
+      'Mensajero': this.getMensajero(entrega.idEntrega).nombreUsuario + ' ' + this.getMensajero(entrega.idEntrega).apellidoUsuario,
     }));
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Novedades');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Entregas');
 
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const excelFileURL = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = excelFileURL;
-    link.download = 'clientes.xlsx';
+    link.download = 'entregas.xlsx';
     link.click();
+  }
+
+  generatePDF(): void {
+    this.dataToExport = this.entregas.map(entrega => ({
+      'Nombre destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).nombreDestinatario,
+      'Documento destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).documentoDestinatario,
+      'Dirección destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).direccionPaquete,
+      'Telefono destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).telefonoDestinatario,
+      'Codigo paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).codigoPaquete,
+      'Peso paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).pesoPaquete,
+      'Contenido paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).contenidoPaquete,
+      'Fecha de entrega': entrega.fechaEntrega,
+      'Mensajero': this.getMensajero(entrega.idEntrega).nombreUsuario + ' ' + this.getMensajero(entrega.idEntrega).apellidoUsuario,
+    }));
+
+    const docDefinition: TDocumentDefinitions = {
+      content: [
+        { text: 'Lista de Entregas', style: 'header' },
+        {
+          style: 'tableExample',
+          table: {
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              ['Nombre destinatario', 'Documento destinatario', 'Dirección destinatario', 'Telefono destinatario', 'Codigo paquete', 'Peso paquete', 'Contenido paquete', 'Fecha de entrega', 'Mensajero'],
+              ...this.dataToExport.map(entrega => [
+                entrega['Nombre destinatario'],
+                entrega['Documento destinatario'],
+                entrega['Dirección destinatario'],
+                entrega['Telefono destinatario'],
+                entrega['Codigo paquete'],
+                entrega['Peso paquete'],
+                entrega['Contenido paquete'],
+                entrega['Fecha de entrega'],
+                entrega['Mensajero'],
+              ])
+            ]
+          }
+        }
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 0, 0, 10]
+        },
+        tableExample: {
+          margin: [0, 5, 0, 15]
+        }
+      },
+      pageOrientation: 'landscape'
+    };
+
+    const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+    pdfDocGenerator.getBlob((blob: Blob) => {
+      const pdfBlobUrl = URL.createObjectURL(blob);
+      window.open(pdfBlobUrl, '_blank');
+    });
   }
 
   applyFilter(event: Event) {
