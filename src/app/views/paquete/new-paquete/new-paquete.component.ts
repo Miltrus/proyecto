@@ -234,6 +234,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
         this.api.postPaquete(form).subscribe(data => {
           if (data.status == 'ok') {
             this.newForm.reset();
+            this.editRemitente.reset();
             this.router.navigate(['paquete/list-paquetes']);
             Swal.fire({
               icon: 'success',
@@ -263,7 +264,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
   editRemi(id: any): void {
     if (this.editRemitente.get('telefonoCliente')?.dirty || this.editRemitente.get('correoCliente')?.dirty) {
       Swal.fire({
-        title: '¿Deseas modificar el correo y/o el teléfono de este cliente?',
+        title: '¿Deseas modificar el correo y/o el teléfono de este remitente?',
         icon: 'question',
         showCancelButton: true,
         reverseButtons: true,
@@ -275,7 +276,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
           const putCltSub = this.apiClient.putCliente(id).subscribe((data) => {
             Swal.fire({
               icon: data.status == "ok" ? 'success' : 'error',
-              title: data.status == "ok" ? 'Cliente modificado' : 'Error al modificar el cliente',
+              title: data.status == "ok" ? 'Remitente modificado' : 'Error al modificar el remitente',
               text: data.msj,
             });
             this.loading = false;
@@ -288,7 +289,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
         Swal.fire({
           icon: 'warning',
           title: 'Modificacion cancelada',
-          text: 'No se han realizado cambios en los campos correo y/o telefono.',
+          text: 'No se han realizado cambios en los campos correo y/o teléfono.',
           toast: true,
           timerProgressBar: true,
           showConfirmButton: false,
@@ -300,7 +301,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
         Swal.fire({
           icon: 'warning',
           title: 'Modificacion cancelada',
-          text: 'No se han realizado cambios en los campos correo y/o telefono.',
+          text: 'No se han realizado cambios en los campos correo y/o télefono.',
           toast: true,
           timerProgressBar: true,
           showConfirmButton: false,

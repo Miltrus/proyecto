@@ -74,7 +74,7 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
 
   postForm(form: ClienteInterface) {
     Swal.fire({
-      title: '¿Estás seguro de que deseas crear este cliente?',
+      title: '¿Estás seguro de que deseas registrar este remitente?',
       icon: 'question',
       showCancelButton: true,
       allowOutsideClick: false,
@@ -89,8 +89,8 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
             this.newForm.reset();
             Swal.fire({
               icon: 'success',
-              title: 'Cliente creado',
-              text: 'El cliente ha sido creado exitosamente.',
+              title: 'Remitente creado',
+              text: 'El remitente ha sido creado exitosamente.',
               toast: true,
               showConfirmButton: false,
               timer: 5000,
@@ -102,7 +102,7 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
           } else {
             Swal.fire({
               icon: 'error',
-              title: 'Error al crear el cliente',
+              title: 'Error al crear el remitente',
               text: data.msj,
             });
             this.loading = false;

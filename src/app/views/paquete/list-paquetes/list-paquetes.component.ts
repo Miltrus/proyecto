@@ -301,6 +301,7 @@ export class ListPaquetesComponent implements OnInit {
       'Detalle dirección': paquete.detalleDireccionPaquete,
       'Peso paquete': paquete.pesoPaquete + ' kg',
       'Contenido paquete': paquete.contenidoPaquete,
+      'Estado': this.getEstadoPaquete(paquete.idEstado),
     }));
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);

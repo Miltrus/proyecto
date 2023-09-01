@@ -51,7 +51,8 @@
         <ng-container matColumnDef="firmaDestinatario">
           <th mat-header-cell *matHeaderCellDef>Firma</th>
           <td mat-cell *matCellDef="let entrega">
-            <button mat-icon-button title="Ver firma" (click)="openImageViewer(entrega.firmaDestinatario)">
+            <button mat-icon-button title="Ver firma del destinatario"
+              (click)="openImageViewer(entrega.firmaDestinatario)">
               <mat-icon>draw</mat-icon>
             </button>
           </td>

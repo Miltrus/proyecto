@@ -131,7 +131,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       this.editForm.setValue({
         'idPaquete': this.dataPaquete[0]?.idPaquete || 'idPaquete',
         'codigoPaquete': this.dataPaquete[0]?.codigoPaquete || 'codigoPaquete',
-        'direccionPaquete': this.dataPaquete[0]?.direccionPaquete || '', //si dataRol[0] es null, asignamos un string vacio, si no se hace esto da error
+        'direccionPaquete': this.dataPaquete[0]?.direccionPaquete || '',
         'detalleDireccionPaquete': this.dataPaquete[0]?.detalleDireccionPaquete || '',
         'pesoPaquete': this.dataPaquete[0]?.pesoPaquete || '',
         'contenidoPaquete': this.dataPaquete[0]?.contenidoPaquete || '',
@@ -247,6 +247,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         this.api.putPaquete(id).subscribe(data => {
           if (data.status == 'ok') {
             this.editForm.reset();
+            this.editRemitente.reset();
             this.router.navigate(['paquete/list-paquetes']);
             Swal.fire({
               icon: 'success',
@@ -283,7 +284,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
   editRemi(id: any): void {
     if (this.editRemitente.get('telefonoCliente')?.dirty || this.editRemitente.get('correoCliente')?.dirty) {
       Swal.fire({
-        title: '¿Deseas modificar el correo y/o el teléfono de este cliente?',
+        title: '¿Deseas modificar el correo y/o el teléfono de este remitente?',
         icon: 'question',
         showCancelButton: true,
         reverseButtons: true,
@@ -295,7 +296,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
           const putCltSub = this.apiClient.putCliente(id).subscribe((data) => {
             Swal.fire({
               icon: data.status == "ok" ? 'success' : 'error',
-              title: data.status == "ok" ? 'Cliente modificado' : 'Error al modificar el cliente',
+              title: data.status == "ok" ? 'Remitente modificado' : 'Error al modificar el remitente',
               text: data.msj,
             });
             this.loading = false;
@@ -316,7 +317,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         Swal.fire({
           icon: 'warning',
           title: 'Modificacion cancelada',
-          text: 'No se han realizado cambios en los campos correo y/o telefono.',
+          text: 'No se han realizado cambios en los campos correo y/o télefono.',
           toast: true,
           timerProgressBar: true,
           showConfirmButton: false,
@@ -328,7 +329,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         Swal.fire({
           icon: 'warning',
           title: 'Modificacion cancelada',
-          text: 'No se han realizado cambios en los campos correo y/o telefono.',
+          text: 'No se han realizado cambios en los campos correo y/o télefono.',
           toast: true,
           timerProgressBar: true,
           showConfirmButton: false,
@@ -353,7 +354,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         const remitenteSeleccionado = this.editForm.get('documentoRemitente')?.value;
         this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === remitenteSeleccionado);
 
-        const destinatarioSeleccionado = this.editForm.get('documentoDestinatario')?.value;
+        this.editForm.get('documentoDestinatario')?.value;
       }
 
       this.loading = false;
