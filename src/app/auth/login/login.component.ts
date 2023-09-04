@@ -83,8 +83,4 @@ export class LoginComponent {
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
-
-  goBack() {
-    this.router.navigate(['landing-page']);
-  }
 }

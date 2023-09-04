@@ -6,7 +6,7 @@
 
 <div class="wrapper fadeInDown">
   <div id="formContent">
-    <a href="#" class="back-link" (click)="goBack()">
+    <a href="landing-page" title="Volver atrás" class="back-link">
       <mat-icon class="flecha-atras">arrow_back</mat-icon>
     </a>
     <div class="fadeIn first">
@@ -17,7 +17,7 @@
       <div class="fadeIn second">
         <mat-form-field appearance="outline">
           <mat-label>Correo electrónico</mat-label>
-          <input id="login" formControlName="correoUsuario" matInput placeholder="Correo" [ngClass]="{
+          <input formControlName="correoUsuario" matInput placeholder="Ingresa tu email" [ngClass]="{
               'is-invalid': loginForm.get('correoUsuario')?.invalid && (loginForm.get('correoUsuario')?.touched || loginForm.get('correoUsuario')?.dirty),
               'is-valid': loginForm.get('correoUsuario')?.valid && (loginForm.get('correoUsuario')?.touched || loginForm.get('correoUsuario')?.dirty)
             }">
@@ -28,7 +28,7 @@
         <p>
           <mat-form-field appearance="outline">
             <mat-label>Contraseña</mat-label>
-            <input id="password" formControlName="contrasenaUsuario" matInput placeholder="Contraseña" [ngClass]="{
+            <input formControlName="contrasenaUsuario" matInput placeholder="Ingresa tu contraseña" [ngClass]="{
                 'is-invalid': loginForm.get('contrasenaUsuario')?.invalid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty),
                 'is-valid': loginForm.get('contrasenaUsuario')?.valid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty)
               }" [type]="showPassword ? 'text' : 'password'">

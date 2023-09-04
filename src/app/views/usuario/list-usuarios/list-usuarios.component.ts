@@ -71,7 +71,6 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
         this.loading = false;
       },
       (error) => {
-        console.error(error);
         this.loading = false;
       }
     );
@@ -233,22 +232,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
     });
   }
 
-  async getContPaquetePDFyExcel(idUsuario: any): Promise<number> {  //esta funcion nos sirve para hacer el contador correctamente de páquetes entregados para pdf y excel
-    try {
-      const data = await this.api.getPaqueteUsuario(idUsuario).toPromise();
-      if (typeof data === 'number' && data >= 0) {
-        return data;
-      } else {
-        console.log('Respuesta de API inválida:', data);
-        return 0; // Valor predeterminado en caso de respuesta inválida
-      }
-    } catch (error) {
-      console.error('Error al obtener el contador de paquetes:', error);
-      return 0; // Valor predeterminado en caso de error
-    }
-  }
-
-  async getContPaquete(idUsuario: any) {   //Esta funcion nos sirve para hacer el contador correctamente de páquetes entregados para el modal pero esta usa una logica basada en la api que no fui capaz de replicar en la funcion de arriba por eso son dos distintas
+  async getContPaquete(idUsuario: any) {
     this.cont = 0;
     try {
       const data = await this.api.getPaqueteUsuario(idUsuario).toPromise();
@@ -256,13 +240,11 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
         console.log(data.msj);
       } else {
         this.cont = data;
-        console.log("CONTADORR", this.cont);
       }
     } catch (error) {
       console.error("Error al obtener el contador de paquetes:", error);
     }
   }
-
 
 
   getTipoDocumento(idTipoDocumento: any): string {
@@ -285,7 +267,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
 
     for (const usuario of this.usuarios) {
       try {
-        const contadorPaquetes = await this.getContPaquetePDFyExcel(usuario.idUsuario);
+        await this.getContPaquete(usuario.idUsuario);
 
         const userData = {
           'Documento': usuario.documentoUsuario,
@@ -296,12 +278,16 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
           'Teléfono': usuario.telefonoUsuario,
           'Rol': this.getRolUsuario(usuario.idRol),
           'Estado': this.getEstadoUsuario(usuario.idEstado),
-          'Paquetes Entregados': contadorPaquetes
+          'Paquetes entregados': this.cont
         };
 
         dataToExport.push(userData);
       } catch (error) {
-        console.error('Error al obtener el contador de paquetes:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al generar el Excel',
+          text: 'Ha ocurrido un error al generar el Excel. Por favor, inténtalo nuevamente.',
+        });
       }
     }
 
@@ -321,10 +307,10 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
   generatePDF(): void {
     const dataToExport: any[] = [];
 
-    // Crear un array de promesas para obtener los datos de paquetes
     const promiseArray: Promise<void>[] = this.usuarios.map(async usuario => {
       try {
-        const contadorPaquetes = await this.getContPaquetePDFyExcel(usuario.idUsuario);
+
+        await this.getContPaquete(usuario.idUsuario);
 
         const userData = {
           'Documento': usuario.documentoUsuario,
@@ -335,16 +321,19 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
           'Teléfono': usuario.telefonoUsuario,
           'Rol': this.getRolUsuario(usuario.idRol),
           'Estado': this.getEstadoUsuario(usuario.idEstado),
-          'Paquetes Entregados': contadorPaquetes
+          'Paquetes Entregados': this.cont
         };
 
         dataToExport.push(userData);
       } catch (error) {
-        console.error('Error al obtener el contador de paquetes:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al generar el PDF',
+          text: 'Ha ocurrido un error al generar el PDF. Por favor, inténtalo nuevamente.',
+        });
       }
     });
 
-    // Esperar a que se resuelvan todas las promesas antes de continuar
     Promise.all(promiseArray).then(() => {
       const docDefinition: TDocumentDefinitions = {
         content: [
@@ -364,7 +353,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
                   usuario['Teléfono'],
                   usuario['Rol'],
                   usuario['Estado'],
-                  usuario['Paquetes Entregados']
+                  usuario['Paquetes entregados']
                 ])
               ]
             }

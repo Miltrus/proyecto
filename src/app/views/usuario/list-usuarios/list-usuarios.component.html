@@ -64,7 +64,7 @@
         <ng-container matColumnDef="idEstado">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
           <td mat-cell *matCellDef="let usuario">
-            <button title="Cambiar de estado"
+            <button title="Cambiar estado"
               [ngClass]="{'btn-custom': true, 'btn-active': usuario.idEstado == 1, 'btn-inactive': usuario.idEstado != 1}"
               (click)="toggleEstado(usuario)">
               {{ usuario.idEstado == 1 ? 'Activo' : 'Inactivo' }}
@@ -112,7 +112,7 @@
     <div class="button-container">
       <div></div>
       <div class="align-center">
-        <button mat-menu-item class="icon-text pdf-button" (click)="generatePDF()">
+        <button title="Generar PDF" mat-menu-item class="icon-text pdf-button" (click)="generatePDF()">
           <mat-icon [ngStyle]="{'color': '#FF0000'}">picture_as_pdf</mat-icon>
           <span class="icon-text">PDF</span>
         </button>
