@@ -149,7 +149,8 @@ export class ListPaquetesComponent implements OnInit {
   viewPaquete(paquete: PaqueteInterface): void {
     this.dialog.open(this.viewPaqueteDialog, {
       data: paquete,
-      width: '400px',
+      width: '30%',
+      height: '95%',
     });
   }
 

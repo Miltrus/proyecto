@@ -159,7 +159,7 @@
 
 <ng-template #viewPaqueteDialog let-dialogData>
   <div class="dialogData">
-    <h2>Información del paquete</h2><br>
+    <h2>Información del paquete</h2>
     <h4>Remitente:</h4>
     <p><strong>Documento:</strong> {{ dialogData.documentoRemitente }}</p>
     <p><strong>Nombre:</strong> {{ getRemitentePaquete(dialogData.documentoRemitente).nombre }}</p>
@@ -173,11 +173,12 @@
     <p><strong>Dirección:</strong> {{ dialogData.direccionPaquete }}</p>
     <p><strong>Detalle de dirección:</strong> {{ dialogData.detalleDireccionPaquete }}</p><br>
     <h4>Paquete:</h4>
+    <p><strong>Código:</strong> {{ dialogData.codigoPaquete }}</p>
     <p><strong>Peso:</strong> {{ dialogData.pesoPaquete }} kg</p>
     <p><strong>Tamaño:</strong> {{ getTamanoPaquete(dialogData.idTamano) }}</p>
     <p><strong>Tipo:</strong> {{ getTipoPaquete(dialogData.idTipo) }}</p>
     <p><strong>Fecha aprox de entrega:</strong> {{ dialogData.fechaAproxEntrega }}</p>
-    <p><strong>Contenido:</strong> {{ dialogData.contenidoPaquete }}</p>
+    <p><strong>Contenido:</strong> {{ dialogData.contenidoPaquete }}</p><br>
   </div>
 </ng-template>
 

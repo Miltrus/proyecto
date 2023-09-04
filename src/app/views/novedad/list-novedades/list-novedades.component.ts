@@ -123,9 +123,8 @@ export class ListNovedadesComponent implements OnInit {
       if (mensajero && mensajero.nombreUsuario && mensajero.apellidoUsuario) {
         return mensajero || '';
       }
-
     }
-    return 'WEVA';
+    return '';
   }
 
 
@@ -141,6 +140,10 @@ export class ListNovedadesComponent implements OnInit {
       'Motivo': novedad.motivoNoEntrega,
       'Mensajero': this.getMensajero(novedad.idPaquete).nombreUsuario + ' ' + this.getMensajero(novedad.idPaquete).apellidoUsuario,
       'Doc Mensajero': this.getMensajero(novedad.idPaquete).documentoUsuario,
+      'Doc Destinatario': this.getPaquete(novedad.idPaquete).documentoDestinatario,
+      'Nombre Destinatario': this.getPaquete(novedad.idPaquete).nombreDestinatario,
+      'Telefono Destinatario': this.getPaquete(novedad.idPaquete).telefonoDestinatario,
+      'Correo Destinatario': this.getPaquete(novedad.idPaquete).correoDestinatario,
     }));
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
@@ -163,6 +166,10 @@ export class ListNovedadesComponent implements OnInit {
       'Motivo': novedad.motivoNoEntrega,
       'Mensajero': this.getMensajero(novedad.idPaquete).nombreUsuario + ' ' + this.getMensajero(novedad.idPaquete).apellidoUsuario,
       'Doc Mensajero': this.getMensajero(novedad.idPaquete).documentoUsuario,
+      'Doc Destinatario': this.getPaquete(novedad.idPaquete).documentoDestinatario,
+      'Nombre Destinatario': this.getPaquete(novedad.idPaquete).nombreDestinatario,
+      'Telefono Destinatario': this.getPaquete(novedad.idPaquete).telefonoDestinatario,
+      'Correo Destinatario': this.getPaquete(novedad.idPaquete).correoDestinatario,
     }));
 
     const docDefinition: TDocumentDefinitions = {
@@ -171,15 +178,19 @@ export class ListNovedadesComponent implements OnInit {
         {
           style: 'tableExample',
           table: {
-            widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
             body: [
-              ['Codigo paquete', 'Fecha', 'Motivo', 'Mensajero', 'Doc Mensajero'],
+              ['Codigo paquete', 'Fecha', 'Motivo', 'Mensajero', 'Doc Mensajero', 'Doc Destinatario', 'Nombre Destinatario', 'Telefono Destinatario', 'Correo Destinatario'],
               ...this.dataToExport.map(novedad => [
                 novedad['Código paquete'],
                 novedad['Fecha'],
                 novedad['Motivo'],
                 novedad['Mensajero'],
                 novedad['Doc Mensajero'],
+                novedad['Doc Destinatario'],
+                novedad['Nombre Destinatario'],
+                novedad['Telefono Destinatario'],
+                novedad['Correo Destinatario'],
               ])
             ]
           }

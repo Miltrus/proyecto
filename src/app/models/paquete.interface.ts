@@ -7,7 +7,7 @@ export interface PaqueteInterface {
     qrCodeImage?: string | null | undefined;
     qrCodeUrl?: SafeUrl | null | undefined;
     pesoPaquete?: string | null | undefined;
-    contenidoPaquete?: any | null | undefined;
+    contenidoPaquete?: string | null | undefined;
     documentoDestinatario?: string | null | undefined;
     nombreDestinatario?: string | null | undefined;
     correoDestinatario?: string | null | undefined;
