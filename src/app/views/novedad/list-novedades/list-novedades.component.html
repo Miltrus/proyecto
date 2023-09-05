@@ -105,16 +105,17 @@
 <ng-template #viewNovedadDialog let-dialogData>
   <div class="dialogData">
     <h2>Información de la novedad</h2><br>
-    <p><strong>Fecha:</strong> {{ dialogData.fechaNoEntrega }}</p>
     <p><strong>Código paquete:</strong> {{ getPaquete (dialogData.idPaquete).codigoPaquete}}</p>
+    <p><strong>Fecha:</strong> {{ dialogData.fechaNoEntrega }}</p>
+    <p><strong>Motivo:</strong> {{ dialogData.motivoNoEntrega }}</p>
     <p><strong>Mensajero:</strong> {{ getMensajero(dialogData.idPaquete).nombreUsuario + ' ' +
       getMensajero(dialogData.idPaquete).apellidoUsuario }}</p>
-    <p><strong>Estado:</strong> {{ getEstado (dialogData.idEstado) }}</p>
-    <p><strong>Motivo:</strong> {{ dialogData.motivoNoEntrega }}</p><br>
+    <p><strong>Doc mensajero:</strong> {{ getMensajero(dialogData.idPaquete).documentoUsuario }}</p>
+    <p><strong>Estado:</strong> {{ getEstado (dialogData.idEstado) }}</p><br>
     <h4>Destinatario:</h4>
     <p><strong>N° Documento: </strong> {{ getPaquete(dialogData.idPaquete).documentoDestinatario }}</p>
     <p><strong>Nombre: </strong> {{ getPaquete(dialogData.idPaquete).nombreDestinatario }}</p>
+    <p><strong>Email: </strong>{{ getPaquete(dialogData.idPaquete).correoDestinatario }}</p>
     <p><strong>Teléfono: </strong>{{ getPaquete(dialogData.idPaquete).telefonoDestinatario }}</p>
-    <p><strong>Correo: </strong>{{ getPaquete(dialogData.idPaquete).correoDestinatario }}</p>
   </div>
 </ng-template>

@@ -111,18 +111,18 @@
     <h4>Destinatario:</h4>
     <p><strong>Nombre: </strong> {{ getRastreo (dialogData.idRastreo).nombreDestinatario }}</p>
     <p><strong>Documento: </strong> {{ getRastreo (dialogData.idRastreo).documentoDestinatario }}</p>
-    <p><strong>Dirección: </strong> {{ getRastreo (dialogData.idRastreo).direccionPaquete }}</p>
-    <p><strong>Teléfono: </strong> {{ getRastreo (dialogData.idRastreo).telefonoDestinatario }}</p><br>
+    <p><strong>Email: </strong> {{ getRastreo (dialogData.idRastreo).correoDestinatario }}</p>
+    <p><strong>Teléfono: </strong> {{ getRastreo (dialogData.idRastreo).telefonoDestinatario }}</p>
+    <p><strong>Dirección: </strong> {{ getRastreo (dialogData.idRastreo).direccionPaquete }}</p><br>
     <h4>Paquete:</h4>
     <p><strong>Código:</strong> {{ getRastreo (dialogData.idRastreo).codigoPaquete}}</p>
-    <p><strong>Peso: </strong> {{ getRastreo (dialogData.idRastreo).pesoPaquete }}</p>
     <p><strong>Contenido: </strong> {{ getRastreo (dialogData.idRastreo).contenidoPaquete }}</p><br>
 
     <p><strong>Fecha entrega: </strong> {{ dialogData.fechaEntrega }}</p>
 
     <p><strong>Mensajero:</strong> {{ getMensajero(dialogData.idEntrega).nombreUsuario + ' ' +
       getMensajero(dialogData.idEntrega).apellidoUsuario }}</p>
-    <p><strong></strong></p>
+    <p><strong>Doc mensajero: </strong> {{ getMensajero(dialogData.idEntrega).documentoUsuario }}</p>
   </div>
 </ng-template>
 
