@@ -13,7 +13,7 @@ const routes: Routes = [
 
   { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
 
-  { path: 'dashboard', canMatch: [isLoggedInGuard], loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule) },
+  { path: 'home', canMatch: [isLoggedInGuard], loadChildren: () => import('./components/home/home.module').then(m => m.HomeModule) },
 
 
   {
