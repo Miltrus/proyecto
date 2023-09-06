@@ -33,7 +33,7 @@ export class LoginComponent {
   async openForgotPasswordDialog(event: Event) {
     event.preventDefault();
     this.dialog.open(ForgotPwdComponent, {
-      width: '400px',
+      width: '25%',
       height: 'auto',
     });
   };
@@ -47,7 +47,7 @@ export class LoginComponent {
           localStorage.setItem("token", data.token);
           const decodedToken = JSON.parse(atob(data.token!.split('.')[1]));
           localStorage.setItem("uid", decodedToken.uid);
-          await this.router.navigate(['dashboard']);
+          await this.router.navigate(['home']);
           this.dataUser = data.user;
           Swal.fire({
             icon: 'success',

@@ -89,10 +89,11 @@ export class ListClientesComponent implements OnInit, OnDestroy {
   }
 
 
-  viewCliente(usuario: ClienteInterface): void {
+  viewCliente(cliente: ClienteInterface): void {
     this.dialog.open(this.viewClienteDialog, {
-      data: usuario,
-      width: '400px',
+      data: cliente,
+      width: '35%',
+      height: '45%',
     });
   }
 

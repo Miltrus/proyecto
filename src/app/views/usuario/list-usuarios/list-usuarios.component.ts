@@ -92,7 +92,8 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
     const cont = this.cont;
     this.dialog.open(this.viewUsuarioDialog, {
       data: { usuario, conta: cont },
-      width: '400px',
+      width: '35%',
+      height: '50%',
     });
   }
 

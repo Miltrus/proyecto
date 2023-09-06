@@ -109,7 +109,8 @@ export class ListEntregasComponent implements OnInit {
   viewEntrega(entrega: EntregaInterface): void {
     this.dialog.open(this.viewEntregaDialog, {
       data: entrega,
-      width: '400px',
+      width: '35%',
+      height: '70%',
     });
   }
 

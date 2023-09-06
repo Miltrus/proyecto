@@ -42,7 +42,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     private api: PaqueteService,
     private paqueteService: PaqueteService,
     private apiClient: ClienteService,
-    private apiRastreo: RastreoService,                                       
+    private apiRastreo: RastreoService,
     private dialog: MatDialog,
     private renderer: Renderer2,
   ) { }
@@ -248,10 +248,10 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         this.loading = true;
         this.api.putPaquete(id).subscribe(data => {
           if (data.status == 'ok') {
-           /*  if (id.idEstado != 0) {       
-                const idRastreo = this.apiRastreo.getOneRastreo(id.idPaquete)
-              console.log('entro: ', idRastreo);
-            } */
+            /*  if (id.idEstado != 0) {       
+                 const idRastreo = this.apiRastreo.getOneRastreo(id.idPaquete)
+               console.log('entro: ', idRastreo);
+             } */
             this.editForm.reset();
             this.editRemitente.reset();
             this.router.navigate(['paquete/list-paquetes']);
@@ -397,10 +397,11 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   openAddClienteDialog(): void {
     const dialogRef = this.dialog.open(AddClienteComponent, {
-      width: '70%',
-      height: '70%',
+      width: '75%',
+      height: '75%',
       disableClose: true,
       autoFocus: false,
+
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

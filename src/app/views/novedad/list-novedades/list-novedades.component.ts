@@ -106,7 +106,8 @@ export class ListNovedadesComponent implements OnInit {
   viewNovedad(novedad: RastreoInterface): void {
     this.dialog.open(this.viewNovedadDialog, {
       data: novedad,
-      width: '400px',
+      width: '35%',
+      height: '60%',
     });
   }
 
