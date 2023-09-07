@@ -33,8 +33,8 @@
 
         <ng-container matColumnDef="codigo">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
-          <td mat-cell *matCellDef="let novedad" class="max-width-cell">{{ getPaquete (novedad.idPaquete).codigoPaquete
-            }}</td>
+          <td mat-cell *matCellDef="let novedad" class="max-width-cell">{{ getPaquete
+            (novedad.idPaquete).codigoPaquete}}</td>
         </ng-container>
 
         <ng-container matColumnDef="fechaNoEntrega">
@@ -42,10 +42,10 @@
           <td mat-cell *matCellDef="let novedad" class="max-width-cell">{{ novedad.fechaNoEntrega}}</td>
         </ng-container>
 
-        <ng-container matColumnDef="mensajero">
+        <ng-container matColumnDef="idUsuario">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Mensajero</th>
-          <td mat-cell *matCellDef="let paq" class="max-width-cell">
-            {{ getMensajero(paq.idPaquete).nombreUsuario + ' ' + getMensajero(paq.idPaquete).apellidoUsuario }}
+          <td mat-cell *matCellDef="let novedad" class="max-width-cell">
+            {{ getMensajero(novedad.idUsuario).nombreUsuario + ' ' + getMensajero(novedad.idUsuario).apellidoUsuario }}
           </td>
         </ng-container>
 
@@ -70,10 +70,10 @@
         </ng-container>
 
         <tr mat-header-row
-          *matHeaderRowDef="['num', 'codigo', 'mensajero', 'fechaNoEntrega', 'motivoNoEntrega', 'acciones']">
+          *matHeaderRowDef="['num', 'codigo', 'fechaNoEntrega', 'idUsuario', 'motivoNoEntrega', 'acciones']">
         </tr>
         <tr mat-row
-          *matRowDef="let row; columns: ['num', 'codigo', 'mensajero', 'fechaNoEntrega', 'motivoNoEntrega', 'acciones']">
+          *matRowDef="let row; columns: ['num', 'codigo', 'fechaNoEntrega', 'idUsuario', 'motivoNoEntrega', 'acciones']">
         </tr>
       </table>
     </div>
@@ -108,8 +108,8 @@
     <p><strong>Código paquete:</strong> {{ getPaquete (dialogData.idPaquete).codigoPaquete}}</p>
     <p><strong>Fecha:</strong> {{ dialogData.fechaNoEntrega }}</p>
     <p><strong>Motivo:</strong> {{ dialogData.motivoNoEntrega }}</p>
-    <p><strong>Mensajero:</strong> {{ getMensajero(dialogData.idPaquete).nombreUsuario + ' ' +
-      getMensajero(dialogData.idPaquete).apellidoUsuario }}</p>
+    <p><strong>Mensajero:</strong> {{ getMensajero(dialogData.idUsuario).nombreUsuario + ' ' +
+      getMensajero(dialogData.idUsuario).apellidoUsuario }}</p>
     <p><strong>Doc mensajero:</strong> {{ getMensajero(dialogData.idPaquete).documentoUsuario }}</p>
     <p><strong>Estado:</strong> {{ getEstado (dialogData.idEstado) }}</p><br>
     <h4>Destinatario:</h4>
