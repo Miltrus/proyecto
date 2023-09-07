@@ -95,15 +95,20 @@
             </div>
           </div>
           <div class="col">
-            <div class="form-group">
-              <label for="exampleFormControlInput1">Dirección <b style="color: red;">*</b></label>
-              <input type="text" class="form-control" formControlName="direccionCliente" #inputPlaces [ngClass]="{
-                'is-invalid': newForm.get('direccionCliente')?.invalid && (newForm.get('direccionCliente')?.touched || newForm.get('direccionCliente')?.dirty),
-                'is-valid': newForm.get('direccionCliente')?.valid && (newForm.get('direccionCliente')?.touched || newForm.get('direccionCliente')?.dirty)
-              }">
-              <div *ngIf="newForm.get('direccionCliente')?.errors?.['required']" class="invalid-feedback">
-                Este campo es obligatorio.
+            <div class="d-flex align-items-center">
+              <div class="form-group flex-grow-1">
+                <label for="exampleFormControlInput1">Dirección <b style="color: red;">*</b></label>
+                <input type="text" class="form-control" formControlName="direccionCliente" #inputPlaces [ngClass]="{
+                  'is-invalid': newForm.get('direccionCliente')?.invalid && (newForm.get('direccionCliente')?.touched || newForm.get('direccionCliente')?.dirty),
+                  'is-valid': newForm.get('direccionCliente')?.valid && (newForm.get('direccionCliente')?.touched || newForm.get('direccionCliente')?.dirty)
+                }">
+                <div *ngIf="newForm.get('direccionCliente')?.errors?.['required']" class="invalid-feedback">
+                  Este campo es obligatorio.
+                </div>
               </div>
+              <button class="btn btn-circle btn-update btn-margin" type="button" title="Actualizar correo y/o teléfono">
+                <span class="material-icons">edit</span>
+              </button>
             </div>
           </div>
         </div>
