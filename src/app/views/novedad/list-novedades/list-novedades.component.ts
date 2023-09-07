@@ -107,7 +107,7 @@ export class ListNovedadesComponent implements OnInit {
     this.dialog.open(this.viewNovedadDialog, {
       data: novedad,
       width: '35%',
-      height: '60%',
+      height: 'auto',
     });
   }
 

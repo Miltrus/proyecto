@@ -81,8 +81,8 @@ export class ViewProfileComponent implements OnInit, OnDestroy {
 
   openEditProfileDialog(): void {
     const dialogRef = this.dialog.open(EditProfileComponent, {
-      width: '75%',
-      height: '75%',
+      width: '70%',
+      height: 'auto',
       disableClose: true,
       autoFocus: false,
       data: { userData: this.userData }
