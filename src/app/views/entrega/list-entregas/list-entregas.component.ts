@@ -39,7 +39,7 @@ export class ListEntregasComponent implements OnInit {
   entregas: EntregaInterface[] = [];
   rastreos: RastreoInterface[] = [];
   paquetes: PaqueteInterface[] = [];
-  usuarios: UsuarioInterface[] = [];
+  usuarios: any[] = [];
   dataSource = new MatTableDataSource(this.entregas); //pal filtro
   loading: boolean = true;
   dataToExport: any[] = [];
@@ -81,7 +81,6 @@ export class ListEntregasComponent implements OnInit {
       this.loading = false;
     },
       error => {
-        console.log(error);
         Swal.fire({
           icon: 'error',
           title: 'Error en el servidor',
@@ -121,47 +120,34 @@ export class ListEntregasComponent implements OnInit {
 
   getRastreo(idRastreo: any): any {
     const rastreo = this.rastreos.find(tipo => tipo.idRastreo === idRastreo);
-    return this.getPaquete(rastreo?.idPaquete);
+    let paquete = this.getPaquete(rastreo?.idPaquete);
+    let usuario = this.getUsuario(rastreo?.idUsuario);
+
+    return { paquete, usuario }
   }
+
 
   getPaquete(idPaquete: any): any {
     const paquete = this.paquetes.find(tipo => tipo.idPaquete === idPaquete);
     return paquete || '';
   }
 
-
-  getMensajero(idEntrega: any): any {
-    const entrega = this.getEntrega(idEntrega);
-
-    if (entrega.idRastreo) {
-      const novedad = this.rastreos.find(idR => idR.idRastreo == entrega.idRastreo);
-
-      if (novedad?.idPaquete) {
-        const paquete = this.paquetes.find(idP => idP.idPaquete == novedad.idPaquete);
-
-        if (paquete?.idUsuario) {
-          const mensajero = this.usuarios.find(documentoU => documentoU.idUsuario == paquete.idUsuario);
-
-          if (mensajero && mensajero.nombreUsuario && mensajero.apellidoUsuario) {
-            return mensajero || '';
-          }
-        }
-      }
-      return 'No hay mensajero';
-    }
+  getUsuario(idUsuario: any) {
+    const user = this.usuarios.find(i => i.idUsuario === idUsuario);
+    return user || '';
   }
 
   generateExcel(): void {
     const dataToExport = this.dataSource.data.map(entrega => ({
-      'Código paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).codigoPaquete,
-      'Nombre destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).nombreDestinatario,
-      'Documento destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).documentoDestinatario,
-      'Dirección destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).direccionPaquete + ' - ' + this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).detalleDireccionPaquete,
-      'Teléfono destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).telefonoDestinatario,
-      'Correo destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).correoDestinatario,
-      'Contenido paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).contenidoPaquete,
+      'Código paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).codigoPaquete,
+      'Nombre destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).nombreDestinatario,
+      'Documento destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).documentoDestinatario,
+      'Dirección destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).direccionPaquete + ' - ' + this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).detalleDireccionPaquete,
+      'Teléfono destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).telefonoDestinatario,
+      'Correo destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).correoDestinatario,
+      'Contenido paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).contenidoPaquete,
       'Fecha': entrega.fechaEntrega,
-      'Mensajero': this.getMensajero(entrega.idEntrega).nombreUsuario + ' ' + this.getMensajero(entrega.idEntrega).apellidoUsuario,
+      'Mensajero': this.getUsuario(this.getRastreo(entrega.idRastreo).usuario.idUsuario).nombreUsuario + ' ' + this.getUsuario(this.getRastreo(entrega.idRastreo).usuario.idUsuario).apellidoUsuario,
     }));
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
@@ -179,15 +165,15 @@ export class ListEntregasComponent implements OnInit {
 
   generatePDF(): void {
     this.dataToExport = this.dataSource.data.map(entrega => ({
-      'Código paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).codigoPaquete,
-      'Nombre destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).nombreDestinatario,
-      'Documento destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).documentoDestinatario,
-      'Dirección destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).direccionPaquete + ' - ' + this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).detalleDireccionPaquete,
-      'Teléfono destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).telefonoDestinatario,
-      'Correo destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).correoDestinatario,
-      'Contenido paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).idPaquete).contenidoPaquete,
+      'Código paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).codigoPaquete,
+      'Nombre destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).nombreDestinatario,
+      'Documento destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).documentoDestinatario,
+      'Dirección destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).direccionPaquete + ' - ' + this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).detalleDireccionPaquete,
+      'Teléfono destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).telefonoDestinatario,
+      'Correo destinatario': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).correoDestinatario,
+      'Contenido paquete': this.getPaquete(this.getRastreo(entrega.idRastreo).paquete.idPaquete).contenidoPaquete,
       'Fecha': entrega.fechaEntrega,
-      'Mensajero': this.getMensajero(entrega.idEntrega).nombreUsuario + ' ' + this.getMensajero(entrega.idEntrega).apellidoUsuario,
+      'Mensajero': this.getUsuario(this.getRastreo(entrega.idRastreo).usuario.idUsuario).nombreUsuario + ' ' + this.getUsuario(this.getRastreo(entrega.idRastreo).usuario.idUsuario).apellidoUsuario,
     }));
 
     const docDefinition: TDocumentDefinitions = {
