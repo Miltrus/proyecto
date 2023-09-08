@@ -435,7 +435,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     let map!: google.maps.Map;
     let selectedLocation: { lat: number, lng: number } | null = null;
     let selectedLocationMarker: google.maps.Marker | null = null;
-  
+
     if (this.editForm.value.lat == null || this.editForm.value.lng == null) {
       mapOptions = {
         center: { lat: 6.25670, lng: -75.57496 },
@@ -446,12 +446,12 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         center: { lat: this.editForm.value.lat, lng: this.editForm.value.lng },
         zoom: 15,
       }
-  
+
       selectedLocation = { lat: this.editForm.value.lat, lng: this.editForm.value.lng };
     }
-  
+
     map = new google.maps.Map(document.getElementById('map')!, mapOptions);
-  
+
 
     function addSelectedLocationMarker() {
       if (selectedLocation) {
@@ -462,34 +462,33 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         });
       }
     }
-  
+
     addSelectedLocationMarker();
-  
+
     // Crea un objeto de geocodificación inversa
     const geocoder = new google.maps.Geocoder();
-  
+
     // Agrega un evento click al mapa
     google.maps.event.addListener(map, 'click', (event: google.maps.MapMouseEvent) => {
       selectedLocation = { lat: event.latLng!.lat(), lng: event.latLng!.lng() };
-  
+
       // Realiza la geocodificación inversa para obtener la dirección
       geocoder.geocode({ location: selectedLocation }, (results, status) => {
         if (status === 'OK' && results![0]) {
           const formattedAddress = results![0].formatted_address;
-  
+
           this.editForm.patchValue({
             direccionPaquete: formattedAddress,
             lat: selectedLocation!['lat'],
             lng: selectedLocation!['lng']
           });
-          console.log(this.editForm.value);
-  
+
           if (selectedLocationMarker) {
             selectedLocationMarker.setMap(null);
           }
-  
+
           addSelectedLocationMarker();
-  
+
         } else {
           Swal.fire({
             icon: 'error',
