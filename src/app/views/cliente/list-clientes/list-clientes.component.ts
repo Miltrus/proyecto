@@ -34,13 +34,13 @@ export class ListClientesComponent implements OnInit, OnDestroy {
 
   clientes: ClienteInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
-  dataSource = new MatTableDataSource(this.clientes); //pal filtro
+  dataSource = new MatTableDataSource(this.clientes);
   loading: boolean = true;
   dataToExport: any[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
-  @ViewChild('viewClienteDialog') viewClienteDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
+  @ViewChild('viewClienteDialog') viewClienteDialog!: TemplateRef<any>;
 
   ngOnInit(): void {
     this.loading = true;
@@ -89,10 +89,11 @@ export class ListClientesComponent implements OnInit, OnDestroy {
   }
 
 
-  viewCliente(usuario: ClienteInterface): void {
+  viewCliente(cliente: ClienteInterface): void {
     this.dialog.open(this.viewClienteDialog, {
-      data: usuario,
-      width: '400px',
+      data: cliente,
+      width: '35%',
+      height: '45%',
     });
   }
 

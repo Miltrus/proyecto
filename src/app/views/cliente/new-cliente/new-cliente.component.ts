@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnDestroy, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface'
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-new-cliente',
@@ -29,6 +30,7 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
     private router: Router,
     private api: ClienteService,
     private renderer: Renderer2,
+    private dialog: MatDialog,
   ) { }
 
   private subscriptions: Subscription = new Subscription();
@@ -36,6 +38,8 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
   tiposDocumento: TipoDocumentoInterface[] = []
   loading: boolean = true;
   cords: boolean = false;
+
+  @ViewChild('viewMap') viewMap!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
 
   hasUnsavedChanges(): boolean {
     this.loading = false;
@@ -147,6 +151,86 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
         const lng = place.geometry.location.lng();
         this.newForm.patchValue({ lat: lat, lng: lng });
       }
+    });
+  }
+
+  openMapDialog() {
+    const dialogRef = this.dialog.open(this.viewMap, {
+      width: '500px',
+    });
+
+    dialogRef.afterOpened().subscribe(() => {
+      this.initMap();
+    });
+  }
+
+  initMap() {
+    let mapOptions: any;
+    let map!: google.maps.Map;
+    let selectedLocation: { lat: number, lng: number } | null = null;
+    let selectedLocationMarker: google.maps.Marker | null = null;
+  
+    if (this.newForm.value.lat == null || this.newForm.value.lng == null) {
+      mapOptions = {
+        center: { lat: 6.25670, lng: -75.57496 },
+        zoom: 11,
+      };
+    } else {
+      mapOptions = {
+        center: { lat: this.newForm.value.lat, lng: this.newForm.value.lng },
+        zoom: 15,
+      }
+  
+      selectedLocation = { lat: this.newForm.value.lat, lng: this.newForm.value.lng };
+    }
+  
+    map = new google.maps.Map(document.getElementById('map')!, mapOptions);
+  
+
+    function addSelectedLocationMarker() {
+      if (selectedLocation) {
+        selectedLocationMarker = new google.maps.Marker({
+          position: selectedLocation,
+          map: map,
+          title: 'Ubicación seleccionada',
+        });
+      }
+    }
+  
+    addSelectedLocationMarker();
+  
+    // Crea un objeto de geocodificación inversa
+    const geocoder = new google.maps.Geocoder();
+  
+    // Agrega un evento click al mapa
+    google.maps.event.addListener(map, 'click', (event: google.maps.MapMouseEvent) => {
+      selectedLocation = { lat: event.latLng!.lat(), lng: event.latLng!.lng() };
+  
+      // Realiza la geocodificación inversa para obtener la dirección
+      geocoder.geocode({ location: selectedLocation }, (results, status) => {
+        if (status === 'OK' && results![0]) {
+          const formattedAddress = results![0].formatted_address;
+  
+          this.newForm.patchValue({
+            direccionCliente: formattedAddress,
+            lat: selectedLocation!['lat'],
+            lng: selectedLocation!['lng']
+          });
+  
+          if (selectedLocationMarker) {
+            selectedLocationMarker.setMap(null);
+          }
+  
+          addSelectedLocationMarker();
+  
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al obtener la dirección',
+            text: 'No se ha podido obtener la dirección de la ubicación seleccionada. Por favor, inténtalo nuevamente.',
+          });
+        }
+      });
     });
   }
 }

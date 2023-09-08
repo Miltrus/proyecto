@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { ClienteInterface } from '../../../models/cliente.interface';
@@ -121,15 +121,13 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
   loading: boolean = true;
   filtrarCliente: Observable<any[]> = new Observable<any[]>();
   filtrarDestinatario: Observable<any[]> = new Observable<any[]>();
-  divEstado: boolean = false;
-  estadito: any;
 
-  selectedRemitente: ClienteInterface | undefined;
+  @ViewChild('viewMap') viewMap!: TemplateRef<any>;
 
   ngOnInit(): void {
     let idPaquete = this.activatedRouter.snapshot.paramMap.get('id');
     this.api.getOnePaquete(idPaquete).subscribe(data => {
-      this.dataPaquete = data ? [data] : []; //si data encontró algun valor, lo asignamos a dataRol envuelto en un arreglo, si data es null asignamos un arreglo vacio, si no se hace esto da error
+      this.dataPaquete = data ? [data] : [];
       this.editForm.setValue({
         'idPaquete': this.dataPaquete[0]?.idPaquete || 'idPaquete',
         'codigoPaquete': this.dataPaquete[0]?.codigoPaquete || 'codigoPaquete',
@@ -149,10 +147,6 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         'lat': this.dataPaquete[0]?.lat || '',
         'lng': this.dataPaquete[0]?.lng || ''
       });
-      this.estadito = this.dataPaquete[0]?.idEstado;
-      /* if (this.estadito == 4) {
-        this.divEstado = true;
-      } */
       this.editRemitente.patchValue({
         'documentoCliente': this.dataPaquete[0]?.documentoRemitente || ''
       });
@@ -353,10 +347,6 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
 
       if (data) {
         this.remitente = data;
-        const remitenteSeleccionado = this.editForm.get('documentoRemitente')?.value;
-        this.selectedRemitente = this.remitente.find(remi => remi.documentoCliente === remitenteSeleccionado);
-
-        this.editForm.get('documentoDestinatario')?.value;
       }
 
       this.loading = false;
@@ -393,10 +383,11 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   openAddClienteDialog(): void {
     const dialogRef = this.dialog.open(AddClienteComponent, {
-      width: '70%',
-      height: '70%',
+      width: '75%',
+      height: '75%',
       disableClose: true,
       autoFocus: false,
+
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -430,6 +421,87 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         const lng = place.geometry.location.lng();
         this.editForm.patchValue({ lat: lat, lng: lng });
       }
+    });
+  }
+
+  openMapDialog() {
+    const dialogRef = this.dialog.open(this.viewMap, {
+      width: '500px',
+    });
+
+    dialogRef.afterOpened().subscribe(() => {
+      this.initMap();
+    });
+  }
+
+  initMap() {
+    let mapOptions: any;
+    let map!: google.maps.Map;
+    let selectedLocation: { lat: number, lng: number } | null = null;
+    let selectedLocationMarker: google.maps.Marker | null = null;
+  
+    if (this.editForm.value.lat == null || this.editForm.value.lng == null) {
+      mapOptions = {
+        center: { lat: 6.25670, lng: -75.57496 },
+        zoom: 11,
+      };
+    } else {
+      mapOptions = {
+        center: { lat: this.editForm.value.lat, lng: this.editForm.value.lng },
+        zoom: 15,
+      }
+  
+      selectedLocation = { lat: this.editForm.value.lat, lng: this.editForm.value.lng };
+    }
+  
+    map = new google.maps.Map(document.getElementById('map')!, mapOptions);
+  
+
+    function addSelectedLocationMarker() {
+      if (selectedLocation) {
+        selectedLocationMarker = new google.maps.Marker({
+          position: selectedLocation,
+          map: map,
+          title: 'Ubicación seleccionada',
+        });
+      }
+    }
+  
+    addSelectedLocationMarker();
+  
+    // Crea un objeto de geocodificación inversa
+    const geocoder = new google.maps.Geocoder();
+  
+    // Agrega un evento click al mapa
+    google.maps.event.addListener(map, 'click', (event: google.maps.MapMouseEvent) => {
+      selectedLocation = { lat: event.latLng!.lat(), lng: event.latLng!.lng() };
+  
+      // Realiza la geocodificación inversa para obtener la dirección
+      geocoder.geocode({ location: selectedLocation }, (results, status) => {
+        if (status === 'OK' && results![0]) {
+          const formattedAddress = results![0].formatted_address;
+  
+          this.editForm.patchValue({
+            direccionPaquete: formattedAddress,
+            lat: selectedLocation!['lat'],
+            lng: selectedLocation!['lng']
+          });
+          console.log(this.editForm.value);
+  
+          if (selectedLocationMarker) {
+            selectedLocationMarker.setMap(null);
+          }
+  
+          addSelectedLocationMarker();
+  
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al obtener la dirección',
+            text: 'No se ha podido obtener la dirección de la ubicación seleccionada. Por favor, inténtalo nuevamente.',
+          });
+        }
+      });
     });
   }
 }

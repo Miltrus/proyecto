@@ -45,7 +45,6 @@
   
   .mat-select-arrow {
     right: 8px;
-    /* Ajusta este valor según sea necesario */
   }
 
   .btn-circle {
@@ -60,8 +59,13 @@
     cursor: pointer;
 
     &.btn-update {
-      border-color: #ccc; /* Color naranja */
-      color: #007bff; /* Color naranja */
+      border-color: #ccc;
+      color: #007bff; 
+    }
+
+    &.btn-map {
+      border-color: #ccc;
+      color: #ff0000;
     }
   
     &:hover {
@@ -83,5 +87,5 @@
   }
   
   .btn-margin {
-    margin-left: 10px; /* Ajusta el valor según tu preferencia */
+    margin-left: 10px;
   }

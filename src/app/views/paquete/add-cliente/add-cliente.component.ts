@@ -1,10 +1,10 @@
-import { Component, ElementRef, HostListener, OnDestroy, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ClienteService } from '../../../services/api/cliente.service';
 import { ClienteInterface } from '../../../models/cliente.interface';
 import { TipoDocumentoInterface } from 'src/app/models/tipo-documento.interface';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HasUnsavedChanges } from 'src/app/auth/guards/unsaved-changes.guard';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -29,9 +29,12 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
     private dialogRef: MatDialogRef<AddClienteComponent>,
     private api: ClienteService,
     private renderer: Renderer2,
+    private dialog: MatDialog,
   ) { }
 
   private subscriptions: Subscription = new Subscription();
+
+  @ViewChild('viewMap') viewMap!: TemplateRef<any>;
 
 
   hasUnsavedChanges(): boolean {
@@ -43,7 +46,7 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
     documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
     idTipoDocumento: new FormControl('', [Validators.required]),
     nombreCliente: new FormControl('', Validators.required),
-    telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
+    telefonoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     correoCliente: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     direccionCliente: new FormControl('', Validators.required),
     detalleDireccionCliente: new FormControl(''),
@@ -162,6 +165,86 @@ export class AddClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
         const lng = place.geometry.location.lng();
         this.newForm.patchValue({ lat: lat, lng: lng });
       }
+    });
+  }
+
+  openMapDialog() {
+    const dialogMap = this.dialog.open(this.viewMap, {
+      width: '500px',
+    });
+
+    dialogMap.afterOpened().subscribe(() => {
+      this.initMap();
+    });
+  }
+
+  initMap() {
+    let mapOptions: any;
+    let map!: google.maps.Map;
+    let selectedLocation: { lat: number, lng: number } | null = null;
+    let selectedLocationMarker: google.maps.Marker | null = null;
+  
+    if (this.newForm.value.lat == null || this.newForm.value.lng == null) {
+      mapOptions = {
+        center: { lat: 6.25670, lng: -75.57496 },
+        zoom: 11,
+      };
+    } else {
+      mapOptions = {
+        center: { lat: this.newForm.value.lat, lng: this.newForm.value.lng },
+        zoom: 15,
+      }
+  
+      selectedLocation = { lat: this.newForm.value.lat, lng: this.newForm.value.lng };
+    }
+  
+    map = new google.maps.Map(document.getElementById('map')!, mapOptions);
+  
+
+    function addSelectedLocationMarker() {
+      if (selectedLocation) {
+        selectedLocationMarker = new google.maps.Marker({
+          position: selectedLocation,
+          map: map,
+          title: 'Ubicación seleccionada',
+        });
+      }
+    }
+  
+    addSelectedLocationMarker();
+  
+    // Crea un objeto de geocodificación inversa
+    const geocoder = new google.maps.Geocoder();
+  
+    // Agrega un evento click al mapa
+    google.maps.event.addListener(map, 'click', (event: google.maps.MapMouseEvent) => {
+      selectedLocation = { lat: event.latLng!.lat(), lng: event.latLng!.lng() };
+  
+      // Realiza la geocodificación inversa para obtener la dirección
+      geocoder.geocode({ location: selectedLocation }, (results, status) => {
+        if (status === 'OK' && results![0]) {
+          const formattedAddress = results![0].formatted_address;
+  
+          this.newForm.patchValue({
+            direccionCliente: formattedAddress,
+            lat: selectedLocation!['lat'],
+            lng: selectedLocation!['lng']
+          });
+  
+          if (selectedLocationMarker) {
+            selectedLocationMarker.setMap(null);
+          }
+  
+          addSelectedLocationMarker();
+  
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al obtener la dirección',
+            text: 'No se ha podido obtener la dirección de la ubicación seleccionada. Por favor, inténtalo nuevamente.',
+          });
+        }
+      });
     });
   }
 }

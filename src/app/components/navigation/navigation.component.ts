@@ -21,14 +21,7 @@ export class NavigationComponent {
 
   isDarkThemeActive = false;
 
-  modules = [
-    { name: 'Roles', route: '/rol' },
-    { name: 'Usuarios', route: '/usuario' },
-    { name: 'Clientes', route: '/cliente' },
-    { name: 'Paquetes', route: '/paquete' },
-    { name: 'Novedades', route: '/novedad' },
-    { name: 'Entregas', route: '/entrega'}
-  ];
+  modules: any[] = [];
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -36,16 +29,6 @@ export class NavigationComponent {
     private rolService: RolService,
     private userService: UsuarioService,
   ) {
-    const isDarkModeActive = this.document.body.classList.contains('dark-mode');
-    const storedTheme = localStorage.getItem('isDarkThemeActive');
-
-    this.isDarkThemeActive = storedTheme ? storedTheme == 'true' : isDarkModeActive;
-
-    if (this.isDarkThemeActive) {
-      this.document.body.classList.add('dark-mode');
-    } else {
-      this.document.body.classList.remove('dark-mode');
-    }
 
     const uid = localStorage.getItem('uid');
 
@@ -56,7 +39,28 @@ export class NavigationComponent {
         title: 'Su sesión ha expirado',
         text: 'Por favor inicie sesión nuevamente.',
       });
+      return;
     };
+
+    this.modules = [
+      { name: 'Roles', route: '/rol' },
+      { name: 'Usuarios', route: '/usuario' },
+      { name: 'Clientes', route: '/cliente' },
+      { name: 'Paquetes', route: '/paquete' },
+      { name: 'Novedades', route: '/novedad' },
+      { name: 'Entregas', route: '/entrega' }
+    ];
+
+    const isDarkModeActive = this.document.body.classList.contains('dark-mode');
+    const storedTheme = localStorage.getItem('isDarkThemeActive');
+
+    this.isDarkThemeActive = storedTheme ? storedTheme == 'true' : isDarkModeActive;
+
+    if (this.isDarkThemeActive) {
+      this.document.body.classList.add('dark-mode');
+    } else {
+      this.document.body.classList.remove('dark-mode');
+    }
 
     this.userService.getOneUsuario(uid).subscribe(data => {
       const rol = data.idRol;

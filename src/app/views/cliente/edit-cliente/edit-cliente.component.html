@@ -48,7 +48,6 @@
                         </div>
                     </div>
                 </div>
-                <br>
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
@@ -81,7 +80,6 @@
                         </div>
                     </div>
                 </div>
-                <br>
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
@@ -101,22 +99,27 @@
                         </div>
                     </div>
                     <div class="col">
-                        <div class="form-group">
-                            <label for="exampleFormControlInput1">Dirección <b style="color: red;">*</b></label>
-                            <input type="text" class="form-control" formControlName="direccionCliente" #inputPlaces
-                                [ngClass]="{
-                            'is-invalid': editForm.get('direccionCliente')?.invalid && (editForm.get('direccionCliente')?.touched || editForm.get('direccionCliente')?.dirty),
-                            'is-valid': editForm.get('direccionCliente')?.valid && (editForm.get('direccionCliente')?.touched || editForm.get('direccionCliente')?.dirty)
-                          }">
-
-                            <div *ngIf="editForm.get('direccionCliente')?.errors?.['required']"
-                                class="invalid-feedback">
-                                Este campo es obligatorio.
+                        <div class="d-flex align-items-center">
+                            <div class="form-group flex-grow-1">
+                                <label for="exampleFormControlInput1">Dirección <b style="color: red;">*</b></label>
+                                <input type="text" class="form-control" formControlName="direccionCliente" #inputPlaces
+                                    [ngClass]="{
+                              'is-invalid': editForm.get('direccionCliente')?.invalid && (editForm.get('direccionCliente')?.touched || editForm.get('direccionCliente')?.dirty),
+                              'is-valid': editForm.get('direccionCliente')?.valid && (editForm.get('direccionCliente')?.touched || editForm.get('direccionCliente')?.dirty)
+                            }">
+                                <div *ngIf="editForm.get('direccionCliente')?.errors?.['required']"
+                                    class="invalid-feedback">
+                                    Este campo es obligatorio.
+                                </div>
                             </div>
+                            <button class="btn btn-circle btn-update btn-margin" type="button"
+                                title="Seleccionar en el mapa" (click)="openMapDialog()">
+                                <span class="material-icons">location_on</span>
+                            </button>
+
                         </div>
                     </div>
                 </div>
-                <br>
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
@@ -149,3 +152,7 @@
         </div>
     </div>
 </app-navigation>
+
+<ng-template #viewMap>
+    <div id="map" style="width: 100%; height: 400px;"></div>
+</ng-template>

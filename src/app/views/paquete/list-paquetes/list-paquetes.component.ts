@@ -47,7 +47,7 @@ export class ListPaquetesComponent implements OnInit {
   estadosPaquete: EstadoPaqueteInterface[] = [];
   tamano: TamanoPaqueteInterface[] = [];
   tipos: TipoPaqueteInterface[] = [];
-  dataSource = new MatTableDataSource(this.paquetes); //pal filtro
+  dataSource = new MatTableDataSource(this.paquetes);
   loading: boolean = true;
   cords: boolean = false;
   estadosFiltro = [
@@ -64,7 +64,7 @@ export class ListPaquetesComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
-  @ViewChild('viewPaqueteDialog') viewPaqueteDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de paquete
+  @ViewChild('viewPaqueteDialog') viewPaqueteDialog!: TemplateRef<any>;
   @ViewChild('viewQR') viewQR!: TemplateRef<any>;
 
 
@@ -149,7 +149,7 @@ export class ListPaquetesComponent implements OnInit {
   viewPaquete(paquete: PaqueteInterface): void {
     this.dialog.open(this.viewPaqueteDialog, {
       data: paquete,
-      width: '30%',
+      width: '35%',
       height: '95%',
     });
   }

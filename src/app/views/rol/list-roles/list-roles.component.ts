@@ -40,7 +40,7 @@ export class ListRolesComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
-  @ViewChild('viewRolDialog') viewRolDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de rol
+  @ViewChild('viewRolDialog') viewRolDialog!: TemplateRef<any>;
 
   ngOnInit(): void {
     this.loadRoles();
@@ -93,7 +93,8 @@ export class ListRolesComponent implements OnInit, OnDestroy {
   viewRol(rol: RolInterface): void {
     this.dialog.open(this.viewRolDialog, {
       data: rol,
-      width: '400px',
+      width: '35%',
+      height: '45%',
     });
   }
 

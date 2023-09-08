@@ -42,7 +42,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
   estadosUsuario: EstadoUsuarioInterface[] = [];
   rolUsuario: RolInterface[] = [];
   paquetes: any[] = [];
-  dataSource = new MatTableDataSource(this.usuarios); //pal filtro
+  dataSource = new MatTableDataSource(this.usuarios);
   loading: boolean = true;
   dataToExport: any[] = [];
 
@@ -50,7 +50,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
-  @ViewChild('viewUsuarioDialog') viewUsuarioDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
+  @ViewChild('viewUsuarioDialog') viewUsuarioDialog!: TemplateRef<any>;
 
   ngOnInit(): void {
 
@@ -92,7 +92,8 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
     const cont = this.cont;
     this.dialog.open(this.viewUsuarioDialog, {
       data: { usuario, conta: cont },
-      width: '400px',
+      width: '35%',
+      height: '50%',
     });
   }
 

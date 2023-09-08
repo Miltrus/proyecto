@@ -15,7 +15,7 @@
         <div class="d-flex justify-content-end">
           <mat-form-field appearance="outline">
             <mat-label>Búsqueda</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Ej: CJ7E12M" #input autocomplete="off">
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ej: CJ7E2M" #input autocomplete="off">
             <button mat-button matSuffix disabled>
               <mat-icon color="primary">search</mat-icon>
             </button>
@@ -113,7 +113,8 @@
     <p><strong>Documento: </strong> {{ getRastreo (dialogData.idRastreo).documentoDestinatario }}</p>
     <p><strong>Email: </strong> {{ getRastreo (dialogData.idRastreo).correoDestinatario }}</p>
     <p><strong>Teléfono: </strong> {{ getRastreo (dialogData.idRastreo).telefonoDestinatario }}</p>
-    <p><strong>Dirección: </strong> {{ getRastreo (dialogData.idRastreo).direccionPaquete }}</p><br>
+    <p><strong>Dirección: </strong> {{ getRastreo (dialogData.idRastreo).direccionPaquete }}</p>
+    <p><strong>Detalle dirección: </strong> {{getRastreo (dialogData.idRastreo).detalleDireccionPaquete }}</p><br>
     <h4>Paquete:</h4>
     <p><strong>Código:</strong> {{ getRastreo (dialogData.idRastreo).codigoPaquete}}</p>
     <p><strong>Contenido: </strong> {{ getRastreo (dialogData.idRastreo).contenidoPaquete }}</p><br>

@@ -40,13 +40,13 @@ export class ListNovedadesComponent implements OnInit {
   paquetes: PaqueteInterface[] = [];
   usuarios: UsuarioInterface[] = [];
 
-  dataSource = new MatTableDataSource(this.novedades); // Para el filtro
+  dataSource = new MatTableDataSource(this.novedades);
   loading: boolean = true;
   dataToExport: any[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort; // Para el ordenamiento
-  @ViewChild('viewNovedadDialog') viewNovedadDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
+  @ViewChild('viewNovedadDialog') viewNovedadDialog!: TemplateRef<any>;
 
   ngOnInit(): void {
     this.loading = true;
@@ -106,7 +106,8 @@ export class ListNovedadesComponent implements OnInit {
   viewNovedad(novedad: RastreoInterface): void {
     this.dialog.open(this.viewNovedadDialog, {
       data: novedad,
-      width: '400px',
+      width: '35%',
+      height: '60%',
     });
   }
 

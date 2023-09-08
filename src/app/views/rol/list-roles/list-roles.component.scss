@@ -18,15 +18,12 @@
 .mat-cell {
   flex: 1;
   white-space: nowrap;
-  /* Evita que el contenido de la celda se rompa en varias líneas */
   overflow: hidden;
   text-overflow: ellipsis;
-  /* Agrega puntos suspensivos (...) si el contenido desborda el ancho de la celda */
 }
 
 .max-width-cell {
   max-width: 116px;
-  /* Establece el ancho máximo deseado */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -105,5 +102,5 @@ app-navigation {
 .pdf-button, .excel-button {
   white-space: nowrap;
   font-size: 14px;
-  min-width: 120px; /* Ajusta el valor del ancho mínimo según tus necesidades */
+  min-width: 120px;
 }

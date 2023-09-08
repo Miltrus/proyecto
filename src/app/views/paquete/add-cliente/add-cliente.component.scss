@@ -16,3 +16,46 @@
     align-items: center;
     height: 100px;
   }
+
+  .btn-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background-color: transparent;
+    cursor: pointer;
+
+    &.btn-update {
+      border-color: #ccc;
+      color: #007bff;
+    }
+
+    &.btn-map {
+      border-color: #ccc; 
+      color: #ff0000; 
+    }
+  
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+  
+  .btn-circle:hover {
+    background-color: #f0f0f0;
+  }
+
+  .input-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .btn-container {
+    margin-left: 10px;
+  }
+
+  .btn-margin {
+    margin-left: 10px;
+  }

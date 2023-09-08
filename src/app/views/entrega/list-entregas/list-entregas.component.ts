@@ -40,14 +40,14 @@ export class ListEntregasComponent implements OnInit {
   rastreos: RastreoInterface[] = [];
   paquetes: PaqueteInterface[] = [];
   usuarios: UsuarioInterface[] = [];
-  dataSource = new MatTableDataSource(this.entregas); //pal filtro
+  dataSource = new MatTableDataSource(this.entregas);
   loading: boolean = true;
   dataToExport: any[] = [];
   base64UrlToShow: string = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
-  @ViewChild('viewEntregaDialog') viewEntregaDialog!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
+  @ViewChild('viewEntregaDialog') viewEntregaDialog!: TemplateRef<any>;
   @ViewChild('viewFirma') viewFirma!: TemplateRef<any>;
 
   ngOnInit(): void {
@@ -109,7 +109,8 @@ export class ListEntregasComponent implements OnInit {
   viewEntrega(entrega: EntregaInterface): void {
     this.dialog.open(this.viewEntregaDialog, {
       data: entrega,
-      width: '400px',
+      width: '35%',
+      height: '70%',
     });
   }
 
