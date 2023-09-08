@@ -38,7 +38,7 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
   tiposDocumento: TipoDocumentoInterface[] = []
   loading: boolean = true;
 
-  @ViewChild('viewMap') viewMap!: TemplateRef<any>; // Referencia al cuadro emergente de vista de usuario
+  @ViewChild('viewMap') viewMap!: TemplateRef<any>;
 
   hasUnsavedChanges(): boolean {
     this.loading = false;
