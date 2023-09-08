@@ -93,8 +93,8 @@ export class ListRolesComponent implements OnInit, OnDestroy {
   viewRol(rol: RolInterface): void {
     this.dialog.open(this.viewRolDialog, {
       data: rol,
-      width: '35%',
-      height: '45%',
+      width: '25%',
+      height: 'auto',
     });
   }
 

@@ -38,7 +38,7 @@ export class ListNovedadesComponent implements OnInit {
   novedades: RastreoInterface[] = [];
   estados: EstadoRastreoInterface[] = [];
   paquetes: PaqueteInterface[] = [];
-  usuarios: UsuarioInterface[] = [];
+  usuarios: any;
 
   dataSource = new MatTableDataSource(this.novedades);
   loading: boolean = true;
@@ -57,8 +57,11 @@ export class ListNovedadesComponent implements OnInit {
       this.apiPaquete.getAllPaquetes(),
       this.apiUsuario.getAllUsuarios()
     ]).subscribe(([novedad, estado, paquete, usuario]) => {
-      // Filtrar novedades por estado y actualizar datos en la tabla
-      this.novedades = novedad.filter(item => item.idEstado == 2);
+      this.novedades = novedad;
+      this.estados = estado;
+      this.paquetes = paquete;
+      this.usuarios = usuario;
+
       this.dataSource.data = this.novedades;
 
       if (this.dataSource.data.length < 1) {
@@ -75,9 +78,6 @@ export class ListNovedadesComponent implements OnInit {
         })
       }
 
-      this.estados = estado;
-      this.paquetes = paquete;
-      this.usuarios = usuario;
 
       this.loading = false;
     },
@@ -107,7 +107,7 @@ export class ListNovedadesComponent implements OnInit {
     this.dialog.open(this.viewNovedadDialog, {
       data: novedad,
       width: '35%',
-      height: '60%',
+      height: 'auto',
     });
   }
 
@@ -116,16 +116,9 @@ export class ListNovedadesComponent implements OnInit {
     return paquete || '';
   }
 
-  getMensajero(idPaquete: any): any {
-    const paquete = this.getPaquete(idPaquete);
-
-    if (paquete.idUsuario) {
-      const mensajero = this.usuarios.find(documentoU => documentoU.idUsuario == paquete.idUsuario);
-      if (mensajero && mensajero.nombreUsuario && mensajero.apellidoUsuario) {
-        return mensajero || '';
-      }
-    }
-    return '';
+  getMensajero(idUsuario: any): any {
+    const mensajero = this.usuarios.find((usuario: any) => usuario.idUsuario === idUsuario);
+    return mensajero || '';
   }
 
 
@@ -139,11 +132,11 @@ export class ListNovedadesComponent implements OnInit {
       'Código paquete': this.getPaquete(novedad.idPaquete).codigoPaquete,
       'Fecha': novedad.fechaNoEntrega,
       'Motivo': novedad.motivoNoEntrega,
-      'Mensajero': this.getMensajero(novedad.idPaquete).nombreUsuario + ' ' + this.getMensajero(novedad.idPaquete).apellidoUsuario,
-      'Doc Mensajero': this.getMensajero(novedad.idPaquete).documentoUsuario,
+      'Mensajero': this.getMensajero(novedad.idUsuario).nombreUsuario + ' ' + this.getMensajero(novedad.idUsuario).apellidoUsuario,
+      'Doc Mensajero': this.getMensajero(novedad.idUsuario).documentoUsuario,
       'Doc Destinatario': this.getPaquete(novedad.idPaquete).documentoDestinatario,
       'Nombre Destinatario': this.getPaquete(novedad.idPaquete).nombreDestinatario,
-      'Telefono Destinatario': this.getPaquete(novedad.idPaquete).telefonoDestinatario,
+      'Teléfono Destinatario': this.getPaquete(novedad.idPaquete).telefonoDestinatario,
       'Correo Destinatario': this.getPaquete(novedad.idPaquete).correoDestinatario,
     }));
 
@@ -165,11 +158,11 @@ export class ListNovedadesComponent implements OnInit {
       'Código paquete': this.getPaquete(novedad.idPaquete).codigoPaquete,
       'Fecha': novedad.fechaNoEntrega,
       'Motivo': novedad.motivoNoEntrega,
-      'Mensajero': this.getMensajero(novedad.idPaquete).nombreUsuario + ' ' + this.getMensajero(novedad.idPaquete).apellidoUsuario,
-      'Doc Mensajero': this.getMensajero(novedad.idPaquete).documentoUsuario,
+      'Mensajero': this.getMensajero(novedad.idUsuario).nombreUsuario + ' ' + this.getMensajero(novedad.idUsuario).apellidoUsuario,
+      'Doc Mensajero': this.getMensajero(novedad.idUsuario).documentoUsuario,
       'Doc Destinatario': this.getPaquete(novedad.idPaquete).documentoDestinatario,
       'Nombre Destinatario': this.getPaquete(novedad.idPaquete).nombreDestinatario,
-      'Telefono Destinatario': this.getPaquete(novedad.idPaquete).telefonoDestinatario,
+      'Teléfono Destinatario': this.getPaquete(novedad.idPaquete).telefonoDestinatario,
       'Correo Destinatario': this.getPaquete(novedad.idPaquete).correoDestinatario,
     }));
 
@@ -181,7 +174,7 @@ export class ListNovedadesComponent implements OnInit {
           table: {
             widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
             body: [
-              ['Codigo paquete', 'Fecha', 'Motivo', 'Mensajero', 'Doc Mensajero', 'Doc Destinatario', 'Nombre Destinatario', 'Telefono Destinatario', 'Correo Destinatario'],
+              ['Codigo paquete', 'Fecha', 'Motivo', 'Mensajero', 'Doc Mensajero', 'Doc Destinatario', 'Nombre Destinatario', 'Télefono Destinatario', 'Correo Destinatario'],
               ...this.dataToExport.map(novedad => [
                 novedad['Código paquete'],
                 novedad['Fecha'],
@@ -190,7 +183,7 @@ export class ListNovedadesComponent implements OnInit {
                 novedad['Doc Mensajero'],
                 novedad['Doc Destinatario'],
                 novedad['Nombre Destinatario'],
-                novedad['Telefono Destinatario'],
+                novedad['Teléfono Destinatario'],
                 novedad['Correo Destinatario'],
               ])
             ]

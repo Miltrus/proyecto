@@ -329,8 +329,8 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   openAddClienteDialog(): void {
     const dialogRef = this.dialog.open(AddClienteComponent, {
-      width: '75%',
-      height: '75%',
+      width: '70%',
+      height: 'auto',
       disableClose: true,
       autoFocus: false,
     });

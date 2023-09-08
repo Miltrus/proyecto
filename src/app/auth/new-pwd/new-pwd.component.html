@@ -16,7 +16,7 @@
                 <p>
                     <mat-form-field appearance="outline">
                         <mat-label>Nueva contraseña</mat-label>
-                        <input id="password" formControlName="contrasenaUsuario" matInput [ngClass]="{
+                        <input formControlName="contrasenaUsuario" matInput [ngClass]="{
                     'is-invalid': newPwdForm.get('contrasenaUsuario')?.invalid && (newPwdForm.get('contrasenaUsuario')?.touched || newPwdForm.get('contrasenaUsuario')?.dirty),
                     'is-valid': newPwdForm.get('contrasenaUsuario')?.valid && (newPwdForm.get('contrasenaUsuario')?.touched || newPwdForm.get('contrasenaUsuario')?.dirty)
                   }" [type]="showPassword ? 'text' : 'password'">
@@ -30,7 +30,7 @@
                 <p>
                     <mat-form-field appearance="outline">
                         <mat-label>Repite la contraseña</mat-label>
-                        <input id="password" formControlName="repetirContrasena" matInput [ngClass]="{
+                        <input formControlName="repetirContrasena" matInput [ngClass]="{
                     'is-invalid': newPwdForm.get('repetirContrasena')?.invalid && (newPwdForm.get('repetirContrasena')?.touched || newPwdForm.get('repetirContrasena')?.dirty),
                     'is-valid': newPwdForm.get('repetirContrasena')?.valid && (newPwdForm.get('repetirContrasena')?.touched || newPwdForm.get('repetirContrasena')?.dirty)
                   }" [type]="showPassword ? 'text' : 'password'">

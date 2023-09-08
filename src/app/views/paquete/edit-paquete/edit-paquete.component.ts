@@ -1,7 +1,6 @@
 import { Component, ElementRef, HostListener, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { ClienteInterface } from '../../../models/cliente.interface';
 import { PaqueteInterface } from '../../../models/paquete.interface';
 import { PaqueteService } from '../../../services/api/paquete.service';
 import { TamanoPaqueteInterface } from 'src/app/models/tamano-paquete.interface';
@@ -15,7 +14,6 @@ import { ClienteService } from 'src/app/services/api/cliente.service';
 import { Observable, Subscription, map, startWith } from 'rxjs';
 import Swal from 'sweetalert2';
 import { EstadoPaqueteInterface } from 'src/app/models/estado-paquete.interface';
-import { RastreoService } from 'src/app/services/api/rastreo.service';
 
 
 @Component({
@@ -42,7 +40,6 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     private api: PaqueteService,
     private paqueteService: PaqueteService,
     private apiClient: ClienteService,
-    private apiRastreo: RastreoService,
     private dialog: MatDialog,
     private renderer: Renderer2,
   ) { }
@@ -112,7 +109,6 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     return null;
   }
 
-  cords: boolean = false;
   dataPaquete: PaqueteInterface[] = [];
   remitente: any[] = [];
   tamanos: TamanoPaqueteInterface[] = [];
@@ -383,8 +379,8 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
 
   openAddClienteDialog(): void {
     const dialogRef = this.dialog.open(AddClienteComponent, {
-      width: '75%',
-      height: '75%',
+      width: '70%',
+      height: 'auto',
       disableClose: true,
       autoFocus: false,
 

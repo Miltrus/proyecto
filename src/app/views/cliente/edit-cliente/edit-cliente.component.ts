@@ -37,7 +37,6 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
     private dialog: MatDialog,
   ) { }
 
-  cords: boolean = false;
   dataCliente: ClienteInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
   loading: boolean = true;
