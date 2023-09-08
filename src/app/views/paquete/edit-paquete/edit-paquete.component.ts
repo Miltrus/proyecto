@@ -112,7 +112,6 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
     return null;
   }
 
-  cords: boolean = false;
   dataPaquete: PaqueteInterface[] = [];
   remitente: any[] = [];
   tamanos: TamanoPaqueteInterface[] = [];

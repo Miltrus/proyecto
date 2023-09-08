@@ -35,7 +35,6 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
     private renderer: Renderer2,
   ) { }
 
-  cords: boolean = false;
   dataCliente: ClienteInterface[] = [];
   tiposDocumento: TipoDocumentoInterface[] = [];
   loading: boolean = true;

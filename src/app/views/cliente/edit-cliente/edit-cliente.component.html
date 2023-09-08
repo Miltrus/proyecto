@@ -130,21 +130,6 @@
                 <button type="button" mat-raised-button color="accent" (click)="goBack()">Atrás</button> |
                 <button type="submit" mat-raised-button color="primary" [disabled]="editForm.invalid">Editar</button>
                 <br><br>
-
-                <div *ngIf="cords">
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="exampleFormControlInput1">lat</label>
-                            <input type="text" class="form-control" formControlName="lat">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="exampleFormControlInput1">lng</label>
-                            <input type="text" class="form-control" formControlName="lng">
-                        </div>
-                    </div>
-                </div>
             </form>
         </div>
     </div>

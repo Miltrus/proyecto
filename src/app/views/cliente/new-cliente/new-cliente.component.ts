@@ -35,7 +35,6 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
 
   tiposDocumento: TipoDocumentoInterface[] = []
   loading: boolean = true;
-  cords: boolean = false;
 
   hasUnsavedChanges(): boolean {
     this.loading = false;

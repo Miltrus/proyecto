@@ -101,7 +101,6 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     this.api.getRemitenteAndDestinatario().subscribe(data => {
       this.remitente = data;
       this.destinatario = data;
-      console.log("REMITENTE: ", this.remitente, "\n", "DESTINATARIO: ", this.destinatario);
       this.loading = false;
 
       if (data.length == 0) {
