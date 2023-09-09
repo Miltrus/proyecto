@@ -221,9 +221,23 @@ export class ListEntregasComponent implements OnInit {
     });
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
+  removeAccents(cadena: string): string {
+    return cadena.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }  
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    if (filterValue === '') {
+      this.dataSource.data = this.entregas;
+    } else {
+      this.dataSource.data = this.entregas.filter(entrega =>
+        entrega.fechaEntrega?.toLowerCase().includes(filterValue) ||
+          this.getRastreo(entrega.idRastreo).paquete.codigoPaquete.toLowerCase().includes(filterValue) ||
+          this.getRastreo(entrega.idRastreo).usuario.nombreUsuario.toLowerCase().includes(filterValue) ||
+          this.removeAccents(this.getRastreo(entrega.idRastreo).usuario.nombreUsuario.toLowerCase()).includes(filterValue) ||
+          this.getRastreo(entrega.idRastreo).usuario.apellidoUsuario.toLowerCase().includes(filterValue) ||
+          this.removeAccents(this.getRastreo(entrega.idRastreo).usuario.apellidoUsuario.toLowerCase()).includes(filterValue) 
+      )
+    }
+  }
 }

@@ -211,6 +211,10 @@ export class ListNovedadesComponent implements OnInit {
     });
   }
 
+  removeAccents(cadena: string): string {
+    return cadena.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
 
@@ -218,9 +222,13 @@ export class ListNovedadesComponent implements OnInit {
       this.dataSource.data = this.novedades;
     } else {
       this.dataSource.data = this.novedades.filter(novedad =>
-        this.getPaquete(novedad.idPaquete).codigoPaquete.toLowerCase().includes(filterValue) ||
         novedad.fechaNoEntrega.toLowerCase().includes(filterValue) ||
-        this.getEstado(novedad.idEstado).toLowerCase().includes(filterValue)
+        this.getPaquete(novedad.idPaquete).codigoPaquete.toLowerCase().includes(filterValue) ||
+        this.getEstado(novedad.idEstado).toLowerCase().includes(filterValue) ||
+        this.getMensajero(novedad.idUsuario).nombreUsuario.toLowerCase().includes(filterValue) ||
+        this.removeAccents(this.getMensajero(novedad.idUsuario).nombreUsuario.toLowerCase()).includes(filterValue) ||
+        this.getMensajero(novedad.idUsuario).apellidoUsuario.toLowerCase().includes(filterValue) ||
+        this.removeAccents(this.getMensajero(novedad.idUsuario).apellidoUsuario.toLowerCase()).includes(filterValue) 
       );
     }
   }

@@ -355,6 +355,10 @@ export class ListPaquetesComponent implements OnInit {
     link.click();
   }
 
+  removeAccents(cadena: string): string {
+    return cadena.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }  
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     if (filterValue === '') {
@@ -362,10 +366,15 @@ export class ListPaquetesComponent implements OnInit {
     } else {
       this.dataSource.data = this.paquetes.filter(paquete =>
         paquete.codigoPaquete.toLowerCase().includes(filterValue) ||
+        this.removeAccents(paquete.codigoPaquete).toLowerCase().includes(filterValue) || 
         this.getUsuarioPaquete(paquete.idUsuario).nombre.toLowerCase().includes(filterValue) ||
+        this.removeAccents(this.getUsuarioPaquete(paquete.idUsuario).nombre).toLowerCase().includes(filterValue) ||
         this.getUsuarioPaquete(paquete.idUsuario).apellido.toLowerCase().includes(filterValue) ||
-        this.getTipoPaquete(paquete.idTipo).toLowerCase().includes(filterValue) || //QUITAR TILDES
-        this.getRemitentePaquete(paquete.documentoRemitente).nombre.toLowerCase().includes(filterValue)
+        this.removeAccents(this.getUsuarioPaquete(paquete.idUsuario).apellido).toLowerCase().includes(filterValue) ||
+        this.getTipoPaquete(paquete.idTipo).toLowerCase().includes(filterValue) ||
+        this.removeAccents(this.getTipoPaquete(paquete.idTipo)).toLowerCase().includes(filterValue) || 
+        this.getRemitentePaquete(paquete.documentoRemitente).nombre.toLowerCase().includes(filterValue) ||
+        this.removeAccents(this.getRemitentePaquete(paquete.documentoRemitente).nombre).toLowerCase().includes(filterValue)
       )
     }
   }
