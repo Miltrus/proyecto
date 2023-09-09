@@ -234,17 +234,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
   }
 
   async getContPaquete(idUsuario: any) {
-    this.cont = 0;
-    try {
-      const data = await this.api.getPaqueteUsuario(idUsuario).toPromise();
-      if (data?.status == 'error') {
-        console.log(data.msj);
-      } else {
-        this.cont = data;
-      }
-    } catch (error) {
-      console.error("Error al obtener el contador de paquetes:", error);
-    }
+    this.cont = await this.api.getPaqueteUsuario(idUsuario).toPromise();
   }
 
 
@@ -322,7 +312,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
           'Teléfono': usuario.telefonoUsuario,
           'Rol': this.getRolUsuario(usuario.idRol),
           'Estado': this.getEstadoUsuario(usuario.idEstado),
-          'Paquetes Entregados': this.cont
+          'Paquetes entregados': this.cont
         };
 
         dataToExport.push(userData);
