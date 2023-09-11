@@ -145,7 +145,13 @@
     </div>
 
     <div class="button-container">
-      <div></div>
+      <div>
+        <button mat-menu-item title="Paquetes entregados por mensajero" (click)="viewPaquetesEntregados()">
+          <!-- <mat-icon [ngStyle]="{'color': '#3386FF'}">assignment_turned_in</mat-icon> -->
+          <span class="material-symbols-outlined" [ngStyle]="{'color': '#3386FF'}">package_2</span>
+          <span class="icon-text">Entregas por mensajero</span>
+        </button>
+      </div>
       <div class="align-center">
         <button mat-menu-item class="icon-text excel-button" (click)="generateExcel()">
           <mat-icon [ngStyle]="{'color': '#37D12B'}">description</mat-icon>
@@ -188,6 +194,47 @@
       <div class="qr-cell">
         <img [src]="dialogData.qrCodeUrl" alt="qr-image" class="qr-image-details">
       </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #viewPaquetesEntregadosDialog>
+  <div class="dialogData">
+    <h2>Paquetes entregados por mensajero</h2>
+    <div class="date-navigation">
+      <h4 class="" style="text-align: center;">
+        <button (click)="moverFecha(-1)">
+          <mat-icon>keyboard_arrow_left</mat-icon>
+        </button>
+        {{this.fechaActual}}
+        <button *ngIf="this.melo" (click)="moverFecha(1)">
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </button>
+      </h4>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <input type="date" class="form-control" max="{{this.fechaActualReal}}" [(ngModel)]="fechaActual" (change)="cambiarFecha()">
+      </div>
+    </div><br>
+    <div class="row">
+      <div class="col-8">
+        <h6 style="text-align: center;">Mensajero</h6>
+      </div>
+      <div class="col-4">
+        <h6 style="text-align: center;">Entregas</h6>
+      </div>
+    </div>
+    <hr>
+    <div class="row" *ngFor="let i of this.usuario">
+      <div class="col-8">
+        <p><strong>N° de documento:</strong> {{ i.documentoUsuario }}</p>
+        <p><strong>Nombre</strong> {{ i.nombreUsuario }} {{ i.apellidoUsuario }}</p>
+      </div>
+      <div class="col-4">
+        <p class="" style="text-align: center;">{{ getPaquetesEntregados(i.idUsuario) }}</p>
+      </div>
+      <hr>
     </div>
   </div>
 </ng-template>

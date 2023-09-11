@@ -22,6 +22,9 @@ import Swal from 'sweetalert2';
 
 import * as XLSX from 'xlsx';
 import { Form, FormControl, FormGroup } from '@angular/forms';
+import { EntregaService } from 'src/app/services/api/entrega.service';
+import { RastreoService } from 'src/app/services/api/rastreo.service';
+import { isIdentifier } from '@angular/compiler';
 
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
@@ -36,6 +39,8 @@ export class ListPaquetesComponent implements OnInit {
 
   constructor(
     private api: PaqueteService,
+    private apiEntregas: EntregaService,
+    private apiRastreo: RastreoService,
     private router: Router,
     private dialog: MatDialog,
     private sanitizer: DomSanitizer
@@ -43,6 +48,8 @@ export class ListPaquetesComponent implements OnInit {
 
   paquetes: PaqueteInterface[] = [];
   usuario: UsuarioInterface[] = [];
+  entregas: any;
+  rastreos: any;
   remitente: ClienteInterface[] = [];
   estadosPaquete: EstadoPaqueteInterface[] = [];
   tamano: TamanoPaqueteInterface[] = [];
@@ -60,11 +67,15 @@ export class ListPaquetesComponent implements OnInit {
   palFiltro = new FormGroup({
     filtroDeEstados: new FormControl(1)
   });
+  fechaActualReal: any = new Date().toISOString().split('T')[0];
+  fechaActual: any = new Date().toISOString().split('T')[0];
+  melo: boolean = false;
 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; //para la paginacion, y los del ! pal not null
   @ViewChild(MatSort) sort!: MatSort; //para el ordenamiento
   @ViewChild('viewPaqueteDialog') viewPaqueteDialog!: TemplateRef<any>;
+  @ViewChild('viewPaquetesEntregadosDialog') viewPaquetesEntregadosDialog!: TemplateRef<any>;
   @ViewChild('viewQR') viewQR!: TemplateRef<any>;
 
 
@@ -80,6 +91,16 @@ export class ListPaquetesComponent implements OnInit {
           paquete.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qrCodeBase64);
         });
       }
+      this.loading = false;
+    });
+
+    this.apiRastreo.getAllRastreos().subscribe(data => {
+      this.rastreos = data;
+      this.loading = false;
+    });
+
+    this.apiEntregas.getAllEntregas().subscribe(data => {
+      this.entregas = data;
       this.loading = false;
     });
 
@@ -151,6 +172,13 @@ export class ListPaquetesComponent implements OnInit {
       data: paquete,
       width: '35%',
       height: '600px',
+    });
+  }
+
+  viewPaquetesEntregados(): void {
+    this.dialog.open(this.viewPaquetesEntregadosDialog, {
+      width: '35%',
+      height: '450px',
     });
   }
 
@@ -257,6 +285,44 @@ export class ListPaquetesComponent implements OnInit {
     return tipoPaquete?.tipoPaquete || '';
   }
 
+  getPaquetesEntregados(idUsuario: any): any {
+    let cont = 0;
+    for (let i = 0; i < this.rastreos.length; i++) {
+      if (this.rastreos[i].idUsuario == idUsuario && this.rastreos[i].idEstado == 1) {
+        for (let j = 0; j < this.entregas.length; j++) {
+          if (this.rastreos[i].idRastreo == this.entregas[j].idRastreo && this.entregas[j].fechaEntrega.split(' ')[0] == this.fechaActual) {
+            cont++;
+          }
+        }
+      }
+    }
+    return cont;
+  }
+
+  cambiarFecha(): void {
+    const fechaIngresada = new Date(this.fechaActual);
+    const fechaActual = new Date();
+    if (fechaIngresada >= fechaActual) {
+      this.fechaActual = fechaActual.toISOString().split('T')[0];
+    } else {
+      this.fechaActual = fechaIngresada.toISOString().split('T')[0];
+    }
+    if (this.fechaActualReal <= this.fechaActual) {
+      this.melo = false;
+    } else {
+      this.melo = true;
+    }
+  }
+
+  moverFecha(dias: number): void {
+    this.fechaActual = new Date(new Date(this.fechaActual).setDate(new Date(this.fechaActual).getDate() + dias)).toISOString().split('T')[0];
+    if (this.fechaActualReal <= this.fechaActual) {
+      this.melo = false;
+    } else {
+      this.melo = true;
+    }
+  }
+
   async generatePDF(idPaquete: string): Promise<void> {
     const paquete = this.paquetes.find((paquete) => paquete.idPaquete === idPaquete);
 
@@ -357,7 +423,7 @@ export class ListPaquetesComponent implements OnInit {
 
   removeAccents(cadena: string): string {
     return cadena.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  }  
+  }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
@@ -366,13 +432,13 @@ export class ListPaquetesComponent implements OnInit {
     } else {
       this.dataSource.data = this.paquetes.filter(paquete =>
         paquete.codigoPaquete.toLowerCase().includes(filterValue) ||
-        this.removeAccents(paquete.codigoPaquete).toLowerCase().includes(filterValue) || 
+        this.removeAccents(paquete.codigoPaquete).toLowerCase().includes(filterValue) ||
         this.getUsuarioPaquete(paquete.idUsuario).nombre.toLowerCase().includes(filterValue) ||
         this.removeAccents(this.getUsuarioPaquete(paquete.idUsuario).nombre).toLowerCase().includes(filterValue) ||
         this.getUsuarioPaquete(paquete.idUsuario).apellido.toLowerCase().includes(filterValue) ||
         this.removeAccents(this.getUsuarioPaquete(paquete.idUsuario).apellido).toLowerCase().includes(filterValue) ||
         this.getTipoPaquete(paquete.idTipo).toLowerCase().includes(filterValue) ||
-        this.removeAccents(this.getTipoPaquete(paquete.idTipo)).toLowerCase().includes(filterValue) || 
+        this.removeAccents(this.getTipoPaquete(paquete.idTipo)).toLowerCase().includes(filterValue) ||
         this.getRemitentePaquete(paquete.documentoRemitente).nombre.toLowerCase().includes(filterValue) ||
         this.removeAccents(this.getRemitentePaquete(paquete.documentoRemitente).nombre).toLowerCase().includes(filterValue)
       )
