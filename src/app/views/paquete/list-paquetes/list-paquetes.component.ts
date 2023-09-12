@@ -21,10 +21,9 @@ import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 import Swal from 'sweetalert2';
 
 import * as XLSX from 'xlsx';
-import { Form, FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { EntregaService } from 'src/app/services/api/entrega.service';
 import { RastreoService } from 'src/app/services/api/rastreo.service';
-import { isIdentifier } from '@angular/compiler';
 
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 

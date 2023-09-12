@@ -34,6 +34,8 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
   ) { }
 
   private subscriptions: Subscription = new Subscription();
+  directionService = new google.maps.DirectionsService();
+  origin: google.maps.LatLng = new google.maps.LatLng(6.29051, -75.57353);
 
   tiposDocumento: TipoDocumentoInterface[] = []
   loading: boolean = true;
@@ -132,27 +134,6 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
     this.router.navigate(['cliente/list-clientes']);
   }
 
-  private mapInput() {
-    const autocomplete = new google.maps.places.Autocomplete(this.renderer.selectRootElement(this.inputPlaces.nativeElement), {
-      componentRestrictions: {
-        country: ["CO"]
-      },
-      fields: ["formatted_address", "geometry"],
-      types: ["address"]
-    });
-
-    google.maps.event.addListener(autocomplete, 'place_changed', () => {
-      const place: any = autocomplete.getPlace();
-      if (place) {
-        const selectedAddress = place.formatted_address;
-        this.newForm.patchValue({ direccionCliente: selectedAddress });
-        const lat = place.geometry.location.lat();
-        const lng = place.geometry.location.lng();
-        this.newForm.patchValue({ lat: lat, lng: lng });
-      }
-    });
-  }
-
   openMapDialog() {
     const dialogRef = this.dialog.open(this.viewMap, {
       width: '500px',
@@ -163,12 +144,50 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
     });
   }
 
+  private mapInput() {
+    const autocomplete = new google.maps.places.Autocomplete(this.renderer.selectRootElement(this.inputPlaces.nativeElement), {
+      componentRestrictions: {
+        country: ["CO"]
+      },
+      fields: ["formatted_address", "geometry"],
+      types: ["address"]
+    });
+
+
+    google.maps.event.addListener(autocomplete, 'place_changed', () => {
+      const place: any = autocomplete.getPlace();
+      if (place) {
+        const selectedAddress = place.formatted_address;
+        const LatLng = place.geometry.location;
+
+        this.directionService.route({
+          origin: this.origin,
+          destination: LatLng,
+          optimizeWaypoints: true,
+          travelMode: google.maps.TravelMode.DRIVING,
+        }, async (response: any, status: any) => {
+          if (status === google.maps.DirectionsStatus.OK) {
+            const route = response.routes[0];
+            const legs = route.legs;
+            const leg = legs[0];
+            this.newForm.patchValue({
+              direccionCliente: selectedAddress,
+              lat: leg.end_location.lat(),
+              lng: leg.end_location.lng()
+            });
+          }
+        })
+      }
+    });
+  }
+
   initMap() {
+
     let mapOptions: any;
     let map!: google.maps.Map;
-    let selectedLocation: { lat: number, lng: number } | null = null;
+    let selectedLocation: google.maps.LatLng;
     let selectedLocationMarker: google.maps.Marker | null = null;
-  
+
     if (this.newForm.value.lat == null || this.newForm.value.lng == null) {
       mapOptions = {
         center: { lat: 6.25670, lng: -75.57496 },
@@ -179,12 +198,12 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
         center: { lat: this.newForm.value.lat, lng: this.newForm.value.lng },
         zoom: 15,
       }
-  
-      selectedLocation = { lat: this.newForm.value.lat, lng: this.newForm.value.lng };
+
+      selectedLocation = new google.maps.LatLng(this.newForm.value.lat, this.newForm.value.lng);
     }
-  
+
+
     map = new google.maps.Map(document.getElementById('map')!, mapOptions);
-  
 
     function addSelectedLocationMarker() {
       if (selectedLocation) {
@@ -195,33 +214,47 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
         });
       }
     }
-  
+
     addSelectedLocationMarker();
-  
+
     // Crea un objeto de geocodificación inversa
     const geocoder = new google.maps.Geocoder();
-  
+
     // Agrega un evento click al mapa
     google.maps.event.addListener(map, 'click', (event: google.maps.MapMouseEvent) => {
-      selectedLocation = { lat: event.latLng!.lat(), lng: event.latLng!.lng() };
-  
+      selectedLocation = new google.maps.LatLng(event.latLng!.lat(), event.latLng!.lng());
+
       // Realiza la geocodificación inversa para obtener la dirección
       geocoder.geocode({ location: selectedLocation }, (results, status) => {
         if (status === 'OK' && results![0]) {
           const formattedAddress = results![0].formatted_address;
-  
-          this.newForm.patchValue({
-            direccionCliente: formattedAddress,
-            lat: selectedLocation!['lat'],
-            lng: selectedLocation!['lng']
-          });
-  
+          const LatLng = results![0].geometry.location;
+
+          this.directionService.route({
+            origin: this.origin,
+            destination: LatLng,
+            optimizeWaypoints: true,
+            travelMode: google.maps.TravelMode.DRIVING,
+          }, async (response: any, status: any) => {
+            if (status === google.maps.DirectionsStatus.OK) {
+              const route = response.routes[0];
+              const legs = route.legs;
+              const leg = legs[0];
+              this.newForm.patchValue({
+                direccionCliente: formattedAddress,
+                lat: leg.end_location.lat(),
+                lng: leg.end_location.lng()
+              });
+            }
+          })
+
+
           if (selectedLocationMarker) {
             selectedLocationMarker.setMap(null);
           }
-  
+
           addSelectedLocationMarker();
-  
+
         } else {
           Swal.fire({
             icon: 'error',
