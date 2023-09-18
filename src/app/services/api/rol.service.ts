@@ -13,7 +13,7 @@ import { RolPermisoResponseInterface } from 'src/app/models/rol-permiso-response
 })
 export class RolService {
 
-  url: string = 'http://localhost:3030/';
+  url: string = 'https://api-star-routing.onrender.com/';
 
   constructor(private http: HttpClient) { }
 

@@ -15,7 +15,7 @@ import { TipoPaqueteInterface } from 'src/app/models/tipo-paquete.interface';
 })
 export class PaqueteService {
 
-  url: string = 'http://localhost:3030/';
+  url: string = 'https://api-star-routing.onrender.com/';
 
   constructor(private http: HttpClient) { }
 

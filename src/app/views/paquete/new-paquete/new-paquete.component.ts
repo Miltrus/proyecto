@@ -51,7 +51,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
 
 
   editRemitente = new FormGroup({
-    idCliente: new FormControl(''),
+    idCliente: new FormControl(),
     documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreCliente: new FormControl('', Validators.required),
@@ -76,7 +76,7 @@ export class NewPaqueteComponent implements OnInit, HasUnsavedChanges {
     fechaAproxEntrega: new FormControl('', [Validators.required, this.validateFechaPasada]),
     documentoRemitente: new FormControl(''),
     idTamano: new FormControl(),
-    idEstado: new FormControl('1'),
+    idEstado: new FormControl(1),
     idTipo: new FormControl('', Validators.required),
     lat: new FormControl(),
     lng: new FormControl(),

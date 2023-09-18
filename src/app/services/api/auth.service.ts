@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-  url: string = 'http://localhost:3030/auth/';
+  url: string = 'https://api-star-routing.onrender.com/auth/';
 
   constructor(private http: HttpClient) { }
 

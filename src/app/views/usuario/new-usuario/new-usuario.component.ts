@@ -42,7 +42,6 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
   }
 
   newForm = new FormGroup({
-    idUsuario: new FormControl(''),
     documentoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreUsuario: new FormControl('', Validators.required),

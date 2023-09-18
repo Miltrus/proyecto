@@ -48,7 +48,6 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
   }
 
   newForm = new FormGroup({
-    idCliente: new FormControl(''),
     documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreCliente: new FormControl('', Validators.required),
