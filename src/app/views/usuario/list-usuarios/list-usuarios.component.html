@@ -84,11 +84,12 @@
                 <mat-icon [ngStyle]="{'color': '#AED581'}">visibility</mat-icon>
                 <span>Ver</span>
               </button>
-              <button mat-menu-item (click)="editUsuario(usuario.idUsuario)">
+              <button mat-menu-item (click)="editUsuario(usuario.idUsuario)" [disabled]="usuario.idUsuario == 1">
                 <mat-icon [ngStyle]="{'color': '#1A237E'}">edit</mat-icon>
                 <span>Editar</span>
               </button>
-              <button mat-menu-item (click)="deleteUsuario(usuario.idUsuario)" [disabled]="usuario.idEstado === 1">
+              <button mat-menu-item (click)="deleteUsuario(usuario.idUsuario)"
+                [disabled]="usuario.idEstado == 1 || usuario.idUsuario == 1">
                 <mat-icon [ngStyle]="{'color': 'red'}">delete</mat-icon>
                 <span>Eliminar</span>
               </button>
