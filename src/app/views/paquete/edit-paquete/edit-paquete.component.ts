@@ -52,7 +52,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
   }
 
   editRemitente = new FormGroup({
-    idCliente: new FormControl(''),
+    idCliente: new FormControl(),
     documentoCliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]),
     idTipoDocumento: new FormControl('', Validators.required),
     nombreCliente: new FormControl('', Validators.required),
@@ -65,7 +65,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
   });
 
   editForm = new FormGroup({
-    idPaquete: new FormControl(''),
+    idPaquete: new FormControl(),
     codigoPaquete: new FormControl(''),
     direccionPaquete: new FormControl('', Validators.required),
     detalleDireccionPaquete: new FormControl(''),
@@ -240,8 +240,8 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
         this.loading = true;
         this.api.putPaquete(id).subscribe(data => {
           if (data.status == 'ok') {
-            this.editForm.reset();
             this.editRemitente.reset();
+            this.editForm.reset();
             this.router.navigate(['paquete/list-paquetes']);
             Swal.fire({
               icon: 'success',

@@ -110,7 +110,7 @@ export class EditClienteComponent implements OnInit, HasUnsavedChanges, OnDestro
   postForm(id: any) {
     Swal.fire({
       icon: 'question',
-      title: '¿Está seguro de que deseas modificar este cliente?',
+      title: '¿Estás seguro de que deseas modificar este cliente?',
       showCancelButton: true,
       showCloseButton: true,
       allowOutsideClick: false,
