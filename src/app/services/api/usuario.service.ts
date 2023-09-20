@@ -40,7 +40,7 @@ export class UsuarioService {
   }
 
   getPaqueteUsuario(id: any): Observable<ResponseInterface> {
-    const address = this.url + 'usuario/paquete/cont/'+ id;
+    const address = this.url + 'usuario/paquete/cont/' + id;
     const headers = this.getHeaders();
     return this.http.get<ResponseInterface>(address, { headers });
   }

@@ -177,7 +177,7 @@ export class ListPaquetesComponent implements OnInit {
   viewPaquetesEntregados(): void {
     this.dialog.open(this.viewPaquetesEntregadosDialog, {
       width: '35%',
-      height: '450px',
+      height: 'auto',
     });
   }
 
