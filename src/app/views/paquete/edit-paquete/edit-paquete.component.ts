@@ -310,8 +310,8 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       if (!this.editRemitente.get('nombreCliente')?.value || !this.editRemitente.get('direccionCliente')?.value) {
         Swal.fire({
           icon: 'warning',
-          title: 'Modificacion cancelada',
-          text: 'No se han realizado cambios en los campos correo y/o télefono.',
+          title: 'Modificación cancelada',
+          text: 'No se han realizado cambios en los campos correo y/o teléfono.',
           toast: true,
           timerProgressBar: true,
           showConfirmButton: false,
@@ -322,8 +322,8 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
       } else {
         Swal.fire({
           icon: 'warning',
-          title: 'Modificacion cancelada',
-          text: 'No se han realizado cambios en los campos correo y/o télefono.',
+          title: 'Modificación cancelada',
+          text: 'No se han realizado cambios en los campos correo y/o teléfono.',
           toast: true,
           timerProgressBar: true,
           showConfirmButton: false,
@@ -443,6 +443,12 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
               lat: leg.end_location.lat(),
               lng: leg.end_location.lng()
             });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al obtener la dirección',
+              text: 'No se ha podido obtener la dirección seleccionada. Por favor, revisa tu conexión a internet o inténtalo nuevamente.',
+            });
           }
         })
       }
@@ -527,7 +533,7 @@ export class EditPaqueteComponent implements OnInit, HasUnsavedChanges {
           Swal.fire({
             icon: 'error',
             title: 'Error al obtener la dirección',
-            text: 'No se ha podido obtener la dirección de la ubicación seleccionada. Por favor, inténtalo nuevamente.',
+            text: 'No se ha podido obtener la dirección seleccionada. Por favor, revisa tu conexión a internet o inténtalo nuevamente.',
           });
         }
       });

@@ -189,7 +189,7 @@ export class ListUsuariosComponent implements OnInit, OnDestroy {
         if (usuario.idUsuario == this.uid) {
           Swal.fire({
             icon: 'warning',
-            title: 'Operacion cancelada',
+            title: 'Operación cancelada',
             text: 'No puedes cambiar el estado de tu propio usuario.',
           });
           this.loading = false;

@@ -174,6 +174,12 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
               lat: leg.end_location.lat(),
               lng: leg.end_location.lng()
             });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al obtener la dirección',
+              text: 'No se ha podido obtener la dirección seleccionada. Por favor, revisa tu conexión a internet o inténtalo nuevamente.',
+            });
           }
         })
       }
@@ -258,7 +264,7 @@ export class NewClienteComponent implements OnInit, HasUnsavedChanges, OnDestroy
           Swal.fire({
             icon: 'error',
             title: 'Error al obtener la dirección',
-            text: 'No se ha podido obtener la dirección de la ubicación seleccionada. Por favor, inténtalo nuevamente.',
+            text: 'No se ha podido obtener la dirección seleccionada. Por favor, revisa tu conexión a internet o inténtalo nuevamente.',
           });
         }
       });
