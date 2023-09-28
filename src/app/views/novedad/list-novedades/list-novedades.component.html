@@ -110,8 +110,7 @@
     <p><strong>Motivo:</strong> {{ dialogData.motivoNoEntrega }}</p>
     <p><strong>Mensajero:</strong> {{ getMensajero(dialogData.idUsuario).nombreUsuario + ' ' +
       getMensajero(dialogData.idUsuario).apellidoUsuario }}</p>
-    <p><strong>Doc mensajero:</strong> {{ getMensajero(dialogData.idUsuario).documentoUsuario }}</p>
-    <p><strong>Estado:</strong> {{ getEstado (dialogData.idEstado) }}</p><br>
+    <p><strong>Doc mensajero:</strong> {{ getMensajero(dialogData.idUsuario).documentoUsuario }}</p><br>
     <h4>Destinatario:</h4>
     <p><strong>N° Documento: </strong> {{ getPaquete(dialogData.idPaquete).documentoDestinatario }}</p>
     <p><strong>Nombre: </strong> {{ getPaquete(dialogData.idPaquete).nombreDestinatario }}</p>

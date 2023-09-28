@@ -228,8 +228,8 @@
     <hr>
     <div class="row" *ngFor="let i of this.usuario">
       <div class="col-8">
-        <p><strong>N° de documento:</strong> {{ i.documentoUsuario }}</p>
-        <p><strong>Nombre</strong> {{ i.nombreUsuario }} {{ i.apellidoUsuario }}</p>
+        <p><strong>N° Documento:</strong> {{ i.documentoUsuario }}</p>
+        <p><strong>Nombre:</strong> {{ i.nombreUsuario }} {{ i.apellidoUsuario }}</p>
       </div>
       <div class="col-4">
         <p class="" style="text-align: center;">{{ getPaquetesEntregados(i.idUsuario) }}</p>

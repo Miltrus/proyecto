@@ -122,11 +122,6 @@ export class ListNovedadesComponent implements OnInit {
   }
 
 
-  getEstado(idEstado: any): string {
-    const estado = this.estados.find(tipo => tipo.idEstado === idEstado);
-    return estado?.nombreEstado || '';
-  }
-
   generateExcel(): void {
     const dataToExport = this.novedades.map(novedad => ({
       'Código paquete': this.getPaquete(novedad.idPaquete).codigoPaquete,
@@ -224,11 +219,10 @@ export class ListNovedadesComponent implements OnInit {
       this.dataSource.data = this.novedades.filter(novedad =>
         novedad.fechaNoEntrega.toLowerCase().includes(filterValue) ||
         this.getPaquete(novedad.idPaquete).codigoPaquete.toLowerCase().includes(filterValue) ||
-        this.getEstado(novedad.idEstado).toLowerCase().includes(filterValue) ||
         this.getMensajero(novedad.idUsuario).nombreUsuario.toLowerCase().includes(filterValue) ||
         this.removeAccents(this.getMensajero(novedad.idUsuario).nombreUsuario.toLowerCase()).includes(filterValue) ||
         this.getMensajero(novedad.idUsuario).apellidoUsuario.toLowerCase().includes(filterValue) ||
-        this.removeAccents(this.getMensajero(novedad.idUsuario).apellidoUsuario.toLowerCase()).includes(filterValue) 
+        this.removeAccents(this.getMensajero(novedad.idUsuario).apellidoUsuario.toLowerCase()).includes(filterValue)
       );
     }
   }
