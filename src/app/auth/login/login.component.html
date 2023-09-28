@@ -17,7 +17,7 @@
       <div class="fadeIn second">
         <mat-form-field appearance="outline">
           <mat-label>Correo electrónico</mat-label>
-          <input formControlName="correoUsuario" matInput placeholder="Ingresa tu email" [ngClass]="{
+          <input formControlName="correoUsuario" type="email" matInput placeholder="Ingresa tu email" [ngClass]="{
               'is-invalid': loginForm.get('correoUsuario')?.invalid && (loginForm.get('correoUsuario')?.touched || loginForm.get('correoUsuario')?.dirty),
               'is-valid': loginForm.get('correoUsuario')?.valid && (loginForm.get('correoUsuario')?.touched || loginForm.get('correoUsuario')?.dirty)
             }">

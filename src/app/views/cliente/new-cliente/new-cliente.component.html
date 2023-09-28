@@ -82,7 +82,7 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
-              <input type="text" class="form-control" formControlName="correoCliente" [ngClass]="{
+              <input type="email" class="form-control" formControlName="correoCliente" [ngClass]="{
                 'is-invalid': newForm.get('correoCliente')?.invalid && (newForm.get('correoCliente')?.touched || newForm.get('correoCliente')?.dirty),
                 'is-valid': newForm.get('correoCliente')?.valid && (newForm.get('correoCliente')?.touched || newForm.get('correoCliente')?.dirty)
               }">
@@ -106,7 +106,8 @@
                   Este campo es obligatorio.
                 </div>
               </div>
-              <button class="btn btn-circle btn-update btn-margin" type="button" title="Seleccionar en el mapa" (click)="openMapDialog()">
+              <button class="btn btn-circle btn-update btn-margin" type="button" title="Seleccionar en el mapa"
+                (click)="openMapDialog()">
                 <span class="material-icons">location_on</span>
               </button>
             </div>

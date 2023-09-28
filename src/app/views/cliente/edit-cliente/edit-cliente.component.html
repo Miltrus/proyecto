@@ -84,7 +84,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
-                            <input type="text" class="form-control" formControlName="correoCliente" [ngClass]="{
+                            <input type="email" class="form-control" formControlName="correoCliente" [ngClass]="{
                             'is-invalid': editForm.get('correoCliente')?.invalid && (editForm.get('correoCliente')?.touched || editForm.get('correoCliente')?.dirty),
                             'is-valid': editForm.get('correoCliente')?.valid && (editForm.get('correoCliente')?.touched || editForm.get('correoCliente')?.dirty)
                           }">

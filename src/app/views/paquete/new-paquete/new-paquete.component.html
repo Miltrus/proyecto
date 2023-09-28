@@ -51,7 +51,7 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Correo</label>
-              <input type="text" class="form-control" formControlName="correoCliente" [ngClass]="{
+              <input type="email" class="form-control" formControlName="correoCliente" [ngClass]="{
                   'is-invalid': editRemitente.get('correoCliente')?.invalid && (editRemitente.get('correoCliente')?.touched || editRemitente.get('correoCliente')?.dirty),
                   'is-valid': editRemitente.get('correoCliente')?.valid
                 }" />
@@ -130,7 +130,7 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
-              <input type="text" class="form-control" formControlName="correoDestinatario" [ngClass]="{
+              <input type="email" class="form-control" formControlName="correoDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('correoDestinatario')?.invalid && (newForm.get('correoDestinatario')?.touched || newForm.get('correoDestinatario')?.dirty),
                 'is-valid': newForm.get('correoDestinatario')?.valid 
               }" />

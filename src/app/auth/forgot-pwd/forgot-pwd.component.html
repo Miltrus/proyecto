@@ -11,7 +11,7 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Documento <b style="color: red;">*</b></label>
-                        <input type="text" class="form-control" formControlName="documentoUsuario" [ngClass]="{
+                        <input type="number" class="form-control" formControlName="documentoUsuario" [ngClass]="{
                     'is-invalid': forgotForm.get('documentoUsuario')?.invalid && (forgotForm.get('documentoUsuario')?.touched || forgotForm.get('documentoUsuario')?.dirty),
                     'is-valid': forgotForm.get('documentoUsuario')?.valid && (forgotForm.get('documentoUsuario')?.touched || forgotForm.get('documentoUsuario')?.dirty)
                   }">
@@ -28,7 +28,7 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
-                        <input type="text" class="form-control" formControlName="correoUsuario" [ngClass]="{
+                        <input type="email" class="form-control" formControlName="correoUsuario" [ngClass]="{
                   'is-invalid': forgotForm.get('correoUsuario')?.invalid && (forgotForm.get('correoUsuario')?.touched || forgotForm.get('correoUsuario')?.dirty),
                   'is-valid': forgotForm.get('correoUsuario')?.valid && (forgotForm.get('correoUsuario')?.touched || forgotForm.get('correoUsuario')?.dirty)
                 }">
