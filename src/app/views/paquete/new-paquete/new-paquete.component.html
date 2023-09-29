@@ -20,7 +20,7 @@
           </h4>
           <div class="col">
             <div class="form-group">
-              <label for="documentoCliente">N° de Documento <b style="color: red;">*</b></label>
+              <label for="documentoCliente">N° Documento <b style="color: red;">*</b></label>
               <input matInput type="text" [matAutocomplete]="auto" class="form-control"
                 formControlName="documentoCliente" [ngClass]="{
                   'is-invalid': editRemitente.get('documentoCliente')?.invalid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty),
@@ -42,7 +42,9 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Nombre</label>
-              <input type="text" class="form-control" formControlName="nombreCliente" readonly />
+              <input type="text" class="form-control" formControlName="nombreCliente" readonly [ngClass]="{
+                'is-valid': editRemitente.get('nombreCliente')?.valid
+              }" />
             </div>
           </div>
         </div>
@@ -50,8 +52,9 @@
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">Correo</label>
-              <input type="email" class="form-control" formControlName="correoCliente" [ngClass]="{
+              <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
+              <input type="email" [readOnly]="editRemitente.get('documentoCliente')?.invalid" class="form-control"
+                formControlName="correoCliente" [ngClass]="{
                   'is-invalid': editRemitente.get('correoCliente')?.invalid && (editRemitente.get('correoCliente')?.touched || editRemitente.get('correoCliente')?.dirty),
                   'is-valid': editRemitente.get('correoCliente')?.valid
                 }" />
@@ -67,8 +70,9 @@
           <div class="col">
             <div class="d-flex align-items-center">
               <div class="form-group flex-grow-1">
-                <label for="exampleFormControlInput1">Teléfono</label>
-                <input type="text" class="form-control" formControlName="telefonoCliente" [ngClass]="{
+                <label for="exampleFormControlInput1">Teléfono <b style="color: red;">*</b></label>
+                <input type="text" [readOnly]="editRemitente.get('documentoCliente')?.invalid" class="form-control"
+                  formControlName="telefonoCliente" [ngClass]="{
                     'is-invalid': editRemitente.get('telefonoCliente')?.invalid && (editRemitente.get('telefonoCliente')?.touched || editRemitente.get('telefonoCliente')?.dirty),
                     'is-valid': editRemitente.get('telefonoCliente')?.valid
                   }" />
@@ -79,8 +83,9 @@
                   Este campo es obligatorio.
                 </div>
               </div>
-              <button class="btn btn-circle btn-update btn-margin" type="button" title="Actualizar correo y/o teléfono"
-                (click)="editRemi(editRemitente.value)">
+              <button class="btn btn-circle btn-update btn-margin"
+                [disabled]="editRemitente.get('correoCliente')?.invalid || editRemitente.get('telefonoCliente')?.invalid"
+                type="button" title="Actualizar correo y/o teléfono" (click)="editRemi(editRemitente.value)">
                 <span class="material-icons">edit</span>
               </button>
             </div>
@@ -95,7 +100,7 @@
           <h4>Destinatario</h4>
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">N° de Documento <b style="color: red;">*</b></label>
+              <label for="exampleFormControlInput1">N° Documento <b style="color: red;">*</b></label>
               <input matInput type="text" [matAutocomplete]="auto2" class="form-control"
                 formControlName="documentoDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('documentoDestinatario')?.invalid && (newForm.get('documentoDestinatario')?.touched || newForm.get('documentoDestinatario')?.dirty),
@@ -165,7 +170,7 @@
                 <label for="exampleFormControlInput1">Dirección</label>
                 <input type="text" class="form-control" formControlName="direccionPaquete" #inputPlaces [ngClass]="{
                   'is-invalid': newForm.get('direccionPaquete')?.invalid && (newForm.get('direccionPaquete')?.touched || newForm.get('direccionPaquete')?.dirty),
-                  'is-valid': newForm.get('direccionPaquete')?.valid && newForm.get('direccionPaquete')?.dirty
+                  'is-valid': newForm.get('direccionPaquete')?.valid
                 }" />
                 <div *ngIf="newForm.get('direccionPaquete')?.errors?.['required']" class="invalid-feedback">
                   Este campo es obligatorio.
@@ -180,7 +185,9 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Detalle dirección</label>
-              <textarea class="form-control" formControlName="detalleDireccionPaquete"></textarea>
+              <textarea class="form-control" formControlName="detalleDireccionPaquete"
+                [ngClass]="{
+                'is-valid': newForm.get('detalleDireccionPaquete')?.dirty || newForm.get('detalleDireccionPaquete')?.touched}"></textarea>
             </div>
           </div>
         </div>
@@ -192,7 +199,9 @@
             <div class="d-flex align-items-center">
               <div class="form-group flex-grow-1">
                 <label for="exampleFormControlInput1">Código</label>
-                <input class="form-control" readonly formControlName="codigoPaquete" />
+                <input class="form-control" readonly formControlName="codigoPaquete" [ngClass]="{
+                  'is-valid': newForm.get('codigoPaquete')?.valid
+                }" />
               </div>
               <button class="btn btn-circle btn-update btn-margin" type="button" title="Generar nuevo código"
                 (click)="randomCode()">
@@ -221,7 +230,6 @@
             <div class="form-group">
               <label for="">Tamaño</label>
               <mat-select class="form-control" formControlName="idTamano" placeholder="---SELECCIONE---" [ngClass]="{
-                'is-invalid': newForm.get('idTamano')?.invalid && (newForm.get('idTamano')?.touched || newForm.get('idTamano')?.dirty),
                 'is-valid': newForm.get('idTamano')?.valid && (newForm.get('idTamano')?.touched || newForm.get('idTamano')?.dirty)
               }">
                 <mat-option *ngFor="let t of tamanos" [value]="t.idTamano">

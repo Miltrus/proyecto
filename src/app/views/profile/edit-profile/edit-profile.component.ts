@@ -78,7 +78,7 @@ export class EditProfileComponent implements OnInit, HasUnsavedChanges {
   saveChanges(): void {
     Swal.fire({
       icon: 'question',
-      title: '¿Está seguro de que deseas guardar los cambios?',
+      title: '¿Estás seguro de que deseas guardar los cambios?',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',

@@ -118,34 +118,43 @@ export class EditRolComponent implements OnInit, HasUnsavedChanges {
       if (result.isConfirmed) {
         this.loading = true;
 
-        this.api.putRol(id).subscribe(data => {
-          const nuevosPermisos = this.permisosSeleccionadosFormArray.controls
-            .map((control, index) => control.value ? this.permisos[index].idPermiso : null)
-            .filter(permiso => permiso !== null);
-          this.api.putRolPermiso(id.idRol, nuevosPermisos).subscribe(data => {
-            if (data.status == 'ok') {
-              this.editForm.reset();
-              this.router.navigate(['rol/list-roles']);
-              Swal.fire({
-                icon: 'success',
-                title: 'Rol modificado',
-                text: 'El rol ha sido modificado exitosamente.',
-                toast: true,
-                showConfirmButton: false,
-                timer: 5000,
-                position: 'top-end',
-                timerProgressBar: true,
-                showCloseButton: true,
-              });
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error al modificar',
-                text: data.msj,
-              });
-            }
-            this.loading = false;
-          });
+        this.api.putRol(id).subscribe((data: any) => {
+          if (data.status == 'ok') {
+            const nuevosPermisos = this.permisosSeleccionadosFormArray.controls
+              .map((control, index) => control.value ? this.permisos[index].idPermiso : null)
+              .filter(permiso => permiso !== null);
+            this.api.putRolPermiso(id.idRol, nuevosPermisos).subscribe(data => {
+              if (data.status == 'ok') {
+                this.editForm.reset();
+                this.router.navigate(['rol/list-roles']);
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Rol modificado',
+                  text: 'El rol ha sido modificado exitosamente.',
+                  toast: true,
+                  showConfirmButton: false,
+                  timer: 5000,
+                  position: 'top-end',
+                  timerProgressBar: true,
+                  showCloseButton: true,
+                });
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error al modificar',
+                  text: data.msj,
+                });
+              }
+              this.loading = false;
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al modificar',
+              text: data.msj,
+            });
+          }
+          this.loading = false;
         },
           (error) => {
             this.loading = false;

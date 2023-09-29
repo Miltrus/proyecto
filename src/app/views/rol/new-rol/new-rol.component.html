@@ -13,10 +13,10 @@
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label for="exampleFormControlInput1">Nombre del rol <b style="color: red;">*</b></label>
+              <label for="exampleFormControlInput1">Nombre <b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="nombreRol" [ngClass]="{
               'is-invalid': newForm.get('nombreRol')?.invalid && (newForm.get('nombreRol')?.touched || newForm.get('nombreRol')?.dirty),
-              'is-valid': newForm.get('nombreRol')?.valid && (newForm.get('nombreRol')?.touched || newForm.get('nombreRol')?.dirty)
+              'is-valid': newForm.get('nombreRol')?.valid && newForm.get('nombreRol')?.dirty
           }">
               <div *ngIf="newForm.get('nombreRol')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.

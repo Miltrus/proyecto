@@ -14,11 +14,10 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
-                            <label for="idTipoDocumento">Tipo de documento <b style="color: red;">*</b></label>
+                            <label for="idTipoDocumento">Tipo documento <b style="color: red;">*</b></label>
                             <mat-select class="form-control" formControlName="idTipoDocumento"
                                 placeholder="---SELECCIONE---" [ngClass]="{
-                                'is-invalid': editForm.get('idTipoDocumento')?.invalid && (editForm.get('idTipoDocumento')?.touched || editForm.get('idTipoDocumento')?.dirty),
-                                'is-valid': editForm.get('idTipoDocumento')?.valid && (editForm.get('idTipoDocumento')?.touched || editForm.get('idTipoDocumento')?.dirty)
+                                'is-valid': editForm.get('idTipoDocumento')?.valid
                               }">
                                 <mat-option *ngFor="let tipoDocumento of tiposDocumento"
                                     [value]="tipoDocumento.idTipoDocumento">{{ tipoDocumento.nombreTipo }}
@@ -32,10 +31,10 @@
                     </div>
                     <div class="col">
                         <div class="form-group">
-                            <label for="exampleFormControlInput1">Documento <b style="color: red;">*</b></label>
+                            <label for="exampleFormControlInput1">N° Documento <b style="color: red;">*</b></label>
                             <input type="text" class="form-control" formControlName="documentoCliente" [ngClass]="{
-                            'is-invalid': editForm.get('documentoCliente')?.invalid && (editForm.get('documentoCliente')?.touched || editForm.get('documentoCliente')?.dirty),
-                            'is-valid': editForm.get('documentoCliente')?.valid && (editForm.get('documentoCliente')?.touched || editForm.get('documentoCliente')?.dirty)
+                            'is-invalid': editForm.get('documentoCliente')?.invalid && editForm.get('documentoCliente')?.dirty,
+                            'is-valid': editForm.get('documentoCliente')?.valid
                           }">
                             <div *ngIf="editForm.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
                                 Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
@@ -53,8 +52,8 @@
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Nombre <b style="color: red;">*</b></label>
                             <input type="text" class="form-control" formControlName="nombreCliente" [ngClass]="{
-                                'is-invalid': editForm.get('nombreCliente')?.invalid && (editForm.get('nombreCliente')?.touched || editForm.get('nombreCliente')?.dirty),
-                                'is-valid': editForm.get('nombreCliente')?.valid && (editForm.get('nombreCliente')?.touched || editForm.get('nombreCliente')?.dirty)
+                                'is-invalid': editForm.get('nombreCliente')?.invalid && editForm.get('nombreCliente')?.dirty,
+                                'is-valid': editForm.get('nombreCliente')?.valid
                                 }">
                             <div *ngIf="editForm.get('nombreCliente')?.errors?.['required']" class="invalid-feedback">
                                 Este campo es obligatorio.
@@ -65,8 +64,8 @@
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Teléfono <b style="color: red;">*</b></label>
                             <input type="text" class="form-control" formControlName="telefonoCliente" [ngClass]="{
-                            'is-invalid': editForm.get('telefonoCliente')?.invalid && (editForm.get('telefonoCliente')?.touched || editForm.get('telefonoCliente')?.dirty),
-                            'is-valid': editForm.get('telefonoCliente')?.valid && (editForm.get('telefonoCliente')?.touched || editForm.get('telefonoCliente')?.dirty)
+                            'is-invalid': editForm.get('telefonoCliente')?.invalid && editForm.get('telefonoCliente')?.dirty,
+                            'is-valid': editForm.get('telefonoCliente')?.valid
                           }">
 
                             <div *ngIf="editForm.get('telefonoCliente')?.errors?.['pattern']" class="invalid-feedback">
@@ -85,8 +84,8 @@
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
                             <input type="email" class="form-control" formControlName="correoCliente" [ngClass]="{
-                            'is-invalid': editForm.get('correoCliente')?.invalid && (editForm.get('correoCliente')?.touched || editForm.get('correoCliente')?.dirty),
-                            'is-valid': editForm.get('correoCliente')?.valid && (editForm.get('correoCliente')?.touched || editForm.get('correoCliente')?.dirty)
+                            'is-invalid': editForm.get('correoCliente')?.invalid && editForm.get('correoCliente')?.dirty,
+                            'is-valid': editForm.get('correoCliente')?.valid
                           }">
 
                             <div *ngIf="editForm.get('correoCliente')?.errors?.['pattern']" class="invalid-feedback">
@@ -104,8 +103,8 @@
                                 <label for="exampleFormControlInput1">Dirección <b style="color: red;">*</b></label>
                                 <input type="text" class="form-control" formControlName="direccionCliente" #inputPlaces
                                     [ngClass]="{
-                              'is-invalid': editForm.get('direccionCliente')?.invalid && (editForm.get('direccionCliente')?.touched || editForm.get('direccionCliente')?.dirty),
-                              'is-valid': editForm.get('direccionCliente')?.valid && (editForm.get('direccionCliente')?.touched || editForm.get('direccionCliente')?.dirty)
+                              'is-invalid': editForm.get('direccionCliente')?.invalid && editForm.get('direccionCliente')?.dirty,
+                              'is-valid': editForm.get('direccionCliente')?.valid
                             }">
                                 <div *ngIf="editForm.get('direccionCliente')?.errors?.['required']"
                                     class="invalid-feedback">
@@ -124,7 +123,9 @@
                     <div class="col">
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Detalle dirección</label>
-                            <textarea class="form-control" formControlName="detalleDireccionCliente"></textarea>
+                            <textarea class="form-control" formControlName="detalleDireccionCliente" [ngClass]="{
+                                'is-valid': editForm.get('detalleDireccionCliente')?.valid
+                              }"></textarea>
                         </div>
                     </div>
                 </div>

@@ -14,11 +14,11 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
-                            <label for="idTipoDocumento">Tipo de documento <b style="color: red;">*</b></label>
+                            <label for="idTipoDocumento">Tipo documento <b style="color: red;">*</b></label>
                             <mat-select class="form-control" formControlName="idTipoDocumento"
                                 placeholder="---SELECCIONE---" [ngClass]="{
-                                'is-invalid': newForm.get('idTipoDocumento')?.invalid && (newForm.get('idTipoDocumento')?.touched || newForm.get('idTipoDocumento')?.dirty),
-                                'is-valid': newForm.get('idTipoDocumento')?.valid && (newForm.get('idTipoDocumento')?.touched || newForm.get('idTipoDocumento')?.dirty)
+                                'is-invalid': newForm.get('idTipoDocumento')?.invalid && newForm.get('idTipoDocumento')?.touched,
+                                'is-valid': newForm.get('idTipoDocumento')?.valid
                             }">
                                 <mat-option *ngFor="let tipoDocumento of tiposDocumento"
                                     [value]="tipoDocumento.idTipoDocumento">
@@ -33,10 +33,10 @@
 
                     <div class="col">
                         <div class="form-group">
-                            <label for="exampleFormControlInput1">Documento <b style="color: red;">*</b></label>
+                            <label for="exampleFormControlInput1">N° Documento <b style="color: red;">*</b></label>
                             <input type="text" class="form-control" formControlName="documentoUsuario" [ngClass]="{
                                 'is-invalid': newForm.get('documentoUsuario')?.invalid && (newForm.get('documentoUsuario')?.touched || newForm.get('documentoUsuario')?.dirty),
-                                'is-valid': newForm.get('documentoUsuario')?.valid && (newForm.get('documentoUsuario')?.touched || newForm.get('documentoUsuario')?.dirty)
+                                'is-valid': newForm.get('documentoUsuario')?.valid && newForm.get('documentoUsuario')?.dirty
                             }" />
 
                             <div *ngIf="newForm.get('documentoUsuario')?.errors?.['pattern']" class="invalid-feedback">
@@ -55,7 +55,7 @@
                             <label for="exampleFormControlInput1">Nombre <b style="color: red;">*</b></label>
                             <input type="text" class="form-control" formControlName="nombreUsuario" [ngClass]="{
                             'is-invalid': newForm.get('nombreUsuario')?.invalid && (newForm.get('nombreUsuario')?.touched || newForm.get('nombreUsuario')?.dirty),
-                            'is-valid': newForm.get('nombreUsuario')?.valid && (newForm.get('nombreUsuario')?.touched || newForm.get('nombreUsuario')?.dirty)
+                            'is-valid': newForm.get('nombreUsuario')?.valid && newForm.get('nombreUsuario')?.dirty
                         }" />
                             <div *ngIf="newForm.get('nombreUsuario')?.errors?.['required']" class="invalid-feedback">
                                 Este campo es obligatorio.
@@ -67,7 +67,7 @@
                             <label for="exampleFormControlInput1">Apellido <b style="color: red;">*</b></label>
                             <input type="text" class="form-control" formControlName="apellidoUsuario" [ngClass]="{
                             'is-invalid': newForm.get('apellidoUsuario')?.invalid && (newForm.get('apellidoUsuario')?.touched || newForm.get('apellidoUsuario')?.dirty),
-                            'is-valid': newForm.get('apellidoUsuario')?.valid && (newForm.get('apellidoUsuario')?.touched || newForm.get('apellidoUsuario')?.dirty)
+                            'is-valid': newForm.get('apellidoUsuario')?.valid && newForm.get('apellidoUsuario')?.dirty
                         }" />
                             <div *ngIf="newForm.get('apellidoUsuario')?.errors?.['required']" class="invalid-feedback">
                                 Este campo es obligatorio.
@@ -82,7 +82,7 @@
                             <label for="exampleFormControlInput1">Teléfono <b style="color: red;">*</b></label>
                             <input type="text" class="form-control" formControlName="telefonoUsuario" [ngClass]="{
                             'is-invalid': newForm.get('telefonoUsuario')?.invalid && (newForm.get('telefonoUsuario')?.touched || newForm.get('telefonoUsuario')?.dirty),
-                            'is-valid': newForm.get('telefonoUsuario')?.valid && (newForm.get('telefonoUsuario')?.touched || newForm.get('telefonoUsuario')?.dirty)
+                            'is-valid': newForm.get('telefonoUsuario')?.valid && newForm.get('telefonoUsuario')?.dirty
                         }" />
 
                             <div *ngIf="newForm.get('telefonoUsuario')?.errors?.['pattern']" class="invalid-feedback">
@@ -99,7 +99,7 @@
                             <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
                             <input type="email" class="form-control" formControlName="correoUsuario" [ngClass]="{
                           'is-invalid': newForm.get('correoUsuario')?.invalid && (newForm.get('correoUsuario')?.touched || newForm.get('correoUsuario')?.dirty),
-                          'is-valid': newForm.get('correoUsuario')?.valid && (newForm.get('correoUsuario')?.touched || newForm.get('correoUsuario')?.dirty)
+                          'is-valid': newForm.get('correoUsuario')?.valid && newForm.get('correoUsuario')?.dirty
                         }" />
 
                             <div *ngIf="newForm.get('correoUsuario')?.errors?.['pattern']" class="invalid-feedback">
@@ -120,7 +120,7 @@
                                 <input type="{{ showPassword ? 'text' : 'password' }}" class="form-control"
                                     formControlName="contrasenaUsuario" [ngClass]="{
                                     'is-invalid': newForm.get('contrasenaUsuario')?.invalid && (newForm.get('contrasenaUsuario')?.touched || newForm.get('contrasenaUsuario')?.dirty),
-                                    'is-valid': newForm.get('contrasenaUsuario')?.valid && (newForm.get('contrasenaUsuario')?.touched || newForm.get('contrasenaUsuario')?.dirty)
+                                    'is-valid': newForm.get('contrasenaUsuario')?.valid && newForm.get('contrasenaUsuario')?.dirty
                                 }" />
 
                                 <div class="input-group-append">
@@ -166,8 +166,8 @@
                             <label for="idRol">Rol <b style="color: red;">*</b></label>
                             <mat-select class="form-control" formControlName="idRol" placeholder="---SELECCIONE---"
                                 [ngClass]="{
-                                'is-invalid': newForm.get('idRol')?.invalid && (newForm.get('idRol')?.touched || newForm.get('idRol')?.dirty),
-                                'is-valid': newForm.get('idRol')?.valid && (newForm.get('idRol')?.touched || newForm.get('idRol')?.dirty)
+                                'is-invalid': newForm.get('idRol')?.invalid && newForm.get('idRol')?.touched,
+                                'is-valid': newForm.get('idRol')?.valid
                             }">
                                 <mat-option *ngFor="let rol of rolUsuario" [value]="rol.idRol">{{
                                     rol.nombreRol}}</mat-option>

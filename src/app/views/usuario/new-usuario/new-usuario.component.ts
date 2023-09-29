@@ -46,7 +46,7 @@ export class NewUsuarioComponent implements OnInit, OnDestroy, HasUnsavedChanges
     idTipoDocumento: new FormControl('', Validators.required),
     nombreUsuario: new FormControl('', Validators.required),
     apellidoUsuario: new FormControl('', Validators.required),
-    telefonoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // Agregamos la validación de patrón usando Validators.pattern
+    telefonoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     correoUsuario: new FormControl('', [Validators.required, Validators.pattern('^[\\w.%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     contrasenaUsuario: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d.*\d.*\d)(?=.*[!@#$%^&+=?.:,"°~;_¿¡*/{}|<>()]).{8,}$/)]),
     idRol: new FormControl('', Validators.required),
