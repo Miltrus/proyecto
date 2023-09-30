@@ -142,7 +142,7 @@
                         <div class="input-group">
                             <input type="{{ showPassword ? 'text' : 'password' }}" class="form-control"
                                 formControlName="contrasenaUsuario" [ngClass]="{
-                                'is-invalid': pwdForm.get('contrasenaUsuario')?.invalid && (pwdForm.get('contrasenaUsuario')?.touched || pwdForm.get('contrasenaUsuario')?.dirty),
+                                'is-invalid': pwdForm.get('contrasenaUsuario')?.invalid,
                                 'is-valid': pwdForm.get('contrasenaUsuario')?.valid
                             }" />
 

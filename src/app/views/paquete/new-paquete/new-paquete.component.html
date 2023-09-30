@@ -43,7 +43,7 @@
             <div class="form-group">
               <label for="exampleFormControlInput1">Nombre</label>
               <input type="text" class="form-control" formControlName="nombreCliente" readonly [ngClass]="{
-                'is-valid': editRemitente.get('nombreCliente')?.valid
+                'is-valid': editRemitente.get('nombreCliente')?.valid && editRemitente.get('documentoCliente')?.valid
               }" />
             </div>
           </div>
@@ -55,13 +55,17 @@
               <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
               <input type="email" [readOnly]="editRemitente.get('documentoCliente')?.invalid" class="form-control"
                 formControlName="correoCliente" [ngClass]="{
-                  'is-invalid': editRemitente.get('correoCliente')?.invalid && (editRemitente.get('correoCliente')?.touched || editRemitente.get('correoCliente')?.dirty),
-                  'is-valid': editRemitente.get('correoCliente')?.valid
+                  'is-invalid': editRemitente.get('correoCliente')?.invalid && (editRemitente.get('correoCliente')?.touched || editRemitente.get('correoCliente')?.dirty) && editRemitente.get('documentoCliente')?.valid,
+                  'is-valid': editRemitente.get('correoCliente')?.valid && editRemitente.get('documentoCliente')?.valid
                 }" />
-              <div *ngIf="editRemitente.get('correoCliente')?.errors?.['pattern']" class="invalid-feedback">
+              <div
+                *ngIf="editRemitente.get('correoCliente')?.errors?.['pattern'] && editRemitente.get('documentoCliente')?.valid"
+                class="invalid-feedback">
                 Correo inválido.
               </div>
-              <div *ngIf="editRemitente.get('correoCliente')?.errors?.['required']" class="invalid-feedback">
+              <div
+                *ngIf="editRemitente.get('correoCliente')?.errors?.['required'] && editRemitente.get('documentoCliente')?.valid"
+                class="invalid-feedback">
                 Este campo es obligatorio.
               </div>
             </div>
@@ -73,18 +77,22 @@
                 <label for="exampleFormControlInput1">Teléfono <b style="color: red;">*</b></label>
                 <input type="text" [readOnly]="editRemitente.get('documentoCliente')?.invalid" class="form-control"
                   formControlName="telefonoCliente" [ngClass]="{
-                    'is-invalid': editRemitente.get('telefonoCliente')?.invalid && (editRemitente.get('telefonoCliente')?.touched || editRemitente.get('telefonoCliente')?.dirty),
-                    'is-valid': editRemitente.get('telefonoCliente')?.valid
+                    'is-invalid': editRemitente.get('telefonoCliente')?.invalid && (editRemitente.get('telefonoCliente')?.touched || editRemitente.get('telefonoCliente')?.dirty) && editRemitente.get('documentoCliente')?.valid,
+                    'is-valid': editRemitente.get('telefonoCliente')?.valid && editRemitente.get('documentoCliente')?.valid
                   }" />
-                <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['pattern']" class="invalid-feedback">
+                <div
+                  *ngIf="editRemitente.get('telefonoCliente')?.errors?.['pattern'] && editRemitente.get('documentoCliente')?.valid"
+                  class="invalid-feedback">
                   Teléfono inválido, debe contener 10 dígitos numéricos.
                 </div>
-                <div *ngIf="editRemitente.get('telefonoCliente')?.errors?.['required']" class="invalid-feedback">
+                <div
+                  *ngIf="editRemitente.get('telefonoCliente')?.errors?.['required'] && editRemitente.get('documentoCliente')?.valid"
+                  class="invalid-feedback">
                   Este campo es obligatorio.
                 </div>
               </div>
               <button class="btn btn-circle btn-update btn-margin"
-                [disabled]="editRemitente.get('correoCliente')?.invalid || editRemitente.get('telefonoCliente')?.invalid"
+                [disabled]="editRemitente.get('documentoCliente')?.invalid || editRemitente.get('correoCliente')?.invalid || editRemitente.get('telefonoCliente')?.invalid"
                 type="button" title="Actualizar correo y/o teléfono" (click)="editRemi(editRemitente.value)">
                 <span class="material-icons">edit</span>
               </button>
