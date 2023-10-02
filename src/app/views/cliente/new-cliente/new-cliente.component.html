@@ -35,7 +35,7 @@
               <label for="exampleFormControlInput1">N° Documento <b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="documentoCliente" [ngClass]="{
                 'is-invalid': newForm.get('documentoCliente')?.invalid && (newForm.get('documentoCliente')?.touched || newForm.get('documentoCliente')?.dirty),
-                'is-valid': newForm.get('documentoCliente')?.valid && newForm.get('documentoCliente')?.dirty
+                'is-valid': newForm.get('documentoCliente')?.valid
               }">
               <div *ngIf="newForm.get('documentoCliente')?.errors?.['pattern']" class="invalid-feedback">
                 Documento inválido, mínimo 7 y máximo 10 dígitos numéricos.
@@ -53,7 +53,7 @@
               <label for="exampleFormControlInput1">Nombre <b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="nombreCliente" [ngClass]="{
                 'is-invalid': newForm.get('nombreCliente')?.invalid && (newForm.get('nombreCliente')?.touched || newForm.get('nombreCliente')?.dirty),
-                'is-valid': newForm.get('nombreCliente')?.valid && newForm.get('nombreCliente')?.dirty
+                'is-valid': newForm.get('nombreCliente')?.valid
               }">
 
               <div *ngIf="newForm.get('nombreCliente')?.errors?.['required']" class="invalid-feedback">
@@ -66,7 +66,7 @@
               <label for="exampleFormControlInput1">Teléfono <b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="telefonoCliente" [ngClass]="{
                 'is-invalid': newForm.get('telefonoCliente')?.invalid && (newForm.get('telefonoCliente')?.touched || newForm.get('telefonoCliente')?.dirty),
-                'is-valid': newForm.get('telefonoCliente')?.valid && newForm.get('telefonoCliente')?.dirty
+                'is-valid': newForm.get('telefonoCliente')?.valid
               }">
               <div *ngIf="newForm.get('telefonoCliente')?.errors?.['pattern']" class="invalid-feedback">
                 Teléfono inválido, debe contener 10 dígitos numéricos.
@@ -84,7 +84,7 @@
               <label for="exampleFormControlInput1">Correo <b style="color: red;">*</b></label>
               <input type="email" class="form-control" formControlName="correoCliente" [ngClass]="{
                 'is-invalid': newForm.get('correoCliente')?.invalid && (newForm.get('correoCliente')?.touched || newForm.get('correoCliente')?.dirty),
-                'is-valid': newForm.get('correoCliente')?.valid && newForm.get('correoCliente')?.dirty
+                'is-valid': newForm.get('correoCliente')?.valid
               }">
               <div *ngIf="newForm.get('correoCliente')?.errors?.['pattern']" class="invalid-feedback">
                 Correo inválido.
@@ -100,7 +100,7 @@
                 <label for="exampleFormControlInput1">Dirección <b style="color: red;">*</b></label>
                 <input type="text" class="form-control" formControlName="direccionCliente" #inputPlaces [ngClass]="{
                   'is-invalid': newForm.get('direccionCliente')?.invalid && (newForm.get('direccionCliente')?.touched || newForm.get('direccionCliente')?.dirty),
-                  'is-valid': newForm.get('direccionCliente')?.valid && newForm.get('direccionCliente')?.dirty
+                  'is-valid': newForm.get('direccionCliente')?.valid
                 }">
                 <div *ngIf="newForm.get('direccionCliente')?.errors?.['required']" class="invalid-feedback">
                   Este campo es obligatorio.
@@ -119,7 +119,7 @@
             <div class="col">
               <label for="exampleFormControlInput1">Detalle dirección</label>
               <textarea class="form-control" formControlName="detalleDireccionCliente" [ngClass]="{
-                'is-valid': newForm.get('detalleDireccionCliente')?.valid && newForm.get('detalleDireccionCliente')?.touched
+                'is-valid': newForm.get('detalleDireccionCliente')?.valid && (newForm.get('detalleDireccionCliente')?.touched || newForm.get('detalleDireccionCliente')?.dirty)
               }"></textarea>
             </div>
           </div>

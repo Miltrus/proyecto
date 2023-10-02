@@ -90,9 +90,8 @@
                   Este campo es obligatorio.
                 </div>
               </div>
-              <button class="btn btn-circle btn-update btn-margin"
-                [disabled]="editRemitente.get('documentoCliente')?.invalid || editRemitente.get('correoCliente')?.invalid || editRemitente.get('telefonoCliente')?.invalid"
-                type="button" title="Actualizar correo y/o teléfono" (click)="editRemi(editRemitente.value)">
+              <button class="btn btn-circle btn-update btn-margin" [disabled]="editRemitente.invalid" type="button"
+                title="Actualizar correo y/o teléfono" (click)="editRemi(editRemitente.value)">
                 <span class="material-icons">edit</span>
               </button>
             </div>
@@ -245,7 +244,6 @@
             <div class="form-group">
               <label for="">Tipo <b style="color: red;">*</b></label>
               <mat-select class="form-control" formControlName="idTipo" placeholder="---SELECCIONE---" [ngClass]="{
-              'is-invalid': editForm.get('idTipo')?.invalid && (editForm.get('idTipo')?.touched || editForm.get('idTipo')?.dirty),
               'is-valid': editForm.get('idTipo')?.valid
             }">
                 <mat-option *ngFor="let t of tipos" [value]="t.idTipo">

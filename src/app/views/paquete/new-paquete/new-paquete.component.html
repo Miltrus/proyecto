@@ -24,7 +24,7 @@
               <input matInput type="text" [matAutocomplete]="auto" class="form-control"
                 formControlName="documentoCliente" [ngClass]="{
                   'is-invalid': editRemitente.get('documentoCliente')?.invalid && (editRemitente.get('documentoCliente')?.touched || editRemitente.get('documentoCliente')?.dirty),
-                  'is-valid': editRemitente.get('documentoCliente')?.valid && editRemitente.get('documentoCliente')?.dirty 
+                  'is-valid': editRemitente.get('documentoCliente')?.valid 
                 }" />
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let option of filtrarCliente | async" [value]="option.documentoCliente">
@@ -91,9 +91,8 @@
                   Este campo es obligatorio.
                 </div>
               </div>
-              <button class="btn btn-circle btn-update btn-margin"
-                [disabled]="editRemitente.get('documentoCliente')?.invalid || editRemitente.get('correoCliente')?.invalid || editRemitente.get('telefonoCliente')?.invalid"
-                type="button" title="Actualizar correo y/o teléfono" (click)="editRemi(editRemitente.value)">
+              <button class="btn btn-circle btn-update btn-margin" [disabled]="editRemitente.invalid" type="button"
+                title="Actualizar correo y/o teléfono" (click)="editRemi(editRemitente.value)">
                 <span class="material-icons">edit</span>
               </button>
             </div>
@@ -112,7 +111,7 @@
               <input matInput type="text" [matAutocomplete]="auto2" class="form-control"
                 formControlName="documentoDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('documentoDestinatario')?.invalid && (newForm.get('documentoDestinatario')?.touched || newForm.get('documentoDestinatario')?.dirty),
-                'is-valid': newForm.get('documentoDestinatario')?.valid && newForm.get('documentoDestinatario')?.dirty
+                'is-valid': newForm.get('documentoDestinatario')?.valid
               }" />
               <mat-autocomplete #auto2="matAutocomplete">
                 <mat-option *ngFor="let option of filtrarDestinatario | async" [value]="option.documentoCliente">
@@ -132,7 +131,8 @@
               <label for="documentoDestinatario">Nombre <b style="color: red;">*</b></label>
               <input list="destinatarios" class="form-control" formControlName="nombreDestinatario" [ngClass]="{
                 'is-invalid': newForm.get('nombreDestinatario')?.invalid && (newForm.get('nombreDestinatario')?.touched || newForm.get('nombreDestinatario')?.dirty),
-                'is-valid': newForm.get('nombreDestinatario')?.valid}">
+                'is-valid': newForm.get('nombreDestinatario')?.valid
+              }">
               <div *ngIf="newForm.get('nombreDestinatario')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
               </div>
@@ -193,9 +193,9 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlInput1">Detalle dirección</label>
-              <textarea class="form-control" formControlName="detalleDireccionPaquete"
-                [ngClass]="{
-                'is-valid': newForm.get('detalleDireccionPaquete')?.dirty || newForm.get('detalleDireccionPaquete')?.touched}"></textarea>
+              <textarea class="form-control" formControlName="detalleDireccionPaquete" [ngClass]="{
+                'is-valid': newForm.get('detalleDireccionPaquete')?.valid && (newForm.get('detalleDireccionPaquete')?.touched || newForm.get('detalleDireccionPaquete')?.dirty)
+              }"></textarea>
             </div>
           </div>
         </div>
@@ -222,7 +222,7 @@
               <label for="exampleFormControlInput1">Peso en KG <b style="color: red;">*</b></label>
               <input type="text" class="form-control" formControlName="pesoPaquete" [ngClass]="{
                 'is-invalid': newForm.get('pesoPaquete')?.invalid && (newForm.get('pesoPaquete')?.touched || newForm.get('pesoPaquete')?.dirty),
-                'is-valid': newForm.get('pesoPaquete')?.valid && newForm.get('pesoPaquete')?.dirty
+                'is-valid': newForm.get('pesoPaquete')?.valid
               }">
               <div *ngIf="newForm.get('pesoPaquete')?.errors?.['pattern']" class="invalid-feedback">
                 Campo inválido, máximo 3 dígitos numéricos y no más de 2 decimales.
@@ -251,7 +251,7 @@
               <label for="">Tipo <b style="color: red;">*</b></label>
               <mat-select class="form-control" formControlName="idTipo" placeholder="---SELECCIONE---" [ngClass]="{
               'is-invalid': newForm.get('idTipo')?.invalid && (newForm.get('idTipo')?.touched || newForm.get('idTipo')?.dirty),
-              'is-valid': newForm.get('idTipo')?.valid && (newForm.get('idTipo')?.touched || newForm.get('idTipo')?.dirty)
+              'is-valid': newForm.get('idTipo')?.valid
             }">
                 <mat-option *ngFor="let t of tipos" [value]="t.idTipo">
                   {{ t.tipoPaquete }}
@@ -270,7 +270,7 @@
               <input type="date" class="form-control" [min]="getFechAct()" formControlName="fechaAproxEntrega"
                 [ngClass]="{
                 'is-invalid': newForm.get('fechaAproxEntrega')?.invalid && (newForm.get('fechaAproxEntrega')?.touched || newForm.get('fechaAproxEntrega')?.dirty),
-                'is-valid': newForm.get('fechaAproxEntrega')?.valid && newForm.get('fechaAproxEntrega')?.dirty
+                'is-valid': newForm.get('fechaAproxEntrega')?.valid
               }">
               <div *ngIf="newForm.get('fechaAproxEntrega')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.
@@ -285,7 +285,7 @@
               <label for="exampleFormControlInput1">Contenido del paquete <b style="color: red;">*</b></label>
               <textarea class="form-control" formControlName="contenidoPaquete" [ngClass]="{
                   'is-invalid': newForm.get('contenidoPaquete')?.invalid && (newForm.get('contenidoPaquete')?.touched || newForm.get('contenidoPaquete')?.dirty),
-                  'is-valid': newForm.get('contenidoPaquete')?.valid && newForm.get('contenidoPaquete')?.dirty
+                  'is-valid': newForm.get('contenidoPaquete')?.valid
                 }"></textarea>
               <div *ngIf="newForm.get('contenidoPaquete')?.errors?.['required']" class="invalid-feedback">
                 Este campo es obligatorio.

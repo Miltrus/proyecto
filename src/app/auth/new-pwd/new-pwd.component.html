@@ -17,8 +17,8 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Nueva contraseña</mat-label>
                         <input formControlName="contrasenaUsuario" matInput [ngClass]="{
-                    'is-invalid': newPwdForm.get('contrasenaUsuario')?.invalid && (newPwdForm.get('contrasenaUsuario')?.touched || newPwdForm.get('contrasenaUsuario')?.dirty),
-                    'is-valid': newPwdForm.get('contrasenaUsuario')?.valid && (newPwdForm.get('contrasenaUsuario')?.touched || newPwdForm.get('contrasenaUsuario')?.dirty)
+                    'is-invalid': newPwdForm.get('contrasenaUsuario')?.invalid,
+                    'is-valid': newPwdForm.get('contrasenaUsuario')?.valid
                   }" [type]="showPassword ? 'text' : 'password'">
                         <mat-icon matSuffix (click)="togglePasswordVisibility()" [color]="'primary'">
                             {{ showPassword ? 'visibility_off' : 'visibility' }}
@@ -31,8 +31,8 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Repite la contraseña</mat-label>
                         <input formControlName="repetirContrasena" matInput [ngClass]="{
-                    'is-invalid': newPwdForm.get('repetirContrasena')?.invalid && (newPwdForm.get('repetirContrasena')?.touched || newPwdForm.get('repetirContrasena')?.dirty),
-                    'is-valid': newPwdForm.get('repetirContrasena')?.valid && (newPwdForm.get('repetirContrasena')?.touched || newPwdForm.get('repetirContrasena')?.dirty)
+                    'is-invalid': newPwdForm.get('repetirContrasena')?.invalid,
+                    'is-valid': newPwdForm.get('repetirContrasena')?.valid
                   }" [type]="showPassword ? 'text' : 'password'">
                         <mat-icon matSuffix (click)="togglePasswordVisibility()" [color]="'primary'">
                             {{ showPassword ? 'visibility_off' : 'visibility' }}
@@ -44,7 +44,7 @@
                 </p>
             </div>
             <button type="submit" color="primary" class="fadeIn fourth" mat-raised-button
-                [disabled]="newPwdForm.get('contrasenaUsuario')?.invalid || newPwdForm.get('repetirContrasena')?.invalid">Cambiar
+                [disabled]="newPwdForm.invalid">Cambiar
                 contraseña</button><br><br>
         </form>
     </div>

@@ -18,8 +18,8 @@
         <mat-form-field appearance="outline">
           <mat-label>Correo electrónico</mat-label>
           <input formControlName="correoUsuario" type="email" matInput placeholder="Ingresa tu email" [ngClass]="{
-              'is-invalid': loginForm.get('correoUsuario')?.invalid && (loginForm.get('correoUsuario')?.touched || loginForm.get('correoUsuario')?.dirty),
-              'is-valid': loginForm.get('correoUsuario')?.valid && (loginForm.get('correoUsuario')?.touched || loginForm.get('correoUsuario')?.dirty)
+              'is-invalid': loginForm.get('correoUsuario')?.invalid,
+              'is-valid': loginForm.get('correoUsuario')?.valid
             }">
           <mat-icon matSuffix color="primary">person</mat-icon>
         </mat-form-field>
@@ -29,8 +29,8 @@
           <mat-form-field appearance="outline">
             <mat-label>Contraseña</mat-label>
             <input formControlName="contrasenaUsuario" matInput placeholder="Ingresa tu contraseña" [ngClass]="{
-                'is-invalid': loginForm.get('contrasenaUsuario')?.invalid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty),
-                'is-valid': loginForm.get('contrasenaUsuario')?.valid && (loginForm.get('contrasenaUsuario')?.touched || loginForm.get('contrasenaUsuario')?.dirty)
+                'is-invalid': loginForm.get('contrasenaUsuario')?.invalid,
+                'is-valid': loginForm.get('contrasenaUsuario')?.valid
               }" [type]="showPassword ? 'text' : 'password'">
             <mat-icon matSuffix (click)="togglePasswordVisibility()" [color]="'primary'">
               {{ showPassword ? 'visibility_off' : 'visibility' }}
@@ -43,7 +43,7 @@
       </div>
 
       <div class="login-button">
-        <button type="submit" class="fadeIn fourth">Iniciar sesión</button>
+        <button type="submit" [disabled]="loginForm.invalid" class="fadeIn fourth">Iniciar sesión</button>
       </div>
     </form>
   </div>
