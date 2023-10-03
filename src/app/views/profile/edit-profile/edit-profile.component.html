@@ -114,7 +114,7 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="idRol">Rol</label>
-                        <input class="form-control" formControlName="idRol" [value]="getRolNombre()" readonly [ngClass]="{
+                        <input class="form-control" [value]="getRolNombre()" disabled [ngClass]="{
                             'is-valid': editForm.get('idRol')?.valid
                           }">
                     </div>

@@ -115,7 +115,7 @@
           <div class="form-group">
             <label for="exampleFormControlInput1">Detalle dirección</label>
             <textarea class="form-control" formControlName="detalleDireccionCliente" [ngClass]="{
-              'is-valid': newForm.get('detalleDireccionCliente')?.valid
+              'is-valid': newForm.get('detalleDireccionCliente')?.valid && (newForm.get('detalleDireccionCliente')?.touched || newForm.get('detalleDireccionCliente')?.dirty)
             }"></textarea>
           </div>
         </div>
